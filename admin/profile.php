@@ -7,11 +7,10 @@
  */
 session_start();
 require '../config/db.php';
+require_once('../nav/adminHeader.html');
 ?>
 
-<html>    
-    <head><script type="text/javascript" src="../ckeditor/ckeditor.js"></script></head>
-    
+<html>        
     <div id="framecontent">
         <div class='innertube'>
         <?php

@@ -8,12 +8,9 @@
 session_start();
 require '../config/db.php';
 require_once('../calendar/classes/tc_calendar.php');
+require_once('../nav/adminHeader.html');
 ?>
 <html>
-    <head>
-        <link href="../calendar/calendar.css" rel="stylesheet" type="text/css" />
-        <script language="javascript" src="../calendar/calendar.js"></script>
-    </head>
  <div id="framecontent">
         <div class='innertube'>
         <?php

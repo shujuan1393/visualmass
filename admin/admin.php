@@ -61,6 +61,21 @@ unset($_SESSION['updateAdvSuccess']);
 unset($_SESSION['updateAdvError']);
 unset($_SESSION['editUpdateAdvError']);
 
+unset($_SESSION['addBlogError']);
+unset($_SESSION['addBlogSuccess']);
+unset($_SESSION['uploadBlogError']);
+unset($_SESSION['updateBlogSuccess']);
+unset($_SESSION['updateBlogError']);
+unset($_SESSION['editUpdateBlogError']);
+
+unset($_SESSION['addFaqError']);
+unset($_SESSION['addFaqSuccess']);
+unset($_SESSION['uploadFaqError']);
+unset($_SESSION['uploadFaqSuccess']);
+unset($_SESSION['updateFaqSuccess']);
+unset($_SESSION['updateFaqError']);
+unset($_SESSION['editUpdateFaqError']);
+
 unset($_SESSION['updateInvError']);
 unset($_SESSION['updateInvSuccess']);
 unset($_SESSION['profileError']);

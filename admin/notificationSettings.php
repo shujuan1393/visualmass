@@ -7,6 +7,7 @@
  */
 session_start();
 require_once '../config/db.php';
+require_once('../nav/adminHeader.html');
 
 $selectSql = "SELECT value from settings WHERE type='notifications'";
 $savedresult = mysqli_query($link, $selectSql);
@@ -18,7 +19,6 @@ if (!mysqli_query($link,$selectSql)) {
     $valArr = explode("#", $savedrow['value']);
 ?>
 <html>    
-    <head><script type="text/javascript" src="../ckeditor/ckeditor.js"></script></head>
     <div id="framecontent">
         <div class='innertube'>
         <?php
