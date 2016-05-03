@@ -70,11 +70,15 @@ unset($_SESSION['editUpdateBlogError']);
 
 unset($_SESSION['addFaqError']);
 unset($_SESSION['addFaqSuccess']);
-unset($_SESSION['uploadFaqError']);
-unset($_SESSION['uploadFaqSuccess']);
+unset($_SESSION['addFaqBannerError']);
+unset($_SESSION['addFaqBannerSuccess']);
 unset($_SESSION['updateFaqSuccess']);
 unset($_SESSION['updateFaqError']);
-unset($_SESSION['editUpdateFaqError']);
+
+unset($_SESSION['addTermError']);
+unset($_SESSION['addTermSuccess']);
+unset($_SESSION['updateTermSuccess']);
+unset($_SESSION['updateTermError']);
 
 unset($_SESSION['updateInvError']);
 unset($_SESSION['updateInvSuccess']);
