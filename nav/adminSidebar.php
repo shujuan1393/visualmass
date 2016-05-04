@@ -76,6 +76,9 @@ require '../config/db.php';
             <?php if (in_array("web", $checkArr)) { ?><li id='web'>WEB
                 <ul id='webDropdown' style='display:none'>
                     <li><a href='advertisements.php'>ADVERTISEMENTS</a></li>
+                    <li><a href='blog.php'>BLOG</a></li>
+                    <li><a href='faq.php'>FAQ</a></li>
+                    <li><a href='terms.php'>TERMS</a></li>
                 </ul>
             </li><?php } ?>
         </ul>
