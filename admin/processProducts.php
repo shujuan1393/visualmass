@@ -54,7 +54,7 @@ if (isset($_GET['edit'])) {
         $editimages.= ",".$_POST['oldImage'];
         $editcode = $_POST['editcode'];
         $editname = $_POST['editname'];
-        $editdesc = $_POST['editdesc'];
+        $editdesc = htmlentities($_POST['editdesc']);
         $editqty = $_POST['editqty'];
         $editprice = $_POST['editprice'];
         $edittype = $_POST['edittype'];
@@ -182,7 +182,7 @@ if (isset($_GET['edit'])) {
             if (!isset($_SESSION['addProdError'])) {
                 $code = $_POST['code'];
                 $name = $_POST['name'];
-                $desc = $_POST['desc'];
+                $desc = htmlentities($_POST['desc']);
                 $qty = $_POST['qty'];
                 $price = $_POST['price'];
                 $type = $_POST['type'];

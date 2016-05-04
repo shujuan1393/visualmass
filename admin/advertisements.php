@@ -8,7 +8,7 @@
 session_start();
 require '../config/db.php';
 require_once('../calendar/classes/tc_calendar.php');
-require_once('../nav/adminHeader.html');
+require_once('../nav/adminHeader.php');
 ?>
 
 <html> 

@@ -60,7 +60,7 @@ require '../config/db.php';
                     <li>CHECKOUT</li>
                     <li>EXPORTS</li>
                     <li>FORMS</li>
-                    <li>GIFT CARDS</li>
+                    <li><a href="giftcardSettings.php">GIFT CARDS</a></li>
                     <li><a href='homeTrySettings.php'>HOME TRY-ON</a></li>
                     <li><a href='notificationSettings.php'>NOTIFICATIONS</a></li>
                     <li>PAYMENTS</li>
@@ -77,6 +77,7 @@ require '../config/db.php';
                 <ul id='webDropdown' style='display:none'>
                     <li><a href='advertisements.php'>ADVERTISEMENTS</a></li>
                     <li><a href='blog.php'>BLOG</a></li>
+                    <li><a href='contact.php'>CONTACT</a></li>
                     <li><a href='faq.php'>FAQ</a></li>
                     <li><a href='terms.php'>TERMS</a></li>
                 </ul>
@@ -86,11 +87,12 @@ require '../config/db.php';
     </body>
     <script>
         document.getElementById('settings').onclick = function(){  
-           var e = document.getElementById('settingslist');
-           if(e.style.display == 'block')
+            var e = document.getElementById('settingslist');
+            if(e.style.display == 'block') {
                 e.style.display = 'none';
-             else
+            } else {
                 e.style.display = 'block';
+            }
         };
         document.getElementById('web').onclick = function(){  
            var e = document.getElementById('webDropdown');

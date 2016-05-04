@@ -7,7 +7,7 @@
  */
 session_start();
 require_once '../config/db.php';
-require_once('../nav/adminHeader.html');
+require_once('../nav/adminHeader.php');
 
 $selectSql = "SELECT value from settings WHERE type='notifications'";
 $savedresult = mysqli_query($link, $selectSql);

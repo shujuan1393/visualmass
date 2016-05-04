@@ -7,6 +7,7 @@
  */
 session_start();
 require '../config/db.php';
+require_once('../nav/adminHeader.php');
 
 ?>
 <html>    
@@ -98,6 +99,9 @@ require '../config/db.php';
             <br>
             <label for='desc' >Description*:</label>
             <textarea name='desc' id='desc'></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('desc');
+            </script>
             <br>
             <label for='price' >Price*:</label>
             <input type='text' name='price' id='price' onkeypress="return isNumberKey(event)" />

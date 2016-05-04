@@ -97,6 +97,9 @@ if (isset($_GET['id'])) {
                 echo "</select>";
             ?>
             <br>
+            <?php 
+                if (isset($_GET['id'])) {
+            ?>
             <label for='price' >Price*:</label>
             <input type='text' name='price' id='price' 
                    <?php 
@@ -106,6 +109,9 @@ if (isset($_GET['id'])) {
                    ?>
                    onkeypress="return isNumberKey(event)" />
             <br>
+            <?php 
+                }
+            ?>
             <label for='qty' >Quantity*:</label>
             <input type='text' name='qty' id='qty' 
                    <?php 

@@ -7,7 +7,7 @@
  */
 session_start();
 require '../config/db.php';
-require_once('../nav/adminHeader.html');
+require_once('../nav/adminHeader.php');
 ?>
 
 <html>        

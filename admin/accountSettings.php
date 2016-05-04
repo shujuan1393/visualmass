@@ -11,6 +11,12 @@ require_once '../config/db.php';
 $selectSql = "SELECT value from settings WHERE type='account'";
 $savedresult = mysqli_query($link, $selectSql);
 
+if (isset($_GET['id'])) {
+    $getEmpType = "Select * from employeetypes where id='".$_GET['id']."';";
+    $eresult = mysqli_query($link, $getEmpType);
+    $erow = mysqli_fetch_assoc($eresult);
+}
+
 if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
@@ -50,7 +56,7 @@ if (!mysqli_query($link,$selectSql)) {
                         echo "<tr>";
                         echo "<td>".$row['code']."</td>";
                         echo "<td>".$row['name']."</td>";
-                        echo '<td><button onClick="window.location.href=`editEmpType.php?id='.$row['id'].'`">E</button>';
+                        echo '<td><button onClick="window.location.href=`accountSettings.php?id='.$row['id'].'`">E</button>';
                         echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                         echo "</tr>";
                     }
@@ -77,13 +83,26 @@ if (!mysqli_query($link,$selectSql)) {
         ?>
         <form id='addEmpType' method='post' action='saveAccountSettings.php?add=1'>
             <fieldset >
-            <legend>Add Employee Type</legend>
+            <legend>Add/Edit Employee Type</legend>
+            <input type='hidden' name='editid' id='editid' value='<?php 
+                    if (isset($erow['id'])) {
+                        echo $erow['id'];
+                    }
+                   ?>'/>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <label for='code' >Code*:</label>
-            <input type='text' name='code' id='code'  maxlength="50" />
+            <input type='text' name='code' id='code'  maxlength="50" value='<?php 
+                    if (isset($erow['code'])) {
+                        echo $erow['code'];
+                    }
+                   ?>'/>
             <br>
             <label for='name' >Name*:</label>
-            <input type='text' name='name' id='name'  maxlength="50" />
+            <input type='text' name='name' id='name'  maxlength="50" value='<?php 
+                    if (isset($erow['name'])) {
+                        echo $erow['name'];
+                    }
+                   ?>'/>
             <br>
             <input type='submit' name='submit' value='Submit' />
             <div id="addEmpTypeError" style="color:red">

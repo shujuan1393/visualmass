@@ -7,6 +7,7 @@
  */
 session_start();
 require '../config/db.php';
+require_once('../nav/adminHeader.php');
 ?>
 
 <html>
@@ -38,7 +39,11 @@ require '../config/db.php';
             <input type='hidden' name='editid' value='<?php echo $row['id']?>'>
             Product Code: <input type="text" name='editcode' value="<?php echo $row['pid']?>"/> </br>
             Name: <input type="text" name='editname' value="<?php echo $row['name']?>"/> </br>
-            Description: <textarea name='editdesc'><?php echo $row['description']?></textarea> </br>
+            Description: <textarea name='editdesc'><?php echo $row['description']?></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('editdesc');
+            </script>
+            </br>
             Price: <input type="text" name='editprice' value="<?php echo $row['price']?>"/> 
             Quantity: <input type="text" name='editqty' value="<?php echo $row['quantity']?>"/></br>   
             Type: 

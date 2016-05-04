@@ -31,28 +31,29 @@ if (!mysqli_query($link,$selectSql)) {
         
         <form id='homeTrySettings' action='saveHomeTrySettings.php' method='post'>
             Visibility: 
-            <select name='visibility'>
                 <?php 
                     $visib = explode("visibility=", $valArr[0]);
                 ?>
-                <option value='on' 
+                <input name='visibility' type='radio' value='on' 
                         <?php 
                         if (!empty($visib[1])) {
                             if (strcmp($visib[1], "on")===0) {
-                                echo " selected";
+                                echo " checked";
+                                $_SESSION['visibilityOff'] = "on";
                             }
                         }
                         ?>
-                        >On</option>
-                <option value='off' 
+                        onclick="toggleTextbox(true);">On
+                <input type='radio' name='visibility' value='off' 
                         <?php 
                         if (!empty($visib[1])) {
                             if (strcmp($visib[1], "off")===0) {
-                                echo " selected";
+                                echo " checked";
+                                $_SESSION['visibilityOff'] = "off";
                             }
                         }
                         ?>
-                        >Off</option>
+                        onclick="toggleTextbox(false);">Off
             </select>
             <p class='setting-tooltips'>*Turn on/off the home try-on feature</p><br>
             <?php 
@@ -64,7 +65,7 @@ if (!mysqli_query($link,$selectSql)) {
                                     echo "value='". $duration[1]."'";
                                 }
                              ?>
-                             onkeypress="return isNumber(event)" />
+                             onkeypress="return isNumber(event)" /> <span id='days'>days</span>
             <br>
             <p class='setting-tooltips'>*Set the default duration for home try-ons</p><br>
             <?php 
@@ -77,7 +78,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 }
                              ?>
                                       
-                                      onkeypress="return isNumber(event)" > <br>
+                                      onkeypress="return isNumberKey(event)" > <br>
             <p id='nanError' style="display: none;">Please enter numbers only</p>
             <p class='setting-tooltips'>*Set the default amount to charge for home try-ons</p><br>
             <input type='submit' name='submit' value='Save Changes' />
@@ -104,6 +105,38 @@ if (!mysqli_query($link,$selectSql)) {
             document.getElementById('nanError').style.display='none';
             return true;
         }
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+                document.getElementById('nanError').style.display='block';
+                document.getElementById('nanError').style.color='red';
+                return false;
+           }
+
+            document.getElementById('nanError').style.display='none';
+            return true;
+        }
+        function toggleTextbox(rdo) {
+            document.getElementById("duration").disabled = !rdo;
+            document.getElementById("amount").disabled = !rdo;
+            if (rdo) {
+                document.getElementById("days").style.display = "inline";
+            } else {
+                document.getElementById("days").style.display = "none";
+            }
+        }
+        
+        window.onload = function() {
+            <?php 
+                if ($_SESSION['visibilityOff'] === "off") {
+            ?>
+                toggleTextbox(false);
+            <?php 
+                } else {
+            ?>
+                toggleTextbox(true);                    
+            <?php } ?>
+        };
     </script>
 </html>
 <?php } ?>
