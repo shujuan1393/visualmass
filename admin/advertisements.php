@@ -5,10 +5,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 require_once('../calendar/classes/tc_calendar.php');
 require_once('../nav/adminHeader.php');
+
+if (isset($_GET['id'])) {
+    unset($_SESSION['updateAdvSuccess']);    
+    unset($_SESSION['updateAdvError']);
+    unset($_SESSION['addAdvSuccess']);
+    unset($_SESSION['addAdvError']);
+    unset($_SESSION['uploadAdvError']);
+    $selectSql = "Select * from advertisements where id ='" .$_GET['id']."';";
+    $eresult = mysqli_query($link, $selectSql);
+
+    if (!mysqli_query($link,$selectSql))
+    {
+        echo("Error description: " . mysqli_error($link));
+    } else {
+        $erow = mysqli_fetch_assoc($eresult);
+    }
+}
 ?>
 
 <html> 
@@ -53,7 +69,7 @@ require_once('../nav/adminHeader.php');
                     echo "<td>".$row['start']."</td>";                           
                     echo "<td>".$row['end']."</td>";                           
                     echo "<td>".$row['status']."</td>";                        
-                    echo '<td><button onClick="window.location.href=`editAdvertisement.php?id='.$row['id'].'`">E</button>';
+                    echo '<td><button onClick="window.location.href=`advertisements.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
                 }
@@ -79,23 +95,45 @@ require_once('../nav/adminHeader.php');
             </div>
         <hr><br>
         
-        <form id='addDiscount' action='processAdvertisements.php' method='post' enctype="multipart/form-data">
+        <form id='addAdvertisement' action='processAdvertisements.php' method='post' enctype="multipart/form-data">
             <fieldset >
-            <legend>Add Advertisement</legend>
+            <legend>Add/Edit Advertisement</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='editid' id='editid' 
+                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; } ?>'/>
             <label for='title' >Title*:</label>
-            <input type='text' name='title' id='title' maxlength="50" />
+            <input type='text' name='title' id='title' maxlength="50" 
+                   value='<?php if (!empty($erow['title'])) { echo $erow['title']; } ?>'/>
             <br>
+            <?php 
+                if (!empty($erow['image'])) {
+                    echo "<img src='".$erow['image']."' width=200><br>";
+                    echo "<input type='hidden' name='oldImage' id='oldImage' value='".$erow['image']."'>";
+                }
+            ?>
             <label for='image' >Image*:</label>
             <input type="file" name="image" id='image' accept="image/*" />
             <br>
             <label for='link' >Link (optional):</label>
-            <input type='text' name='link' id='link'  maxlength="50" />
+            <input type='text' name='link' id='link'  maxlength="50" 
+                   value='<?php if (!empty($erow['link'])) { echo $erow['link']; } ?>'/>
             <br>
             <label for='status' >Status*:</label>
             <select name='status'>
-                <option value='active'>Active</option>
-                <option value='inactive'>Inactive</option>
+                <option value='active' <?php 
+                    if (!empty($erow['status'])) {
+                        if (strcmp($erow['status'], "active") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Active</option>
+                <option value='inactive' <?php 
+                    if (!empty($erow['status'])) {
+                        if (strcmp($erow['status'], "inactive") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Inactive</option>
             </select>
             <br>
             Valid from:
@@ -127,7 +165,11 @@ require_once('../nav/adminHeader.php');
 
             $myCalendar = new tc_calendar("date3", true, false);
             $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-            $myCalendar->setDate(date('d', strtotime($date1)), date('m', strtotime($date1)), date('Y', strtotime($date1)));
+            if (!empty($erow['start'])) {
+                $myCalendar->setDate(date('d', strtotime($erow['start'])), date('m', strtotime($erow['start'])), date('Y', strtotime($erow['start'])));
+            } else {
+                $myCalendar->setDate(date('d', strtotime($date1)), date('m', strtotime($date1)), date('Y', strtotime($date1)));
+            }
             $myCalendar->setPath("../calendar/");
             $myCalendar->setYearInterval(1970, 2020);
             //$myCalendar->dateAllow('2009-02-20', "", false);
@@ -140,7 +182,12 @@ require_once('../nav/adminHeader.php');
             <?php
             $myCalendar = new tc_calendar("date4", true, false);
             $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-            $myCalendar->setDate(date('d', strtotime($date2)), date('m', strtotime($date2)), date('Y', strtotime($date2)));
+            
+            if (!empty($erow['end'])) {
+                $myCalendar->setDate(date('d', strtotime($erow['end'])), date('m', strtotime($erow['end'])), date('Y', strtotime($erow['end'])));
+            } else {
+                $myCalendar->setDate(date('d', strtotime($date2)), date('m', strtotime($date2)), date('Y', strtotime($date2)));
+            }
             $myCalendar->setPath("../calendar/");
             $myCalendar->setYearInterval(1970, 2020);
             //$myCalendar->dateAllow("", '2009-11-03', false);

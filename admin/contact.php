@@ -5,8 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 require_once('../nav/adminHeader.php');
 
 if (empty($_GET['delete']) && isset($_GET['id'])) {

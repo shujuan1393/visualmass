@@ -5,8 +5,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
+
+if (isset($_GET['id'])) {
+    unset($_SESSION['addLocSuccess']);
+    unset($_SESSION['addLocError']);
+    unset($_SESSION['updateLocSuccess']);
+    unset($_SESSION['updateLocError']);
+    unset($_SESSION['uploadLocError']);
+    unset($_SESSION['randomString']);
+    $selectSql = "Select * from locations where id ='" .$_GET['id']."';";
+    $eresult = mysqli_query($link, $selectSql);
+
+    if (!mysqli_query($link,$selectSql))
+    {
+        echo("Error description: " . mysqli_error($link));
+    } else {
+        $erow = mysqli_fetch_assoc($eresult);
+    }
+}
 ?>
 
 <html>    
@@ -53,7 +70,7 @@ require '../config/db.php';
                     echo "<td>".$row['phone']."</td>";                           
                     echo "<td>".$row['type']."</td>";                           
                     echo "<td>".$row['services']."</td>";                         
-                    echo '<td><button onClick="window.location.href=`editLocation.php?id='.$row['id'].'`">E</button>';
+                    echo '<td><button onClick="window.location.href=`locations.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
                 }
@@ -81,35 +98,61 @@ require '../config/db.php';
         
         <form id='addLocation' action='processLocations.php' method='post' accept-charset='UTF-8' enctype="multipart/form-data">
             <fieldset >
-            <legend>Add Location</legend>
+            <legend>Add/Edit Location</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='editid' id='editid' 
+                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             <label for='code' >Location Code*:</label>
             <input type='text' name='code' id='code' value ="<?php 
             if(isset($_SESSION['randomString'])) { 
-                echo $_SESSION['randomString']; } ?>" maxlength="50" />
+                echo $_SESSION['randomString']; } 
+            if (!empty($erow['code'])) { 
+                echo $erow['code']; }?>" maxlength="50" />
             <button type='button' onclick="randomString()">Generate</button>
             <br>
             <label for='name' >Name*:</label>
-            <input type='text' name='name' id='name'  maxlength="50" />
+            <input type='text' name='name' id='name'  maxlength="50" value ="<?php 
+            if (!empty($erow['name'])) { 
+                echo $erow['name']; }?>"/>
             <br>
             <label for='address' >Address*:</label>
-            <input type='text' name='address' id='address'  maxlength="50" />
+            <input type='text' name='address' id='address'  maxlength="50" value ="<?php 
+            if (!empty($erow['address'])) { 
+                echo $erow['address']; }?>"/>
             <br>
             <label for='phone' >Phone*:</label>
-            <input type='text' name='phone' id='phone'  maxlength="50"  onkeypress="return isNumber(event)"/>
+            <input type='text' name='phone' id='phone'  maxlength="50"  
+                   onkeypress="return isNumber(event)" value ="<?php 
+            if (!empty($erow['phone'])) { 
+                echo $erow['phone']; }?>"/>
             <br>
             <label for='apt' >Apt, suite:</label>
-            <input type='text' name='apt' id='apt'  maxlength="50" />
+            <input type='text' name='apt' id='apt'  maxlength="50" value ="<?php 
+            if (!empty($erow['apt'])) { 
+                echo $erow['apt']; }?>"/>
             <br>
             <label for='city' >City*:</label>
-            <input type='text' name='city' id='city'  maxlength="50" />
+            <input type='text' name='city' id='city'  maxlength="50" value ="<?php 
+            if (!empty($erow['city'])) { 
+                echo $erow['city']; }?>"/>
             <br>
             <label for='zip' >ZIP Code*:</label>
-            <input type='text' name='zip' id='zip'  maxlength="50"  onkeypress="return isNumber(event)"/>
+            <input type='text' name='zip' id='zip'  maxlength="50"  
+                   onkeypress="return isNumber(event)" value ="<?php 
+            if (!empty($erow['zip'])) { 
+                echo $erow['zip']; }?>"/>
             <br>
             <label for='country' >Country*:</label>
-            <input type='text' name='country' id='country'  maxlength="50" />
+            <input type='text' name='country' id='country'  maxlength="50" value ="<?php 
+            if (!empty($erow['country'])) { 
+                echo $erow['country']; }?>"/>
             <br>
+            <?php 
+                if (!empty($erow['image'])) {
+                    echo "<img src='".$erow['image']."' width=200><br>";
+                    echo "<input type='hidden' name='oldImage' id='oldImage' value='".$erow['image']."'>";
+                }
+            ?>
             <label for='image' >Image:</label>
             <input type="file" name="image" id='image' accept="image/*" />
 <!--             Button trigger modal 
@@ -156,14 +199,28 @@ require '../config/db.php';
             
             Type*:
             <select name="type">
-                <option value="retail">Retail</option>
-                <option value="popup">Pop-up</option>
+                <option value="retail" <?php 
+                    if (!empty($erow['type'])) {
+                        if (strcmp($erow['type'], "retail") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Retail</option>
+                <option value="popup" <?php 
+                    if (!empty($erow['type'])) {
+                        if (strcmp($erow['type'], "popup") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Pop-up</option>
             </select>
             <br>
             Services*:
             <table width='500px' style='margin-left: 70px; margin-top:-20px'>
                 <tr><td>
             <?php
+                $serviceArr = explode(",", $erow['services']);
+                
                 $serviceSql = "Select * from services";
                 $serviceResult = mysqli_query($link, $serviceSql);
 
@@ -179,7 +236,13 @@ require '../config/db.php';
                     $count = 0;
                     while($row = mysqli_fetch_assoc($serviceResult)) {
                         echo '<input type="checkbox" name="services[]" 
-                    value="'.$row['servicecode'].'"><label>'.
+                    value="'.$row['servicecode'].'"';
+                        if (!empty($erow['services'])) {
+                            if (in_array($row['servicecode'], $serviceArr)) {
+                                echo " checked";
+                            }
+                        }        
+                        echo '><label>'.
                                 $row['servicename'].'</label>';
                         $count++;
                         

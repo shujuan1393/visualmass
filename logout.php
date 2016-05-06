@@ -5,8 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require 'config/db.php';
+require_once 'config/db.php';
 
 unset($_SESSION['loggedUser']);
 if (isset($_SESSION['loggedUserEmail']) && isset($_SESSION['userType'])) {
@@ -16,9 +15,11 @@ if (isset($_SESSION['loggedUserEmail']) && isset($_SESSION['userType'])) {
     
     mysqli_query($link, $updateSql);
     session_destroy();
+    setcookie("user", "", time() - 3600);
     header("Location: admin/login.php");  
 } else {
     session_destroy();
+    setcookie("user", "", time() - 3600);
     header("Location: index.php");
 }
 ?>

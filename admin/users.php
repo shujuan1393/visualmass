@@ -5,8 +5,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
+
+if (isset($_GET['id'])) {
+    unset($_SESSION['updateSuccess']);
+    unset($_SESSION['updateError']);
+    unset($_SESSION['addEmpSuccess']);
+    unset($_SESSION['addEmpError']);
+    $selectSql = "Select * from staff where id ='" .$_GET['id']."';";
+    $eresult = mysqli_query($link, $selectSql);
+
+    if (!mysqli_query($link,$selectSql))
+    {
+        echo("Error description: " . mysqli_error($link));
+    } else {
+        $erow = mysqli_fetch_assoc($eresult);
+    }
+}
 ?>
 <html>    
     <div id="framecontent">
@@ -47,7 +62,7 @@ require '../config/db.php';
                     echo "<td>".$row['firstname'] . " " . $row['lastname']."</td>";
                     echo "<td>".$row['email']."</td>";                           
                     echo "<td>".$row['type']."</td>";                         
-                    echo '<td><button onClick="window.location.href=`editUser.php?id='.$row['id'].'`">E</button>';
+                    echo '<td><button onClick="window.location.href=`users.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
                 }
@@ -77,17 +92,34 @@ require '../config/db.php';
         
         <form id='addUser' action='processUsers.php' method='post' accept-charset='UTF-8'>
             <fieldset >
-            <legend>Add Employee Account</legend>
+            <legend>Add/Edit Employee Account</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='editid' id='editid' 
+                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             
             <label for='firstName' >First Name*:</label>
-            <input type='text' name='firstName' id='firstName'  maxlength="50" />
+            <input type='text' name='firstName' id='firstName'  maxlength="50" 
+                   value='<?php 
+                   if (!empty($erow['firstname'])) {
+                       echo $erow['firstname'];
+                   }
+                   ?>'/>
             <br>
             <label for='lastName' >Last Name*:</label>
-            <input type='text' name='lastName' id='lastName'  maxlength="50" />
+            <input type='text' name='lastName' id='lastName'  maxlength="50" 
+                   value='<?php 
+                   if (!empty($erow['lastname'])) {
+                       echo $erow['lastname'];
+                   }
+                   ?>'/>
             <br>
             <label for='email' >Email*:</label>
-            <input type='text' name='email' id='email'  maxlength="50" />
+            <input type='text' name='email' id='email'  maxlength="50" 
+                   value='<?php 
+                   if (!empty($erow['email'])) {
+                       echo $erow['email'];
+                   }
+                   ?>'/>
             <br>
             Type*:
             <select name="type">
@@ -102,8 +134,11 @@ require '../config/db.php';
                             echo "You have not created any employee types yet.";
                         } else {
                             while ($row1 = mysqli_fetch_assoc($typeresult)) {
-                                echo "<option value='".$row1['code']."'>";
-                                echo $row1['name']."</option>";
+                                echo "<option value='".$row1['code']."'";
+                                if (strcmp($erow['type'], $row1['code']) === 0) {
+                                    echo " selected";
+                                }
+                                echo ">".$row1['name']."</option>";
                             }
                         }
                     }

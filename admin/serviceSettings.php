@@ -5,8 +5,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
+
+if (isset($_GET['id'])) {
+    unset($_SESSION['addServError']);
+    unset($_SESSION['addServSuccess']);
+    unset($_SESSION['updateServError']);
+    unset($_SESSION['updateServSuccess']);
+    $selectSql = "Select * from services where id ='" .$_GET['id']."';";
+    $eresult = mysqli_query($link, $selectSql);
+
+    if (!mysqli_query($link,$selectSql))
+    {
+        echo("Error description: " . mysqli_error($link));
+    } else {
+        $erow = mysqli_fetch_assoc($eresult);
+    }
+}
 ?>
 <html>    
     <div id="framecontent">
@@ -45,7 +60,7 @@ require '../config/db.php';
                     echo "<tr>";
                     echo "<td>".$row['servicecode']."</td>";
                     echo "<td>".$row['servicename']."</td>";                          
-                    echo '<td><button onClick="window.location.href=`editService.php?id='.$row['id'].'`">E</button>';
+                    echo '<td><button onClick="window.location.href=`serviceSettings.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
                 }
@@ -74,14 +89,20 @@ require '../config/db.php';
         
         <form id='addService' action='processServices.php' method='post' accept-charset='UTF-8'>
             <fieldset >
-            <legend>Add Service</legend>
+            <legend>Add/Edit Service</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='editid' id='editid' 
+                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             
             <label for='code' >Service Code*:</label>
-            <input type='text' name='code' id='code'  maxlength="50" />
+            <input type='text' name='code' id='code'  maxlength="50" 
+                   value='<?php if (!empty($erow['servicecode'])) 
+                       { echo $erow['servicecode']; }?>'/>
             <br>
             <label for='name' >Name*:</label>
-            <input type='text' name='name' id='name'  maxlength="50" />
+            <input type='text' name='name' id='name'  maxlength="50" 
+                   value='<?php if (!empty($erow['servicename'])) 
+                       { echo $erow['servicename']; }?>'/>
             <br>
             <input type='submit' name='submit' value='Submit' />
             <div id="addServError" style="color:red">

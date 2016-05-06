@@ -5,10 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-if (!isset($_SESSION['loggedUser'])) {
-    header("Location: login.php");
-} 
+require_once '../config/db.php';
 
 unset($_SESSION['updateError']);
 unset($_SESSION['updateSuccess']);
@@ -55,6 +52,8 @@ unset($_SESSION['updateGcSetSuccess']);
 unset($_SESSION['updateHTSetSuccess']);
 unset($_SESSION['updateAccSetSuccess']);
 unset($_SESSION['updateNotiSetSuccess']);
+unset($_SESSION['updateCheckSetSuccess']);
+unset($_SESSION['updateCheckSetError']);
 
 unset($_SESSION['addAdvError']);
 unset($_SESSION['addAdvSuccess']);

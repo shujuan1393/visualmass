@@ -6,8 +6,7 @@
  * and open the template in the editor.
  */
 
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 
 if (isset($_GET['edit'])) { 
     $editcode = $_POST['editcode'];

@@ -5,10 +5,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 require_once('../calendar/classes/tc_calendar.php');
 require_once('../nav/adminHeader.php');
+
+if (isset($_GET['id'])) {
+    $selectSql = "Select * from discounts where id ='" .$_GET['id']."';";
+    $eresult = mysqli_query($link, $selectSql);
+
+    if (!mysqli_query($link,$selectSql))
+    {
+        echo("Error description: " . mysqli_error($link));
+    } else {
+        $erow = mysqli_fetch_assoc($eresult);
+    }
+}
 ?>
 
 <html>        
@@ -61,7 +72,7 @@ require_once('../nav/adminHeader.php');
                     echo "<td>".$row['start']."</td>";                           
                     echo "<td>".$row['end']."</td>";                           
                     echo "<td>".$row['status']."</td>";                        
-                    echo '<td><button onClick="window.location.href=`editDiscount.php?id='.$row['id'].'`">E</button>';
+                    echo '<td><button onClick="window.location.href=`discounts.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
                 }
@@ -89,36 +100,103 @@ require_once('../nav/adminHeader.php');
         
         <form id='addDiscount' action='processDiscounts.php' method='post'>
             <fieldset >
-            <legend>Add Discount</legend>
+            <legend>Add/Edit Discount</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='editid' id='editid' 
+                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             <label for='code' >Discount Code*:</label>
             <input type='text' name='code' id='code' value ="<?php 
             if(isset($_SESSION['randomString'])) { 
-                echo $_SESSION['randomString']; } ?>" maxlength="50" />
+                echo $_SESSION['randomString']; } 
+            if (!empty($erow['code'])) {
+                echo $erow['code'];
+            }
+                ?>" maxlength="50" />
             <button type='button' onclick="randomString()">Generate</button>
             <br>
             <label for='name' >Name:</label>
-            <input type='text' name='name' id='name'  maxlength="50" />
+            <input type='text' name='name' id='name'  maxlength="50" 
+                   value ="<?php 
+            if (!empty($erow['name'])) {
+                echo $erow['name'];
+            }
+                ?>"/>
             <br>
             <label for='limit' >Limit*:</label>
-            <input type='text' name='limit' id='limit'  maxlength="50"  onkeypress="return isNumber(event)"/>
+            <input type='text' name='limit' id='limit'  maxlength="50"  
+                   onkeypress="return isNumber(event)" value ="<?php 
+                    if (!empty($erow['disclimit'])) {
+                        echo $erow['disclimit'];
+                    }
+                ?>"/>
             <br>
             <label for='recurrence' >Recurrence*:</label>
             <select name='recurrence'>
-                <option value='adhoc'>Ad-hoc</option>
-                <option value='weekly'>Weekly</option>
-                <option value='monthly'>Monthly</option>
-                <option value='yearly'>Yearly</option>
+                <option value='adhoc' <?php 
+                    if (!empty($erow['recurrence'])) {
+                        if (strcmp($erow['recurrence'], "adhoc") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Ad-hoc</option>
+                <option value='weekly' <?php 
+                    if (!empty($erow['recurrence'])) {
+                        if (strcmp($erow['recurrence'], "weekly") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Weekly</option>
+                <option value='monthly' <?php 
+                    if (!empty($erow['recurrence'])) {
+                        if (strcmp($erow['recurrence'], "monthly") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Monthly</option>
+                <option value='yearly' <?php 
+                    if (!empty($erow['recurrence'])) {
+                        if (strcmp($erow['recurrence'], "yearly") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Yearly</option>
             </select>
             <br>
+            <?php
+                $usageArr = explode(",", $erow['discusage']);
+            ?>
             <label for='usage' >Usage*:</label>
-            <input type='checkbox' name='usage[]' value="cust">Customer 
-            <input type='checkbox' name='usage[]' value='emp'>Employee
+            <input type='checkbox' name='usage[]' value="cust" <?php 
+                    if (!empty($erow['discusage'])) {
+                        if (in_array("cust", $usageArr)) {
+                            echo " checked";
+                        }
+                    }
+                ?>>Customer 
+            <input type='checkbox' name='usage[]' value='emp' <?php 
+                    if (!empty($erow['discusage'])) {
+                        if (in_array("emp", $usageArr)) {
+                            echo " checked";
+                        }
+                    }
+                ?>>Employee
             <br>
             <label for='status' >Status*:</label>
             <select name='status'>
-                <option value='active'>Active</option>
-                <option value='inactive'>Inactive</option>
+                <option value='active' <?php 
+                    if (!empty($erow['status'])) {
+                        if (strcmp($erow['status'], "active") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Active</option>
+                <option value='inactive' <?php 
+                    if (!empty($erow['status'])) {
+                        if (strcmp($erow['status'], "inactive") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Inactive</option>
             </select>
             <br>
             Valid from:
@@ -150,7 +228,11 @@ require_once('../nav/adminHeader.php');
 
             $myCalendar = new tc_calendar("date3", true, false);
             $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-            $myCalendar->setDate(date('d', strtotime($date1)), date('m', strtotime($date1)), date('Y', strtotime($date1)));
+            if (!empty($erow['start'])) {
+                $myCalendar->setDate(date('d', strtotime($erow['start'])), date('m', strtotime($erow['start'])), date('Y', strtotime($erow['start'])));
+            } else {
+                $myCalendar->setDate(date('d', strtotime($date1)), date('m', strtotime($date1)), date('Y', strtotime($date1)));
+            }
             $myCalendar->setPath("../calendar/");
             $myCalendar->setYearInterval(1970, 2020);
             //$myCalendar->dateAllow('2009-02-20', "", false);
@@ -163,7 +245,11 @@ require_once('../nav/adminHeader.php');
             <?php
             $myCalendar = new tc_calendar("date4", true, false);
             $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-            $myCalendar->setDate(date('d', strtotime($date2)), date('m', strtotime($date2)), date('Y', strtotime($date2)));
+            if (!empty($erow['end'])) {
+                $myCalendar->setDate(date('d', strtotime($erow['end'])), date('m', strtotime($erow['end'])), date('Y', strtotime($erow['end'])));
+            } else {
+                $myCalendar->setDate(date('d', strtotime($date2)), date('m', strtotime($date2)), date('Y', strtotime($date2)));
+            }
             $myCalendar->setPath("../calendar/");
             $myCalendar->setYearInterval(1970, 2020);
             //$myCalendar->dateAllow("", '2009-11-03', false);

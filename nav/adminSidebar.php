@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require '../config/db.php';
+require_once '../config/db.php';
 ?>
 <html>
     <head>
@@ -15,10 +15,9 @@ require '../config/db.php';
     </head>
     <body>
         <?php 
-            if (isset($_SESSION['loggedUser'])) {
-                echo "Welcome, " .$_SESSION['loggedUser']; 
-                echo "<br> <a href='../logout.php'>Logout</a>";
-            } 
+            echo "Welcome, " .$_SESSION['loggedUser']; 
+            echo "<br> <a href='../logout.php'>Logout</a>";
+            
             $curUserType = $_SESSION['userType'];
             
             $accessSql = "Select value from settings where type='account'";
@@ -29,7 +28,7 @@ require '../config/db.php';
             $accessArr = explode("&", $accessRow['value']);
             $checkArr;
             if ($curUserType === 'admin') {
-                $checkArr = array("cust", "disc", "inv", "loc", "media", "orders", "partners",
+                $checkArr = array("cust", "disc", "gift", "inv", "loc", "media", "orders", "partners",
                     "products", "settings", "stats", "emp", "web");
             } else {
                 for ($i = 0; $i < count($accessArr); $i++) {
@@ -47,6 +46,7 @@ require '../config/db.php';
             <li><a href='profile.php'>MY PROFILE</a></li>            
             <?php if (in_array("cust", $checkArr)) { ?><li>CUSTOMERS</li><?php } ?>
             <?php if (in_array("disc", $checkArr)) { ?><li><a href='discounts.php'>DISCOUNTS</a></li><?php } ?>
+            <?php if (in_array("gift", $checkArr)) { ?><li><a href='giftcards.php'>GIFT CARDS</a></li><?php } ?>
             <?php if (in_array("inv", $checkArr)) { ?><li><a href='inventory.php'>INVENTORY</a></li><?php } ?>
             <?php if (in_array("loc", $checkArr)) { ?><li><a href='locations.php'>LOCATIONS</a></li><?php } ?>
             <?php if (in_array("media", $checkArr)) { ?><li><a href='media.php'>MEDIA GALLERY</a></li><?php } ?>
@@ -57,7 +57,7 @@ require '../config/db.php';
                 <ul id='settingslist' style='display:none'>
                     <li><a href="generalSettings.php">GENERAL</a></li>
                     <li><a href='accountSettings.php'>ACCOUNTS</a></li>
-                    <li>CHECKOUT</li>
+                    <li><a href='checkoutSettings.php'>CHECKOUT</a></li>
                     <li>EXPORTS</li>
                     <li>FORMS</li>
                     <li><a href="giftcardSettings.php">GIFT CARDS</a></li>
@@ -68,7 +68,7 @@ require '../config/db.php';
                     <li><a href='serviceSettings.php'>SERVICES</a></li>
                     <li>STORE CREDIT</li>
                     <li>VIRTUAL TRY-ON</li>
-                    <li>WEB</li>
+                    <li><a href='webSettings.php'>WEB</a></li>
                 </ul>
             </li> <?php } ?> 
             <?php if (in_array("stats", $checkArr)) { ?><li>STATISTICS</li><?php } ?> 

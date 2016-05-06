@@ -5,44 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 
-if (isset($_GET['edit'])) {  
-    $editid = $_POST['editid'];
-    $editcode = $_POST['editcode'];
-    $editname = $_POST['editname'];
-    $editlimit = $_POST['editlimit'];
-    $editrecurrence = $_POST['editrecurrence'];
-    $editstatus = $_POST['editstatus'];
-    $editstart = $_POST['date3'];
-    $editend = $_POST['date4'];
-    $editusageArr = $_POST['editusage'];
-    $editusage = "";
-    
-    for($i = 0; $i < count($editusageArr); $i++) {
-        $editusage .= $editusageArr[$i];
-
-        if ($i+1 !== count($editusageArr)) {
-            $editusage.=",";
-        }
-    }
-    
-    $updateDiscSql = "UPDATE discounts SET code='$editcode', name='$editname', "
-            . "disclimit='$editlimit', recurrence='$editrecurrence', "
-            . "discusage='$editusage', status='$editstatus', start='$editstart', "
-            . "end='$editend' where id = '$editid';";
-
-    if (mysqli_query($link, $updateDiscSql)) {
-        unset($_SESSION['addDiscSuccess']);
-        unset($_SESSION['addDiscError']);
-        unset($_SESSION['updateDiscError']);
-        $_SESSION['updateDiscSuccess'] = "Record updated successfully";
-        header("Location: discounts.php");
-    } else {
-        echo "Error updating record: " . mysqli_error($link);
-    }
-} else if (isset($_GET['delete'])) {
+if (isset($_GET['delete'])) {
     $deletesql = "DELETE FROM discounts where id ='". $_GET['id']."'";
     if (mysqli_query($link, $deletesql)) {
         unset($_SESSION['updateDiscError']);
@@ -83,14 +48,34 @@ if (isset($_GET['edit'])) {
                 $usage.=",";
             }
         }
+        
+        if (!empty($_POST['editid'])) {
+            $editid = $_POST['editid'];
+            
+            $updateDiscSql = "UPDATE discounts SET code='$code', name='$name', "
+                    . "disclimit='$limit', recurrence='$recurrence', "
+                    . "discusage='$usage', status='$status', start='$start', "
+                    . "end='$end' where id = '$editid';";
 
-        $discSql = "INSERT INTO discounts (code, name, disclimit, recurrence, discusage, "
-                . "status, start, end) VALUES ('$code','$name', '$limit', '$recurrence', "
-                . "'$usage', '$status', '$start', '$end');";
+            if (mysqli_query($link, $updateDiscSql)) {
+                unset($_SESSION['addDiscSuccess']);
+                unset($_SESSION['addDiscError']);
+                unset($_SESSION['updateDiscError']);
+                $_SESSION['updateDiscSuccess'] = "Record updated successfully";
+                header("Location: discounts.php");
+            } else {
+                echo "Error updating record: " . mysqli_error($link);
+            }
 
-        mysqli_query($link, $discSql);
-        $_SESSION['addDiscSuccess'] = "Discount successfully added";
-        header('Location: discounts.php');
+        } else {
+            $discSql = "INSERT INTO discounts (code, name, disclimit, recurrence, discusage, "
+                    . "status, start, end) VALUES ('$code','$name', '$limit', '$recurrence', "
+                    . "'$usage', '$status', '$start', '$end');";
+
+            mysqli_query($link, $discSql);
+            $_SESSION['addDiscSuccess'] = "Discount successfully added";
+            header('Location: discounts.php');
+        }
     }
 }
 

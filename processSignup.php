@@ -5,8 +5,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require 'config/db.php';
+
+require_once 'config/db.php';
 if(empty($_POST['email']) || empty($_POST['password']) ||
         empty($_POST['firstName']) || empty($_POST['lastName']) ) {
     $_SESSION['signUpError'] = "Empty field(s)";

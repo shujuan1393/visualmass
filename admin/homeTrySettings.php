@@ -5,7 +5,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
 require_once '../config/db.php';
 
 $selectSql = "SELECT value from settings WHERE type='homeTryon'";
@@ -54,7 +53,6 @@ if (!mysqli_query($link,$selectSql)) {
                         }
                         ?>
                         onclick="toggleTextbox(false);">Off
-            </select>
             <p class='setting-tooltips'>*Turn on/off the home try-on feature</p><br>
             <?php 
                 $duration = explode("duration=", $valArr[1]);

@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require 'nav/header.php';
+require_once 'nav/header.php';
 ?>
 
 <html>
