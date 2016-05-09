@@ -5,11 +5,76 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
-require_once('../nav/adminHeader.html');
+require_once '../config/db.php';
+require_once('../nav/adminHeader.php');
 
-if (isset($_POST['submit'])) {
+if (empty($_GET['delete']) && isset($_GET['id'])) {
+    $editFaq = "Select * from faq where id ='". $_GET['id']."'";
+    $editresult = mysqli_query($link, $editFaq);
+    
+    if (!mysqli_query($link,$editFaq))
+    {
+        echo("Error description: " . mysqli_error($link));
+    } else {
+        $editrow = mysqli_fetch_assoc($editresult);
+    }
+    
+    unset($_SESSION['updateFaqSuccess']);
+    unset($_SESSION['updateFaqError']);
+    unset($_SESSION['addFaqSuccess']);
+    unset($_SESSION['addFaqError']);
+    unset($_SESSION['addFaqBannerError']);
+    unset($_SESSION['addFaqBannerSuccess']);
+} else if (isset($_GET['delete'])) {
+    $deletesql = "DELETE FROM faq where id ='". $_GET['id']."'";
+    if (mysqli_query($link, $deletesql)) {
+        unset($_SESSION['updateFaqError']);
+        unset($_SESSION['addFaqSuccess']);
+        unset($_SESSION['addFaqError']);
+        unset($_SESSION['addFaqBannerError']);
+        unset($_SESSION['addFaqBannerSuccess']);
+        $_SESSION['updateFaqSuccess'] = "Record deleted successfully";
+    } 
+} else if (isset($_GET['update'])) {
+    if (empty($_POST['title']) || empty($_POST['html'])) {
+        unset($_SESSION['updateFaqSuccess']);
+        unset($_SESSION['addFaqSuccess']);
+        unset($_SESSION['updateFaqError']);
+        unset($_SESSION['addFaqBannerError']);
+        unset($_SESSION['addFaqBannerSuccess']);
+        $_SESSION['addFaqError'] = "Empty field(s)";        
+    } else {
+        $title = $_POST['title'];
+        $html = htmlentities($_POST['html']);
+
+        $editid = $_POST['editid'];
+
+        if (empty($editid)) {
+            $faqSql = "INSERT INTO faq (title, html, type) VALUES "
+                    . "('$title', '$html', 'section');";
+            unset($_SESSION['updateFaqSuccess']);
+            unset($_SESSION['addFaqError']);
+            unset($_SESSION['updateFaqError']);
+            unset($_SESSION['addFaqBannerError']);
+            unset($_SESSION['addFaqBannerSuccess']);
+            mysqli_query($link, $faqSql);
+            $_SESSION['addFaqSuccess'] = "FAQ section successfully added";
+        } else {
+            $faqSql = "UPDATE faq SET title='$title', html='$html', "
+                . "type='section' where id = '$editid';";
+            if (mysqli_query($link, $faqSql)) {
+                unset($_SESSION['addFaqSuccess']);
+                unset($_SESSION['addFaqError']);
+                unset($_SESSION['updateFaqError']);
+                unset($_SESSION['addFaqBannerError']);
+                unset($_SESSION['addFaqBannerSuccess']);
+                $_SESSION['updateFaqSuccess'] = "Record updated successfully";
+            } else {
+                echo "Error updating record: " . mysqli_error($link);
+            }
+        }
+    }
+} else if (isset($_POST['submit'])) {
     if (!empty($_FILES['image']['name'])) {
         unset($_SESSION['updateFaqSuccess']);
         unset($_SESSION['addFaqSuccess']);
@@ -31,36 +96,36 @@ if (isset($_POST['submit'])) {
                 $uploadOk = 1;
             } else {
                 unset($_SESSION['addFaqBannerSuccess']);
-                $_SESSION['uploadFaqBannerError'] = "File is not an image.";
-                header('Location: faq.php');
+                $_SESSION['addFaqBannerError'] = "File is not an image.";
+//                header('Location: faq.php');
             }
         }
         // Check if file already exists
         if (file_exists($target_file)) {
             unset($_SESSION['addFaqBannerSuccess']);
-            $_SESSION['uploadFaqBannerError'] = "Sorry, file already exists.";
-            header('Location: faq.php');
+            $_SESSION['addFaqBannerError'] = "Sorry, file already exists.";
+//            header('Location: faq.php');
         }
         // Check file size
         if ($_FILES["image"]["size"] > 500000) {
             unset($_SESSION['addFaqBannerSuccess']);
-            $_SESSION['uploadFaqBannerError'] = "Sorry, your file is too large.";
-            header('Location: faq.php');
+            $_SESSION['addFaqBannerError'] = "Sorry, your file is too large.";
+//            header('Location: faq.php');
         }
         // Allow certain file formats
         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
         && $imageFileType != "gif" ) {
             unset($_SESSION['addFaqBannerSuccess']);
-            $_SESSION['uploadFaqBannerError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            header('Location: faq.php');
+            $_SESSION['addFaqBannerError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+//            header('Location: faq.php');
         }
         if ($uploadOk === 1) {
             if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                 unset($_SESSION['addFaqBannerSuccess']);
-                $_SESSION['uploadFaqBannerError'] = "Sorry, there was an error uploading your file.";
-                header('Location: faq.php');   
+                $_SESSION['addFaqBannerError'] = "Sorry, there was an error uploading your file.";
+//                header('Location: faq.php');   
             } else {
-                unset($_SESSION['uploadFaqBannerError']);
+                unset($_SESSION['addFaqBannerError']);
                 
                 $check = "Select * from faq where type='banner';";
                 $cresult = mysqli_query($link, $check);
@@ -85,13 +150,13 @@ if (isset($_POST['submit'])) {
                         mysqli_query($link, $faqBanner);
                         unset($_SESSION['addFaqBannerError']);
                         $_SESSION['addFaqBannerSuccess'] = "Banner updated successfully";
-                        header("Location: faq.php");
+//                        header("Location: faq.php");
                     }
                 }
             }
         }
     } 
-}
+} 
 ?>
 
 <html>  
@@ -106,55 +171,6 @@ if (isset($_POST['submit'])) {
         <div class="innertube">
         <h2>FAQs</h2>
         <br>
-        <?php 
-            $qry = "Select * from faq where type <> 'banner'";
-            
-            $result = mysqli_query($link, $qry);
-
-            if (!mysqli_query($link,$qry))
-            {
-                echo("Error description: " . mysqli_error($link));
-            } else {
-                if ($result->num_rows === 0) {
-                    echo "You have not created any FAQs yet.";
-                } else {
-            ?>
-            <table>
-                <thead>
-                    <th>Title</th>
-                    <th>Edit</th>
-                    <th>Delete</th>                        
-                </thead>
-            <?php
-                // output data of each row
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>".$row['title'] ."</td>";                        
-                    echo '<td><button onClick="window.location.href=`editFaq.php?id='.$row['id'].'`">E</button>';
-                    echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
-                    echo "</tr>";
-                }
-            ?>
-            </table>
-            <?php
-                } 
-            }
-            ?>
-            <div id="updateFaqSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['updateFaqSuccess'])) {
-                        echo $_SESSION['updateFaqSuccess'];
-                    }
-                ?>
-            </div>
-            <div id="updateFaqError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['updateFaqError'])) {
-                        echo $_SESSION['updateFaqError'];
-                    }
-                ?>
-            </div>
-        <hr><br>
         <?php 
             $getBanner = "Select * from faq where type='banner';";
             $bresult = mysqli_query($link, $getBanner);
@@ -195,16 +211,68 @@ if (isset($_POST['submit'])) {
             </div>
             </fieldset>
         </form>
-        <br>
-        <form id='addFaqSection' action='processFaqs.php' method='post'>
+        <h3>FAQ Sections</h3>
+        <?php 
+            $qry = "Select * from faq where type <> 'banner'";
+            
+            $result = mysqli_query($link, $qry);
+
+            if (!mysqli_query($link,$qry))
+            {
+                echo("Error description: " . mysqli_error($link));
+            } else {
+                if ($result->num_rows === 0) {
+                    echo "You have not created any FAQs yet.";
+                } else {
+            ?>
+            <table>
+                <thead>
+                    <th>Title</th>
+                    <th>Edit</th>
+                    <th>Delete</th>                        
+                </thead>
+            <?php
+                // output data of each row
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<td>".$row['title'] ."</td>";                        
+                    echo '<td><button onClick="window.location.href=`faq.php?id='.$row['id'].'`">E</button>';
+                    echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
+                    echo "</tr>";
+                }
+            ?>
+            </table>
+            <?php
+                } 
+            }
+            ?>
+            <div id="updateFaqSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['updateFaqSuccess'])) {
+                        echo $_SESSION['updateFaqSuccess'];
+                    }
+                ?>
+            </div>
+            <div id="updateFaqError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['updateFaqError'])) {
+                        echo $_SESSION['updateFaqError'];
+                    }
+                ?>
+            </div>
+        <hr><br>
+        <form id='addFaqSection' action='faq.php?update=1' method='post'>
             <fieldset >
-            <legend>Add FAQ Section</legend>
+            <legend>Add/Edit FAQ Section</legend>
+            <input type="hidden" name="editid" id="editid" 
+                   value="<?php if(isset($_GET['id'])) { echo $_GET['id']; } ?>"
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <label for='title' >Title*:</label>
-            <input type='text' name='title' id='title'/>
+            <input type='text' name='title' id='title' 
+                   value="<?php if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
             <br>
             Content*: 
-            <textarea name="html"></textarea>
+            <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
             <script type="text/javascript">
                 CKEDITOR.replace('html');
             </script>
@@ -233,7 +301,7 @@ if (isset($_POST['submit'])) {
         function deleteFunction(locId) {
             var r = confirm("Are you sure you wish to delete this FAQ section?");
             if (r === true) {
-                window.location="processFaqs.php?delete=1&id=" + locId;
+                window.location="faq.php?delete=1&id=" + locId;
             } else if (r === false) {
                 <?php
                     unset($_SESSION['addFaqError']);

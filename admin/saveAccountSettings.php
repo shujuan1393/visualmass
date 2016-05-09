@@ -5,8 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 
 if (isset($_GET['edit'])) {
     $editid = $_POST['editid'];
@@ -43,34 +42,50 @@ if (isset($_GET['edit'])) {
     } else {        
         $code = $_POST['code'];
         $name = $_POST['name'];
+        
+        $editid = $_POST['editid'];
+        if (empty($editid)) {
+            $qry = "Select * from employeeTypes where code ='". $code."'";
 
-        $qry = "Select * from employeeTypes where code ='". $code."'";
+            $result = mysqli_query($link, $qry);
+            if (!mysqli_query($link,$qry))
+            {
+                echo("Error description: " . mysqli_error($link));
+            } else {
+                if ($result->num_rows != 0) {
+                    unset($_SESSION['updateEmpTypeSuccess']);
+                    unset($_SESSION['addEmpTypeSuccess']);
+                    unset($_SESSION['updateEmpTypeError']);
+                    $_SESSION['addEmpTypeError'] = "Code already exists";
+                    header('Location: accountSettings.php');
+                } else {               
 
-        $result = mysqli_query($link, $qry);
-        if (!mysqli_query($link,$qry))
-        {
-            echo("Error description: " . mysqli_error($link));
+                    unset($_SESSION['addEmpTypeError']);
+                    unset($_SESSION['updateEmpTypeSuccess']);
+                    unset($_SESSION['updateEmpTypeError']);
+                     $sql = "INSERT INTO employeeTypes (code, name) "
+                        . "VALUES ('$code', '$name');";
+
+                    mysqli_query($link, $sql);
+                    $_SESSION['addEmpTypeSuccess'] = "Employee type successfully added";
+                    header('Location: accountSettings.php');
+
+
+                } 
+            }
         } else {
-            if ($result->num_rows != 0) {
-                unset($_SESSION['updateEmpTypeSuccess']);
+            $updateSql = "UPDATE employeeTypes SET code='". $code. "', "
+            . "name ='" .$name. "' where id='". $editid. "'";
+            
+            if (mysqli_query($link, $updateSql)) {
+                unset($_SESSION['addEmpTypeError']);
                 unset($_SESSION['addEmpTypeSuccess']);
                 unset($_SESSION['updateEmpTypeError']);
-                $_SESSION['addEmpTypeError'] = "Code already exists";
-                header('Location: accountSettings.php');
-            } else {               
-                
-                unset($_SESSION['addEmpTypeError']);
-                unset($_SESSION['updateEmpTypeSuccess']);
-                unset($_SESSION['updateEmpTypeError']);
-                 $sql = "INSERT INTO employeeTypes (code, name) "
-                    . "VALUES ('$code', '$name');";
-
-                mysqli_query($link, $sql);
-                $_SESSION['addEmpTypeSuccess'] = "Employee type successfully added";
-                header('Location: accountSettings.php');
-                
-
-            } 
+                $_SESSION['updateEmpTypeSuccess'] = "Record updated successfully";
+                header("Location: accountSettings.php");
+            } else {
+                echo "Error updating record: " . mysqli_error($link);
+            }
         }
     }
 } else if (isset($_GET['save'])) {

@@ -5,8 +5,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require 'config/db.php';
+
+require_once 'config/db.php';
 if(empty($_POST['email']) || empty($_POST['password'])) {
     $_SESSION['loginFormError'] = "Email/password field(s) empty";
     header('Location: login.php');
@@ -33,6 +33,8 @@ if(empty($_POST['email']) || empty($_POST['password'])) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $type = $row['accountType'];
                 if (strcmp($type, "customer") === 0) {
+                    $_SESSION['user_time'] = time();
+                    setcookie("user", $row['email'], time() + (86400 * 30), "/"); // 86400 = 1 day
                     $_SESSION['loggedUser'] = $row['firstname'];
                     header('Location: index.php');
                 }

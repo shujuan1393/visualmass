@@ -5,11 +5,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
+
 require_once '../config/db.php';
 
 $selectSql = "SELECT value from settings WHERE type='account'";
 $savedresult = mysqli_query($link, $selectSql);
+
+if (isset($_GET['id'])) {
+    unset($_SESSION['addEmpTypeError']);
+    unset($_SESSION['addEmpTypeSuccess']);
+    unset($_SESSION['updateEmpTypeError']);
+    unset($_SESSION['updateEmpTypeSuccess']);
+    $getEmpType = "Select * from employeetypes where id='".$_GET['id']."';";
+    $eresult = mysqli_query($link, $getEmpType);
+    $erow = mysqli_fetch_assoc($eresult);
+}
 
 if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
@@ -28,6 +38,7 @@ if (!mysqli_query($link,$selectSql)) {
     <div id="maincontent">
         <div class="innertube">
         <h2>Settings - Accounts</h2>
+        <h3>Employee Types</h3> 
         <?php 
             $empTypeSql = "select * from employeeTypes";
             $empresult = mysqli_query($link, $empTypeSql);
@@ -50,7 +61,7 @@ if (!mysqli_query($link,$selectSql)) {
                         echo "<tr>";
                         echo "<td>".$row['code']."</td>";
                         echo "<td>".$row['name']."</td>";
-                        echo '<td><button onClick="window.location.href=`editEmpType.php?id='.$row['id'].'`">E</button>';
+                        echo '<td><button onClick="window.location.href=`accountSettings.php?id='.$row['id'].'`">E</button>';
                         echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                         echo "</tr>";
                     }
@@ -77,13 +88,26 @@ if (!mysqli_query($link,$selectSql)) {
         ?>
         <form id='addEmpType' method='post' action='saveAccountSettings.php?add=1'>
             <fieldset >
-            <legend>Add Employee Type</legend>
+            <legend>Add/Edit Employee Type</legend>
+            <input type='hidden' name='editid' id='editid' value='<?php 
+                    if (isset($erow['id'])) {
+                        echo $erow['id'];
+                    }
+                   ?>'/>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <label for='code' >Code*:</label>
-            <input type='text' name='code' id='code'  maxlength="50" />
+            <input type='text' name='code' id='code'  maxlength="50" value='<?php 
+                    if (isset($erow['code'])) {
+                        echo $erow['code'];
+                    }
+                   ?>'/>
             <br>
             <label for='name' >Name*:</label>
-            <input type='text' name='name' id='name'  maxlength="50" />
+            <input type='text' name='name' id='name'  maxlength="50" value='<?php 
+                    if (isset($erow['name'])) {
+                        echo $erow['name'];
+                    }
+                   ?>'/>
             <br>
             <input type='submit' name='submit' value='Submit' />
             <div id="addEmpTypeError" style="color:red">
@@ -147,13 +171,20 @@ if (!mysqli_query($link,$selectSql)) {
                                     }
                                    ?>
                                    > Discounts
+                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='gift' 
+                                   <?php 
+                                    if (in_array("gift", $accessArr)) {
+                                        echo " checked";
+                                    }
+                                   ?>
+                                   > Gift Cards<br>
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='inv' 
                                    <?php 
                                     if (in_array("inv", $accessArr)) {
                                         echo " checked";
                                     }
                                    ?>
-                                   > Inventory<br>
+                                   > Inventory
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='loc' 
                                    <?php 
                                     if (in_array("loc", $accessArr)) {
@@ -167,14 +198,14 @@ if (!mysqli_query($link,$selectSql)) {
                                         echo " checked";
                                     }
                                    ?> 
-                                   > Media Gallery
+                                   > Media Gallery<br>
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='orders' 
                                    <?php 
                                     if (in_array("orders", $accessArr)) {
                                         echo " checked";
                                     }
                                    ?>
-                                   > Orders<br>
+                                   > Orders
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='partners' 
                                    <?php 
                                     if (in_array("partners", $accessArr)) {
@@ -188,14 +219,14 @@ if (!mysqli_query($link,$selectSql)) {
                                         echo " checked";
                                     }
                                    ?>
-                                   > Products
+                                   > Products<br>
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='settings' 
                                    <?php 
                                     if (in_array("settings", $accessArr)) {
                                         echo " checked";
                                     }
                                    ?>
-                                   > Settings<br>
+                                   > Settings
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='stats' 
                                    <?php 
                                     if (in_array("statistics", $accessArr)) {
@@ -216,7 +247,7 @@ if (!mysqli_query($link,$selectSql)) {
                                         echo " checked";
                                     }
                                    ?>
-                                   > Web<br>
+                                   > Web
                         </td>
                     <?php 
                             echo "</tr>";
@@ -235,7 +266,7 @@ if (!mysqli_query($link,$selectSql)) {
                 }
             ?>
         </div>
-          All Employees: 
+                <h3>All Employees</h3> 
             <?php
                 $empSql = "Select * from staff where email <> '".$_SESSION['loggedUserEmail']."'";
                 

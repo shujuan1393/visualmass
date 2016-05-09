@@ -5,8 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 if (!isset($_SESSION['loggedUser'])) {
     header("Location: login.php");
 } 
@@ -97,6 +96,9 @@ if (isset($_GET['id'])) {
                 echo "</select>";
             ?>
             <br>
+            <?php 
+                if (isset($_GET['id'])) {
+            ?>
             <label for='price' >Price*:</label>
             <input type='text' name='price' id='price' 
                    <?php 
@@ -106,6 +108,9 @@ if (isset($_GET['id'])) {
                    ?>
                    onkeypress="return isNumberKey(event)" />
             <br>
+            <?php 
+                }
+            ?>
             <label for='qty' >Quantity*:</label>
             <input type='text' name='qty' id='qty' 
                    <?php 

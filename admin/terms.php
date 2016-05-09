@@ -5,9 +5,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
-require_once('../nav/adminHeader.html');
+require_once '../config/db.php';
+require_once('../nav/adminHeader.php');
+
+if (isset($_GET['id'])) {
+    unset($_SESSION['addTermError']);
+    unset($_SESSION['addTermSuccess']);
+    unset($_SESSION['updateTermError']);
+    unset($_SESSION['updateTermSuccess']);
+    $selectSql = "Select * from terms where id ='" .$_GET['id']."';";
+    $eresult = mysqli_query($link, $selectSql);
+
+    if (!mysqli_query($link,$selectSql))
+    {
+        echo("Error description: " . mysqli_error($link));
+    } else {
+        $erow = mysqli_fetch_assoc($eresult);
+    }
+}
 ?>
 
 <html>  
@@ -46,7 +61,7 @@ require_once('../nav/adminHeader.html');
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>";
                     echo "<td>".$row['title'] ."</td>";                        
-                    echo '<td><button onClick="window.location.href=`editTerms.php?id='.$row['id'].'`">E</button>';
+                    echo '<td><button onClick="window.location.href=`terms.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
                 }
@@ -74,13 +89,24 @@ require_once('../nav/adminHeader.html');
         
         <form id='addTermSection' action='processTerms.php' method='post'>
             <fieldset >
-            <legend>Add Terms Section</legend>
+            <legend>Add/Edit Terms Section</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='editid' id='editid' 
+                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             <label for='title' >Title*:</label>
-            <input type='text' name='title' id='title'/>
+            <input type='text' name='title' id='title' 
+                   value='<?php 
+                   if (!empty($erow['title'])) {
+                       echo $erow['title'];
+                   }
+                   ?>'/>
             <br>
             Content*: 
-            <textarea name="html"></textarea>
+            <textarea name="html"><?php 
+                   if (!empty($erow['html'])) {
+                       echo $erow['html'];
+                   }
+                   ?></textarea>
             <script type="text/javascript">
                 CKEDITOR.replace('html');
             </script>

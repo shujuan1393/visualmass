@@ -5,27 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 
-if (isset($_GET['edit'])) {
-    $editid = $_POST['editid'];
-    $editcode = $_POST['editcode'];
-    $editname = $_POST['editname'];
-    
-    $updateSql = "UPDATE services SET servicecode='". $editcode. "', "
-            . "servicename ='" .$editname. "' where id='". $editid. "'";
-    
-    if (mysqli_query($link, $updateSql)) {
-        unset($_SESSION['addServSuccess']);
-        unset($_SESSION['updateServError']);
-        $_SESSION['updateServSuccess'] = "Record updated successfully";
-        header("Location: serviceSettings.php");
-    } else {
-        echo "Error updating record: " . mysqli_error($link);
-    }
-
-} else if (isset($_GET['delete'])) {
+if (isset($_GET['delete'])) {
     $deletesql = "DELETE FROM services where id ='". $_GET['id']."'";
     if (mysqli_query($link, $deletesql)) {
         unset($_SESSION['addServSuccess']);
@@ -49,26 +31,28 @@ if (isset($_GET['edit'])) {
         $code = $_POST['code'];
         $name = $_POST['name'];
 
-        $qry = "Select * from services where servicecode ='". $code."'";
+        if (!empty($_POST['editid'])) {
+            $editid = $_POST['editid'];
+            $updateSql = "UPDATE services SET servicecode='". $code. "', "
+                    . "servicename ='" .$name. "' where id='". $editid. "'";
 
-        $result = mysqli_query($link, $qry);
-        if (!mysqli_query($link,$qry))
-        {
-            echo("Error description: " . mysqli_error($link));
-        } else {
-            if ($result->num_rows != 0) {
-                $_SESSION['addServError'] = "Service code already exists";
-                header('Location: serviceSettings.php');
+            if (mysqli_query($link, $updateSql)) {
+                unset($_SESSION['addServSuccess']);
+                unset($_SESSION['updateServError']);
+                $_SESSION['updateServSuccess'] = "Record updated successfully";
+                header("Location: serviceSettings.php");
             } else {
-                // output data of each row
-                $sql = "INSERT INTO services (servicecode, servicename) "
-                        . "VALUES ('$code','$name');";
+                echo "Error updating record: " . mysqli_error($link);
+            }
+        } else {
+            // output data of each row
+            $sql = "INSERT INTO services (servicecode, servicename) "
+                    . "VALUES ('$code','$name');";
 
-                mysqli_query($link, $sql);
+            mysqli_query($link, $sql);
 
-                $_SESSION['addServSuccess'] = "Service successfully added";
-                header('Location: serviceSettings.php');
-            } 
+            $_SESSION['addServSuccess'] = "Service successfully added";
+            header('Location: serviceSettings.php');
         }
-    }
+    } 
 }

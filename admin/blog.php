@@ -5,10 +5,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-require '../config/db.php';
+require_once '../config/db.php';
 require_once('../calendar/classes/tc_calendar.php');
-require_once('../nav/adminHeader.html');
+require_once('../nav/adminHeader.php');
+
+if (isset($_GET['id'])) {
+    unset($_SESSION['addBlogSuccess']);
+    unset($_SESSION['addBlogError']);
+    unset($_SESSION['updateBlogError']);
+    unset($_SESSION['updateBlogSuccess']);
+    unset($_SESSION['uploadBlogError']);
+    $selectSql = "Select * from blog where id ='" .$_GET['id']."';";
+    $eresult = mysqli_query($link, $selectSql);
+
+    if (!mysqli_query($link,$selectSql))
+    {
+        echo("Error description: " . mysqli_error($link));
+    } else {
+        $erow = mysqli_fetch_assoc($eresult);
+    }
+}
 ?>
 
 <html>  
@@ -53,7 +69,7 @@ require_once('../nav/adminHeader.html');
                     echo "<td>".$row['author']."</td>";                            
                     echo "<td>".$row['dateposted']."</td>";                           
                     echo "<td>".$row['visibility']."</td>";                         
-                    echo '<td><button onClick="window.location.href=`editBlogPost.php?id='.$row['id'].'`">E</button>';
+                    echo '<td><button onClick="window.location.href=`blog.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
                 }
@@ -83,13 +99,17 @@ require_once('../nav/adminHeader.html');
             <fieldset >
             <legend>Add Blog Post</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='editid' id='editid' 
+                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             <label for='title' >Title*:</label>
-            <input type='text' name='title' id='title'/>
+            <input type='text' name='title' id='title'
+                   value='<?php if (!empty($erow['title'])) { echo $erow['title']; }?>'/>
             <br>
             <div id="showDiv">+ Add Excerpt</div>
             <div id="addExcerpt" style="display:none">
             <label for='excerpt' >Excerpt:</label>
-            <textarea name="excerpt" id='excerpt'></textarea>
+            <textarea name="excerpt" id='excerpt'><?php 
+            if(!empty($erow['excerpt'])) { echo $erow['excerpt']; }?></textarea>
             <script type="text/javascript">
                 CKEDITOR.replace('excerpt');
             </script>
@@ -97,18 +117,35 @@ require_once('../nav/adminHeader.html');
             </div>
             <label for='visibility' >Visibility*:</label>
             <select name='visibility'>
-                <option value='active'>Active</option>
-                <option value='inactive'>Inactive</option>
+                <option value='active' <?php 
+                    if (!empty($erow['visibility'])) {
+                        if (strcmp($erow['visibility'], "active") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Active</option>
+                <option value='inactive' <?php 
+                    if (!empty($erow['visibility'])) {
+                        if (strcmp($erow['visibility'], "inactive") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Inactive</option>
             </select>
             <br>
             <label for='tags' >Tags:</label>
-            <input type='text' name='tags' id='tags'/>
+            <input type='text' name='tags' id='tags' 
+                   value='<?php if (!empty($erow['tags'])) { echo $erow['tags']; } ?>'/>
             <br>
             Date Posted:
             <?php
             $myCalendar = new tc_calendar("date3", true, false);
             $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-            $myCalendar->setDate(date('d', strtotime(date('Y-m-d'))), date('m', strtotime(date('Y-m-d'))), date('Y', strtotime(date('Y-m-d'))));
+            if (!empty($erow['dateposted'])) {
+                $myCalendar->setDate(date('d', strtotime($erow['dateposted'])), date('m', strtotime($erow['dateposted'])), date('Y', strtotime($erow['dateposted'])));
+            } else {
+                $myCalendar->setDate(date('d', strtotime(date('Y-m-d'))), date('m', strtotime(date('Y-m-d'))), date('Y', strtotime(date('Y-m-d'))));
+            }
             $myCalendar->setPath("../calendar/");
             $myCalendar->setYearInterval(1970, 2020);
             //$myCalendar->dateAllow('2009-02-20', "", false);
@@ -117,11 +154,18 @@ require_once('../nav/adminHeader.html');
             $myCalendar->writeScript();
             ?>
             <br>
+            <?php 
+                if (!empty($erow['image'])) {
+                    echo "<img src='".$erow['image']."' width=200><br>";
+                    echo "<input type='hidden' name='oldImage' id='oldImage' value='".$erow['image']."'>";
+                }
+            ?>
             <label for='image' >Image:</label>
             <input type="file" name="image" id='image' accept="image/*" />
             <br>
             Content: 
-            <textarea name="html"></textarea>
+            <textarea name="html"><?php 
+            if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
             <script type="text/javascript">
                 CKEDITOR.replace('html');
             </script>

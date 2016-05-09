@@ -5,10 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
-if (!isset($_SESSION['loggedUser'])) {
-    header("Location: login.php");
-} 
+require_once '../config/db.php';
 
 unset($_SESSION['updateError']);
 unset($_SESSION['updateSuccess']);
@@ -50,9 +47,13 @@ unset($_SESSION['addServError']);
 
 unset($_SESSION['gensetError']);
 unset($_SESSION['updateGenSetSuccess']);
+unset($_SESSION['updateGcsetError']);
+unset($_SESSION['updateGcSetSuccess']);
 unset($_SESSION['updateHTSetSuccess']);
 unset($_SESSION['updateAccSetSuccess']);
 unset($_SESSION['updateNotiSetSuccess']);
+unset($_SESSION['updateCheckSetSuccess']);
+unset($_SESSION['updateCheckSetError']);
 
 unset($_SESSION['addAdvError']);
 unset($_SESSION['addAdvSuccess']);
@@ -84,6 +85,12 @@ unset($_SESSION['updateInvError']);
 unset($_SESSION['updateInvSuccess']);
 unset($_SESSION['profileError']);
 unset($_SESSION['profileSuccess']);
+unset($_SESSION['updateContactSuccess']);
+unset($_SESSION['updateContactError']);
+unset($_SESSION['addContactSuccess']);
+unset($_SESSION['addContactError']);
+unset($_SESSION['setContactDetailsError']);
+unset($_SESSION['setContactDetailsSuccess']);
 ?>
 <html>    
     <div id="framecontent">
@@ -98,5 +105,6 @@ unset($_SESSION['profileSuccess']);
         <h2>Admin Homepage</h2>
         </div>
     </div>
+    
 </html>
 

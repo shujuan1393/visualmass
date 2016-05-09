@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 session_start();
+
 if (isset($_GET['file'])) {
     $filename = $_GET['file'];
     if (file_exists($filename)) {

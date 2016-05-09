@@ -5,7 +5,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-session_start();
 require_once '../config/db.php';
 
 $selectSql = "SELECT value from settings WHERE type='general'";

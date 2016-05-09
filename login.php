@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require 'nav/header.php';
+require_once 'nav/header.php';
 ?>
 
 <html>
@@ -25,8 +25,9 @@ require 'nav/header.php';
             
             <div id="loginError" style="color:red">
                 <?php 
-                    $error = $_SESSION['loginFormError'];
-                    echo $error;
+                    if (isset($_SESSION['loginFormError'])) {
+                        echo $_SESSION['loginFormError'];
+                    }
                 ?>
             </div>
             </fieldset>
