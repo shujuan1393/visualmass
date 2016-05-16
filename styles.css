@@ -1,54 +1,178 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : Apr 25, 2016, 2:27:22 PM
-    Author     : smu
-*/
-body{
-margin: 0;
-padding: 0;
-border: 0;
-overflow: hidden;
-height: 100%; 
-max-height: 100%; 
+@font-face{
+    font-family: 'Alright Sans';
+    src: url(font/AlrightSans-Light-v3.otf);
+}
+
+html,body { 
+    margin: 0; 
+    padding: 0; 
+    border: 0; 
+    background-color: #fff; 
+}
+html { 
+    font-size: 62.5%; 
+    -webkit-touch-callout:none; 
+    -webkit-text-size-adjust:none; 
+    -ms-text-size-adjust:100%; 
+}
+body { 
+    line-height: 21px; 
+    font-size: 12px; 
+    color: #000; 
+    font-family: 'Alright Sans'; 
+}
+
+.container{
+    position: relative;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 30px;
+    max-width: 300px;
+    text-align: center;
+    margin:auto;
+    margin-bottom: 30px;
+}
+
+.error {
+   color: red; 
+}
+
+.form_header {
+    font-family: inherit;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+input, textarea, select{
+    font-family:inherit;
+    font-size: inherit;
+}
+
+input[type=text], input[type=password], select {
+    width: 100%;
+    height: 50px;
+    padding: 15px 15px;
+    margin: 2px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+    background-color: #808080;
+    height: 50px;
+    border: none;
+    color: #fff;
+    padding: 15px 50px;
+    margin-top: 8px;
+    text-transform: uppercase;
+    border-radius: 4px;
+}
+
+.logo {
+    margin: auto;
+    text-align: center;
+    max-width: 300px;
+    padding: 50px;
+    background-image: url(images/HorizontalLogo_black.png);
+    background-repeat: no-repeat;
+    background-size: auto 30px;
+    background-position: center center;
+}
+
+.logo_sidebar {
+    margin: auto;
+    text-align: center;
+    max-width: 200px;
+    padding: 10px;
+    background-image: url(images/HorizontalLogo_black.png);
+    background-repeat: no-repeat;
+    background-size: auto 20px;
+    background-position: center center;
+}
+
+form {
+    margin-bottom: 0px!important;
+}
+
+table {
+    border-collapse: collapse;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+table, td, th {
+    border: none;
+}
+
+th {
+    padding: 15px 30px;
+    text-align: center;
+}
+
+tr {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+td {
+    padding: 15px 30px;
+    text-align: center;
 }
 
 #framecontent{
-position: absolute;
-top: 0;
-bottom: 0; 
-left: 0;
-width: 200px; /*Width of frame div*/
-height: 100%;
-overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
-background: #808080;
-color: white;
+    position: fixed;
+    top: 0;
+    bottom: 0; 
+    left: 0;
+    width: 200px; /*Width of frame div*/
+    height: 100%;
+    overflow: auto; /*Disable scrollbars. Set to "scroll" to enable*/
+    background: #ccc;
 }
 
-table td {
-    align-content: center;
-}
-
-#framecontent li {
+#framecontent ul {
     list-style-type: none;
-    margin-left: -20px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#settingslist {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+#framecontent li{
+    color: #000;
+    text-align: center;
+    padding: 10px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#framecontent li:last-child {
+    border-bottom: none;
+}
+
+#framecontent li a {
+    display: block;
 }
 
 #framecontent a {
-    color:white;
+    color: #000;
     text-decoration: none;
-    
 }
 
 #framecontent a:hover {
-    color: appworkspace;
+    color: #808080;
+}
+
+#framecontent a:active {
+    color: #fff;
 }
 
 #framecontent a:visited {
-    color: blanchedalmond;
+    color: #000;
 }
 
 #maincontent{
@@ -78,7 +202,7 @@ width: 100%;
     cursor: pointer;
 }
 
-#settingslist, #webDropdown li {
+#webDropdown li {
     font-size: 14px;  
 }
 

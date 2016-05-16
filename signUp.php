@@ -7,35 +7,31 @@
  */
 require_once 'nav/header.php';
 ?>
-
+<head>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+</head>
 <html>
     <body>
+        <div class="logo"></div>
+        <div class="container">
+        <div class="form_header">Create a Visual Mass account</div>
         <form id='signUp' action='processSignup.php' method='post' accept-charset='UTF-8'>
-            <fieldset >
-            <legend>Create Visual Mass Account</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             
-            <label for='firstName' >First Name*:</label>
-            <input type='text' name='firstName' id='firstName'  maxlength="50" />
-            <br>
-            <label for='lastName' >Last Name*:</label>
-            <input type='text' name='lastName' id='lastName'  maxlength="50" />
-            <br>
-            <label for='email' >Email*:</label>
-            <input type='text' name='email' id='email'  maxlength="50" />
-            <br>
-            <label for='password' >Password*:</label>
-            <input type='password' name='password' id='password' maxlength="50" />
-            <br>
-            <input type='submit' name='Submit' value='Submit' />
-            <div id="signupError" style="color:red">
+            <input type='text' name='firstName' id='firstName'  maxlength="50" placeholder="First Name" /><br>
+            <input type='text' name='lastName' id='lastName'  maxlength="50" placeholder="Last Name" /><br>
+            <input type='text' name='email' id='email'  maxlength="50" placeholder="Email" /><br>
+            <input type='password' name='password' id='password' maxlength="50" placeholder="Password" /><br>
+            <input type='submit' name='Submit' value='Create account' />
+            
+            <div id="signupError" >
                 <?php 
                     $error = $_SESSION['signUpError'];
                     echo $error;
                 ?>
             </div>
-            </fieldset>
         </form>
+        </div>
     </body>
 </html>
 

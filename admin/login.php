@@ -7,21 +7,20 @@
  */
 session_start();
 ?>
-
+<head>
+    <link href="../styles.css" rel="stylesheet" type="text/css" />
+</head>
 <html>
     <body>
+        <div class="logo"></div>
+        <div class="container">
+        <div class="form_header">Sign in</div>
         <form id='login' action='processAdminLogin.php' method='post' accept-charset='UTF-8'>
-            <fieldset >
-            <legend>Login</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
 
-            <label for='username' >Email*:</label>
-            <input type='text' name='email' id='email'  maxlength="50" />
-            <br>
-            <label for='password' >Password*:</label>
-            <input type='password' name='password' id='password' maxlength="50" />
-            <br>
-            <input type='submit' name='Submit' value='Submit' />
+            <input type='text' name='email' id='email'  maxlength="50" placeholder="Email" /><br>
+            <input type='password' name='password' id='password' maxlength="50" placeholder="Password" /><br>
+            <input type='submit' name='Submit' value='Sign in' />
             
             <div id="loginError" style="color:red">
                 <?php 
@@ -30,8 +29,8 @@ session_start();
                     }
                 ?>
             </div>
-            </fieldset>
         </form>
+        </div>
     </body>
 </html>
 

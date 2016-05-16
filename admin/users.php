@@ -135,8 +135,10 @@ if (isset($_GET['id'])) {
                         } else {
                             while ($row1 = mysqli_fetch_assoc($typeresult)) {
                                 echo "<option value='".$row1['code']."'";
-                                if (strcmp($erow['type'], $row1['code']) === 0) {
-                                    echo " selected";
+                                if (!empty($erow['type'])) {
+                                    if (strcmp($erow['type'], $row1['code']) === 0) {
+                                        echo " selected";
+                                    }
                                 }
                                 echo ">".$row1['name']."</option>";
                             }
