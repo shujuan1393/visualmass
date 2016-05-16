@@ -14,6 +14,7 @@ require_once '../config/db.php';
         <link rel="stylesheet" href="../styles.css" type="text/css">
     </head>
     <body>
+        <div class="logo_sidebar"></div>
         <?php 
             echo "Welcome, " .$_SESSION['loggedUser']; 
             echo "<br> <a href='../logout.php'>Logout</a>";

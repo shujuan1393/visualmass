@@ -8,34 +8,35 @@
 
 session_start();
 
-if (!isset($_COOKIE['user'])) {
-    header("Location: login.php");
-    exit();
-} 
+//if (!isset($_COOKIE['user'])) {
+//    header("Location: login.php");
+//    exit();
+//} 
 
-if(auto_logout("user_time")) {
-    session_unset();
-    session_destroy();
-    setcookie("user", "", time() - 3600);
-    header("Location: login.php");          
-    exit;
-}  
+//if(auto_logout("user_time")) {
+//    session_unset();
+//    session_destroy();
+//    setcookie("user", "", time() - 3600);
+//    header("Location: login.php");          
+//    exit;
+//}  
+//
+//function auto_logout($field) {
+//    if (isset($_SESSION[$field])) {
+//        $t = time();
+//        $t0 = $_SESSION[$field];
+//        $diff = $t - $t0;
+//        if ($diff > 900 || !isset($t0)) {          
+//            return true;
+//        }
+//        else {
+//            $_SESSION[$field] = time();
+//        }
+//    } else {
+//        header("Location: login.php");
+//    }
+//}
 
-function auto_logout($field) {
-    if (isset($_SESSION[$field])) {
-        $t = time();
-        $t0 = $_SESSION[$field];
-        $diff = $t - $t0;
-        if ($diff > 900 || !isset($t0)) {          
-            return true;
-        }
-        else {
-            $_SESSION[$field] = time();
-        }
-    } else {
-        header("Location: login.php");
-    }
-}
 $link = mysqli_connect('localhost', 'visualmass', 'ilovevisualmass');
 if (!$link) {
     die('Could not connect: ' . mysql_error());
