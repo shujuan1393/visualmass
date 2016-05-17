@@ -160,7 +160,7 @@ td {
 
 #framecontent a {
     color: #000;
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 #framecontent a:hover {
@@ -209,4 +209,9 @@ width: 100%;
 .setting-tooltips {
     font-size: 13px;
     font-style: oblique;
+}
+
+.checkboxAlign {
+    margin-left: 70px;
+    margin-top: -20px;
 }

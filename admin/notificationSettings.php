@@ -30,6 +30,21 @@ if (!mysqli_query($link,$selectSql)) {
         <h2>Settings - Notifications</h2>
         
         <form id='notificationSettings' action='saveNotiSettings.php' method='post'>
+        
+        <div id="notiSetError" style='color:red'>
+            <?php
+                if (isset($_SESSION['notisetError'])) {
+                    echo $_SESSION['notisetError'];
+                }
+            ?>
+        </div>
+        <div id="notiSetSuccess" style='color:green'>
+            <?php
+                if (isset($_SESSION['updateNotiSetSuccess'])) {
+                    echo $_SESSION['updateNotiSetSuccess'];
+                }
+            ?>
+        </div>
             <h4>Email Templates - <span class='setting-tooltips'>Set default email templates to be received by customers</span></h4>
             <?php 
                 $emailArr = explode("email=", $valArr[0]);
@@ -123,20 +138,6 @@ if (!mysqli_query($link,$selectSql)) {
             </table>
             <input type='submit' name='submit' value='Save Changes' />
         </form>
-        <div id="notiSetError" style='color:red'>
-            <?php
-                if (isset($_SESSION['notisetError'])) {
-                    echo $_SESSION['notisetError'];
-                }
-            ?>
-        </div>
-        <div id="notiSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateNotiSetSuccess'])) {
-                    echo $_SESSION['updateNotiSetSuccess'];
-                }
-            ?>
-        </div>
         </div>
     </div>
 </html>

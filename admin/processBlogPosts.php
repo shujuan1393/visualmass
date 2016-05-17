@@ -18,11 +18,20 @@ if (isset($_GET['delete'])) {
         header("Location: blog.php");
     } 
 } else if (isset($_POST['submit'])) {
-    if(empty($_POST['title']) || empty($_POST['html']) ) {
+    if(empty($_POST['title']) || empty($_POST['html']) || 
+            (strcmp($_POST['addNewAuthor'], "yes") === 0 && (empty($_POST['firstname']) 
+                    || empty($_POST['lastname']) || empty($_POST['email']) || empty($_POST['phone'])) )) {
         unset($_SESSION['addBlogSuccess']);
         unset($_SESSION['updateBlogError']);
         unset($_SESSION['updateBlogSuccess']);
         $_SESSION['addBlogError'] = "Empty field(s)";
+        header('Location: blog.php');
+    } else if (strcmp($_POST['addNewAuthor'], "yes") === 0 
+            && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) { 
+        unset($_SESSION['addBlogSuccess']);
+        unset($_SESSION['updateBlogError']);
+        unset($_SESSION['updateBlogSuccess']);
+        $_SESSION['addBlogError'] = "Invalid email address";
         header('Location: blog.php');
     } else {
         unset($_SESSION['addBlogError']);
@@ -37,15 +46,19 @@ if (isset($_GET['delete'])) {
         $date = $_POST['date3'];
         $author;
         
-        $getAuthor = "Select * from staff where email='".$_SESSION['loggedUserEmail']."';";
-        
-        if (!mysqli_query($link, $getAuthor)) {
-            $_SESSION['addBlogError'] = mysqli_error($link);
-            header('Location: blog.php');
+        if (strcmp($_POST['addNewAuthor'], "yes") === 0) {
+            $firstname = $_POST['firstname'];
+            $lastname = $_POST['lastname'];
+            $email = $_POST['email'];
+            $phone = $_POST['phone'];
+            $date = date('Y-m-d');
+            
+            $sql = "INSERT INTO authors (firstname, lastname, email, phone, datejoined) VALUES "
+                    . "('$firstname', '$lastname', '$email', '$phone', '$date');";
+            mysqli_query($link, $sql);
+            $author = $firstname. " ". $lastname;
         } else {
-            $result = mysqli_query($link, $getAuthor);
-            $row = mysqli_fetch_assoc($result);
-            $author = $row['firstname']." ".$row['lastname'];
+            $author = $_POST['author'];
         }
         
         $tagArr = $_POST['tags'];

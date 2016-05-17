@@ -29,6 +29,21 @@ if (!mysqli_query($link,$selectSql)) {
         <h2>Settings - General</h2>
         
         <form id='generalSettings' action='saveGeneralSettings.php' method='post'>
+        
+        <div id="genSetError" style='color:red'>
+            <?php
+                if (isset($_SESSION['gensetError'])) {
+                    echo $_SESSION['gensetError'];
+                }
+            ?>
+        </div>
+        <div id="genSetSuccess" style='color:green'>
+            <?php
+                if (isset($_SESSION['updateGenSetSuccess'])) {
+                    echo $_SESSION['updateGenSetSuccess'];
+                }
+            ?>
+        </div>
             Primary Store: 
             <?php
                 $locSql = "Select * from locations";
@@ -259,20 +274,6 @@ if (!mysqli_query($link,$selectSql)) {
             <p class='setting-tooltips'>*Set default timezone to be used throughout Visual Mass</p>
             <input type='submit' name='submit' value='Save Changes' />
         </form>
-        <div id="genSetError" style='color:red'>
-            <?php
-                if (isset($_SESSION['gensetError'])) {
-                    echo $_SESSION['gensetError'];
-                }
-            ?>
-        </div>
-        <div id="genSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateGenSetSuccess'])) {
-                    echo $_SESSION['updateGenSetSuccess'];
-                }
-            ?>
-        </div>
         </div>
     </div>
 </html>

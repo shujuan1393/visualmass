@@ -54,6 +54,21 @@ if (!mysqli_query($link,$selectSql)) {
         <h2>Settings - Web</h2>
         
         <form id='generalSettings' action='webSettings.php' method='post'>
+        
+        <div id="updateWebSetError" style='color:red'>
+            <?php
+                if (isset($_SESSION['updateWebSetError'])) {
+                    echo $_SESSION['updateWebSetError'];
+                }
+            ?>
+        </div>
+        <div id="updateWebSetSuccess" style='color:green'>
+            <?php
+                if (isset($_SESSION['updateWebSetSuccess'])) {
+                    echo $_SESSION['updateWebSetSuccess'];
+                }
+            ?>
+        </div>
             Web Store Title:
             <?php 
                 $web = explode("web=", $valArr[0]);
@@ -71,20 +86,6 @@ if (!mysqli_query($link,$selectSql)) {
             <br>
             <input type='submit' name='submit' value='Save Changes' />
         </form>
-        <div id="updateWebSetError" style='color:red'>
-            <?php
-                if (isset($_SESSION['updateWebSetError'])) {
-                    echo $_SESSION['updateWebSetError'];
-                }
-            ?>
-        </div>
-        <div id="updateWebSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateWebSetSuccess'])) {
-                    echo $_SESSION['updateWebSetSuccess'];
-                }
-            ?>
-        </div>
         </div>
     </div>
 </html>

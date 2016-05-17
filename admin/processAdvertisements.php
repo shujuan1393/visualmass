@@ -19,13 +19,27 @@ if (isset($_GET['delete'])) {
         header("Location: advertisements.php");
     } 
 } else if (isset($_POST['submit'])) {
-    if(empty($_POST['title']) || empty($_POST['status']) ||
-            (empty($_POST['oldImage']) && empty($_FILES['image']['name']))) {
+    if(empty($_POST['title']) || empty($_POST['status']) || 
+            empty($_POST['visibility'])) {
         unset($_SESSION['addAdvSuccess']);
         unset($_SESSION['updateAdvError']);
         unset($_SESSION['updateAdvSuccess']);
         unset($_SESSION['uploadAdvError']);
         $_SESSION['addAdvError'] = "Empty field(s)";
+        header('Location: advertisements.php');
+    } else if (empty($_POST['oldImage']) && empty($_FILES['image']['name'])) { 
+        unset($_SESSION['addAdvSuccess']);
+        unset($_SESSION['updateAdvError']);
+        unset($_SESSION['updateAdvSuccess']);
+        unset($_SESSION['uploadAdvError']);
+        $_SESSION['addAdvError'] = "No image selected";
+        header('Location: advertisements.php');
+    } else if (!empty($_POST['visibility']) && empty($_POST['minheight'])) { 
+        unset($_SESSION['addAdvSuccess']);
+        unset($_SESSION['updateAdvError']);
+        unset($_SESSION['updateAdvSuccess']);
+        unset($_SESSION['uploadAdvError']);
+        $_SESSION['addAdvError'] = "Min height required";
         header('Location: advertisements.php');
     } else {
         unset($_SESSION['addAdvError']);
@@ -36,8 +50,23 @@ if (isset($_GET['delete'])) {
         $title = $_POST['title'];
         $pagelink = $_POST['link'];
         $status = $_POST['status'];
+        $expiry = $_POST['expiry'];
         $start = $_POST['date3'];
         $end = $_POST['date4'];
+        $html = htmlentities($_POST['html']);
+        $visArr = $_POST['visibility'];
+        $vis = "";
+
+        for($i = 0; $i < count($visArr); $i++) {
+            $vis .= $visArr[$i];
+
+            if ($i+1 !== count($visArr)) {
+                $vis.=",";
+            }
+        }
+        
+        $minheight = $_POST['minheight'];
+        
         $image = "";
         
         if (!empty($_FILES['image']['name'])) {
@@ -100,7 +129,8 @@ if (isset($_GET['delete'])) {
                 
                 $updateAdvSql = "UPDATE advertisements SET title='$title', link='$pagelink', "
                     . "image='$image', status='$status', start='$start', "
-                    . "end='$end' where id = '$editid';";
+                    . "end='$end', expiry='$expiry', visibility='$vis',"
+                        . " minheight='$minheight', html='$html' where id = '$editid';";
                 
                 if (mysqli_query($link, $updateAdvSql)) {
                     unset($_SESSION['addAdvSuccess']);
@@ -113,8 +143,10 @@ if (isset($_GET['delete'])) {
                     echo "Error updating record: " . mysqli_error($link);
                 }
             } else {
-                $advSql = "INSERT INTO advertisements (title, image, link, status, start, end) "
-                    . "VALUES ('$title','$image', '$pagelink', '$status', '$start', '$end');";
+                $advSql = "INSERT INTO advertisements (title, image, link, status, expiry, "
+                        . "start, end, visibility, minheight, html) "
+                    . "VALUES ('$title','$image', '$pagelink', '$status', '$expiry', "
+                        . "'$start', '$end', '$vis', '$minheight', '$html');";
 
                 mysqli_query($link, $advSql);
                 unset($_SESSION['uploadAdvError']);

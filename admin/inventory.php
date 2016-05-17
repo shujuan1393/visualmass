@@ -72,6 +72,20 @@ if (isset($_GET['id'])) {
         <br><hr>
         <form id='addInventory' action='processInventory.php' method='post' accept-charset='UTF-8'>
             <fieldset >
+            <div id="updateInvSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['updateInvSuccess'])) {
+                        echo $_SESSION['updateInvSuccess'];
+                    }
+                ?>
+            </div>
+            <div id="updateInvError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['updateInvError'])) {
+                        echo $_SESSION['updateInvError'];
+                    }
+                ?>
+            </div>
             <legend>Add Inventory</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             
@@ -122,20 +136,6 @@ if (isset($_GET['id'])) {
             <br>
             <p id='nanError' style="display: none;">Please enter numbers only</p>
             <input type='submit' name='submit' value='Submit' />
-            <div id="updateInvSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['updateInvSuccess'])) {
-                        echo $_SESSION['updateInvSuccess'];
-                    }
-                ?>
-            </div>
-            <div id="updateInvError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['updateInvError'])) {
-                        echo $_SESSION['updateInvError'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>

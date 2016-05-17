@@ -14,11 +14,7 @@ require_once '../config/db.php';
         <link rel="stylesheet" href="../styles.css" type="text/css">
     </head>
     <body>
-        <div class="logo_sidebar"></div>
-        <?php 
-            echo "Welcome, " .$_SESSION['loggedUser']; 
-            echo "<br> <a href='../logout.php'>Logout</a>";
-            
+        <?php             
             $curUserType = $_SESSION['userType'];
             
             $accessSql = "Select value from settings where type='account'";
@@ -39,8 +35,7 @@ require_once '../config/db.php';
                         $checkArr = explode(",", $arr[1]);
                     }
                 }
-            }
-            
+            }            
         ?>
         <ul>
             <li><a href='admin.php'>HOME</a></li>  
@@ -58,6 +53,7 @@ require_once '../config/db.php';
                 <ul id='settingslist' style='display:none'>
                     <li><a href="generalSettings.php">GENERAL</a></li>
                     <li><a href='accountSettings.php'>ACCOUNTS</a></li>
+                    <li><a href='blogSettings.php'>BLOG</a></li>
                     <li><a href='checkoutSettings.php'>CHECKOUT</a></li>
                     <li>EXPORTS</li>
                     <li>FORMS</li>
@@ -95,6 +91,7 @@ require_once '../config/db.php';
                 e.style.display = 'block';
             }
         };
+        
         document.getElementById('web').onclick = function(){  
            var e = document.getElementById('webDropdown');
            if(e.style.display == 'block')

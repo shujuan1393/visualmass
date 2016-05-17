@@ -92,6 +92,21 @@ if (isset($_GET['id'])) {
         
         <form id='addUser' action='processUsers.php' method='post' accept-charset='UTF-8'>
             <fieldset >
+            <div id="addUserError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addEmpError'])) {
+                        echo $_SESSION['addEmpError'];
+                    }
+                ?>
+            </div>
+            
+            <div id="addEmpSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addEmpSuccess'])) {
+                        echo $_SESSION['addEmpSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Employee Account</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -148,21 +163,6 @@ if (isset($_GET['id'])) {
             </select>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addUserError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addEmpError'])) {
-                        echo $_SESSION['addEmpError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addEmpSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addEmpSuccess'])) {
-                        echo $_SESSION['addEmpSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>

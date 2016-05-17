@@ -56,6 +56,21 @@ if (!mysqli_query($link,$selectSql)) {
         <h2>Settings - Gift cards</h2>
         
         <form id='giftcardSettings' action='giftcardSettings.php' method='post'>
+            
+        <div id="updateGcSetError" style='color:red'>
+            <?php
+                if (isset($_SESSION['updateGcSetError'])) {
+                    echo $_SESSION['updateGcSetError'];
+                }
+            ?>
+        </div>
+        <div id="updateGcSetSuccess" style='color:green'>
+            <?php
+                if (isset($_SESSION['updateGcSetSuccess'])) {
+                    echo $_SESSION['updateGcSetSuccess'];
+                }
+            ?>
+        </div>
             <?php
                 $expiry = explode("expiry=", $valArr[0]);
             ?>
@@ -89,20 +104,6 @@ if (!mysqli_query($link,$selectSql)) {
             <p class='setting-tooltips'>*Set the default validity period for purchased gift cards</p>
             <input type='submit' name='submit' value='Save Changes' />
         </form>
-        <div id="updateGcSetError" style='color:red'>
-            <?php
-                if (isset($_SESSION['updateGcSetError'])) {
-                    echo $_SESSION['updateGcSetError'];
-                }
-            ?>
-        </div>
-        <div id="updateGcSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateGcSetSuccess'])) {
-                    echo $_SESSION['updateGcSetSuccess'];
-                }
-            ?>
-        </div>
         </div>
     </div>
     <script type="text/javascript">

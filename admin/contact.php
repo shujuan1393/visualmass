@@ -58,7 +58,8 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         $html = $_POST['options'];
 
         $editid = $_POST['editid'];
-
+        echo "here";
+        exit();
         if (empty($editid)) {
             $contactSql = "INSERT INTO contact (title, html, fieldorder, type) VALUES "
                     . "('$title', '$html','$order', '$type');";
@@ -73,6 +74,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         } else {
             $contactSql = "UPDATE contact SET title='$title', html='$html', "
                 . "type='$type', fieldorder='$order' where id = '$editid';";
+            
             if (mysqli_query($link, $contactSql)) {
                 unset($_SESSION['updateContactError']);
                 unset($_SESSION['addContactSuccess']);
@@ -87,7 +89,9 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
     }
 } else if (isset($_POST['submit'])) {
     $target_file;
-    if (!empty($_FILES['image']['name'])) {
+    if (empty($_POST['title']) || empty($_POST['html'])) {
+        $_SESSION['setContactDetailsError'] = "Empty field(s)";
+    } else if (!empty($_FILES['image']['name'])) {
         unset($_SESSION['setContactDetailsSuccess']);
         unset($_SESSION['addContactSuccess']);
         unset($_SESSION['addContactError']);
@@ -168,8 +172,8 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 unset($_SESSION['addContactSuccess']);
                 unset($_SESSION['addContactError']);
                 unset($_SESSION['updateContactError']);
-                mysqli_query($link, $contactDetails);
                 unset($_SESSION['setContactDetailsError']);
+                mysqli_query($link, $contactDetails);
                 $_SESSION['setContactDetailsSuccess'] = "Details updated successfully";
 //                        header("Location: faq.php");
             }
@@ -201,15 +205,30 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 if ($dresult -> num_rows == 0 ) {
                     echo "You have not set your details yet.<br><br>";
                 } else {
-                    unset($_SESSION['setContactDetailsSuccess']);
+//                    unset($_SESSION['setContactDetailsSuccess']);
                     $drow = mysqli_fetch_assoc($dresult);
                     echo "<img src='".$drow['image']."' width=200>";
        
                 }
             }
         ?>
-        <form id='setContactDetails' action='contact.php?update=1' method='post' enctype="multipart/form-data">
+        <form id='setContactDetails' action='contact.php' method='post' enctype="multipart/form-data">
             <fieldset >
+            <div id="setContactDetailsError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['setContactDetailsError'])) {
+                        echo $_SESSION['setContactDetailsError'];
+                    }
+                ?>
+            </div>
+            
+            <div id="setContactDetailsSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['setContactDetailsSuccess'])) {
+                        echo $_SESSION['setContactDetailsSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Update Contact Page Details</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <label for='title' >Title*:</label>
@@ -227,21 +246,6 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             </script>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="setContactDetailsError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['setContactDetailsError'])) {
-                        echo $_SESSION['setContactDetailsError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="setContactDetailsSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['setContactDetailsSuccess'])) {
-                        echo $_SESSION['setContactDetailsSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         
@@ -303,6 +307,21 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         <hr><br>
         <form id='addContactFormField' action='contact.php?update=1' method='post'>
             <fieldset >
+            <div id="addContactError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addContactError'])) {
+                        echo $_SESSION['addContactError'];
+                    }
+                ?>
+            </div>
+            
+            <div id="addContactSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addContactSuccess'])) {
+                        echo $_SESSION['addContactSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Contact Form Field</legend>
             <input type="hidden" name="editid" id="editid" 
                    value="<?php if(isset($_GET['id'])) { echo $_GET['id']; } ?>"
@@ -356,21 +375,6 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             <textarea name="options" cols='50' rows='10'><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addContactError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addContactError'])) {
-                        echo $_SESSION['addContactError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addContactSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addContactSuccess'])) {
-                        echo $_SESSION['addContactSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>

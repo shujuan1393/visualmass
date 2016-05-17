@@ -98,6 +98,26 @@ if (isset($_GET['id'])) {
         
         <form id='addLocation' action='processLocations.php' method='post' accept-charset='UTF-8' enctype="multipart/form-data">
             <fieldset >
+            <div id="addLocError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addLocError'])) {
+                        echo $_SESSION['addLocError'];
+                    }
+                    
+                    if (isset($_SESSION['uploadLocError'])) {
+                        echo $_SESSION['uploadLocError'];
+                    }
+                ?>
+            </div>
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
+            
+            <div id="addLocSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addLocSuccess'])) {
+                        echo $_SESSION['addLocSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Location</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -196,7 +216,7 @@ if (isset($_GET['id'])) {
               </div> /.modal-content 
             </div> /.modal-dialog 
           </div> /.modal -->
-            
+<br>
             Type*:
             <select name="type">
                 <option value="retail" <?php 
@@ -257,26 +277,6 @@ if (isset($_GET['id'])) {
             </table>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addLocError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addLocError'])) {
-                        echo $_SESSION['addLocError'];
-                    }
-                    
-                    if (isset($_SESSION['uploadLocError'])) {
-                        echo $_SESSION['uploadLocError'];
-                    }
-                ?>
-            </div>
-            <p id='nanError' style="display: none;">Please enter numbers only</p>
-            
-            <div id="addLocSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addLocSuccess'])) {
-                        echo $_SESSION['addLocSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>
