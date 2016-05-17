@@ -219,8 +219,9 @@ if (isset($_GET['id'])) {
             <table width='500px' style='margin-left: 70px; margin-top:-20px'>
                 <tr><td>
             <?php
-                $serviceArr = explode(",", $erow['services']);
-                
+                if(!empty($erow['services'])){
+                    $serviceArr = explode(",", $erow['services']);
+                }
                 $serviceSql = "Select * from services";
                 $serviceResult = mysqli_query($link, $serviceSql);
 

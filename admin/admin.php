@@ -92,7 +92,27 @@ unset($_SESSION['addContactError']);
 unset($_SESSION['setContactDetailsError']);
 unset($_SESSION['setContactDetailsSuccess']);
 ?>
-<html>    
+<script>
+    var date = new Date();
+    var hrs = date.getHours();
+    var welcome = "oi";
+    
+    if(hrs < 12) {
+        welcome = "Good morning, ";
+    }else if(hrs < 17) {
+        welcome = "Good afternoon, ";
+    }else if(hrs < 21) {
+        welcome = "Good evening, ";
+    }else {
+        welcome = "Good night, ";
+    }
+</script>
+<html>
+    <div id="frameheader">
+        <?php
+            require '../nav/adminHeader.php';
+        ?>
+    </div>
     <div id="framecontent">
         <div class='innertube'>
         <?php
@@ -102,7 +122,12 @@ unset($_SESSION['setContactDetailsSuccess']);
     </div>
     <div id="maincontent">
         <div class="innertube">
-        <h2>Admin Homepage</h2>
+            <?php 
+            
+            ?>
+            <h2><?php 
+                    echo $welcome = "<script>document.write(welcome)</script>" .$_SESSION['loggedUser'];
+                ?></h2>
         </div>
     </div>
     

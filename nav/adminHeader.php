@@ -18,4 +18,13 @@
         <script language="javascript" src="../calendar/calendar.js"></script>
         <link href="../styles.css" rel="stylesheet" type="text/css" />        
     </head>
+    <body>
+        <div class="logo_sidebar"></div>
+        <div class ="rightheader">
+            <?php 
+                echo "Welcome, " .$_SESSION['loggedUser']; 
+                echo "&nbsp<a href='../logout.php'>Logout</a>";
+            ?>
+        </div>
+    </body>
 </html>
