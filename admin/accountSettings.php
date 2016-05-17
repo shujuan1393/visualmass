@@ -88,6 +88,21 @@ if (!mysqli_query($link,$selectSql)) {
         ?>
         <form id='addEmpType' method='post' action='saveAccountSettings.php?add=1'>
             <fieldset >
+            <div id="addEmpTypeError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addEmpTypeError'])) {
+                        echo $_SESSION['addEmpTypeError'];
+                    }
+                ?>
+            </div>
+            
+            <div id="addEmpTypeSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addEmpTypeSuccess'])) {
+                        echo $_SESSION['addEmpTypeSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Employee Type</legend>
             <input type='hidden' name='editid' id='editid' value='<?php 
                     if (isset($erow['id'])) {
@@ -110,26 +125,18 @@ if (!mysqli_query($link,$selectSql)) {
                    ?>'/>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addEmpTypeError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addEmpTypeError'])) {
-                        echo $_SESSION['addEmpTypeError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addEmpTypeSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addEmpTypeSuccess'])) {
-                        echo $_SESSION['addEmpTypeSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form> 
                     
         <form id='accountSettings' action='saveAccountSettings.php?save=1' method='post'>
-        <h3>Manage employee restrictions</h3>        
+        <h3>Manage employee restrictions</h3>  
+        <div id="accSetSuccess" style='color:green'>
+            <?php
+                if (isset($_SESSION['updateAccSetSuccess'])) {
+                    echo $_SESSION['updateAccSetSuccess'];
+                }
+            ?>
+        </div>
             <table>
                 <thead>
                 <th>Type</th>
@@ -258,14 +265,6 @@ if (!mysqli_query($link,$selectSql)) {
             </table>
             <input type='submit' name='submit' value='Save Changes' />
         </form>
-        
-        <div id="accSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateAccSetSuccess'])) {
-                    echo $_SESSION['updateAccSetSuccess'];
-                }
-            ?>
-        </div>
                 <h3>All Employees</h3> 
             <?php
                 $empSql = "Select * from staff where email <> '".$_SESSION['loggedUserEmail']."'";

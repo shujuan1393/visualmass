@@ -63,6 +63,21 @@ if (!mysqli_query($link,$selectSql)) {
         <h2>Settings - Checkout</h2>
         
         <form id='checkoutSettings' action='checkoutSettings.php' method='post'>
+        
+        <div id="updateCheckSetError" style='color:red'>
+            <?php
+                if (isset($_SESSION['updateCheckSetError'])) {
+                    echo $_SESSION['updateCheckSetError'];
+                }
+            ?>
+        </div>
+        <div id="updateCheckSetSuccess" style='color:green'>
+            <?php
+                if (isset($_SESSION['updateCheckSetSuccess'])) {
+                    echo $_SESSION['updateCheckSetSuccess'];
+                }
+            ?>
+        </div>
             Get customers' consent to receive promotional emails: 
                 <?php 
                     $promo = explode("promo=", $valArr[0]);
@@ -128,24 +143,9 @@ if (!mysqli_query($link,$selectSql)) {
                         }
                         ?>>No
             <br>
-            <p class='setting-tooltips'>*If you select 'No', orders can be process without logging in or signing up first.</p><br>
+            <p class='setting-tooltips'>*If you select 'No', orders can be processed without logging in or signing up first.</p><br>
             <input type='submit' name='submit' value='Save Changes' />
         </form>
-        
-        <div id="updateCheckSetError" style='color:red'>
-            <?php
-                if (isset($_SESSION['updateCheckSetError'])) {
-                    echo $_SESSION['updateCheckSetError'];
-                }
-            ?>
-        </div>
-        <div id="updateCheckSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateCheckSetSuccess'])) {
-                    echo $_SESSION['updateCheckSetSuccess'];
-                }
-            ?>
-        </div>
         </div>
     </div>
 </html>

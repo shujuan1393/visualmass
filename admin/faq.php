@@ -263,21 +263,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         <hr><br>
         <form id='addFaqSection' action='faq.php?update=1' method='post'>
             <fieldset >
-            <legend>Add/Edit FAQ Section</legend>
-            <input type="hidden" name="editid" id="editid" 
-                   value="<?php if(isset($_GET['id'])) { echo $_GET['id']; } ?>"
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <label for='title' >Title*:</label>
-            <input type='text' name='title' id='title' 
-                   value="<?php if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
-            <br>
-            Content*: 
-            <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
-            <script type="text/javascript">
-                CKEDITOR.replace('html');
-            </script>
-            <br>
-            <input type='submit' name='submit' value='Submit' />
+                
             <div id="addFaqError" style="color:red">
                 <?php 
                     if (isset($_SESSION['addFaqError'])) {
@@ -293,6 +279,21 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                     }
                 ?>
             </div>
+            <legend>Add/Edit FAQ Section</legend>
+            <input type="hidden" name="editid" id="editid" 
+                   value="<?php if(isset($_GET['id'])) { echo $_GET['id']; } ?>"
+            <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <label for='title' >Title*:</label>
+            <input type='text' name='title' id='title' 
+                   value="<?php if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
+            <br>
+            Content*: 
+            <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('html');
+            </script>
+            <br>
+            <input type='submit' name='submit' value='Submit' />
             </fieldset>
         </form>
         </div>

@@ -97,6 +97,26 @@ if (isset($_GET['id'])) {
         
         <form id='addBlogPost' action='processBlogPosts.php' method='post' enctype="multipart/form-data">
             <fieldset >
+            <div id="addBlogError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addBlogError'])) {
+                        echo $_SESSION['addBlogError'];
+                    }
+                    
+                    if (isset($_SESSION['uploadBlogError'])) {
+                        echo $_SESSION['uploadBlogError'];
+                    }
+                ?>
+            </div>
+            
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
+            <div id="addBlogSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addBlogSuccess'])) {
+                        echo $_SESSION['addBlogSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add Blog Post</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -115,6 +135,54 @@ if (isset($_GET['id'])) {
             </script>
             <br>
             </div>
+            <label for='author' >Author*:</label> 
+            <input type="hidden" id="addNewAuthor" name='addNewAuthor' value='no'>
+            <div id="showAuthor">+ Add New Author</div>
+            <div id="addAuthor" style="display:none">
+                <label for='firstname' >First Name*:</label>
+                <input type='text' name='firstname' id='firstname'  maxlength="50"/>
+                <br>
+                <label for='lastname' >Last Name*:</label>
+                <input type='text' name='lastname' id='lastname'  maxlength="50"/>
+                <br>
+                <label for='email' >Email*:</label>
+                <input type='text' name='email' id='email'  maxlength="50"/>
+                <br>
+                <label for='phone' >Phone*:</label>
+                <input type='text' name='phone' id='phone'  maxlength="50" 
+                       onkeypress="return isNumber(event)"/>
+                <br>
+            </div>
+            
+            <select name='author' id="existingAuthor">
+            <?php 
+                $userSql = "Select firstname, lastname from staff UNION ALL"
+                        . " Select firstname, lastname from authors";
+                $uresult = mysqli_query($link, $userSql);
+                
+                while ($urow = mysqli_fetch_assoc($uresult)) {
+                    $name = $urow['firstname'] . " " . $urow['lastname'];
+                    echo "<option value='". $name."' ";
+                    if (!empty($erow['author'])) {
+                        if (strcmp($erow['author'], $name) === 0) {
+                            echo " selected";
+                        }
+                    } else {
+                        $selected = "Select * from staff where email ='".$_SESSION['loggedUserEmail']."'";
+                        $sresult = mysqli_query($link, $selected);
+                        
+                        $srow = mysqli_fetch_assoc($sresult);
+                        $sname = $srow['firstname']. " ". $srow['lastname'];
+                        
+                        if (strcmp($sname, $name) === 0) {
+                            echo " selected";
+                        }
+                    }
+                    echo ">".$name."</option>";
+                }
+            ?>
+            </select>
+            <br>
             <label for='visibility' >Visibility*:</label>
             <select name='visibility'>
                 <option value='active' <?php 
@@ -163,7 +231,7 @@ if (isset($_GET['id'])) {
             <label for='image' >Image:</label>
             <input type="file" name="image" id='image' accept="image/*" />
             <br>
-            Content: 
+            Content*: 
             <textarea name="html"><?php 
             if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
             <script type="text/javascript">
@@ -171,36 +239,42 @@ if (isset($_GET['id'])) {
             </script>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addBlogError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addBlogError'])) {
-                        echo $_SESSION['addBlogError'];
-                    }
-                    
-                    if (isset($_SESSION['uploadBlogError'])) {
-                        echo $_SESSION['uploadBlogError'];
-                    }
-                ?>
-            </div>
             
-            <div id="addBlogSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addBlogSuccess'])) {
-                        echo $_SESSION['addBlogSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>
     </div>
     <script>
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                document.getElementById('nanError').style.display='block';
+                document.getElementById('nanError').style.color='red';
+                return false;
+            }
+            document.getElementById('nanError').style.display='none';
+            return true;
+        }
+        
         document.getElementById('showDiv').onclick = function(){  
            var e = document.getElementById('addExcerpt');
            if(e.style.display == 'block')
                 e.style.display = 'none';
              else
                 e.style.display = 'block';
+        };
+        document.getElementById('showAuthor').onclick = function(){  
+           var e = document.getElementById('addAuthor');
+           if (e.style.display == 'block') {
+                e.style.display = 'none';
+                document.getElementById('existingAuthor').style.display = "block";
+                document.getElementById('addNewAuthor').value = "no";
+            } else {
+                e.style.display = 'block';
+                document.getElementById('existingAuthor').style.display = "none";
+                document.getElementById('addNewAuthor').value = "yes";
+            }
         };
         
         function deleteFunction(locId) {

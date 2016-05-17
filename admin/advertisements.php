@@ -55,9 +55,9 @@ if (isset($_GET['id'])) {
             <table>
                 <thead>
                     <th>Title</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+                    <th>Expiry</th>   
                     <th>Status</th>
+                    <th>Visibility</th>
                     <th>Edit</th>
                     <th>Delete</th>                        
                 </thead>
@@ -65,10 +65,22 @@ if (isset($_GET['id'])) {
                 // output data of each row
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>";
-                    echo "<td>".$row['title'] ."</td>";                          
-                    echo "<td>".$row['start']."</td>";                           
-                    echo "<td>".$row['end']."</td>";                           
-                    echo "<td>".$row['status']."</td>";                        
+                    $oDate = new DateTime($row['start']);
+                    $sDate = $oDate->format("d-m-Y");
+                    
+                    
+                    $mDate = new DateTime($row['end']);
+                    $eDate = $mDate->format("d-m-Y");
+                    
+                    echo "<td>".$row['title'] ."</td>";     
+                    echo "<td>".$row['expiry'];
+                    if (strcmp($row['expiry'], "yes")===0) {
+                          echo " (".$sDate." to ".$eDate.")";
+                    }
+                    echo "</td>";  
+                    
+                    echo "<td>".$row['status']."</td>";                           
+                    echo "<td>".$row['visibility']."</td>";                       
                     echo '<td><button onClick="window.location.href=`advertisements.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
@@ -97,6 +109,24 @@ if (isset($_GET['id'])) {
         
         <form id='addAdvertisement' action='processAdvertisements.php' method='post' enctype="multipart/form-data">
             <fieldset >
+            <div id="addAdvError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addAdvError'])) {
+                        echo $_SESSION['addAdvError'];
+                    }
+                    
+                    if (isset($_SESSION['uploadAdvError'])) {
+                        echo $_SESSION['uploadAdvError'];
+                    }
+                ?>
+            </div>
+            <div id="addAdvSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addAdvSuccess'])) {
+                        echo $_SESSION['addAdvSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Advertisement</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -136,101 +166,215 @@ if (isset($_GET['id'])) {
                 ?>>Inactive</option>
             </select>
             <br>
-            Valid from:
-            <?php
-            $thisweek = date('W');
-            $thisyear = date('Y');
-
-            $dayTimes = getDaysInWeek($thisweek, $thisyear);
-            //----------------------------------------
-
-            $date1 = date('Y-m-d', $dayTimes[0]);
-            $date2 = date('Y-m-d', $dayTimes[(sizeof($dayTimes)-1)]);
-
-            function getDaysInWeek ($weekNumber, $year, $dayStart = 1) {
-              // Count from '0104' because January 4th is always in week 1
-              // (according to ISO 8601).
-              $time = strtotime($year . '0104 +' . ($weekNumber - 1).' weeks');
-              // Get the time of the first day of the week
-              $dayTime = strtotime('-' . (date('w', $time) - $dayStart) . ' days', $time);
-              // Get the times of days 0 -> 6
-              $dayTimes = array ();
-              for ($i = 0; $i < 7; ++$i) {
-                    $dayTimes[] = strtotime('+' . $i . ' days', $dayTime);
-              }
-              // Return timestamps for mon-sun.
-              return $dayTimes;
-            }
-
-
-            $myCalendar = new tc_calendar("date3", true, false);
-            $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-            if (!empty($erow['start'])) {
-                $myCalendar->setDate(date('d', strtotime($erow['start'])), date('m', strtotime($erow['start'])), date('Y', strtotime($erow['start'])));
-            } else {
-                $myCalendar->setDate(date('d', strtotime($date1)), date('m', strtotime($date1)), date('Y', strtotime($date1)));
-            }
-            $myCalendar->setPath("../calendar/");
-            $myCalendar->setYearInterval(1970, 2020);
-            //$myCalendar->dateAllow('2009-02-20', "", false);
-            $myCalendar->setAlignment('left', 'bottom');
-            $myCalendar->setDatePair('date3', 'date4', $date2);
-            //$myCalendar->setSpecificDate(array("2011-04-01", "2011-04-04", "2011-12-25"), 0, 'year');
-            $myCalendar->writeScript();
-            ?>
-            to
-            <?php
-            $myCalendar = new tc_calendar("date4", true, false);
-            $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
             
-            if (!empty($erow['end'])) {
-                $myCalendar->setDate(date('d', strtotime($erow['end'])), date('m', strtotime($erow['end'])), date('Y', strtotime($erow['end'])));
-            } else {
-                $myCalendar->setDate(date('d', strtotime($date2)), date('m', strtotime($date2)), date('Y', strtotime($date2)));
-            }
-            $myCalendar->setPath("../calendar/");
-            $myCalendar->setYearInterval(1970, 2020);
-            //$myCalendar->dateAllow("", '2009-11-03', false);
-            $myCalendar->setAlignment('left', 'bottom');
-            $myCalendar->setDatePair('date3', 'date4', $date1);
-            //$myCalendar->setSpecificDate(array("2011-04-01", "2011-04-04", "2011-12-25"), 0, 'year');
-            $myCalendar->writeScript();
+            <label for='expiry' >Expiry*:</label>
+            <input type='radio' name='expiry' id='checkYes' value='yes' <?php 
+                    if (!empty($erow['expiry'])) {
+                        if (strcmp($erow['expiry'], "yes") === 0) {
+                            echo " checked";
+                        }
+                    }
+                ?>> Yes
+            <input type='radio' name='expiry' id='checkNo' value='no' <?php 
+                    if (!empty($erow['expiry'])) {
+                        if (strcmp($erow['expiry'], "no") === 0) {
+                            echo " checked";
+                        } 
+                    } else {
+                        echo " checked";
+                    }
+                ?>> No
+            <br>
+            <div id='expiryDate' style='display:none'>
+                Valid from:
+                <?php
+                $thisweek = date('W');
+                $thisyear = date('Y');
+
+                $dayTimes = getDaysInWeek($thisweek, $thisyear);
+                //----------------------------------------
+
+                $date1 = date('Y-m-d', $dayTimes[0]);
+                $date2 = date('Y-m-d', $dayTimes[(sizeof($dayTimes)-1)]);
+
+                function getDaysInWeek ($weekNumber, $year, $dayStart = 1) {
+                  // Count from '0104' because January 4th is always in week 1
+                  // (according to ISO 8601).
+                  $time = strtotime($year . '0104 +' . ($weekNumber - 1).' weeks');
+                  // Get the time of the first day of the week
+                  $dayTime = strtotime('-' . (date('w', $time) - $dayStart) . ' days', $time);
+                  // Get the times of days 0 -> 6
+                  $dayTimes = array ();
+                  for ($i = 0; $i < 7; ++$i) {
+                        $dayTimes[] = strtotime('+' . $i . ' days', $dayTime);
+                  }
+                  // Return timestamps for mon-sun.
+                  return $dayTimes;
+                }
+
+
+                $myCalendar = new tc_calendar("date3", true, false);
+                $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
+                if (!empty($erow['start'])) {
+                    $myCalendar->setDate(date('d', strtotime($erow['start'])), date('m', strtotime($erow['start'])), date('Y', strtotime($erow['start'])));
+                } else {
+                    $myCalendar->setDate(date('d', strtotime($date1)), date('m', strtotime($date1)), date('Y', strtotime($date1)));
+                }
+                $myCalendar->setPath("../calendar/");
+                $myCalendar->setYearInterval(1970, 2020);
+                //$myCalendar->dateAllow('2009-02-20', "", false);
+                $myCalendar->setAlignment('left', 'bottom');
+                $myCalendar->setDatePair('date3', 'date4', $date2);
+                //$myCalendar->setSpecificDate(array("2011-04-01", "2011-04-04", "2011-12-25"), 0, 'year');
+                $myCalendar->writeScript();
+                ?>
+                to
+                <?php
+                $myCalendar = new tc_calendar("date4", true, false);
+                $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
+
+                if (!empty($erow['end'])) {
+                    $myCalendar->setDate(date('d', strtotime($erow['end'])), date('m', strtotime($erow['end'])), date('Y', strtotime($erow['end'])));
+                } else {
+                    $myCalendar->setDate(date('d', strtotime($date2)), date('m', strtotime($date2)), date('Y', strtotime($date2)));
+                }
+                $myCalendar->setPath("../calendar/");
+                $myCalendar->setYearInterval(1970, 2020);
+                //$myCalendar->dateAllow("", '2009-11-03', false);
+                $myCalendar->setAlignment('left', 'bottom');
+                $myCalendar->setDatePair('date3', 'date4', $date1);
+                //$myCalendar->setSpecificDate(array("2011-04-01", "2011-04-04", "2011-12-25"), 0, 'year');
+                $myCalendar->writeScript();
+                ?>
+            <br>
+            </div>
+            Content (optional): 
+            <textarea name="html"><?php 
+            if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('html');
+            </script>
+            <br>
+            Visibility*: 
+            <?php 
+                if(!empty($erow['visibility'])) {
+                    $visib = explode(",", $erow['visibility']);
+                }
             ?>
+            <div class='checkboxAlign'>
+            <input name='visibility[]' type='checkbox' value='homepage' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("homepage", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Homepage</label>
+            <input name='visibility[]' type='checkbox' value='catalogue' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("catalogue", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Product Catalogue</label>
+            <input name='visibility[]' type='checkbox' value='prodDetails' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("prodDetails", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Product Details</label>
+            
+            <input name='visibility[]' type='checkbox' value='locations' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("locations", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Locations</label>
+            <br>
+            <input name='visibility[]' type='checkbox' value='story' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("story", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Our Story</label>
+            
+            <input name='visibility[]' type='checkbox' value='culture' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("culture", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Culture</label>
+            
+            <input name='visibility[]' type='checkbox' value='design' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("design", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Design</label>
+            
+            <input name='visibility[]' type='checkbox' value='one' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("one", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>One for You, One for Them</label>
+            <br>
+            <input name='visibility[]' type='checkbox' value='blog' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("blog", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Blog</label>
+            
+            <input name='visibility[]' type='checkbox' value='hometry' <?php 
+                if (!empty($erow['visibility'])) {
+                    if (in_array("hometry", $visib)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Home Try-on</label>
+            </div>
+            <br>
+            <label for='minheight' >Min height*: <span class='setting-tooltips'>(for the advertisement to appear on each page)</span></label>
+                        
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
+            <input type='text' name='minheight' id='minheight' maxlength="50" 
+                   onkeypress="return isNumber(event)" 
+                   value='<?php if (!empty($erow['minheight'])) { echo $erow['minheight']; } ?>'/>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addAdvError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addAdvError'])) {
-                        echo $_SESSION['addAdvError'];
-                    }
-                    
-                    if (isset($_SESSION['uploadAdvError'])) {
-                        echo $_SESSION['uploadAdvError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addAdvSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addAdvSuccess'])) {
-                        echo $_SESSION['addAdvSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>
     </div>
-    <script>
-        function randomString() {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-            for( var i=0; i < 5; i++ )
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-            document.getElementById('code').value = text;
-            return false;
+    <script> 
+        if (document.getElementById('checkYes').checked) {
+           document.getElementById('expiryDate').style.display = "block";            
+        }
+        document.getElementById('checkYes').onclick = function(){  
+           document.getElementById('expiryDate').style.display = "block";
+        };
+        
+        document.getElementById('checkNo').onclick = function(){  
+           document.getElementById('expiryDate').style.display = "none";
+        };
+        
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                document.getElementById('nanError').style.display='block';
+                document.getElementById('nanError').style.color='red';
+                return false;
+            }
+            document.getElementById('nanError').style.display='none';
+            return true;
         }
         
         function deleteFunction(locId) {

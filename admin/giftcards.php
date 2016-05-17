@@ -94,6 +94,22 @@ if (isset($_GET['id'])) {
         
         <form id='addGift' action='processGiftcards.php' method='post'>
             <fieldset >
+            <div id="addGiftError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addGiftError'])) {
+                        echo $_SESSION['addGiftError'];
+                    }
+                ?>
+            </div>
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
+            
+            <div id="addGiftSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addGiftSuccess'])) {
+                        echo $_SESSION['addGiftSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Gift Card</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -162,22 +178,6 @@ if (isset($_GET['id'])) {
             <br>
             
             <input type='submit' name='submit' value='Submit' />
-            <div id="addGiftError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addGiftError'])) {
-                        echo $_SESSION['addGiftError'];
-                    }
-                ?>
-            </div>
-            <p id='nanError' style="display: none;">Please enter numbers only</p>
-            
-            <div id="addGiftSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addGiftSuccess'])) {
-                        echo $_SESSION['addGiftSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>

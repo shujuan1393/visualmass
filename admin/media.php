@@ -19,6 +19,22 @@ session_start();
     <div id="maincontent">
         <div class="innertube">
         <h2>Media Gallery</h2>
+        
+        <div id="updateMediaError" style="color:red">
+            <?php 
+                if (isset($_SESSION['updateMediaError'])) {
+                    echo $_SESSION['updateMediaError'];
+                }
+            ?>
+        </div>
+
+        <div id="updateMediaSuccess" style="color:green">
+            <?php 
+                if (isset($_SESSION['updateMediaSuccess'])) {
+                    echo $_SESSION['updateMediaSuccess'];
+                }
+            ?>
+        </div>
         <?php 
             //path to directory to scan. i have included a wildcard for a subdirectory
             $directory = "../uploads/*/";
@@ -49,21 +65,6 @@ session_start();
             echo "</table>";
             echo $count;
         ?>
-            <div id="updateMediaError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['updateMediaError'])) {
-                        echo $_SESSION['updateMediaError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="updateMediaSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['updateMediaSuccess'])) {
-                        echo $_SESSION['updateMediaSuccess'];
-                    }
-                ?>
-            </div>
         </div>
     </div>
     <script>

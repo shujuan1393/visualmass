@@ -35,32 +35,7 @@ require_once('../nav/adminHeader.php');
                 } else {
                     $row = mysqli_fetch_assoc($empresult);
         ?>
-        <form id='profile' method='post' action='saveProfile.php'>
-            <label for='firstname' >First Name:</label>
-            <input type='text' name='firstname' value='<?php echo $row['firstname'];?>' id='firstname'  maxlength="50" />
-            <label for='lastname' >Last Name:</label>
-            <input type='text' name='lastname' value='<?php echo $row['lastname'];?>' id='lastname'  maxlength="50" />
-            <br>
-            <label for='email' >Email*:</label>
-            <input type='text' name='email' value='<?php echo $row['email'];?>' id='email'  maxlength="50" />
-            <br>
-            <label for='password' >Password*:</label>
-            <input type='password' name='password' id='password'  maxlength="50" />
-            <br>
-            <label for='phone' >Phone Number:</label>
-            <input type='text' name='phone' value='<?php echo $row['phone'];?>' id='phone'  maxlength="50" onkeypress="return isNumber(event)" />
-            <br>
-            <label for='web' >Website:</label>
-            <input type='text' name='web' value='<?php echo $row['website'];?>' id='web'  maxlength="50" />
-            <br>
-            <label for='biography' >Biography:</label>
-            <textarea name="biography"><?php echo $row['biography'];?></textarea>
-            <script type="text/javascript">
-                CKEDITOR.replace('biography');
-            </script>
-            <br>
-            <input type='submit' name='submit' value='Save Changes' />
-        </form>
+        
         <div id="profileError" style='color:red'>
             <?php
                 if (isset($_SESSION['profileError'])) {
@@ -76,7 +51,35 @@ require_once('../nav/adminHeader.php');
             ?>
         </div>
         <p id='nanError' style="display: none;">Please enter numbers only</p>
-            
+        <form id='profile' method='post' action='saveProfile.php'>
+            <label for='firstname' >First Name:</label>
+            <input type='text' name='firstname' value='<?php echo $row['firstname'];?>' id='firstname'  maxlength="50" />
+            <label for='lastname' >Last Name:</label>
+            <input type='text' name='lastname' value='<?php echo $row['lastname'];?>' id='lastname'  maxlength="50" />
+            <br>
+            <label for='email' >Email*:</label>
+            <input type='text' name='email' value='<?php echo $row['email'];?>' id='email'  maxlength="50" />
+            <br>
+            <label for='password' >Change Password*:</label>
+            <input type='password' name='password' id='password'  maxlength="50" />
+            <br>
+            <label for='password' >Retype Password*:</label>
+            <input type='password' name='repassword' id='repassword'  maxlength="50" />
+            <br>
+            <label for='phone' >Phone Number:</label>
+            <input type='text' name='phone' value='<?php echo $row['phone'];?>' id='phone'  maxlength="50" onkeypress="return isNumber(event)" />
+            <br>
+            <label for='web' >Website:</label>
+            <input type='text' name='web' value='<?php echo $row['website'];?>' id='web'  maxlength="50" />
+            <br>
+            <label for='biography' >Biography:</label>
+            <textarea name="biography"><?php echo $row['biography'];?></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('biography');
+            </script>
+            <br>
+            <input type='submit' name='submit' value='Save Changes' />
+        </form>            
         <?php 
                 }
             }

@@ -98,6 +98,22 @@ if (isset($_GET['id'])) {
         
         <form id='addProduct' action='processProducts.php' method='post' accept-charset='UTF-8' enctype="multipart/form-data">
             <fieldset >
+            <div id="addProdError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addProdError'])) {
+                        echo $_SESSION['addProdError'];
+                    }
+                ?>
+            </div>
+            
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
+            <div id="addProdSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addProdSuccess'])) {
+                        echo $_SESSION['addProdSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Product</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -264,22 +280,6 @@ if (isset($_GET['id'])) {
             <input type="file" name="images[]" id='images' multiple accept='image/*'/>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addProdError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addProdError'])) {
-                        echo $_SESSION['addProdError'];
-                    }
-                ?>
-            </div>
-            
-            <p id='nanError' style="display: none;">Please enter numbers only</p>
-            <div id="addProdSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addProdSuccess'])) {
-                        echo $_SESSION['addProdSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>

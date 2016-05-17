@@ -29,6 +29,22 @@ if (!mysqli_query($link,$selectSql)) {
         <h2>Settings - Home Try-on</h2>
         
         <form id='homeTrySettings' action='saveHomeTrySettings.php' method='post'>
+        
+        <div id="htSetError" style='color:red'>
+            <?php
+                if (isset($_SESSION['updateHTSetError'])) {
+                    echo $_SESSION['updateHTSetError'];
+                }
+            ?>
+        </div>
+        
+        <div id="htSetSuccess" style='color:green'>
+            <?php
+                if (isset($_SESSION['updateHTSetSuccess'])) {
+                    echo $_SESSION['updateHTSetSuccess'];
+                }
+            ?>
+        </div>
             Visibility: 
                 <?php 
                     $visib = explode("visibility=", $valArr[0]);
@@ -81,14 +97,6 @@ if (!mysqli_query($link,$selectSql)) {
             <p class='setting-tooltips'>*Set the default amount to charge for home try-ons</p><br>
             <input type='submit' name='submit' value='Save Changes' />
         </form>
-        
-        <div id="htSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateHTSetSuccess'])) {
-                    echo $_SESSION['updateHTSetSuccess'];
-                }
-            ?>
-        </div>
         </div>
     </div>
     <script>

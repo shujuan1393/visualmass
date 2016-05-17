@@ -100,6 +100,23 @@ if (isset($_GET['id'])) {
         
         <form id='addDiscount' action='processDiscounts.php' method='post'>
             <fieldset >
+                
+            <div id="addDiscError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addDiscError'])) {
+                        echo $_SESSION['addDiscError'];
+                    }
+                ?>
+            </div>
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
+            
+            <div id="addDiscSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addDiscSuccess'])) {
+                        echo $_SESSION['addDiscSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Discount</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -260,22 +277,6 @@ if (isset($_GET['id'])) {
             ?>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addDiscError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addDiscError'])) {
-                        echo $_SESSION['addDiscError'];
-                    }
-                ?>
-            </div>
-            <p id='nanError' style="display: none;">Please enter numbers only</p>
-            
-            <div id="addDiscSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addDiscSuccess'])) {
-                        echo $_SESSION['addDiscSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>

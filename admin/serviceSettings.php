@@ -89,6 +89,22 @@ if (isset($_GET['id'])) {
         
         <form id='addService' action='processServices.php' method='post' accept-charset='UTF-8'>
             <fieldset >
+                
+            <div id="addServError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addServError'])) {
+                        echo $_SESSION['addServError'];
+                    }
+                ?>
+            </div>
+            
+            <div id="addServSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addServSuccess'])) {
+                        echo $_SESSION['addServSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Service</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -105,21 +121,6 @@ if (isset($_GET['id'])) {
                        { echo $erow['servicename']; }?>'/>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addServError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addServError'])) {
-                        echo $_SESSION['addServError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addServSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addServSuccess'])) {
-                        echo $_SESSION['addServSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>
