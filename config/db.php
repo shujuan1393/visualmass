@@ -7,7 +7,9 @@
  */
 
 session_start();
-
+if (!isset($_SESSION['loggedUserEmail'])) {
+    header("Location: login.php");
+}
 //if (!isset($_COOKIE['user'])) {
 //    header("Location: login.php");
 //    exit();

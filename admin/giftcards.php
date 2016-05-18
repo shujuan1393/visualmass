@@ -8,7 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['addGiftError']);
     unset($_SESSION['addGiftSuccess']);
     unset($_SESSION['updateGiftError']);
     unset($_SESSION['updateGiftSuccess']);
@@ -57,8 +56,9 @@ if (isset($_GET['id'])) {
             <table>
                 <thead>
                     <th>Name</th>
-                    <th>Amount</th>
+                    <th>Type</th>
                     <th>Customisable</th>
+                    <th>Amount</th>
                     <th>Status</th>
                     <th>Edit</th>
                     <th>Delete</th>                        
@@ -67,9 +67,17 @@ if (isset($_GET['id'])) {
                 // output data of each row
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>";
-                    echo "<td>".$row['name'] ."</td>";
-                    echo "<td>".$row['amount']."</td>";                            
-                    echo "<td>".$row['customise']."</td>";                           
+                    echo "<td>".$row['name'] ."</td>";                          
+                    echo "<td>".$row['type']."</td>";                            
+                    echo "<td>".$row['customise']."</td>"; 
+                    echo "<td>";
+                    if (strcmp($row['customise'], "yes") === 0) {
+                        echo " -";
+                    } else {
+                        echo "$".$row['amount'];                        
+                    }
+                    
+                    echo "</td>";                           
                     echo "<td>".$row['status']."</td>";                        
                     echo '<td><button onClick="window.location.href=`giftcards.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
@@ -141,7 +149,7 @@ if (isset($_GET['id'])) {
                         $_SESSION['customiseOn'] = "yes";
                     }
                    ?>
-                   onclick="toggleTextbox(true);">Yes
+                   onclick="toggleTextbox(false);">Yes
             <input type="radio" name='customise' value='no' 
                    <?php 
                     if (!empty($erow['customise'])) {
@@ -151,13 +159,31 @@ if (isset($_GET['id'])) {
                         }
                     }
                    ?>
-                   onclick="toggleTextbox(false);">No
+                   onclick="toggleTextbox(true);">No
             <br>
-            <label for='amount' >Amount:</label>
+            <label for='amount' >Amount: </label>
             <span id='currency' style='display:none'>$</span>
             <input type='text' name='amount' id='amount'  maxlength="50"  onkeypress="return isNumberKey(event)"
                    value='<?php if (!empty($erow['amount'])) { echo $erow['amount']; }?>'/>
             <br>
+            <br>
+            <label for='type' >Type*:</label>
+            <input type='radio' name='type' id='type' value='physical' <?php 
+                        if(!empty($erow['type'])) {
+                            if (strcmp($erow['type'], "physical") === 0) {
+                                echo " checked";
+                            }
+                        } else {
+                            echo " checked";
+                        }
+                    ?>>Physical 
+            <input type='radio' name='type' id='type' value='ecard' <?php 
+                        if(!empty($erow['type'])) {
+                            if (strcmp($erow['type'], "ecard") === 0) {
+                                echo " checked";
+                            }
+                        }
+                    ?>>E-card 
             <br>
             <label for='status' >Status*:</label>
             <select name='status'>
@@ -222,12 +248,13 @@ if (isset($_GET['id'])) {
                 document.getElementById("currency").style.display = "inline";
             } else {
                 document.getElementById("currency").style.display = "none";
+                document.getElementById("amount").value = "";
             }
         }
         
         window.onload = function() {
             <?php 
-                if ($_SESSION['customiseOn'] === "yes") {
+                if ($_SESSION['customiseOn'] === "no") {
             ?>
                 toggleTextbox(true);
             <?php 
