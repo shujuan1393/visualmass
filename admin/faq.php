@@ -160,6 +160,11 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
 ?>
 
 <html>  
+    <div id="frameheader">
+        <?php
+            require '../nav/adminHeader.php';
+        ?>
+    </div>
     <div id="framecontent">
         <div class='innertube'>
         <?php

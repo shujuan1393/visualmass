@@ -122,9 +122,6 @@ unset($_SESSION['setContactDetailsSuccess']);
     </div>
     <div id="maincontent">
         <div class="innertube">
-            <?php 
-            
-            ?>
             <h2><?php 
                     echo $welcome = "<script>document.write(welcome)</script>" .$_SESSION['loggedUser'];
                 ?></h2>

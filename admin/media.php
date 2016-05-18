@@ -9,6 +9,11 @@
 session_start();
 ?>
 <html>    
+    <div id="frameheader">
+        <?php
+            require '../nav/adminHeader.php';
+        ?>
+    </div>
     <div id="framecontent">
         <div class='innertube'>
         <?php

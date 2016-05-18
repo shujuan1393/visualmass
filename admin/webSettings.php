@@ -42,6 +42,11 @@ if (!mysqli_query($link,$selectSql)) {
     $valArr = explode("#", $savedrow['value']);
 ?>
 <html>    
+    <div id="frameheader">
+        <?php
+            require '../nav/adminHeader.php';
+        ?>
+    </div>
     <div id="framecontent">
         <div class='innertube'>
         <?php

@@ -10,6 +10,11 @@ require_once('../nav/adminHeader.php');
 ?>
 
 <html>        
+    <div id="frameheader">
+        <?php
+            require '../nav/adminHeader.php';
+        ?>
+    </div>
     <div id="framecontent">
         <div class='innertube'>
         <?php
