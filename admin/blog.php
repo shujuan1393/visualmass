@@ -122,7 +122,7 @@ if (isset($_GET['id'])) {
                     }
                 ?>
             </div>
-            <legend>Add Blog Post</legend>
+            <legend>Add/Edit Blog Post</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
                    value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
