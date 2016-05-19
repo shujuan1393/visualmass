@@ -113,9 +113,10 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         $form = $_POST['form'];
         $options = $_POST['options'];
         
-        if (!empty($_POST['editformid'])) {
+        if (!empty($_POST['editfieldid'])) {
             $sql = "UPDATE forms set name='$name', type='field', field='$type', options='$options',"
-                    . "form='$form', fieldorder='$fieldorder' where id='".$_POST['editid']."';";
+                    . "form='$form', fieldorder='$fieldorder' where id='".$_POST['editfieldid']."';";
+            
             mysqli_query($link, $sql);
             unset($_SESSION['addFormFieldError']);
             $_SESSION['addFormFieldSuccess'] = "Form field updated successfully";
@@ -249,7 +250,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         <br>
         <h3>Manage Form Fields</h3>
         <?php 
-            $qry = "Select * from forms where type <> 'form' GROUP BY form ORDER BY fieldorder asc";
+            $qry = "Select * from forms where type <> 'form' ORDER BY form, fieldorder asc";
            
             $result = mysqli_query($link, $qry);
 
@@ -257,28 +258,27 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
             {
                 echo("Error description: " . mysqli_error($link));
             } else {
-                $rowCount=0;
                 if ($result->num_rows === 0) {
                     echo "You have not created any form fields yet.";
                 } else {
             ?>
             <table>
                 <thead>
+                    <th>Form</th>
                     <th>Order</th>
                     <th>Name</th>
-                    <th>Form</th>
                     <th>Field Type</th>
                     <th>Edit</th>
                     <th>Delete</th>                        
                 </thead>
             <?php
                 // output data of each row
+                        
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $rowCount = $result -> num_rows;
-                    echo "<tr>";
+                    echo "<tr>"; 
+                    echo "<td>".$row['form'] ."</td>"; 
                     echo "<td>".$row['fieldorder'] ."</td>";  
                     echo "<td>".$row['name'] ."</td>";  
-                    echo "<td>".$row['form'] ."</td>";  
                     echo "<td>".$row['field'] ."</td>";                        
                     echo '<td><button onClick="window.location.href=`formSettings.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
@@ -289,6 +289,16 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
             <?php
                 } 
             }
+            
+            $formsQry = "Select * from forms where type='form';";
+            $formResult = mysqli_query($link, $formsQry);
+
+            while($formRow = mysqli_fetch_assoc($formResult)) {
+                $fieldQry = "Select * from forms where type='field' and form='".$formRow['name']."';";
+                $fieldResult = mysqli_query($link, $fieldQry);
+                $fieldRows = $fieldResult -> num_rows;
+                echo "<input type='hidden' id='".$formRow['name']."Value' value='".$fieldRows."'>";
+            }
             ?>
             <div id="updateFormFieldSuccess" style="color:green">
                 <?php 
@@ -297,6 +307,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                     }
                 ?>
             </div>
+        
             <div id="updateFormFieldError" style="color:red">
                 <?php 
                     if (isset($_SESSION['updateFormFieldError'])) {
@@ -305,96 +316,107 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                 ?>
             </div>
         <hr><br>
-        <form id='addFormField' action='formSettings.php?update=1' method='post'>
-            <fieldset >
-            <div id="addFormFieldError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addFormFieldError'])) {
-                        echo $_SESSION['addFormFieldError'];
-                    }
-                ?>
-            </div>
+        
+        <?php 
+            $noForm = "Select * from forms where type='form'";
+            $forResult = mysqli_query($link, $noForm);
             
-            <div id="addFormFieldSuccess" style="color:green">
+            if ($forResult -> num_rows > 0) {
+        ?>
+            <form id='addFormField' action='formSettings.php?update=1' method='post'>
+                <fieldset >
+                <div id="addFormFieldError" style="color:red">
+                    <?php 
+                        if (isset($_SESSION['addFormFieldError'])) {
+                            echo $_SESSION['addFormFieldError'];
+                        }
+                    ?>
+                </div>
+                <p id='nanError' style="display: none;">Please enter numbers only</p>
+                <div id="addFormFieldSuccess" style="color:green">
+                    <?php 
+                        if (isset($_SESSION['addFormFieldSuccess'])) {
+                            echo $_SESSION['addFormFieldSuccess'];
+                        }
+                    ?>
+                </div>
+                <legend>Add/Edit Form Field</legend>
+                <input type="hidden" name="editfieldid" id="editfieldid" 
+                       value="<?php if(!isset($_GET['delete']) && isset($_GET['id'])) { echo $_GET['id']; } ?>"
+                <input type='hidden' name='submitted' id='submitted' value='1'/>
+                <label for='name' >Name*:</label>
+                <input type='text' name='name' id='name' 
+                       value="<?php if (isset($editrow['name'])) { echo $editrow['name']; } ?>"/>
+                <label for='order' >Order*:</label>
+                <input type='text' name='order' id='order'  
+                   onkeypress="return isNumber(event)" 
+                       value="<?php if (isset($editrow['fieldorder'])) { echo $editrow['fieldorder']; } ?>"/>
+                <br>
+                <label for='form' >Form*:</label>
+                <select name="form" id="form">
                 <?php 
-                    if (isset($_SESSION['addFormFieldSuccess'])) {
-                        echo $_SESSION['addFormFieldSuccess'];
+                    $formSql = "Select * from forms where type='form';";
+                    $fresult = mysqli_query($link, $formSql);
+                    while ($row1 = mysqli_fetch_assoc($fresult)) {
+                ?>
+                    <option value="<?php echo $row1['name'];?>" <?php 
+                            if(isset($editrow['form'])) {
+                                if (strcmp($editrow['form'], $row1['name']) === 0) {
+                                    echo " selected";
+                                }
+                            }
+                            ?>><?php echo $row1['name'];?></option>
+                <?php 
                     }
                 ?>
-            </div>
-            <legend>Add/Edit Form Field</legend>
-            <input type="hidden" name="editformid" id="editformid" 
-                   value="<?php if(!isset($_GET['delete']) && isset($_GET['id'])) { echo $_GET['id']; } ?>"
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <label for='name' >Name*:</label>
-            <input type='text' name='name' id='name' 
-                   value="<?php if (isset($editrow['name'])) { echo $editrow['name']; } ?>"/>
-            <label for='order' >Order*:</label>
-            <input type='text' name='order' id='order' 
-                   value="<?php if (isset($editrow['fieldorder'])) { echo $editrow['fieldorder']; } else { echo $rowCount+1; } ?>"/>
-            <br>
-            <label for='form' >Form*:</label>
-            <select name="form">
-            <?php 
-                $formSql = "Select * from forms where type='form';";
-                $fresult = mysqli_query($link, $formSql);
-                while ($row1 = mysqli_fetch_assoc($fresult)) {
-            ?>
-                <option value="<?php echo $row1['name'];?>" <?php 
-                        if(isset($editrow['form'])) {
-                            if (strcmp($editrow['form'], $row1['name']) === 0) {
-                                echo " selected";
-                            }
-                        }
-                        ?>><?php echo $row1['name'];?></option>
-            <?php 
-                }
-            ?>
-            </select>
-            <label for='type' >Type*:</label>
-            <select name='type'>
-                <option value='textbox'
-                        <?php
-                            if (isset($editrow['field'])) {
-                                if (strcmp($editrow['field'], "textbox") === 0) {
-                                    echo " selected";
+                </select>
+                <label for='type' >Type*:</label>
+                <select name='type'>
+                    <option value='textbox'
+                            <?php
+                                if (isset($editrow['field'])) {
+                                    if (strcmp($editrow['field'], "textbox") === 0) {
+                                        echo " selected";
+                                    }
                                 }
-                            }
-                        ?>
-                        >Single-line Textbox</option>
-                <option value='dropdown'
-                        <?php
-                            if (isset($editrow['field'])) {
-                                if (strcmp($editrow['field'], "dropdown") === 0) {
-                                    echo " selected";
+                            ?>
+                            >Single-line Textbox</option>
+                    <option value='dropdown'
+                            <?php
+                                if (isset($editrow['field'])) {
+                                    if (strcmp($editrow['field'], "dropdown") === 0) {
+                                        echo " selected";
+                                    }
                                 }
-                            }
-                        ?>>Dropdown List</option>
-                <option value='checkbox'
-                        <?php
-                            if (isset($editrow['field'])) {
-                                if (strcmp($editrow['field'], "checkbox") === 0) {
-                                    echo " selected";
+                            ?>>Dropdown List</option>
+                    <option value='checkbox'
+                            <?php
+                                if (isset($editrow['field'])) {
+                                    if (strcmp($editrow['field'], "checkbox") === 0) {
+                                        echo " selected";
+                                    }
                                 }
-                            }
-                        ?>>Checkbox</option>
-                <option value='textarea'
-                        <?php
-                            if (isset($editrow['field'])) {
-                                if (strcmp($editrow['field'], "textarea") === 0) {
-                                    echo " selected";
+                            ?>>Checkbox</option>
+                    <option value='textarea'
+                            <?php
+                                if (isset($editrow['field'])) {
+                                    if (strcmp($editrow['field'], "textarea") === 0) {
+                                        echo " selected";
+                                    }
                                 }
-                            }
-                        ?>>Multi-line Textbox</option>
-            </select>
-            <br>
-            Options (only for dropdown & checkbox types): 
-            <p class='setting-tooltips'>Please place a comma (,) after each option</p>
-            <textarea name="options" cols='50' rows='10'><?php if (isset($editrow['options'])) { echo $editrow['options']; } ?></textarea>
-            <br>
-            <input type='submit' name='submit' value='Submit' />
-            </fieldset>
-        </form>
+                            ?>>Multi-line Textbox</option>
+                </select>
+                <br>
+                Options (only for dropdown & checkbox types): 
+                <p class='setting-tooltips'>Please place a comma (,) after each option</p>
+                <textarea name="options" cols='50' rows='10'><?php if (isset($editrow['options'])) { echo $editrow['options']; } ?></textarea>
+                <br>
+                <input type='submit' name='submit' value='Submit' />
+                </fieldset>
+            </form>
+        <?php 
+            }
+        ?>
         </div>
     </div>
     <script>
@@ -433,6 +455,44 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                 ?>
                 window.location='formSettings.php';
             }
+        }
+        
+        document.getElementById('form').onchange = function() {
+            var index = this.selectedIndex;
+            var inputText = this.children[index].innerHTML.trim();
+            var count = document.getElementById(inputText+ "Value").value;
+            <?php
+            if(!isset($_GET['id'])) {
+            ?>
+                document.getElementById('order').value = Number(count)+1;
+            <?php 
+            }
+            ?>
+        }
+        
+        window.onload = function() {
+            var index = document.getElementById('form').selectedIndex;
+            var inputText = document.getElementById('form').children[index].innerHTML.trim();
+            var count = document.getElementById(inputText+ "Value").value;
+            <?php
+            if(!isset($_GET['id'])) {
+            ?>
+                document.getElementById('order').value = Number(count)+1;
+            <?php 
+            }
+            ?>
+        };
+        
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                document.getElementById('nanError').style.display='block';
+                document.getElementById('nanError').style.color='red';
+                return false;
+            }
+            document.getElementById('nanError').style.display='none';
+            return true;
         }
     </script>
 </html>

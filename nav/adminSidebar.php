@@ -77,6 +77,12 @@ require_once '../config/db.php';
                     <li><a href='careers.php'>CAREERS</a></li>
                     <li><a href='contact.php'>CONTACT</a></li>
                     <li><a href='faq.php'>FAQ</a></li>
+                    <li><a href='homepage.php'>HOMEPAGE</a></li>
+                    <li><a href='homeTry.php'>HOME TRY-ON</a></li>
+                    <li><a href='mainstory.php'>OUR STORY - MAIN</a></li>
+                    <li><a href='culturestory.php'>OUR STORY - CULTURE</a></li>
+                    <li><a href='designstory.php'>OUR STORY - DESIGN</a></li>
+                    <li><a href='onestory.php'>OUR STORY - GIFT INITIATIVE</a></li>
                     <li><a href='terms.php'>TERMS</a></li>
                 </ul>
             </li><?php } ?>
