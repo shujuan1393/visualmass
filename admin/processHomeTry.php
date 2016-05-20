@@ -18,6 +18,81 @@ if (isset($_GET['delete'])) {
         $_SESSION['updateHomeSuccess'] = "Record deleted successfully";
         header("Location: homeTry.php");
     } 
+} else if (isset($_GET['banner'])) { 
+    unset($_SESSION['addHomeBannerError']);
+    $target_dir = "../uploads/banner/";
+    $random_digit=md5(uniqid(rand(), true));
+    
+    if (empty($_FILES['image']['name']) && empty($_POST['oldImage'])) { 
+        unset($_SESSION['updateHomeError']);
+        unset($_SESSION['addHomeSuccess']);
+        unset($_SESSION['addHomeError']);
+        unset($_SESSION['updateHomeSuccess']);
+        unset($_SESSION['addHomeBannerSuccess']);
+        $_SESSION['addHomeBannerError'] = "No file selected";
+        header("Location: homeTry.php");
+    } else if (!empty($_FILES['image']['name'])) {
+        $new_file = 'hometry_'.$random_digit.basename($_FILES["image"]["name"]);
+        $target_file = $target_dir . $new_file;
+        $uploadOk = 1;
+
+        $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+        
+        // Check if file already exists
+        if (file_exists($target_file)) {
+            unset($_SESSION['addHomeBannerSuccess']);
+            $_SESSION['addHomeBannerError'] = "Sorry, file already exists.";
+            header('Location: homeTry.php');
+        }
+        // Allow certain file formats
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" && $imageFileType != "mp3" && $imageFileType != "mp4" && $imageFileType != "wma" ) {
+            unset($_SESSION['addHomeBannerSuccess']);
+            $_SESSION['addHomeBannerError'] = "Sorry, only JPG, JPEG, PNG, GIF, MP3, MP4 & WMA files are allowed.";
+            header('Location: homeTry.php');
+        }
+
+        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            unset($_POST['addHomeBannerError']);
+        } else { 
+            unset($_SESSION['addHomeBannerSuccess']);
+            $_SESSION['addHomeBannerError'] = "Sorry, there was an error uploading your file.";
+            header('Location: homeTry.php');   
+        }
+    } else {
+        unset($_SESSION['addHomeBannerError']);
+        $target_file = $_POST['oldImage'];
+    }
+    
+    if(!isset($_SESSION['addHomeBannerError'])) {
+        $check = "Select * from hometry where type='banner';";
+        $cresult = mysqli_query($link, $check);
+
+        if (!mysqli_query($link, $check)) {
+            echo "Error description: ". mysqli_error($link);
+            exit();
+        } else {
+            $crow = mysqli_fetch_assoc($cresult);
+
+            if ($cresult -> num_rows != 0) {
+                $faqBanner = "UPDATE hometry SET html='$target_file' where type='banner'";
+            } else {
+                $faqBanner = "INSERT INTO hometry (type, html) VALUES "
+                        . "('banner', '$target_file');";
+            }
+            if (!empty($faqBanner)) {
+                unset($_SESSION['updateHomeSuccess']);
+                unset($_SESSION['addHomeSuccess']);
+                unset($_SESSION['addHomeError']);
+                unset($_SESSION['updateHomeError']);
+                mysqli_query($link, $faqBanner);
+                unset($_SESSION['addHomeBannerError']);
+                $_SESSION['addHomeBannerSuccess'] = "Banner updated successfully";
+                header("Location: homeTry.php");
+            }
+        }
+    }
+    
 } else if (isset($_POST['submit'])) {
     
     $buttonno = $_POST['buttonno'];
@@ -181,7 +256,7 @@ if (isset($_GET['delete'])) {
                 $updateHomeSql = "UPDATE hometry SET title='$title', link='$pagelink', "
                     . "image='$image', status='$status', html='$html', htmlpos='$htmlpos',"
                         . "imagepos='$imagepos', linkpos='$linkpos', buttontext='$buttonlink', "
-                        . "fieldorder='$fieldorder' where id = '$editid';";
+                        . "fieldorder='$fieldorder', type='section' where id = '$editid';";
                 
                 if (mysqli_query($link, $updateHomeSql)) {
                     unset($_SESSION['addHomeSuccess']);
@@ -195,9 +270,10 @@ if (isset($_GET['delete'])) {
                 }
             } else {
                 $advSql = "INSERT INTO hometry (title, image, imagepos, buttontext, "
-                        . "link, linkpos, status, html, htmlpos, fieldorder) "
+                        . "link, linkpos, status, html, htmlpos, fieldorder, type) "
                     . "VALUES ('$title','$image', '$imagepos', '$buttonlink',"
-                        . " '$pagelink', '$linkpos', '$status', '$html', '$htmlpos', '$fieldorder');";
+                        . " '$pagelink', '$linkpos', '$status', '$html', '$htmlpos', "
+                        . "'$fieldorder', 'section');";
 
                 mysqli_query($link, $advSql);
                 unset($_SESSION['uploadHomeError']);

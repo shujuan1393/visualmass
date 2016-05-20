@@ -41,10 +41,65 @@ if (isset($_GET['id'])) {
     </div>
     <div id="maincontent">
         <div class="innertube">
-        <h2>Manage Homepage Sections</h2>
-        
+        <h2>Manage Homepage</h2>
         <?php 
-            $qry = "Select * from homepage";
+            $getBanner = "Select * from homepage where type='banner';";
+            $bresult = mysqli_query($link, $getBanner);
+            
+            if (!mysqli_query($link, $getBanner)) {
+                echo "Error description: ". mysqli_error($link);
+            } else {
+                if ($bresult -> num_rows == 0 ) {
+                    echo "You have not uploaded a banner image yet.<br><br>";
+                } else {
+                    $brow = mysqli_fetch_assoc($bresult);
+                    $browArr = explode(".", $brow['html']);
+                    $ext = $browArr[count($browArr)-1];
+                    
+                    $imgArr = array("jpg", "jpeg", "png", "gif");
+                    $vidArr = array("mp3", "mp4", "wma");
+                    
+                    if (in_array($ext, $imgArr)) {
+                        echo "<img src='".$brow['html']."' width=450>";
+                    } else {
+                        echo '<video width="500" height="400" autoplay>
+                        <source src="'.$brow['html'].'" type="video/mp4">
+                        Your browser does not support the video tag.
+                        </video>';
+                    }
+                }
+            }
+        ?>
+        <form id='addHomepageBanner' action='processHomepage.php?banner=1' method='post' enctype="multipart/form-data">
+            <fieldset >
+            <div id="addHomepageBannerError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addHomepageBannerError'])) {
+                        echo $_SESSION['addHomepageBannerError'];
+                    }
+                ?>
+            </div>
+            
+            <div id="addHomepageBannerSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addHomepageBannerSuccess'])) {
+                        echo $_SESSION['addHomepageBannerSuccess'];
+                    }
+                ?>
+            </div>
+            <legend>Update Homepage Banner</legend>
+            <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='oldImage' id='oldImage' value='<?php echo $brow['html']; ?>'/>
+            <label for='image' >Image:</label>
+            <input type="file" name="image" id='image'/>
+            <br>
+            <input type='submit' name='submit' value='Submit' />
+            
+            </fieldset>
+        </form>
+        <br>
+        <?php 
+            $qry = "Select * from homepage where type='section'";
             
             $result = mysqli_query($link, $qry);
 
@@ -111,6 +166,7 @@ if (isset($_GET['id'])) {
                     }
                 ?>
             </div>
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
             <div id="addHomepageSuccess" style="color:green">
                 <?php 
                     if (isset($_SESSION['addHomepageSuccess'])) {

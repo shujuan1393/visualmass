@@ -75,13 +75,6 @@ if (isset($_GET['id'])) {
         ?>
         <form id='addCultBanner' action='processCulture.php?banner=1' method='post' enctype="multipart/form-data">
             <fieldset >
-            <legend>Update Our Story - Culture Banner</legend>
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <input type='hidden' name='oldImage' id='oldImage' value='<?php echo $brow['html']; ?>'/>
-            <label for='image' >Image:</label>
-            <input type="file" name="image" id='image'/>
-            <br>
-            <input type='submit' name='submit' value='Submit' />
             <div id="addCultBannerError" style="color:red">
                 <?php 
                     if (isset($_SESSION['addCultBannerError'])) {
@@ -97,6 +90,13 @@ if (isset($_GET['id'])) {
                     }
                 ?>
             </div>
+            <legend>Update Our Story - Culture Banner</legend>
+            <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='oldImage' id='oldImage' value='<?php echo $brow['html']; ?>'/>
+            <label for='image' >Image:</label>
+            <input type="file" name="image" id='image'/>
+            <br>
+            <input type='submit' name='submit' value='Submit' />
             </fieldset>
         </form>
         <br>

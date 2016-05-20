@@ -42,9 +42,64 @@ if (isset($_GET['id'])) {
     <div id="maincontent">
         <div class="innertube">
         <h2>Manage Home Try</h2>
-        
         <?php 
-            $qry = "Select * from hometry ORDER BY fieldorder asc";
+            $getBanner = "Select * from hometry where type='banner';";
+            $bresult = mysqli_query($link, $getBanner);
+            
+            if (!mysqli_query($link, $getBanner)) {
+                echo "Error description: ". mysqli_error($link);
+            } else {
+                if ($bresult -> num_rows == 0 ) {
+                    echo "You have not uploaded a banner image yet.<br><br>";
+                } else {
+                    $brow = mysqli_fetch_assoc($bresult);
+                    $browArr = explode(".", $brow['html']);
+                    $ext = $browArr[count($browArr)-1];
+                    
+                    $imgArr = array("jpg", "jpeg", "png", "gif");
+                    $vidArr = array("mp3", "mp4", "wma");
+                    
+                    if (in_array($ext, $imgArr)) {
+                        echo "<img src='".$brow['html']."' width=450>";
+                    } else {
+                        echo '<video width="500" height="400" autoplay>
+                        <source src="'.$brow['html'].'" type="video/mp4">
+                        Your browser does not support the video tag.
+                        </video>';
+                    }
+                }
+            }
+        ?>
+        <form id='addHomeBanner' action='processHomeTry.php?banner=1' method='post' enctype="multipart/form-data">
+            <fieldset >
+            <div id="addHomeBannerError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addHomeBannerError'])) {
+                        echo $_SESSION['addHomeBannerError'];
+                    }
+                ?>
+            </div>
+            
+            <div id="addHomeBannerSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addHomeBannerSuccess'])) {
+                        echo $_SESSION['addHomeBannerSuccess'];
+                    }
+                ?>
+            </div>
+            <legend>Update Home Try-on Banner</legend>
+            <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <input type='hidden' name='oldImage' id='oldImage' value='<?php echo $brow['html']; ?>'/>
+            <label for='image' >Image:</label>
+            <input type="file" name="image" id='image'/>
+            <br>
+            <input type='submit' name='submit' value='Submit' />
+            
+            </fieldset>
+        </form>
+        <br>
+        <?php 
+            $qry = "Select * from hometry where type='section' ORDER BY fieldorder asc";
             
             $result = mysqli_query($link, $qry);
 

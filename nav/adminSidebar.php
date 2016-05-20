@@ -75,7 +75,7 @@ require_once '../config/db.php';
                     <li><a href='advertisements.php'>ADVERTISEMENTS</a></li>
                     <li><a href='blog.php'>BLOG</a></li>
                     <li><a href='careers.php'>CAREERS</a></li>
-                    <li><a href='contact.php'>CONTACT</a></li>
+<!--                    <li><a href='contact.php'>CONTACT</a></li>-->
                     <li><a href='faq.php'>FAQ</a></li>
                     <li><a href='homepage.php'>HOMEPAGE</a></li>
                     <li><a href='homeTry.php'>HOME TRY-ON</a></li>
