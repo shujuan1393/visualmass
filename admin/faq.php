@@ -49,9 +49,11 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
 
         $editid = $_POST['editid'];
 
+        $order = $_POST['order'];
+        
         if (empty($editid)) {
-            $faqSql = "INSERT INTO faq (title, html, type) VALUES "
-                    . "('$title', '$html', 'section');";
+            $faqSql = "INSERT INTO faq (title, html, type, fieldorder) VALUES "
+                    . "('$title', '$html', 'section', '$order');";
             unset($_SESSION['updateFaqSuccess']);
             unset($_SESSION['addFaqError']);
             unset($_SESSION['updateFaqError']);
@@ -61,7 +63,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             $_SESSION['addFaqSuccess'] = "FAQ section successfully added";
         } else {
             $faqSql = "UPDATE faq SET title='$title', html='$html', "
-                . "type='section' where id = '$editid';";
+                . "type='section', fieldorder='$order' where id = '$editid';";
             if (mysqli_query($link, $faqSql)) {
                 unset($_SESSION['addFaqSuccess']);
                 unset($_SESSION['addFaqError']);
@@ -89,37 +91,22 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
 
         $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 
-        // Check if image file is a actual image or fake image
-        if(isset($_POST["submit"])) {
-            $check = getimagesize($_FILES["image"]["tmp_name"]);
-            if($check !== false) {
-                $uploadOk = 1;
-            } else {
-                unset($_SESSION['addFaqBannerSuccess']);
-                $_SESSION['addFaqBannerError'] = "File is not an image.";
-//                header('Location: faq.php');
-            }
-        }
         // Check if file already exists
         if (file_exists($target_file)) {
             unset($_SESSION['addFaqBannerSuccess']);
             $_SESSION['addFaqBannerError'] = "Sorry, file already exists.";
 //            header('Location: faq.php');
         }
-        // Check file size
-        if ($_FILES["image"]["size"] > 500000) {
-            unset($_SESSION['addFaqBannerSuccess']);
-            $_SESSION['addFaqBannerError'] = "Sorry, your file is too large.";
-//            header('Location: faq.php');
-        }
+        
         // Allow certain file formats
         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-        && $imageFileType != "gif" ) {
+        && $imageFileType != "gif" && $imageFileType != "mp3" && $imageFileType != "mp4" 
+                && $imageFileType != "wma" ) {
             unset($_SESSION['addFaqBannerSuccess']);
-            $_SESSION['addFaqBannerError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $_SESSION['addFaqBannerError'] = "Sorry, only JPG, JPEG, PNG, GIF, MP3, MP4 & WMA files are allowed.";
 //            header('Location: faq.php');
         }
-        if ($uploadOk === 1) {
+        if (!isset($_SESSION['addFaqBannerError'])) {
             if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                 unset($_SESSION['addFaqBannerSuccess']);
                 $_SESSION['addFaqBannerError'] = "Sorry, there was an error uploading your file.";
@@ -187,18 +174,25 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                     echo "You have not uploaded a banner image yet.<br><br>";
                 } else {
                     $brow = mysqli_fetch_assoc($bresult);
-                    echo "<img src='".$brow['html']."' width=200>";
+                    $browArr = explode(".", $brow['html']);
+                    $ext = $browArr[count($browArr)-1];
+                    
+                    $imgArr = array("jpg", "jpeg", "png", "gif");
+                    $vidArr = array("mp3", "mp4", "wma");
+                    
+                    if (in_array($ext, $imgArr)) {
+                        echo "<img src='".$brow['html']."' width=450>";
+                    } else {
+                        echo '<video width="500" height="400" autoplay>
+                        <source src="'.$brow['html'].'" type="video/mp4">
+                        Your browser does not support the video tag.
+                        </video>';
+                    }
                 }
             }
         ?>
         <form id='addFaqBanner' action='faq.php' method='post' enctype="multipart/form-data">
             <fieldset >
-            <legend>Update FAQ Banner</legend>
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <label for='image' >Image:</label>
-            <input type="file" name="image" id='image' accept="image/*" />
-            <br>
-            <input type='submit' name='submit' value='Submit' />
             <div id="addFaqBannerError" style="color:red">
                 <?php 
                     if (isset($_SESSION['addFaqBannerError'])) {
@@ -214,11 +208,17 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                     }
                 ?>
             </div>
+            <legend>Update FAQ Banner</legend>
+            <input type='hidden' name='submitted' id='submitted' value='1'/>
+            <label for='image' >Image:</label>
+            <input type="file" name="image" id='image' />
+            <br>
+            <input type='submit' name='submit' value='Submit' />
             </fieldset>
         </form>
         <h3>FAQ Sections</h3>
         <?php 
-            $qry = "Select * from faq where type <> 'banner'";
+            $qry = "Select * from faq where type <> 'banner' order by fieldorder asc";
             
             $result = mysqli_query($link, $qry);
 
@@ -232,14 +232,18 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             ?>
             <table>
                 <thead>
+                    <th>Order</th>
                     <th>Title</th>
                     <th>Edit</th>
                     <th>Delete</th>                        
                 </thead>
             <?php
                 // output data of each row
+            $rowCount = 0;
                 while ($row = mysqli_fetch_assoc($result)) {
+                    $rowCount++;
                     echo "<tr>";
+                    echo "<td>".$row['fieldorder'] ."</td>";   
                     echo "<td>".$row['title'] ."</td>";                        
                     echo '<td><button onClick="window.location.href=`faq.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
@@ -276,6 +280,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                     }
                 ?>
             </div>
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
             
             <div id="addFaqSuccess" style="color:green">
                 <?php 
@@ -292,6 +297,11 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             <input type='text' name='title' id='title' 
                    value="<?php if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
             <br>
+            <label for='order' >Order*:</label>
+            <input type='text' name='order' id='order'  
+               onkeypress="return isNumber(event)" 
+                   value="<?php if (isset($editrow['fieldorder'])) { echo $editrow['fieldorder']; } else { echo $rowCount+1; } ?>"/>
+            <br>
             Content*: 
             <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
             <script type="text/javascript">
@@ -304,6 +314,17 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         </div>
     </div>
     <script>
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                document.getElementById('nanError').style.display='block';
+                document.getElementById('nanError').style.color='red';
+                return false;
+            }
+            document.getElementById('nanError').style.display='none';
+            return true;
+        }
         function deleteFunction(locId) {
             var r = confirm("Are you sure you wish to delete this FAQ section?");
             if (r === true) {

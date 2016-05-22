@@ -24,7 +24,7 @@ require_once '../config/db.php';
             $accessArr = explode("&", $accessRow['value']);
             $checkArr;
             if ($curUserType === 'admin') {
-                $checkArr = array("cust", "disc", "gift", "inv", "loc", "media", "orders", "partners",
+                $checkArr = array("career", "cust", "disc", "gift", "inv", "loc", "media", "orders", "partners",
                     "products", "settings", "stats", "emp", "web");
             } else {
                 for ($i = 0; $i < count($accessArr); $i++) {
@@ -38,7 +38,8 @@ require_once '../config/db.php';
         ?>
         <ul>
             <li><a href='admin.php'>HOME</a></li>  
-            <li><a href='profile.php'>MY PROFILE</a></li>            
+            <li><a href='profile.php'>MY PROFILE</a></li>         
+            <?php if (in_array("career", $checkArr)) { ?><li><a href='jobs.php'>CAREERS</a></li><?php } ?>   
             <?php if (in_array("cust", $checkArr)) { ?><li>CUSTOMERS</li><?php } ?>
             <?php if (in_array("disc", $checkArr)) { ?><li><a href='discounts.php'>DISCOUNTS</a></li><?php } ?>
             <?php if (in_array("gift", $checkArr)) { ?><li><a href='giftcards.php'>GIFT CARDS</a></li><?php } ?>
@@ -55,7 +56,7 @@ require_once '../config/db.php';
                     <li><a href='blogSettings.php'>BLOG</a></li>
                     <li><a href='checkoutSettings.php'>CHECKOUT</a></li>
                     <li>EXPORTS</li>
-                    <li>FORMS</li>
+                    <li><a href="formSettings.php">FORMS</a></li>
                     <li><a href="giftcardSettings.php">GIFT CARDS</a></li>
                     <li><a href='homeTrySettings.php'>HOME TRY-ON</a></li>
                     <li><a href='notificationSettings.php'>NOTIFICATIONS</a></li>
@@ -73,8 +74,15 @@ require_once '../config/db.php';
                 <ul id='webDropdown' style='display:none'>
                     <li><a href='advertisements.php'>ADVERTISEMENTS</a></li>
                     <li><a href='blog.php'>BLOG</a></li>
-                    <li><a href='contact.php'>CONTACT</a></li>
+                    <li><a href='careers.php'>CAREERS</a></li>
+<!--                    <li><a href='contact.php'>CONTACT</a></li>-->
                     <li><a href='faq.php'>FAQ</a></li>
+                    <li><a href='homepage.php'>HOMEPAGE</a></li>
+                    <li><a href='homeTry.php'>HOME TRY-ON</a></li>
+                    <li><a href='mainstory.php'>OUR STORY - MAIN</a></li>
+                    <li><a href='culturestory.php'>OUR STORY - CULTURE</a></li>
+                    <li><a href='designstory.php'>OUR STORY - DESIGN</a></li>
+                    <li><a href='onestory.php'>OUR STORY - GIFT INITIATIVE</a></li>
                     <li><a href='terms.php'>TERMS</a></li>
                 </ul>
             </li><?php } ?>

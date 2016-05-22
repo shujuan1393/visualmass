@@ -29,12 +29,13 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateTermError']);
         
         $title = $_POST['title'];
+        $order = $_POST['order'];
         $html = htmlentities($_POST['html']);
         
         if (!empty($_POST['editid'])) {
             $editid = $_POST['editid'];
 
-            $updateDiscSql = "UPDATE terms SET title='$title', html='$html' "
+            $updateDiscSql = "UPDATE terms SET title='$title', html='$html', fieldorder='$order' "
                     . "where id = '$editid';";
             
             if (mysqli_query($link, $updateDiscSql)) {
@@ -47,8 +48,8 @@ if (isset($_GET['delete'])) {
                 echo "Error updating record: " . mysqli_error($link);
             }
         } else {
-            $faqSql = "INSERT INTO terms (title, html) VALUES "
-                    . "('$title', '$html');";
+            $faqSql = "INSERT INTO terms (title, html, fieldorder) VALUES "
+                    . "('$title', '$html', '$order');";
             
             mysqli_query($link, $faqSql);
             $_SESSION['addTermSuccess'] = "Terms section successfully added";

@@ -19,6 +19,28 @@ if (isset($_GET['delete'])) {
         header("Location: advertisements.php");
     } 
 } else if (isset($_POST['submit'])) {
+    
+    $buttonno = $_POST['buttonno'];
+    
+    for ($i = 1; $i <= $buttonno; $i++) {
+        $linki = "link".$i;
+        $linkposi = "linkpos".$i;
+        $buttoni = "buttontext".$i;
+        if (!empty($_POST[$linki]) && (empty($_POST[$linkposi]) 
+                || empty($_POST[$buttoni]))) { 
+            unset($_SESSION['addAdvSuccess']);
+            unset($_SESSION['updateAdvError']);
+            unset($_SESSION['updateAdvSuccess']);
+            unset($_SESSION['uploadAdvError']);
+            $_SESSION['addAdvError'] = "Button text and Link position required";
+            if (!empty($_POST['editid'])) {
+                header("Location: advertisements.php?id=".$_POST['editid']);
+            } else {
+                header('Location: advertisements.php');
+            }
+        } 
+    }
+    
     if(empty($_POST['title']) || empty($_POST['status']) || 
             empty($_POST['visibility'])) {
         unset($_SESSION['addAdvSuccess']);
@@ -41,19 +63,53 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['uploadAdvError']);
         $_SESSION['addAdvError'] = "Min height required";
         header('Location: advertisements.php');
-    } else {
+    } else if (!empty($_POST['html']) && empty($_POST['htmlpos'])) { 
+        unset($_SESSION['addAdvSuccess']);
+        unset($_SESSION['updateAdvError']);
+        unset($_SESSION['updateAdvSuccess']);
+        unset($_SESSION['uploadAdvError']);
+        $_SESSION['addAdvError'] = "Content position required";
+        header('Location: advertisements.php');
+    } else if (!empty($_FILES['image']['name']) && empty($_POST['imagepos'])) { 
+        unset($_SESSION['addAdvSuccess']);
+        unset($_SESSION['updateAdvError']);
+        unset($_SESSION['updateAdvSuccess']);
+        unset($_SESSION['uploadAdvError']);
+        $_SESSION['addAdvError'] = "Image position required";
+        header('Location: advertisements.php');
+    } else if (!isset($_SESSION['addAdvError'])){
         unset($_SESSION['addAdvError']);
         unset($_SESSION['updateAdvError']);
         unset($_SESSION['updateAdvSuccess']);
         unset($_SESSION['uploadAdvError']);
         
+        $pagelink = "";
+        $linkpos = "";
+        $buttonlink = "";
+        
+        for ($i = 1; $i <= $buttonno; $i++) {
+            $linki = "link".$i;
+            $linkposi = "linkpos".$i;
+            $buttoni = "buttontext".$i;
+            
+            $pagelink .= $_POST[$linki];
+            $linkpos .= $_POST[$linkposi];
+            $buttonlink .= $_POST[$buttoni];
+            
+            if ($i+1 !== $buttonno+1) {
+                $pagelink .= ",";
+                $linkpos .= ",";
+                $buttonlink .= ",";
+            }
+        }
+        
         $title = $_POST['title'];
-        $pagelink = $_POST['link'];
         $status = $_POST['status'];
         $expiry = $_POST['expiry'];
         $start = $_POST['date3'];
         $end = $_POST['date4'];
         $html = htmlentities($_POST['html']);
+        $htmlpos = $_POST['htmlpos'];
         $visArr = $_POST['visibility'];
         $vis = "";
 
@@ -66,7 +122,8 @@ if (isset($_GET['delete'])) {
         }
         
         $minheight = $_POST['minheight'];
-        
+        $imagepos = $_POST['imagepos'];
+                
         $image = "";
         
         if (!empty($_FILES['image']['name'])) {
@@ -130,7 +187,8 @@ if (isset($_GET['delete'])) {
                 $updateAdvSql = "UPDATE advertisements SET title='$title', link='$pagelink', "
                     . "image='$image', status='$status', start='$start', "
                     . "end='$end', expiry='$expiry', visibility='$vis',"
-                        . " minheight='$minheight', html='$html' where id = '$editid';";
+                        . " minheight='$minheight', html='$html', htmlpos='$htmlpos',"
+                        . "imagepos='$imagepos', linkpos='$linkpos', buttontext='$buttonlink' where id = '$editid';";
                 
                 if (mysqli_query($link, $updateAdvSql)) {
                     unset($_SESSION['addAdvSuccess']);
@@ -143,10 +201,12 @@ if (isset($_GET['delete'])) {
                     echo "Error updating record: " . mysqli_error($link);
                 }
             } else {
-                $advSql = "INSERT INTO advertisements (title, image, link, status, expiry, "
-                        . "start, end, visibility, minheight, html) "
-                    . "VALUES ('$title','$image', '$pagelink', '$status', '$expiry', "
-                        . "'$start', '$end', '$vis', '$minheight', '$html');";
+                $advSql = "INSERT INTO advertisements (title, image, imagepos, buttontext, "
+                        . "link, linkpos, status, expiry, start, end, visibility, "
+                        . "minheight, html, htmlpos) "
+                    . "VALUES ('$title','$image', '$imagepos', '$buttonlink',"
+                        . " '$pagelink', '$linkpos', '$status', '$expiry', "
+                        . "'$start', '$end', '$vis', '$minheight', '$html', '$htmlpos');";
 
                 mysqli_query($link, $advSql);
                 unset($_SESSION['uploadAdvError']);

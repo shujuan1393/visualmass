@@ -169,6 +169,13 @@ if (!mysqli_query($link,$selectSql)) {
                                 
                     ?>
                         <td>
+                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='career'
+                                   <?php 
+                                    if (in_array("career", $accessArr)) {
+                                        echo " checked";
+                                    }
+                                   ?>
+                                   > Careers
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='cust'
                                    <?php 
                                     if (in_array("cust", $accessArr)) {

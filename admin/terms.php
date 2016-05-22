@@ -43,8 +43,7 @@ if (isset($_GET['id'])) {
         <h2>Terms</h2>
         <br>
         <?php 
-            $qry = "Select * from terms";
-            
+            $qry = "Select * from terms order by fieldorder asc";
             $result = mysqli_query($link, $qry);
 
             if (!mysqli_query($link,$qry))
@@ -57,14 +56,18 @@ if (isset($_GET['id'])) {
             ?>
             <table>
                 <thead>
+                    <th>Order</th>
                     <th>Title</th>
                     <th>Edit</th>
                     <th>Delete</th>                        
                 </thead>
             <?php
+            $rowCount = 0;
                 // output data of each row
                 while ($row = mysqli_fetch_assoc($result)) {
+                    $rowCount++;
                     echo "<tr>";
+                    echo "<td>".$row['fieldorder'] ."</td>";  
                     echo "<td>".$row['title'] ."</td>";                        
                     echo '<td><button onClick="window.location.href=`terms.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
@@ -94,6 +97,22 @@ if (isset($_GET['id'])) {
         
         <form id='addTermSection' action='processTerms.php' method='post'>
             <fieldset >
+            <div id="addTermError" style="color:red">
+                <?php 
+                    if (isset($_SESSION['addTermError'])) {
+                        echo $_SESSION['addTermError'];
+                    }
+                ?>
+            </div>
+            
+            <p id='nanError' style="display: none;">Please enter numbers only</p>
+            <div id="addTermSuccess" style="color:green">
+                <?php 
+                    if (isset($_SESSION['addTermSuccess'])) {
+                        echo $_SESSION['addTermSuccess'];
+                    }
+                ?>
+            </div>
             <legend>Add/Edit Terms Section</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
@@ -106,6 +125,11 @@ if (isset($_GET['id'])) {
                    }
                    ?>'/>
             <br>
+            <label for='order' >Order*:</label>
+            <input type='text' name='order' id='order'  
+               onkeypress="return isNumber(event)" 
+                   value="<?php if (isset($erow['fieldorder'])) { echo $erow['fieldorder']; } else { echo $rowCount+1; } ?>"/>
+            <br>
             Content*: 
             <textarea name="html"><?php 
                    if (!empty($erow['html'])) {
@@ -117,26 +141,22 @@ if (isset($_GET['id'])) {
             </script>
             <br>
             <input type='submit' name='submit' value='Submit' />
-            <div id="addTermError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addTermError'])) {
-                        echo $_SESSION['addTermError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addTermSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addTermSuccess'])) {
-                        echo $_SESSION['addTermSuccess'];
-                    }
-                ?>
-            </div>
             </fieldset>
         </form>
         </div>
     </div>
     <script>
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                document.getElementById('nanError').style.display='block';
+                document.getElementById('nanError').style.color='red';
+                return false;
+            }
+            document.getElementById('nanError').style.display='none';
+            return true;
+        }
         function deleteFunction(locId) {
             var r = confirm("Are you sure you wish to delete this Terms section?");
             if (r === true) {

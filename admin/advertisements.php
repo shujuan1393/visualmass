@@ -13,7 +13,6 @@ if (isset($_GET['id'])) {
     unset($_SESSION['updateAdvSuccess']);    
     unset($_SESSION['updateAdvError']);
     unset($_SESSION['addAdvSuccess']);
-    unset($_SESSION['addAdvError']);
     unset($_SESSION['uploadAdvError']);
     $selectSql = "Select * from advertisements where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
@@ -149,9 +148,28 @@ if (isset($_GET['id'])) {
             <label for='image' >Image*:</label>
             <input type="file" name="image" id='image' accept="image/*" />
             <br>
-            <label for='link' >Link (optional):</label>
-            <input type='text' name='link' id='link'  maxlength="50" 
-                   value='<?php if (!empty($erow['link'])) { echo $erow['link']; } ?>'/>
+            <label for='imagepos' >Image Position*:</label>
+            <input type='radio' name='imagepos' value='left' <?php 
+                if (!empty($erow['imagepos'])) {
+                    if (strcmp($erow['imagepos'], "left") === 0) {
+                        echo " checked";
+                    }
+                }
+            ?>>Left 
+            <input type='radio' name='imagepos' value='background' <?php 
+                if (!empty($erow['imagepos'])) {
+                    if (strcmp($erow['imagepos'], "background") === 0) {
+                        echo " checked";
+                    }
+                }
+            ?>>Background 
+            <input type='radio' name='imagepos' value='right' <?php 
+                if (!empty($erow['imagepos'])) {
+                    if (strcmp($erow['imagepos'], "right") === 0) {
+                        echo " checked";
+                    }
+                }
+            ?>>Right 
             <br>
             <label for='status' >Status*:</label>
             <select name='status'>
@@ -260,6 +278,29 @@ if (isset($_GET['id'])) {
                 CKEDITOR.replace('html');
             </script>
             <br>
+            <label for='htmlpos' >Content Position:</label>
+            <input type='radio' name='htmlpos' value='left' <?php 
+                if (!empty($erow['htmlpos'])) {
+                    if (strcmp($erow['htmlpos'], "left") === 0) {
+                        echo " checked";
+                    }
+                }
+            ?>>Left 
+            <input type='radio' name='htmlpos' value='center' <?php 
+                if (!empty($erow['htmlpos'])) {
+                    if (strcmp($erow['htmlpos'], "center") === 0) {
+                        echo " checked";
+                    }
+                }
+            ?>>Center 
+            <input type='radio' name='htmlpos' value='right' <?php 
+                if (!empty($erow['htmlpos'])) {
+                    if (strcmp($erow['htmlpos'], "right") === 0) {
+                        echo " checked";
+                    }
+                }
+            ?>>Right 
+            <br>
             Visibility*: 
             <?php 
                 if(!empty($erow['visibility'])) {
@@ -353,6 +394,88 @@ if (isset($_GET['id'])) {
                    onkeypress="return isNumber(event)" 
                    value='<?php if (!empty($erow['minheight'])) { echo $erow['minheight']; } ?>'/>
             <br>
+            <?php 
+                if (!empty($erow['buttontext'])) {
+                    $buttontexts = explode(",", $erow['buttontext']);
+                }
+                if (!empty($erow['link'])) {
+                    $links = explode(",", $erow['link']);
+                }
+                
+                if (!empty($erow['linkpos'])) {
+                    $linkposArr = explode(",", $erow['linkpos']);
+                }
+            ?>
+            <input type='hidden' name='buttonno' id='buttonno' value='<?php 
+                    if(!empty($buttontexts)) {
+                        echo count($buttontexts);
+                    } else {
+                        echo '1';
+                    }
+            ?>'>
+            <span onclick="addButton()">Add Button</span>
+            <div id='buttonlinks'>
+                <?php 
+                    if (!empty($buttontexts)) {
+                        for ($i = 0; $i < count($buttontexts); $i++) {
+                ?>
+                        <fieldset>
+                            <legend>Add Button <?php echo $i+1; ?></legend>
+                            <label for='buttontext1' >Button Text <?php echo $i+1; ?>(optional):</label>
+                            <input type='text' name='buttontext<?php echo $i+1; ?>' 
+                                   id='buttontext<?php echo $i+1; ?>'  maxlength="50" 
+                                   value='<?php if (!empty($buttontexts[$i])) { echo $buttontexts[$i]; } ?>'/>
+                            <br>
+                            <label for='link1' >Link  <?php echo $i+1; ?> (optional):</label>
+                            <input type='text' name='link<?php echo $i+1; ?>' 
+                                   id='link<?php echo $i+1; ?>'  maxlength="50" 
+                                   value='<?php if (!empty($links[$i])) { echo $links[$i]; } ?>'/>
+                            <br>
+                            <label for='linkpos1' >Link Position  <?php echo $i+1; ?>:</label>
+                            <input type='radio' name='linkpos<?php echo $i+1; ?>' value='left' <?php 
+                                if (!empty($linkposArr[$i])) {
+                                    if (strcmp($linkposArr[$i], "left") === 0) {
+                                        echo " checked";
+                                    }
+                                }
+                            ?>>Left 
+                            <input type='radio' name='linkpos<?php echo $i+1; ?>' value='center' <?php 
+                                if (!empty($linkposArr[$i])) {
+                                    if (strcmp($linkposArr[$i], "center") === 0) {
+                                        echo " checked";
+                                    }
+                                }
+                            ?>>Center 
+                            <input type='radio' name='linkpos<?php echo $i+1; ?>' value='right' <?php 
+                                if (!empty($linkposArr[$i])) {
+                                    if (strcmp($linkposArr[$i], "right") === 0) {
+                                        echo " checked";
+                                    }
+                                }
+                            ?>>Right 
+                        </fieldset>
+                <?php
+                        }
+                    } else {
+                ?>
+                    <fieldset>
+                        <legend>Add Button 1</legend>
+                        <label for="buttontext1">Button Text 1(optional):</label>
+                        <input type="text" name="buttontext1" id="buttontext1" maxlength="50">
+                        <br>
+                        <label for="link1">Link  1 (optional):</label>
+                        <input type="text" name="link1" id="link1" maxlength="50">
+                        <br>
+                        <label for="linkpos1">Link Position 1:</label>
+                        <input type="radio" name="linkpos1" value="left">Left 
+                        <input type="radio" name="linkpos1" value="center">Center 
+                        <input type="radio" name="linkpos1" value="right">Right 
+                    </fieldset>
+                <?php
+                    }
+                ?>
+            </div>
+            <br>
             <input type='submit' name='submit' value='Submit' />
             </fieldset>
         </form>
@@ -395,6 +518,26 @@ if (isset($_GET['id'])) {
                 ?>
                 window.location='advertisements.php';
             }
+        }
+        var count=1;
+        
+        function addButton() {
+            count++;
+            document.getElementById('buttonno').value = count;
+            var node = document.createElement('fieldset');  
+            node.innerHTML = "<legend>Add Button "+ count + 
+                    "</legend><label for='buttontext"+count+"' >Button Text " +count+ 
+                    " (optional):</label><input type='text' name='buttontext"+count+
+                    "' id='buttontext"+count+"' maxlength='50' /><br>" +
+                    "<label for='link"+count+"' >Link " +count+ " (optional):</label>"
+                    +"<input type='text' name='link"+count+"' id='link"+count+"'  maxlength='50' />"+
+                    "<br><label for='linkpos"+count+"' >Link Position "+count+ " :</label>"+
+                    "<input type='radio' name='linkpos"+count+"' value='left'>Left "+
+                    "<input type='radio' name='linkpos"+count+"' value='center'>Center"+ 
+                    "<input type='radio' name='linkpos"+count+"' value='right'>Right";
+//            node.innerHTML = 'Button Text ' + count + ' : <input type="text" name="buttontext'+count+'">';
+            
+            document.getElementById('buttonlinks').appendChild(node); 
         }
     </script>
     
