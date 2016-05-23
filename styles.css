@@ -14,12 +14,14 @@ html,body {
     border: 0; 
     background-color: #fff; 
 }
+
 html { 
     font-size: 62.5%; 
     -webkit-touch-callout:none; 
     -webkit-text-size-adjust:none; 
     -ms-text-size-adjust:100%; 
 }
+
 body { 
     line-height: 21px; 
     font-size: 12px; 
@@ -80,8 +82,6 @@ input[type=button], input[type=submit], input[type=reset] {
     margin-top: 8px;
     text-transform: uppercase;
 }
-
-/* TABLE STYLE */
 
 table {
     border-collapse: collapse;
