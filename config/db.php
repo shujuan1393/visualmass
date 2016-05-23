@@ -7,37 +7,14 @@
  */
 
 session_start();
-if (!isset($_SESSION['loggedUserEmail'])) {
-    header("Location: login.php");
-}
-//if (!isset($_COOKIE['user'])) {
-//    header("Location: login.php");
-//    exit();
-//} 
+$curUrl = $_SERVER['REQUEST_URI'];
+$urlArr = explode("/", $curUrl);
 
-//if(auto_logout("user_time")) {
-//    session_unset();
-//    session_destroy();
-//    setcookie("user", "", time() - 3600);
-//    header("Location: login.php");          
-//    exit;
-//}  
-//
-//function auto_logout($field) {
-//    if (isset($_SESSION[$field])) {
-//        $t = time();
-//        $t0 = $_SESSION[$field];
-//        $diff = $t - $t0;
-//        if ($diff > 900 || !isset($t0)) {          
-//            return true;
-//        }
-//        else {
-//            $_SESSION[$field] = time();
-//        }
-//    } else {
-//        header("Location: login.php");
-//    }
-//}
+if (in_array("admin", $urlArr)) {
+    if (!isset($_SESSION['loggedUserEmail'])) {
+        header("Location: login.php");
+    }
+}
 
 $link = mysqli_connect('localhost', 'visualmass', 'ilovevisualmass');
 if (!$link) {

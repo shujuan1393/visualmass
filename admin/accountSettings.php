@@ -158,24 +158,21 @@ if (!mysqli_query($link,$selectSql)) {
                             $count = 0;
                             while ($row1 = mysqli_fetch_assoc($empTypeResult)) {
                                 $str = $row1['code']."=";
-                                $checkArr = explode($str, $valArr[$count]);
-                                $count++;
-                                $accessArr;
-                                if (!empty($checkArr[1])) {
-                                    $accessArr = explode(",", $checkArr[1]);
+                                if (stripos($savedrow['value'], $str) !== FALSE) {
+                                    $checkArr = explode($str, $valArr[$count]);
+                                    $count++;
+                                    $accessArr;
+                                    if (!empty($checkArr[1])) {
+                                        $accessArr = explode(",", $checkArr[1]);
+                                    }else{
+                                        $accessArr = array();
+                                    }
                                 }
                                 echo "<tr>";
                                 echo "<td>".$row1['name']."</td>";
                                 
                     ?>
                         <td>
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='career'
-                                   <?php 
-                                    if (in_array("career", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Careers
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='cust'
                                    <?php 
                                     if (in_array("cust", $accessArr)) {
@@ -248,7 +245,7 @@ if (!mysqli_query($link,$selectSql)) {
                                    > Settings
                             <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='stats' 
                                    <?php 
-                                    if (in_array("statistics", $accessArr)) {
+                                    if (in_array("stats", $accessArr)) {
                                         echo " checked";
                                     }
                                    ?>
@@ -279,7 +276,7 @@ if (!mysqli_query($link,$selectSql)) {
         </form>
                 <h3>All Employees</h3> 
             <?php
-                $empSql = "Select * from staff where email <> '".$_SESSION['loggedUserEmail']."'";
+                $empSql = "Select * from staff ";
                 
                 $result = mysqli_query($link, $empSql);
                 

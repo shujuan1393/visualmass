@@ -14,12 +14,14 @@ html,body {
     border: 0; 
     background-color: #fff; 
 }
+
 html { 
     font-size: 62.5%; 
     -webkit-touch-callout:none; 
     -webkit-text-size-adjust:none; 
     -ms-text-size-adjust:100%; 
 }
+
 body { 
     line-height: 21px; 
     font-size: 12px; 
@@ -41,6 +43,13 @@ body {
 
 .error {
    color: red; 
+   padding: 5px;
+}
+
+/* FORM STYLE */
+
+form {
+    margin-bottom: 0px!important;
 }
 
 .form_header {
@@ -61,7 +70,6 @@ input[type=text], input[type=password], select {
     margin: 2px 0;
     display: inline-block;
     border: 1px solid #ccc;
-    border-radius: 4px;
     box-sizing: border-box;
 }
 
@@ -73,30 +81,6 @@ input[type=button], input[type=submit], input[type=reset] {
     padding: 15px 50px;
     margin-top: 8px;
     text-transform: uppercase;
-    border-radius: 4px;
-}
-
-.logo {
-    margin: auto;
-    text-align: center;
-    padding: 50px;
-    background-image: url(images/HorizontalLogo_black.png);
-    background-repeat: no-repeat;
-    background-size: auto 30px;
-    background-position: center center;
-}
-
-.logo_sidebar {
-    padding: 20px;
-    left: 10px;
-    background-image: url(images/HorizontalLogo_black.png);
-    background-repeat: no-repeat;
-    background-size: 200px auto;
-    background-position: 1% center;
-}
-
-form {
-    margin-bottom: 0px!important;
 }
 
 table {
@@ -124,6 +108,39 @@ td {
     text-align: center;
 }
 
+.content tr {
+    border: none;
+}
+
+.content td {
+    text-align: left;
+}
+
+/*  HEADER BAR */
+
+.logo {
+    margin: auto;
+    text-align: center;
+    padding: 50px;
+    background-image: url(images/HorizontalLogo_black.png);
+    background-repeat: no-repeat;
+    background-size: auto 30px;
+    background-position: center center;
+}
+
+.rightheader {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    padding: 20px;
+    display: flex;
+}
+
+.rightheader ul {
+    list-style-type: none;
+    margin: 0;
+}
+
 #frameheader{
     top: 0;
     width: 100%;
@@ -134,55 +151,87 @@ td {
     position: fixed;
 }
 
+/* SIDE NAVIGATION BAR */
+
 #framecontent{
     position: fixed;
     top: 60px;
     bottom: 0; 
     left: 0;
     width: 250px; /*Width of frame div*/
-    height: 100%;
+    height: auto;
     overflow: auto; /*Disable scrollbars. Set to "scroll" to enable*/
     background: #ccc;
 }
 
-#framecontent ul {
-    list-style-type: none;
-    margin: 0px;
-    padding: 0px;
-}
-
-#settingslist {
+#settingslist, #weblist {
     font-family: inherit;
     font-size: inherit;
 }
 
-#framecontent li{
-    color: #000;
-    text-align: center;
-    padding: 10px 10px;
-    border-bottom: 1px solid #ddd;
+.logo_sidebar {
+    padding: 20px;
+    left: 0;
+    background-image: url(images/HorizontalLogo_black.png);
+    background-repeat: no-repeat;
+    background-size: 200px auto;
+    background-position: 5px center;
 }
 
-#framecontent li:last-child {
-    border-bottom: none;
+.nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    bottom: 0;
 }
 
-#framecontent li a {
+.nav li, .sub li {
+    padding: 15px 15px 0 15px;
     display: block;
 }
 
-#framecontent a {
-    color: #000;
-    text-decoration: underline;
+.nav li a {
+    display: block;
+    margin: auto;
 }
 
-#framecontent a:link, #framecontent a:visited {
-    color: #000;
+.subcontent {
+    width: inherit;
+    height: auto;
+    overflow: auto;
 }
 
-#framecontent a:hover, #framecontent a:active {
-    color: #fff;
+.sub ul {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 0;
+    margin: 0;
 }
+
+.subtable {
+    max-width: 250px;
+}
+
+.subtable td {
+    padding: 0;
+    text-align: left;
+}
+
+#nav img, #navlist img{
+    height: 20px;
+    padding-right: 10px;
+}
+
+#settingslist ul, #weblist ul {
+    margin-left: 50px;
+}
+
+#navlist li a{
+    display: block;
+}
+
+/* MAIN CONTENT */
 
 #maincontent{
     position: fixed;
@@ -198,27 +247,140 @@ td {
     margin: 15px; /*Margins for inner DIV inside each DIV (to provide padding)*/
 }
 
-.rightheader {
+.setting-tooltips {
+    font-size: inherit;
+    font-style: italic;
+    color: #808080;
+}
+
+/*.rightheader {
     position: absolute;
     top: 0px;
     right: 15px;
     padding: 20px;
-}
-
-#settings, #web {
-    cursor: pointer;
-}
-
-#webDropdown li {
-    font-size: inherit;  
-}
-
-.setting-tooltips {
-    font-size: 13px;
-    font-style: oblique;
-}
+}*/
 
 .checkboxAlign {
     margin-left: 70px;
     margin-top: -20px;
+}
+
+
+/* WEBSITE */
+/* GENERAL */
+.title {
+    font-size: 14px;
+    align-content: left;
+}
+
+.banner-title {
+    font-size: 14px;
+    text-align: center;
+}
+
+.webbanner {
+    display: block;
+    margin: auto;
+    height: 100%;
+    text-align: center;
+}
+
+/* NAVIGATION & FOOTER */
+.rightheader, .rightcontact {
+    padding: 0!important;
+}
+
+.left_nav, .rightheader, .rightcontact, .righticons {
+    display: flex;
+}
+
+
+.rightcontact {
+    position: absolute;
+    top: 85px;
+    right: 20px;
+    padding: 0;
+}
+
+.righticons {
+    position: absolute;
+    top: 200px;
+    right: 15px;
+    padding: 0;
+}
+
+.contact {
+    margin-left: 10px;
+}
+
+.left_nav ul, .rightheader ul, .righticons ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.left_nav li, #footer li {
+    float: left;
+    margin-top: 5px;
+    padding: 10px;
+}
+
+.rightheader li, .righticons {
+    float: left;
+    margin-top: 5px;
+}
+
+.left_nav li a , .rightheader li a, .righticons li a {
+    display: block;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+}
+
+.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active) {
+    color: #808080;
+}
+
+.active {
+background-color:#4CAF50;
+}
+
+#footer {
+    clear: both;
+    position: relative;
+    z-index: 10;
+    height: 3em;
+}
+
+/* TERMS */
+
+#terms_nav {
+  text-align: center;
+}
+#terms_nav ul {
+  display: inline-block;
+  margin: 20px 0;
+  padding: 0;
+}
+#terms_nav li {
+  padding: 0 60px;
+  display: inline-block;
+  text-transform: uppercase;
+}
+#terms_nav li a {
+  display: inline-block;
+  color: #000;
+  padding: 5px;
+  text-decoration: none;
+}
+
+#terms_content {
+    text-align: left;
+    padding: 30px 250px;
+}
+
+#terms_content .title {
+    text-transform: uppercase;
 }

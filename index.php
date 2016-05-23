@@ -7,18 +7,15 @@ and open the template in the editor.
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
     </head>
     <body>
-        <?php
-        // put your code here
-        require 'nav/header.php';
-        if (isset($_SESSION['loggedUser'])) {
-            echo "Welcome, ". $_SESSION['loggedUser'];
-            echo " <a href='logout.php'>Logout</a>";
-        } else {
-            echo "<a href='login.php'>Login</a>";
-        }
-        ?>
+        
+        <div id="wrapper">
+            <div id="header"><?php require_once 'nav/header.php';?></div>
+            
+            <div id="content"></div>
+            
+            <div id="footer"><?php require_once 'nav/footer.php';?></div>
+        </div>
     </body>
 </html>

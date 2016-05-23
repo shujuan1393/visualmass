@@ -159,30 +159,36 @@ if (isset($_GET['id'])) {
                 echo $erow['price'];
             }
                 ?>"/>
-            <label for='qty' >Quantity*:</label>
-            <input type='text' name='qty' id='qty' 
-                   onkeypress="return isNumber(event)" value ="<?php 
-            if (!empty($erow['quantity'])) {
-                echo $erow['quantity'];
+            <label for='track' >Track Inventory?*:</label>
+            <input type='radio' name='track' id='track' value ="yes" <?php 
+            if (strcmp($erow['track'], "yes") === 0) {
+                echo " checked";
             }
-                ?>"/>
+                ?>/>
             <br>
+            <div id='showQty' style='display: none;'>
+                <label for='qty' >Quantity*:</label>
+                <input type='text' name='qty' id='qty' 
+                       onkeypress="return isNumber(event)" value ="<?php 
+                if (!empty($erow['quantity'])) {
+                    echo $erow['quantity'];
+                }
+                    ?>"/>
+                <br>
+            </div>
             Type*:
             <select name="type">
-                <option value="sunglasses" <?php 
-                if (!empty($erow['type'])) {
-                    if (strcmp($erow['type'], "sunglasses") === 0) {
-                        echo " selected";
+                <?php 
+                    $types = "Select * from categories where type='product';";
+                    $res = mysqli_query($link, $types);
+                    while($trow = mysqli_fetch_assoc($res)) {
+                        echo "<option value='".$trow['name']."'";
+                        if (strcmp($erow['type'], $trow['name']) === 0) {
+                            echo " selected";
+                        }
+                        echo ">".$trow['name']."</option>";
                     }
-                }
-                ?>>Sunglasses</option>
-                <option value="frames" <?php 
-                if (!empty($erow['type'])) {
-                    if (strcmp($erow['type'], "frames") === 0) {
-                        echo " selected";
-                    }
-                }
-                ?>>Frames</option>
+                ?>
             </select>
             <br>
             <?php 
@@ -289,7 +295,14 @@ if (isset($_GET['id'])) {
         </form>
         </div>
     </div>
-    <script>
+    <script>   
+        if (document.getElementById('track').checked) {
+           document.getElementById('showQty').style.display = "block";            
+        }
+        document.getElementById('track').onclick = function(){  
+           document.getElementById('showQty').style.display = "block";
+        };
+        
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode
             if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {

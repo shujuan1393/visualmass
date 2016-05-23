@@ -18,8 +18,7 @@ if (isset($_GET['delete'])) {
         header("Location: products.php");
     } 
 } else if (isset($_POST['submit'])) {
-    if(empty($_POST['name']) || empty($_POST['desc']) 
-            || empty($_POST['qty']) || empty($_POST['price']) 
+    if(empty($_POST['name']) || empty($_POST['desc']) || empty($_POST['price']) 
             || empty($_POST['type']) || empty($_POST['tags']) 
             || empty($_POST['visibility']) || empty($_POST['availability']) 
             || empty($_POST['locations']) || empty($_POST['code']) ) {
@@ -124,10 +123,10 @@ if (isset($_GET['delete'])) {
                     $loc.=",";
                 }
             }
-
+            $track = $_POST['track'];
+            
             if (!empty($_POST['editid'])) {
                 $editcode = $_POST['editid'];
-
                 $editproductSql = "UPDATE products set name='$name', description='$desc',"
                         . " price='$price', quantity='$qty', type='$type',"
                         . " images='$images', tags='$tags', visibility='$vis',"
@@ -135,11 +134,13 @@ if (isset($_GET['delete'])) {
                         . "where pid='$editcode'";
 
                 mysqli_query($link, $editproductSql);
+                
+                if (strcmp($track, "yes") === 0) {
+                    $editinvSql = "UPDATE inventory set quantity='$qty', price='$price', "
+                            . "type='$type' where pid ='$editcode'";
 
-                $editinvSql = "UPDATE inventory set quantity='$qty', price='$price', "
-                        . "type='$type' where pid ='$editcode'";
-
-                mysqli_query($link, $editinvSql);
+                    mysqli_query($link, $editinvSql);
+                }
 //                echo $editinvSql."<br>";
 //                echo $editproductSql;
 //                exit();
@@ -147,16 +148,17 @@ if (isset($_GET['delete'])) {
                     header('Location: products.php');
             } else {
                 $productSql = "INSERT INTO products (pid, name, description, price, quantity, type,"
-                        . "images, tags, visibility, availability, locations) VALUES('$code',"
+                        . "images, tags, visibility, availability, locations, track) VALUES('$code',"
                         . "'$name', '$desc', '$price', '$qty', '$type', '$images', '$tags',"
-                        . "'$vis', '$avai', '$loc')";
+                        . "'$vis', '$avai', '$loc', '$track')";
 
                 mysqli_query($link, $productSql);
+                if (strcmp($track, "yes") === 0) {
+                    $invSql = "INSERT INTO inventory (pid, quantity, price, type) "
+                            . "VALUES('$code','$qty', '$price', '$type')";
 
-                $invSql = "INSERT INTO inventory (pid, quantity, price, type) "
-                        . "VALUES('$code','$qty', '$price', '$type')";
-
-                mysqli_query($link, $invSql);
+                    mysqli_query($link, $invSql);
+                }
                 unset($_SESSION["updateProdError"]);
                 unset($_SESSION["updateProdSuccess"]);
                 $_SESSION['addProdSuccess'] = "Product added successfully";
