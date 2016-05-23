@@ -61,6 +61,7 @@ require_once '../config/db.php';
                     <li><a href='homeTrySettings.php'>HOME TRY-ON</a></li>
                     <li><a href='notificationSettings.php'>NOTIFICATIONS</a></li>
                     <li>PAYMENTS</li>
+                    <li><a href='productCatSettings.php'>PRODUCT CATEGORIES</a></li>
                     <li>RECEIPTS</li>
                     <li><a href='serviceSettings.php'>SERVICES</a></li>
                     <li>STORE CREDIT</li>
