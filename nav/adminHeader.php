@@ -22,7 +22,7 @@
         <div class="logo_sidebar"></div>
         <div class ="rightheader">
             <ul>
-                <li><?php echo $_SESSION['loggedUser'] ?></li>
+                <li><?php echo $_SESSION['loggedUser']; ?></li>
                 <li><a href='../logout.php'>Logout</a></li>
             </ul>
         </div>

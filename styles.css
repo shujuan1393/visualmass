@@ -73,7 +73,7 @@ input[type=text], input[type=password], select {
     box-sizing: border-box;
 }
 
-input[type=button], input[type=submit], input[type=reset] {
+.button, input[type=button], input[type=submit], input[type=reset] {
     background-color: #808080;
     height: 50px;
     border: none;
@@ -170,6 +170,7 @@ td {
 }
 
 .logo_sidebar {
+    width: 200px;
     padding: 20px;
     left: 0;
     background-image: url(images/HorizontalLogo_black.png);
@@ -253,13 +254,6 @@ td {
     color: #808080;
 }
 
-/*.rightheader {
-    position: absolute;
-    top: 0px;
-    right: 15px;
-    padding: 20px;
-}*/
-
 .checkboxAlign {
     margin-left: 70px;
     margin-top: -20px;
@@ -285,6 +279,14 @@ td {
     text-align: center;
 }
 
+/*
+.rightheader {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    padding: 20px;
+}*/
+
 /* NAVIGATION & FOOTER */
 .rightheader, .rightcontact {
     padding: 0!important;
@@ -294,17 +296,16 @@ td {
     display: flex;
 }
 
-
 .rightcontact {
     position: absolute;
-    top: 85px;
+    top: 60px;
     right: 20px;
     padding: 0;
 }
 
 .righticons {
     position: absolute;
-    top: 200px;
+    top: 190px;
     right: 15px;
     padding: 0;
 }
@@ -312,6 +313,7 @@ td {
 .contact {
     margin-left: 10px;
 }
+
 
 .left_nav ul, .rightheader ul, .righticons ul {
     list-style-type: none;
@@ -321,13 +323,13 @@ td {
     display: inline-block;
 }
 
-.left_nav li, #footer li {
+.left_nav li, #footer li,.rightheader li {
     float: left;
     margin-top: 5px;
     padding: 10px;
 }
 
-.rightheader li, .righticons {
+.righticons {
     float: left;
     margin-top: 5px;
 }
@@ -383,4 +385,42 @@ background-color:#4CAF50;
 
 #terms_content .title {
     text-transform: uppercase;
+}
+
+.home-section {
+    width: inherit;
+    height: 100%;
+    position: relative;
+}
+
+.section-image{
+    width: 33%;
+    /*padding: 0 30px;*/
+}
+
+.section-image img {
+    height: 100%;
+    width: 100%;
+    display: block;
+    margin: auto;
+}
+
+.section-text {
+    width: 60%;
+    margin: 0 30px;
+}
+
+/*.section-link {
+    width: 50%;
+    margin: 0 30px;
+    display: inline;
+}*/
+
+.section-link {
+    width: 98%;
+    margin: auto;
+    display: block;
+    position: absolute;
+    padding: 0 10px;
+    bottom: 80px;
 }

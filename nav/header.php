@@ -21,7 +21,7 @@
             <ul>
                 <li>GLASSES</li>
                 <li>SUNGLASSES</li>
-                <li>HOME TRY-ON</li>
+                <li><a href='hometry.php'>HOME TRY-ON</a></li>
                 <li>LOCATION</li>
                 <li>OUR STORY</li>
             </ul>
