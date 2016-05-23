@@ -21,10 +21,10 @@
     <body>
         <div class="logo_sidebar"></div>
         <div class ="rightheader">
-            <?php 
-                echo "Welcome, " .$_SESSION['loggedUser']; 
-                echo "&nbsp<a href='../logout.php'>Logout</a>";
-            ?>
+            <ul>
+                <li><?php echo $_SESSION['loggedUser'] ?></li>
+                <li><a href='../logout.php'>Logout</a></li>
+            </ul>
         </div>
     </body>
 </html>

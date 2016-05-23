@@ -91,12 +91,11 @@ unset($_SESSION['addContactSuccess']);
 unset($_SESSION['addContactError']);
 unset($_SESSION['setContactDetailsError']);
 unset($_SESSION['setContactDetailsSuccess']);
-
 ?>
 <script>
     var date = new Date();
     var hrs = date.getHours();
-    var welcome = "oi";
+    var welcome = "";
     
     if(hrs < 12) {
         welcome = "Good morning, ";
@@ -115,11 +114,9 @@ unset($_SESSION['setContactDetailsSuccess']);
         ?>
     </div>
     <div id="framecontent">
-        <div class='innertube'>
         <?php
             require '../nav/adminSidebar.php';
         ?>
-        </div>
     </div>
     <div id="maincontent">
         <div class="innertube">
