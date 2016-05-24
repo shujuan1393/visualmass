@@ -19,7 +19,7 @@
             <ul>
                 <li>GIFT CARDS</li>
                 <li>CAREER</li>
-                <li>BLOG</li>
+                <li><a href='blog.php'>BLOG</a></li>
             </ul>
         </div>
         <div class ="rightheader">
@@ -53,7 +53,7 @@
         
         <div class="left_nav">
             <ul>
-                <li>FAQs</li>
+                <li><a href='faq.php'>FAQs</a></li>
                 <li>|</li>
                 <li><a href='terms.php'>Terms</a></li>
                 <li>|</li>

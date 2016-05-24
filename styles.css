@@ -128,6 +128,16 @@ td {
     background-position: center center;
 }
 
+.blog_logo {
+    text-align: center;
+    margin: 0 30%;
+    min-width: 200px;
+    background-image: url(images/HorizontalLogo_black.png);
+    background-repeat: no-repeat;
+    background-size: auto 25px;
+    background-position: 0 center;
+}
+
 .rightheader {
     position: absolute;
     top: 0px;
@@ -170,13 +180,12 @@ td {
 }
 
 .logo_sidebar {
-    width: 200px;
-    padding: 20px;
-    left: 0;
+    min-width: 200px;
+    margin-left: 15px;
     background-image: url(images/HorizontalLogo_black.png);
     background-repeat: no-repeat;
-    background-size: 200px auto;
-    background-position: 5px center;
+    background-size: auto 25px;
+    background-position: 0 center;
 }
 
 .nav {
@@ -262,7 +271,7 @@ td {
 
 /* WEBSITE */
 /* GENERAL */
-.title {
+.title, .blog_title {
     font-size: 14px;
     align-content: left;
 }
@@ -294,6 +303,11 @@ td {
 
 .left_nav, .rightheader, .rightcontact, .righticons {
     display: flex;
+}
+
+.left_nav {
+    overflow: hidden;
+    overflow-style: marquee;
 }
 
 .rightcontact {
@@ -380,7 +394,7 @@ background-color:#4CAF50;
 
 #terms_content {
     text-align: left;
-    padding: 30px 250px;
+    padding: 30px 200px;
 }
 
 #terms_content .title {
@@ -423,4 +437,81 @@ background-color:#4CAF50;
     position: absolute;
     padding: 0 10px;
     bottom: 80px;
+}
+
+#blog_content, .blog_title_page {
+    text-align: center;
+    margin: auto;
+}
+
+.blog_title_page {
+    padding: 10px 0;
+    font-size: 16px;
+}
+
+.blog_post{ 
+    height:100%;
+    padding: 0 200px;
+    margin: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.blog_post img{
+    width: 100%;
+    margin: auto;
+}
+
+.blog_title {
+    font-size: 15px;
+    margin: auto;
+    font-family: 'Alright Sans-Medium';
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.blog_author {
+    text-transform: uppercase;
+}
+
+.read_link {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.read_link:hover {
+    text-decoration: underline;
+}
+
+#faq_content {
+    text-align: center;
+    padding: 0 200px;
+    margin: 0 auto;
+}
+
+button.accordion {
+    background-color: #fff;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    border: none;
+    transition: 0.4s;
+}
+
+button.accordion.active, button.accordion:hover {
+    background-color: #ddd; 
+}
+
+div.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+}
+
+div.panel.show {
+    display: block !important;
 }
