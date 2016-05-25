@@ -7,8 +7,6 @@
  */
 
 require_once '../config/db.php';
-require_once('../calendar/classes/tc_calendar.php');
-require_once('../nav/adminHeader.php');
 
 $selectSql = "SELECT value from settings WHERE type='blog'";
 $savedresult = mysqli_query($link, $selectSql);
@@ -54,11 +52,9 @@ if (!mysqli_query($link,$selectSql)) {
         ?>
     </div>
     <div id="framecontent">
-        <div class='innertube'>
         <?php
             require '../nav/adminSidebar.php';
         ?>
-        </div>
     </div>
     <div id="maincontent">
         <div class="innertube">
@@ -252,21 +248,7 @@ if (!mysqli_query($link,$selectSql)) {
                    ?>'/>
             <br>
             Date Joined:
-            <?php
-            $myCalendar = new tc_calendar("date3", true, false);
-            $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-            if (!empty($erow['datejoined'])) {
-                $myCalendar->setDate(date('d', strtotime($erow['datejoined'])), date('m', strtotime($erow['datejoined'])), date('Y', strtotime($erow['datejoined'])));
-            } else {
-                $myCalendar->setDate(date('d', strtotime(date('Y-m-d'))), date('m', strtotime(date('Y-m-d'))), date('Y', strtotime(date('Y-m-d'))));
-            }
-            $myCalendar->setPath("../calendar/");
-            $myCalendar->setYearInterval(1970, 2020);
-            //$myCalendar->dateAllow('2009-02-20', "", false);
-            $myCalendar->setAlignment('left', 'bottom');
-            //$myCalendar->setSpecificDate(array("2011-04-01", "2011-04-04", "2011-12-25"), 0, 'year');
-            $myCalendar->writeScript();
-            ?>
+            <input type="text" id="date3" name="date3">
             <br>
             <input type='submit' name='submit' value='Submit' />
             </fieldset>
@@ -274,47 +256,50 @@ if (!mysqli_query($link,$selectSql)) {
         </div>
     </div>
     <script>
-    function isNumber(evt) {
-        evt = (evt) ? evt : window.event;
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-            document.getElementById('nanError').style.display='block';
-            document.getElementById('nanError').style.color='red';
-            return false;
+        var myCalendar = new dhtmlXCalendarObject(["date3"]);
+                myCalendar.hideTime();
+                
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                document.getElementById('nanError').style.display='block';
+                document.getElementById('nanError').style.color='red';
+                return false;
+            }
+            document.getElementById('nanError').style.display='none';
+            return true;
         }
-        document.getElementById('nanError').style.display='none';
-        return true;
-    }
-    
-    function deleteAuthFunction(empId) {
-        var r = confirm("Are you sure you wish to delete this author?");
-        if (r === true) {
-            window.location="saveBlogSettings.php?delete=1&aid=" + empId;
-        } else if (r === false) {
-            <?php
-                unset($_SESSION['addAuthorSuccess']);
-                unset($_SESSION['addAuthorError']);
-                unset($_SESSION['updateAuthorSuccess']);
-                $_SESSION['updateAuthorError'] = "Nothing was deleted";
-            ?>
-            window.location='blogSettings.php';
+
+        function deleteAuthFunction(empId) {
+            var r = confirm("Are you sure you wish to delete this author?");
+            if (r === true) {
+                window.location="saveBlogSettings.php?delete=1&aid=" + empId;
+            } else if (r === false) {
+                <?php
+                    unset($_SESSION['addAuthorSuccess']);
+                    unset($_SESSION['addAuthorError']);
+                    unset($_SESSION['updateAuthorSuccess']);
+                    $_SESSION['updateAuthorError'] = "Nothing was deleted";
+                ?>
+                window.location='blogSettings.php';
+            }
         }
-    }
-    
-    function deleteFunction(empId) {
-        var r = confirm("Are you sure you wish to delete this blog category?");
-        if (r === true) {
-            window.location="saveBlogSettings.php?delete=1&id=" + empId;
-        } else if (r === false) {
-            <?php
-                unset($_SESSION['addBlogCatSuccess']);
-                unset($_SESSION['addBlogCatError']);
-                unset($_SESSION['updateBlogCatSuccess']);
-                $_SESSION['updateBlogCatError'] = "Nothing was deleted";
-            ?>
-            window.location='blogSettings.php';
+
+        function deleteFunction(empId) {
+            var r = confirm("Are you sure you wish to delete this blog category?");
+            if (r === true) {
+                window.location="saveBlogSettings.php?delete=1&id=" + empId;
+            } else if (r === false) {
+                <?php
+                    unset($_SESSION['addBlogCatSuccess']);
+                    unset($_SESSION['addBlogCatError']);
+                    unset($_SESSION['updateBlogCatSuccess']);
+                    $_SESSION['updateBlogCatError'] = "Nothing was deleted";
+                ?>
+                window.location='blogSettings.php';
+            }
         }
-    }
     </script>
 </html>
 <?php } ?>

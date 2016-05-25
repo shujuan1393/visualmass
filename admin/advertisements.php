@@ -6,8 +6,6 @@
  * and open the template in the editor.
  */
 require_once '../config/db.php';
-require_once('../calendar/classes/tc_calendar.php');
-require_once('../nav/adminHeader.php');
 
 if (isset($_GET['id'])) {
     unset($_SESSION['updateAdvSuccess']);    
@@ -33,11 +31,9 @@ if (isset($_GET['id'])) {
         ?>
     </div>
     <div id="framecontent">
-        <div class='innertube'>
         <?php
             require '../nav/adminSidebar.php';
         ?>
-        </div>
     </div>
     <div id="maincontent">
         <div class="innertube">
@@ -209,66 +205,10 @@ if (isset($_GET['id'])) {
                 ?>> No
             <br>
             <div id='expiryDate' style='display:none'>
-                Valid from:
-                <?php
-                $thisweek = date('W');
-                $thisyear = date('Y');
-
-                $dayTimes = getDaysInWeek($thisweek, $thisyear);
-                //----------------------------------------
-
-                $date1 = date('Y-m-d', $dayTimes[0]);
-                $date2 = date('Y-m-d', $dayTimes[(sizeof($dayTimes)-1)]);
-
-                function getDaysInWeek ($weekNumber, $year, $dayStart = 1) {
-                  // Count from '0104' because January 4th is always in week 1
-                  // (according to ISO 8601).
-                  $time = strtotime($year . '0104 +' . ($weekNumber - 1).' weeks');
-                  // Get the time of the first day of the week
-                  $dayTime = strtotime('-' . (date('w', $time) - $dayStart) . ' days', $time);
-                  // Get the times of days 0 -> 6
-                  $dayTimes = array ();
-                  for ($i = 0; $i < 7; ++$i) {
-                        $dayTimes[] = strtotime('+' . $i . ' days', $dayTime);
-                  }
-                  // Return timestamps for mon-sun.
-                  return $dayTimes;
-                }
-
-
-                $myCalendar = new tc_calendar("date3", true, false);
-                $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-                if (!empty($erow['start'])) {
-                    $myCalendar->setDate(date('d', strtotime($erow['start'])), date('m', strtotime($erow['start'])), date('Y', strtotime($erow['start'])));
-                } else {
-                    $myCalendar->setDate(date('d', strtotime($date1)), date('m', strtotime($date1)), date('Y', strtotime($date1)));
-                }
-                $myCalendar->setPath("../calendar/");
-                $myCalendar->setYearInterval(1970, 2020);
-                //$myCalendar->dateAllow('2009-02-20', "", false);
-                $myCalendar->setAlignment('left', 'bottom');
-                $myCalendar->setDatePair('date3', 'date4', $date2);
-                //$myCalendar->setSpecificDate(array("2011-04-01", "2011-04-04", "2011-12-25"), 0, 'year');
-                $myCalendar->writeScript();
-                ?>
-                to
-                <?php
-                $myCalendar = new tc_calendar("date4", true, false);
-                $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-
-                if (!empty($erow['end'])) {
-                    $myCalendar->setDate(date('d', strtotime($erow['end'])), date('m', strtotime($erow['end'])), date('Y', strtotime($erow['end'])));
-                } else {
-                    $myCalendar->setDate(date('d', strtotime($date2)), date('m', strtotime($date2)), date('Y', strtotime($date2)));
-                }
-                $myCalendar->setPath("../calendar/");
-                $myCalendar->setYearInterval(1970, 2020);
-                //$myCalendar->dateAllow("", '2009-11-03', false);
-                $myCalendar->setAlignment('left', 'bottom');
-                $myCalendar->setDatePair('date3', 'date4', $date1);
-                //$myCalendar->setSpecificDate(array("2011-04-01", "2011-04-04", "2011-12-25"), 0, 'year');
-                $myCalendar->writeScript();
-                ?>
+                    Start date:
+                    <input type="text" id="date3" name="date3">
+                    End date:
+                    <input type="text" id="date4" name="date4">
             <br>
             </div>
             Content (optional): 
@@ -482,6 +422,11 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <script> 
+        var myCalendar = new dhtmlXCalendarObject(["date3"]);
+                myCalendar.hideTime();
+        var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
+                myCalendar2.hideTime();
+                
         if (document.getElementById('checkYes').checked) {
            document.getElementById('expiryDate').style.display = "block";            
         }
