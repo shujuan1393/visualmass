@@ -72,6 +72,17 @@ if (isset($_GET['delete'])) {
 //            }
 //        }
         
+        $catArr = $_POST['categories'];
+        $cats = "";
+
+        for($i = 0; $i < count($catArr); $i++) {
+            $cats .= $catArr[$i];
+
+            if ($i+1 !== count($catArr)) {
+                $cats.=",";
+            }
+        }
+        
         if (!empty($_FILES['image']['name'])) {
             $random_digit=md5(uniqid(rand(), true));
             $new_file = $random_digit.basename($_FILES["image"]["name"]);
@@ -131,7 +142,7 @@ if (isset($_GET['delete'])) {
                 $editid = $_POST['editid'];
                 
                 $updateDiscSql = "UPDATE blog SET title='$title', excerpt='$excerpt', "
-                    . "html='$html', visibility='$visibility', dateposted='$date', "
+                    . "html='$html', visibility='$visibility', categories='$cats', dateposted='$date', "
                     . "tags='$tags', image='$image' where id = '$editid';";
 
                 if (mysqli_query($link, $updateDiscSql)) {
@@ -145,8 +156,8 @@ if (isset($_GET['delete'])) {
                 }
             } else {
                 $blogSql = "INSERT INTO blog (title, excerpt, image, html, visibility, "
-                        . "author, dateposted, tags) VALUES ('$title','$excerpt', '$image', '$html', "
-                        . "'$visibility', '$author', '$date', '$tags');";
+                        . "author, dateposted, tags, categories) VALUES ('$title','$excerpt', '$image', '$html', "
+                        . "'$visibility', '$author', '$date', '$tags', '$cats');";
 
                 mysqli_query($link, $blogSql);
                 $_SESSION['addBlogSuccess'] = "Blog entry successfully added";

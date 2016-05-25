@@ -184,6 +184,26 @@ if (isset($_GET['id'])) {
             ?>
             </select>
             <br>
+            Categories*:
+            <?php
+                if(!empty($erow['categories'])) {
+                    $cats = explode(",", $erow['categories']);
+                }
+                
+                $blogCat = "Select * from categories where type='blog'";
+                $bresult = mysqli_query($link, $blogCat);
+                
+                while ($brow = mysqli_fetch_assoc($bresult)) {
+                    echo "<input name='categories[]' type='checkbox' value='".$brow['name']."'";
+                    if (!empty($erow['categories'])) {
+                        if (in_array($brow['name'], $cats)) {
+                            echo " checked";
+                        }
+                    }
+                    echo ">".$brow['name'];
+                }
+            ?>
+            <br>
             <label for='visibility' >Visibility*:</label>
             <select name='visibility'>
                 <option value='active' <?php 

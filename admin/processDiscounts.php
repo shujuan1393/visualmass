@@ -33,7 +33,11 @@ if (isset($_GET['delete'])) {
         
         $code = $_POST['code'];
         $name = $_POST['name'];
-        $limit = $_POST['limit'];
+        if (strcmp($_POST['limit'], "0") === 0) {
+            $limit = "unlimited";
+        } else {
+            $limit = $_POST['limit'];
+        }
         $recurrence = $_POST['recurrence'];
         $status = $_POST['status'];
         $start = $_POST['date3'];

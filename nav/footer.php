@@ -13,14 +13,13 @@
         <title>Visual Mass</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="styles.css" rel="stylesheet" type="text/css" />        
     </head>
     <body>
         <div class="left_nav">
             <ul>
                 <li>GIFT CARDS</li>
                 <li>CAREER</li>
-                <li>BLOG</li>
+                <li><a href='blog.php'>BLOG</a></li>
             </ul>
         </div>
         <div class ="rightheader">
@@ -54,7 +53,7 @@
         
         <div class="left_nav">
             <ul>
-                <li>FAQs</li>
+                <li><a href='faq.php'>FAQs</a></li>
                 <li>|</li>
                 <li><a href='terms.php'>Terms</a></li>
                 <li>|</li>

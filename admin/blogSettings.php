@@ -61,7 +61,7 @@ if (!mysqli_query($link,$selectSql)) {
         <h2>Settings - Blog</h2>
         <h3>Blog Categories</h3> 
         <?php 
-            $blogCatSql = "select * from categories";
+            $blogCatSql = "select * from categories where type='blog'";
             $empresult = mysqli_query($link, $blogCatSql);
             if (!mysqli_query($link,$blogCatSql)) {
                 echo("Error description: " . mysqli_error($link));
