@@ -57,11 +57,9 @@ if (!mysqli_query($link,$selectSql)) {
         ?>
     </div>
     <div id="framecontent">
-        <div class='innertube'>
         <?php
             require '../nav/adminSidebar.php';
         ?>
-        </div>
     </div>
     <div id="maincontent">
         <div class="innertube">

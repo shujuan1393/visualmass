@@ -22,7 +22,7 @@ session_start();
             <input type='password' name='password' id='password' maxlength="50" placeholder="Password" /><br>
             <input type='submit' name='Submit' value='Sign in' />
             
-            <div id="loginError" style="color:red">
+            <div id="loginError" class='error'>
                 <?php 
                     if (isset($_SESSION['adminLoginError'])) {
                         echo $_SESSION['adminLoginError'];

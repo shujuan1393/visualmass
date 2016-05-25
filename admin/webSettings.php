@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 require_once '../config/db.php';
-require_once '../nav/adminHeader.php';
 
 if (isset($_POST['submit'])) {
     $webstore = $_POST['title'];
@@ -48,11 +47,9 @@ if (!mysqli_query($link,$selectSql)) {
         ?>
     </div>
     <div id="framecontent">
-        <div class='innertube'>
         <?php
             require '../nav/adminSidebar.php';
         ?>
-        </div>
     </div>
     <div id="maincontent">
         <div class="innertube">

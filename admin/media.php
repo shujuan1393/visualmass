@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 
-session_start();
 ?>
 <html>    
     <div id="frameheader">
@@ -15,11 +14,9 @@ session_start();
         ?>
     </div>
     <div id="framecontent">
-        <div class='innertube'>
         <?php
             require '../nav/adminSidebar.php';
         ?>
-        </div>
     </div>
     <div id="maincontent">
         <div class="innertube">

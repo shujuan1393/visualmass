@@ -6,8 +6,6 @@
  * and open the template in the editor.
  */
 require_once '../config/db.php';
-require_once('../calendar/classes/tc_calendar.php');
-require_once('../nav/adminHeader.php');
 
 if (isset($_GET['id'])) {
     unset($_SESSION['addBlogSuccess']);
@@ -34,11 +32,9 @@ if (isset($_GET['id'])) {
         ?>
     </div>
     <div id="framecontent">
-        <div class='innertube'>
         <?php
             require '../nav/adminSidebar.php';
         ?>
-        </div>
     </div>
     <div id="maincontent">
         <div class="innertube">
@@ -231,21 +227,7 @@ if (isset($_GET['id'])) {
                    value='<?php if (!empty($erow['tags'])) { echo $erow['tags']; } ?>'/>
             <br>
             Date Posted:
-            <?php
-            $myCalendar = new tc_calendar("date3", true, false);
-            $myCalendar->setIcon("../calendar/images/iconCalendar.gif");
-            if (!empty($erow['dateposted'])) {
-                $myCalendar->setDate(date('d', strtotime($erow['dateposted'])), date('m', strtotime($erow['dateposted'])), date('Y', strtotime($erow['dateposted'])));
-            } else {
-                $myCalendar->setDate(date('d', strtotime(date('Y-m-d'))), date('m', strtotime(date('Y-m-d'))), date('Y', strtotime(date('Y-m-d'))));
-            }
-            $myCalendar->setPath("../calendar/");
-            $myCalendar->setYearInterval(1970, 2020);
-            //$myCalendar->dateAllow('2009-02-20', "", false);
-            $myCalendar->setAlignment('left', 'bottom');
-            //$myCalendar->setSpecificDate(array("2011-04-01", "2011-04-04", "2011-12-25"), 0, 'year');
-            $myCalendar->writeScript();
-            ?>
+            <input type="text" id="date3" name="date3">
             <br>
             <?php 
                 if (!empty($erow['image'])) {
@@ -270,6 +252,9 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <script>
+        var myCalendar = new dhtmlXCalendarObject(["date3"]);
+                myCalendar.hideTime();
+                
         function isNumber(evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;

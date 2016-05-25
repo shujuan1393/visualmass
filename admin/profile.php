@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 require_once '../config/db.php';
-require_once('../nav/adminHeader.php');
 ?>
 
 <html>        

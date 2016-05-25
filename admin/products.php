@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 require_once '../config/db.php';
-require_once('../nav/adminHeader.php');
 
 if (isset($_GET['id'])) {
     unset($_SESSION['updateProdSuccess']);
@@ -31,11 +30,9 @@ if (isset($_GET['id'])) {
         ?>
     </div>
     <div id="framecontent">
-        <div class='innertube'>
         <?php
             require '../nav/adminSidebar.php';
         ?>
-        </div>
     </div>
     <div id="maincontent">
         <div class="innertube">

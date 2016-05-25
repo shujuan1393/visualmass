@@ -30,7 +30,12 @@ body {
     letter-spacing: 1px;
 }
 
-.container{
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
     position: relative;
     border-radius: 5px;
     background-color: #f2f2f2;
@@ -39,6 +44,30 @@ body {
     text-align: center;
     margin:auto;
     margin-bottom: 30px;
+}
+
+.table_container {
+    display: inline-block;
+    position: absolute;
+    padding-right: 30px;
+}
+
+.content_container {
+    display: inline-block;
+    position: absolute;
+    background-color: #f2f2f2;
+    padding: 15px 10px;
+    margin: 30px;
+    right: 0px;
+    top: 0px;
+}
+
+.content_container-2 {
+    display: inline-block;
+    position: relative;
+    background-color: #f2f2f2;
+    padding: 15px 10px;
+    margin: auto;
 }
 
 .error {
@@ -55,7 +84,7 @@ form {
 .form_header {
     font-family: inherit;
     font-size: 14px;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
 }
 
 input, textarea, select{
@@ -87,6 +116,19 @@ table {
     border-collapse: collapse;
     font-family: inherit;
     font-size: inherit;
+    margin-right: 30px;
+    width: 100%;
+    
+}
+
+.content tr {
+    border: none;
+}
+
+.content td {
+    text-align: left;
+    padding: 10px 15px;
+    max-width: 300px;
 }
 
 table, td, th {
@@ -106,14 +148,6 @@ tr {
 td {
     padding: 15px 30px;
     text-align: center;
-}
-
-.content tr {
-    border: none;
-}
-
-.content td {
-    text-align: left;
 }
 
 /*  HEADER BAR */
@@ -140,10 +174,7 @@ td {
 
 .rightheader {
     position: absolute;
-    top: 0px;
     right: 15px;
-    padding: 20px;
-    display: flex;
 }
 
 .rightheader ul {
@@ -152,52 +183,52 @@ td {
 }
 
 #frameheader{
-    top: 0;
+    height: 50px;
     width: 100%;
-    height: auto;
-    padding: 10px;
     background: #f2f2f2;
-    display: block;
-    position: fixed;
+    display: flex;
 }
 
 /* SIDE NAVIGATION BAR */
 
 #framecontent{
     position: fixed;
-    top: 60px;
+    top: 50px;
     bottom: 0; 
     left: 0;
-    width: 250px; /*Width of frame div*/
+    width: 250px;
     height: auto;
-    overflow: auto; /*Disable scrollbars. Set to "scroll" to enable*/
+    overflow: auto;
     background: #ccc;
 }
-
+/*
 #settingslist, #weblist {
     font-family: inherit;
     font-size: inherit;
-}
+}*/
 
 .logo_sidebar {
     min-width: 200px;
     margin-left: 15px;
+    background-size: auto 25px;
     background-image: url(images/HorizontalLogo_black.png);
     background-repeat: no-repeat;
-    background-size: auto 25px;
     background-position: 0 center;
+}
+
+.navcontent {
+    display: table;
+    position: relative;
 }
 
 .nav {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
+    padding-bottom: 15px;
     bottom: 0;
 }
 
 .nav li, .sub li {
     padding: 15px 15px 0 15px;
-    display: block;
 }
 
 .nav li a {
@@ -205,56 +236,57 @@ td {
     margin: auto;
 }
 
+.nav li a:visited {
+    color: #000;
+}
+
 .subcontent {
     width: inherit;
-    height: auto;
     overflow: auto;
+    padding-bottom: 15px;
 }
 
 .sub ul {
-    position: absolute;
+    list-style-type: none;
+    float: right;
+    background-color: #dddddd;
+    width: 190px;
+    height: auto;
     top: 0;
-    bottom: 0;
-    padding: 0;
-    margin: 0;
+    right: 0;
+    position: absolute;
 }
 
-.subtable {
+/*.subtable {
     max-width: 250px;
 }
 
 .subtable td {
     padding: 0;
     text-align: left;
-}
+}*/
 
-#nav img, #navlist img{
-    height: 20px;
-    padding-right: 10px;
-}
-
-#settingslist ul, #weblist ul {
-    margin-left: 50px;
-}
-
-#navlist li a{
-    display: block;
+#nav img {
+    height: 16px;
+    padding-right: 15px;
 }
 
 /* MAIN CONTENT */
 
 #maincontent{
     position: fixed;
-    top: 60px; 
+    top: 50px; 
     left: 250px; /*Set left value to WidthOfFrameDiv*/
     right: 0;
     bottom: 0;
-    overflow: auto; 
+    overflow: auto;
+    height: auto;
     background: #fff;
 }
 
-.innertube{
-    margin: 15px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+.innertube {
+    margin: 15px;
+    padding: 10px;
 }
 
 .setting-tooltips {
@@ -270,6 +302,7 @@ td {
 
 
 /* WEBSITE */
+
 /* GENERAL */
 .title, .blog_title {
     font-size: 14px;
@@ -297,17 +330,17 @@ td {
 }*/
 
 /* NAVIGATION & FOOTER */
+
 .rightheader, .rightcontact {
     padding: 0!important;
 }
 
-.left_nav, .rightheader, .rightcontact, .righticons {
-    display: flex;
+.left_nav {
+    min-height: 50px;
 }
 
-.left_nav {
-    overflow: hidden;
-    overflow-style: marquee;
+.left_nav, .rightheader, .rightcontact, .righticons {
+    display: flex;
 }
 
 .rightcontact {
@@ -331,21 +364,18 @@ td {
 
 .left_nav ul, .rightheader ul, .righticons ul {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
     overflow: hidden;
     display: inline-block;
 }
 
-.left_nav li, #footer li,.rightheader li {
+.left_nav li, #footer li, .rightheader li {
     float: left;
-    margin-top: 5px;
+    margin-top: 8px;
     padding: 10px;
 }
 
 .righticons {
     float: left;
-    margin-top: 5px;
 }
 
 .left_nav li a , .rightheader li a, .righticons li a {
@@ -375,16 +405,19 @@ background-color:#4CAF50;
 #terms_nav {
   text-align: center;
 }
+
 #terms_nav ul {
   display: inline-block;
   margin: 20px 0;
   padding: 0;
 }
+
 #terms_nav li {
   padding: 0 60px;
   display: inline-block;
   text-transform: uppercase;
 }
+
 #terms_nav li a {
   display: inline-block;
   color: #000;
