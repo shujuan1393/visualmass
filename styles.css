@@ -374,14 +374,14 @@ td {
     float: left;
 }
 
-.left_nav li a , .rightheader li a, .righticons li a, .products row a {
+.left_nav li a , .rightheader li a, .righticons li a, #products_table a {
     display: block;
     color: black;
     text-align: center;
     text-decoration: none;
 }
 
-.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .products row a:hover:not(.active) {
+.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), #products_table a:hover:not(.active) {
     color: #808080;
 }
 
