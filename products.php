@@ -12,25 +12,28 @@
             
             <div id="content">
                 <?php
-                    $banner = "Select * from products where type='banner';";
+                    $banner = "Select * from products where name='banner' and type='".$_GET['type']."' and "
+                            . "gender LIKE '%".$_GET['gender']."%';";
+
                     $bresult = mysqli_query($link, $banner);
                     
                     if (!mysqli_query($link, $banner)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
                         if ($bresult -> num_rows == 0) {
-                            echo "<h3 class='banner-title' id='banner'>There is no product banner at the moment.</h3>";
+                            echo "<h3 class='banner-title'>There is no banner at the moment.</h3>";
                         } else {
                             $brow = mysqli_fetch_assoc($bresult);
                             
-                            $browArr = explode(".", $brow['html']);
+                            $browArr = explode(".", $brow['images']);
+
                             $ext = $browArr[count($browArr)-1];
 
                             $imgArr = array("jpg", "jpeg", "png", "gif");
                             $vidArr = array("mp3", "mp4", "wma");
-                            
-                            $pos = strpos($brow['html'], '/');
-                            $url = substr($brow['html'], $pos+1);
+ 
+                            $pos = strpos($brow['images'], '/');
+                            $url = substr($brow['images'], $pos+1);
                             echo "<div class='webbanner'>";
                             
                             if (in_array($ext, $imgArr)) {
@@ -46,49 +49,48 @@
                     }
                 ?>
                 <div class='search_filter'>
-                    <input type='checkbox' name='homeTry' value='yes'> Available for Home Try-on
+                    <input type='checkbox' name='homeTry' value='yes'> Available for Home Try-on?
                     <ul>
                         <li>COLOUR</li>
+                        <li>|</li>
                         <li>WIDTH</li>
+                        <li>|</li>
                         <li>SHAPE</li>
+                        <li>|</li>
                         <li>MATERIAL</li>
                     </ul>
-                    <div class='rightsearch'>
-                        SEARCH FRAMES
-                    </div>
                 </div>
-                <hr>
+                <div class='rightsearch'>
+                    SEARCH FRAMES
+                </div>
                 <?php 
-                    $sql = "Select * from products where type='".$_GET['type'].
-                            "' and gender LIKE '%".$_GET['gender']."%'";
+                    $sql = "Select * from products where type='".$_GET['type']."' and "
+                            . "gender LIKE '%".$_GET['gender']."%';";
                     $result = mysqli_query($link, $sql);
                     
                     if (!mysqli_query($link, $sql)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
                         if ($result -> num_rows == 0) {
-                            echo "<h3 class='banner-title'>There are no products matching '".$_GET['type']."' and '".$_GET['gender']."' at the moment.</h3>";
+                            echo "<h3>There are no products matching '".$_GET['type']
+                                    ."' and '".$_GET['gender']."' at the moment.</h3>";
                         } else {
                 ?>  
                     <!--<div id='terms_content'>-->
-                    <table class='product_table'>
+                    <div id='product_table' class='products row'>
                         <?php 
-                            $count = 0;
-                            echo "<tr>";
                             while ($row = mysqli_fetch_assoc($result)) {
-                                $count++;
-                                if (!empty($row['images'])) {
-                                    $imgArr = explode(",", $row['images']);
-                                    $imgpos = strpos($imgArr[0], '/');
-                                    $imgurl = substr($imgArr[0], $imgpos+1);
-                                    echo "<td><a href='product.php?id=".$row['pid']."'><img src='".$imgurl."'></a><br>";
-                                    echo "<span class='product-title'><a href='product.php?id=".$row['pid']."'>"
-                                        .$row['name']."</a></span>";
-                                    echo "</td>";
-                                }
+                                $imgArr = explode(",", $row['images']);
+                                
+                                $imgpos = strpos($imgArr[0], '/');
+                                $imgurl = substr($imgArr[0], $pos+1);
+                                echo "<div class='products col-md-3'>";
+                                echo "<a href='product.php?id=".$row['pid']."'><img src='".$imgurl."'></a><br>";
+                                echo "<a href='product.php?id=".$row['pid']."'>".$row['name']."</a>";
+                                echo "</div>";
                             }
                         ?>
-                    </table>
+                    </div>
                     <!--</div>-->
                 <?php
                         }

@@ -189,6 +189,25 @@ if (isset($_GET['id'])) {
             </select>
             <br>
             <?php 
+                $genArr = explode(",", $erow['gender']);
+            ?>
+            Gender*: 
+            <input name='gender[]' type='checkbox' value='men' <?php 
+                if (!empty($erow['gender'])) {
+                    if (in_array("men", $genArr)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Men</label>
+            <input name='gender[]' type='checkbox' value='women' <?php 
+                if (!empty($erow['gender'])) {
+                    if (in_array("women", $genArr)) {
+                        echo " checked";
+                    }
+                }
+                ?>><label>Women</label>
+            <br>
+            <?php 
                 $visib = explode(",", $erow['visibility']);
             ?>
             Visibility*: 
