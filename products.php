@@ -75,7 +75,7 @@
                         } else {
                 ?>  
                     <!--<div id='terms_content'>-->
-                    <div class='products row'>
+                    <div id='products_table' class='products row'>
                         <?php 
                             while ($row = mysqli_fetch_assoc($result)) {
                                 $imgArr = explode(",", $row['images']);
