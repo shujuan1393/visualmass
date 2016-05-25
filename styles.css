@@ -343,14 +343,14 @@ td {
     margin-top: 5px;
 }
 
-.left_nav li a , .rightheader li a, .righticons li a, .product_table a {
+.left_nav li a , .rightheader li a, .righticons li a, .products row a {
     display: block;
     color: black;
     text-align: center;
     text-decoration: none;
 }
 
-.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .product_table a:hover:not(.active) {
+.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .products row a:hover:not(.active) {
     color: #808080;
 }
 
@@ -375,6 +375,7 @@ background-color:#4CAF50;
     cursor: pointer;
     position: absolute;
     background-color: #fff;
+    z-index: 10;
 }
 
 #glasses ul, #sunglasses ul {
@@ -540,6 +541,7 @@ div.panel.show {
 
 .search_filter, .product_title {
     text-align: center;
+    margin-left: 10px;
     margin-bottom: 10px;
 }
 
@@ -554,7 +556,7 @@ div.panel.show {
 
 .search_filter li{
     float: left;
-    margin: 0 5px;
+    margin: 0;
     padding: 5px 20px;
     background-color: #808080;
     color: #fff;
@@ -568,17 +570,17 @@ div.panel.show {
     display: flex;
 }
 
-.product_table {
-    padding: 0 200px;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
+.products row {
+    text-align: center!important;
+    margin: 0 auto!important;
+    width: 100%!important;
 }
 
-.product_table tr {
-    border: none;
+.col-md-3 {
+    width: 30%!important;
 }
 
-.product_table img {
+.products row img {
     width: 100%;
 }
 
@@ -617,21 +619,78 @@ div.panel.show {
     padding: 0;
 }
 
+.details {
+    width: 100%;
+}
+
 .product_details {
     height: 100%;
-    margin: 0 20px;
+    width: 49%;
+    margin-left: 10px!important;
+    float: left;
 }
 
 .product_desc {
     margin: 0;
+    float: left;
+}
+
+.product_measurements {
+    margin: 0 auto;
+    bottom: 0;
+    float: left;
 }
 
 .product_measurements h5 {
-    margin-right: 20px;
     display: inline;
 }
 
-.product_measurements hr {
+#myCarousel {
+    margin: 10px 0;
+}
+
+.img-responsive {
+    width: 100%!important;
+    margin: 0 auto!important;
+}
+
+.carousel-inner {
+    text-align: center;
+    margin: auto;
+}
+
+.carousel-control {
+  padding-top:10%;
+  width:5%;
+}
+
+div.product_display.col-md-6 {
+    background-color: #000;
     width: 50%;
-    margin: 0;
+    height: 100%;
+    color: #fff;
+}
+
+#image_display img {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#shipping_terms, #virtual_tryon {
+    height: 100%;
+    margin: 0 auto;
+}
+
+#shipping_terms {
+    background-color: #ddd;
+}
+
+#shipping_terms, #virtual_tryon {
+    text-align: center;
+    margin: 10px auto;
+}
+
+#virtual_tryon .col-md-4 button{
+    border: 1px solid #ccc!important;
+    background-color: #fff;
 }
