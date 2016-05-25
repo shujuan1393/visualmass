@@ -301,25 +301,20 @@ td {
     padding: 0!important;
 }
 
-.left_nav, .rightheader, .rightcontact, .righticons {
+.left_nav, .rightheader, .rightcontact, .righticons, .search_filter, .product_title {
     display: flex;
-}
-
-.left_nav {
-    overflow: hidden;
-    overflow-style: marquee;
 }
 
 .rightcontact {
     position: absolute;
-    top: 60px;
+    top: 85px;
     right: 20px;
     padding: 0;
 }
 
 .righticons {
     position: absolute;
-    top: 190px;
+    top: 200px;
     right: 15px;
     padding: 0;
 }
@@ -348,14 +343,14 @@ td {
     margin-top: 5px;
 }
 
-.left_nav li a , .rightheader li a, .righticons li a {
+.left_nav li a , .rightheader li a, .righticons li a, .product_table a {
     display: block;
     color: black;
     text-align: center;
     text-decoration: none;
 }
 
-.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active) {
+.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .product_table a:hover:not(.active) {
     color: #808080;
 }
 
@@ -368,6 +363,33 @@ background-color:#4CAF50;
     position: relative;
     z-index: 10;
     height: 3em;
+}
+
+#showGlasses, #showSunglasses {
+    cursor: pointer;
+}
+#glasses, #sunglasses {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    cursor: pointer;
+    position: absolute;
+    background-color: #fff;
+}
+
+#glasses ul, #sunglasses ul {
+    list-style-type: none;
+    display: inline-block;
+}
+
+#glasses li, #sunglasses li {
+    float: left;
+    margin-top: 5px;
+    padding: 10px 200px;
+}
+
+#glasses li a:hover, #sunglasses li a:hover {
+    background-color: #808080;
 }
 
 /* TERMS */
@@ -514,4 +536,102 @@ div.panel {
 
 div.panel.show {
     display: block !important;
+}
+
+.search_filter, .product_title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.search_filter ul, .product_title ul {
+    /*margin: 0 20%;*/
+    margin: 0 auto;
+    list-style-type: none;
+    padding: 0;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.search_filter li{
+    float: left;
+    margin: 0 5px;
+    padding: 5px 20px;
+    background-color: #808080;
+    color: #fff;
+}
+
+.rightsearch {
+    position: absolute;
+    top: 75px;
+    right: 15px;
+    padding: 20px;
+    display: flex;
+}
+
+.product_table {
+    padding: 0 200px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.product_table tr {
+    border: none;
+}
+
+.product_table img {
+    width: 100%;
+}
+
+.carousel {
+    overflow: hidden;
+}
+
+.carousel img {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.product_title {
+    margin: 10px;
+}
+
+.product_title h3 {
+    margin: 0 20px;
+}
+
+.product_title li {
+    float: left;
+    margin: 0 20px;
+    padding: 5px 20px;
+    background-color: #808080;
+    color: #fff;
+}
+
+.color_swatch {
+    margin: 0;
+}
+
+.product-buttons {
+    position: absolute;
+    right: 20px;
+    padding: 0;
+}
+
+.product_details {
+    height: 100%;
+    margin: 0 20px;
+}
+
+.product_desc {
+    margin: 0;
+}
+
+.product_measurements h5 {
+    margin-right: 20px;
+    display: inline;
+}
+
+.product_measurements hr {
+    width: 50%;
+    margin: 0;
 }
