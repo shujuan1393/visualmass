@@ -121,6 +121,11 @@ table {
     
 }
 
+#content h3 {
+    text-align: center;
+    margin: 0;
+}
+
 .content tr {
     border: none;
 }
@@ -321,6 +326,9 @@ td {
     text-align: center;
 }
 
+.row {
+    width:100%!important;
+}
 /*
 .rightheader {
     position: absolute;
@@ -339,16 +347,24 @@ td {
     display: flex;
 }
 
+.rightfooter {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    padding: 0;
+    display: flex;
+}
+
 .rightcontact {
     position: absolute;
-    top: 85px;
-    right: 20px;
+    top: 90px;
+    right: 15px;
     padding: 0;
 }
 
 .righticons {
     position: absolute;
-    top: 200px;
+    top: 210px;
     right: 15px;
     padding: 0;
 }
@@ -358,13 +374,13 @@ td {
 }
 
 
-.left_nav ul, .rightheader ul, .righticons ul {
+.left_nav ul, .rightheader ul, .rightfooter ul, .righticons ul {
     list-style-type: none;
     overflow: hidden;
     display: inline-block;
 }
 
-.left_nav li, #footer li, .rightheader li {
+.left_nav li, #footer li, .rightfooter li, .rightheader li {
     float: left;
     margin-top: 8px;
     padding: 10px;
@@ -374,14 +390,16 @@ td {
     float: left;
 }
 
-.left_nav li a , .rightheader li a, .righticons li a, #products_table a {
+.left_nav li a , .rightheader li a, .righticons li a, .rightfooter li a, #products_table a, #recommended a {
     display: block;
     color: black;
     text-align: center;
     text-decoration: none;
 }
 
-.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), #products_table a:hover:not(.active) {
+.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), #products_table a:hover:not(.active),
+#recommended a:hover:not(.active), #showGlasses  a:hover:not(.active), #showStory  a:hover:not(.active), 
+#showSunglasses a:hover:not(.active) {
     color: #808080;
 }
 
@@ -396,20 +414,21 @@ background-color:#4CAF50;
     height: 3em;
 }
 
-#showGlasses, #showSunglasses {
+#showGlasses, #showSunglasses, #showStory {
     cursor: pointer;
 }
-#glasses, #sunglasses {
+
+#glasses, #sunglasses, #ourstoryheader {
     width: 100%;
     text-align: center;
     margin: 0 auto;
     cursor: pointer;
     position: absolute;
     background-color: #fff;
-    z-index: 10;
+    z-index: 15;
 }
 
-#glasses ul, #sunglasses ul {
+#glasses ul, #sunglasses ul, #ourstoryheader ul {
     list-style-type: none;
     display: inline-block;
 }
@@ -417,11 +436,19 @@ background-color:#4CAF50;
 #glasses li, #sunglasses li {
     float: left;
     margin-top: 5px;
-    padding: 10px 200px;
+    padding: 50px 240px;
+    margin: 20px;
+    background-color: #ddd;
 }
 
-#glasses li a:hover, #sunglasses li a:hover {
-    background-color: #808080;
+#ourstoryheader li {
+    float: left;
+    width: 280px;
+    height: 150px;
+    padding: 50px 10px;
+    margin: 10px 15px;
+    background-color: #ddd; 
+    vertical-align: middle; 
 }
 
 /* TERMS */
@@ -577,6 +604,7 @@ div.panel.show {
     text-align: center;
     margin-left: 10px;
     margin-bottom: 10px;
+    padding: 10px;
 }
 
 .search_filter ul, .product_title ul {
@@ -597,10 +625,11 @@ div.panel.show {
 }
 
 .rightsearch {
-    position: absolute;
-    top: 75px;
-    right: 15px;
-    padding: 20px;
+    float: right;
+    position: relative;
+    /*top: 75px;*/
+    right: 20px;
+    padding: 0;
     display: flex;
 }
 
@@ -680,6 +709,7 @@ div.panel.show {
 }
 
 #myCarousel {
+    width:100%;
     margin: 10px 0;
 }
 
@@ -710,7 +740,7 @@ div.product_display.col-md-6 {
     margin: 0 auto;
 }
 
-#shipping_terms, #virtual_tryon {
+#shipping_terms, #virtual_tryon, #ourstory, #recommended {
     height: 100%;
     margin: 0 auto;
 }
@@ -719,7 +749,7 @@ div.product_display.col-md-6 {
     background-color: #ddd;
 }
 
-#shipping_terms, #virtual_tryon {
+#shipping_terms, #virtual_tryon, #recommended, #ourstory {
     text-align: center;
     margin: 10px auto;
 }

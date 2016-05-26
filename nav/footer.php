@@ -22,7 +22,7 @@
                 <li><a href='blog.php'>BLOG</a></li>
             </ul>
         </div>
-        <div class ="rightheader">
+        <div class ="rightfooter">
             <ul>
                 <li>MAILING LIST</li>
                 <li>SEARCH</li>

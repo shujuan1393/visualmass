@@ -19,7 +19,7 @@
                         echo "Error: ".mysqli_error($link);
                     } else {
                         if ($bresult -> num_rows == 0) {
-                            echo "<h3 class='banner-title'>There are no images for this product at the moment.</h3>";
+                            echo "<h3 class='banner-title'>Sorry, this product is no longer available.</h3>";
                         } else {
                             $brow = mysqli_fetch_assoc($bresult);
                             
@@ -83,18 +83,20 @@
                 </div>
                 <div class="details row">
                     <div class='product_details col-md-6'>
-                        <h3>ABOUT THE FRAME</h3>
-                        <div class='product_desc'>
-                            <?php echo html_entity_decode($brow['description']); ?>
-                        </div>
+                        <div class='row'>
+                            <div class='product_desc col-md-12'>
+                                <h3>ABOUT THE FRAME</h3>
+                                <?php echo html_entity_decode($brow['description']); ?>
+                            </div>
 
-                        <div class='product_measurements'>
-                            <h5>WIDTH</h5>
-                            <?php echo $brow['width']; ?>
-                            <h5>MEASUREMENTS</h5>
-                            <?php echo $brow['measurement']; ?>
+                            <div class='product_measurements col-md-12'>
+                                <h5>WIDTH</h5>
+                                <?php echo $brow['width']; ?>
+                                <h5>MEASUREMENTS</h5>
+                                <?php echo $brow['measurement']; ?>
 
-                            <hr>
+                                <hr>
+                            </div>
                             <div id="myCarousel" class="carousel slide">
                                 <!-- Carousel items -->
                                 <div class="carousel-inner">
@@ -157,6 +159,36 @@
                 <div class='col-md-2'></div>
             </div>
             <hr>
+            
+            <div id='recommended' class='row'>
+                <h3>YOU MAY ALSO LIKE</h3>
+                <div class='col-md-2'></div>
+                <div class='col-md-8'>
+                    <div class='row'>
+                    <?php 
+                        $productsSql = "Select * from products where pid <> '".$brow['pid']."' and type ='".$brow['type']."' LIMIT 3;";
+                       
+                        $recResult = mysqli_query($link, $productsSql);
+                        if (!mysqli_query($link, $productsSql)) {
+                            echo "Error: ". mysqli_error($link);
+                        } else {
+                            while ($rec = mysqli_fetch_assoc($recResult)) {
+                                $imgArr = explode(",", $rec['images']);
+                                $imgpos = strpos($imgArr[0], '/');
+                                $imgurl = substr($imgArr[0], $imgpos+1);
+                    ?>
+                        <div class='col-md-4'>
+                            <a href='product.php?id=<?php echo $rec['pid']; ?>'><img src='<?php echo $imgurl; ?>'></a> <br>
+                            <?php echo "<a href='product.php?id=".$rec['pid']."'>".$rec['name']."</a>"; ?>
+                        </div>
+                    <?php
+                            }
+                        }
+                    ?>
+                    </div>
+                </div>
+                <div class='col-md-2'></div>
+            </div>
                         
             <?php        }
                 }

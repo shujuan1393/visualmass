@@ -22,16 +22,16 @@
         <div class="left_nav">
             <div class="logo_sidebar"></div>
             <ul>
-                <li><div id='showGlasses'>GLASSES</div></li>
-                <li><div id='showSunglasses'>SUNGLASSES</div></li>
+                <li><div id='showGlasses'><a>GLASSES</a></div></li>
+                <li><div id='showSunglasses'><a>SUNGLASSES</a></div></li>
                 <li><a href='hometry.php'>HOME TRY-ON</a></li>
                 <li>LOCATION</li>
-                <li>OUR STORY</li>
+                <li><div id='showStory'><a>OUR STORY</a></div></li>
             </ul>
             <div class ="rightheader">
                 <ul>
                     <li><a href='login.php'>SIGN IN</a></li>
-                    <li>HELP</li>
+                    <li><a href='faq.php'>HELP</a></li>
                     <li>CART</li>
                 </ul>
                 <?php 
@@ -46,6 +46,7 @@
                 <li><a href='products.php?type=frames&gender=women'>SHOP WOMEN</a></li>
             </ul>
         </div>
+        
         <div id='sunglasses' style='display:none;'>
             <ul>
                 <li><a href='products.php?type=sunglasses&gender=men'>SHOP MEN</a></li>
@@ -53,30 +54,62 @@
             </ul>
         </div>
         
+        <div id='ourstoryheader' style='display:none;'>
+             <ul>
+                <li><a href='ourstory.php'>HISTORY</a></li>
+                <li><a href='giftInitiative.php'>ONE FOR YOU, <br> ONE FOR THEM</a></li>
+                <li><a href='culture.php'>CULTURE</a></li>
+                <li><a href='design.php'>DESIGN</a></li>
+            </ul>
+        </div>
         <script>
             document.getElementById('showGlasses').onclick = function(){  
                 var e = document.getElementById('glasses');
-                if (e.style.display == 'block') {
+                if (e.style.display === 'block') {
                      e.style.display = 'none';
-                 } else {
-                     e.style.display = 'block';
-                 }
-                if (document.getElementById('sunglasses').style.display == 'block') {
+                } else {
+                    e.style.display = 'block';
+                }
+                
+                if (document.getElementById('sunglasses').style.display === 'block') {
                     document.getElementById('sunglasses').style.display = 'none';
+                }
+                
+                if (document.getElementById('ourstoryheader').style.display === 'block') {
+                    document.getElementById('ourstoryheader').style.display = 'none';
                 }
              };
              
-             document.getElementById('showSunglasses').onclick = function(){  
-                var e = document.getElementById('sunglasses');
-                if (e.style.display == 'block') {
-                     e.style.display = 'none';
-                 } else {
-                     e.style.display = 'block';
-                 }
-                if (document.getElementById('glasses').style.display == 'block') {
+            document.getElementById('showSunglasses').onclick = function(){  
+               var e = document.getElementById('sunglasses');
+               if (e.style.display === 'block') {
+                    e.style.display = 'none';
+                } else {
+                    e.style.display = 'block';
+                }
+                if (document.getElementById('glasses').style.display === 'block') {
                     document.getElementById('glasses').style.display = 'none';
                 }
-             };
+                if (document.getElementById('ourstoryheader').style.display === 'block') {
+                    document.getElementById('ourstoryheader').style.display = 'none';
+                }
+            };
+            
+            document.getElementById('showStory').onclick = function(){  
+                var e = document.getElementById('ourstoryheader');
+                if (e.style.display === 'block') {
+                    e.style.display = 'none';
+                } else {
+                    e.style.display = 'block';
+                }
+                if (document.getElementById('glasses').style.display === 'block') {
+                    document.getElementById('glasses').style.display = 'none';
+                }
+
+                if (document.getElementById('sunglasses').style.display === 'block') {
+                    document.getElementById('sunglasses').style.display = 'none';
+                }
+            };
         </script>
     </body>
 </html>

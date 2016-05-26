@@ -40,7 +40,7 @@ and open the template in the editor.
                         echo "Error: ".mysqli_error($link);
                     } else {
                         if ($result -> num_rows == 0) {
-                            echo "<h3>There are no blog categories at the moment.</h3>";
+                            echo "<h3>Sorry, this page is under construction.</h3>";
                         } else {
                 ?>  
                     <div id='terms_nav'>

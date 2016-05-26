@@ -19,7 +19,7 @@
                         echo "Error: ".mysqli_error($link);
                     } else {
                         if ($bresult -> num_rows == 0) {
-                            echo "<h3 class='banner-title'>There is no Home Try-on banner at the moment.</h3>";
+                            echo "<h3 class='banner-title'>Sorry, this page is under construction.</h3>";
                         } else {
                             $brow = mysqli_fetch_assoc($bresult);
                             
@@ -53,7 +53,7 @@
                         echo "Error: ".mysqli_error($link);
                     } else {
                         if ($result -> num_rows == 0) {
-                            echo "<h3>There is no information regarding Home Try-on at the moment.</h3>";
+                            echo "<h3>Sorry, this page is under construction.</h3>";
                         } else {
                 ?>  
                     <!--<div id='terms_content'>-->

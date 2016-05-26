@@ -12,9 +12,7 @@
             
             <div id="content">
                 <?php
-                    $banner = "Select * from products where name='banner' and type='".$_GET['type']."' and "
-                            . "gender LIKE '%".$_GET['gender']."%';";
-
+                    $banner = "Select * from ourstory where page='one' and type='banner';";
                     $bresult = mysqli_query($link, $banner);
                     
                     if (!mysqli_query($link, $banner)) {
@@ -25,15 +23,14 @@
                         } else {
                             $brow = mysqli_fetch_assoc($bresult);
                             
-                            $browArr = explode(".", $brow['images']);
-
+                            $browArr = explode(".", $brow['html']);
                             $ext = $browArr[count($browArr)-1];
 
                             $imgArr = array("jpg", "jpeg", "png", "gif");
                             $vidArr = array("mp3", "mp4", "wma");
- 
-                            $pos = strpos($brow['images'], '/');
-                            $url = substr($brow['images'], $pos+1);
+                            
+                            $pos = strpos($brow['html'], '/');
+                            $url = substr($brow['html'], $pos+1);
                             echo "<div class='webbanner'>";
                             
                             if (in_array($ext, $imgArr)) {
@@ -48,51 +45,31 @@
                         }
                     }
                 ?>
-                
-                <div class='search_filter'>
-                    <input type='checkbox' name='homeTry' value='yes'> Available for Home Try-on?
-                    <ul>
-                        <li>COLOUR</li>
-                        <li>|</li>
-                        <li>WIDTH</li>
-                        <li>|</li>
-                        <li>SHAPE</li>
-                        <li>|</li>
-                        <li>MATERIAL</li>
-                    </ul>
-                <div class='rightsearch'>
-                    SEARCH FRAMES
-                </div>
-                </div>
                 <?php 
-                    $sql = "Select * from products where type='".$_GET['type']."' and "
-                            . "gender LIKE '%".$_GET['gender']."%';";
+                    $sql = "Select * from ourstory where page='one' and type='section' and status='active' order by fieldorder asc";
                     $result = mysqli_query($link, $sql);
                     
                     if (!mysqli_query($link, $sql)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
                         if ($result -> num_rows == 0) {
-                            echo "<h3>There are no products matching '".$_GET['type']
-                                    ."' and '".$_GET['gender']."' at the moment.</h3>";
+                            echo "<h3>Sorry, this page is under construction.</h3>";
                         } else {
                 ?>  
-                    <!--<div id='terms_content'>-->
-                    <div id='product_table' class='products row'>
+                    <div id='ourstory'>
                         <?php 
                             while ($row = mysqli_fetch_assoc($result)) {
-                                $imgArr = explode(",", $row['images']);
-                                
-                                $imgpos = strpos($imgArr[0], '/');
-                                $imgurl = substr($imgArr[0], $pos+1);
-                                echo "<div class='products col-md-3'>";
-                                echo "<a href='product.php?id=".$row['pid']."'><img src='".$imgurl."'></a><br>";
-                                echo "<a href='product.php?id=".$row['pid']."'>".$row['name']."</a>";
+                                echo "<div class='row'>";
+                                echo "<div class='col-md-2'></div>";
+                                echo "<div class='col-md-8'>";
+                                echo "<h3>".$row['title']."</h3>";
+                                echo html_entity_decode($row['html']);
+                                echo "</div>";
+                                echo "<div class='col-md-2'></div>";
                                 echo "</div>";
                             }
                         ?>
                     </div>
-                    <!--</div>-->
                 <?php
                         }
                     }
