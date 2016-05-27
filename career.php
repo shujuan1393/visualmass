@@ -97,9 +97,11 @@
                             if(!mysqli_query($link, $featured)) {
                                 echo "Error: ".mysqli_error($link);
                             } else {
+                                $featcount = 0;
                                 while ($frow = mysqli_fetch_assoc($fresult)) {
-                                    echo "<input type='hidden' id=desc".$row['id']." value=".$row['html'].">";
-                                    echo "<a id=job".$row['id']." value=".$frow['id'].">".$frow['title']."</a>";
+                                    $featcount++;
+                                    echo "<input type='hidden' id='featdesc".$featcount."' value='".$frow['html']."'>";
+                                    echo "<a id='featjob".$featcount."'>".$frow['title']."</a>";
                                 }
                             }
                         ?>
@@ -132,18 +134,18 @@
                     } else {
                         $jobcount = 0;
                         while ($row = mysqli_fetch_assoc($res)) {
+                            echo "<input type='hidden' id='desc".$row['id']."' value='".$row['html']."'>";
+                            
                             if (strcmp($row['type'], "retail")===0) {
                                 echo "<script>";
                                 echo "document.getElementById('retailJobs').innerHTML +=";
-                                echo "'<input type=hidden id=desc".$row['id']." value=".$row['html'].">";
-                                echo "<a id=job".$row['id']." value=".$row['id'].">".$row['title']."</a>'";
+                                echo "'<a id=job".$row['id'].">".$row['title']."</a>'";
                                 echo "</script>";
                                 
                             } else if (strcmp($row['type'], "hq")===0) {
                                 echo "<script>";
                                 echo "document.getElementById('hqJobs').innerHTML +=";
-                                echo "'<input type=hidden id=desc".$row['id']." value=".$row['html'].">";
-                                echo "<a id=job".$row['id']." value=".$row['id'].">".$row['title']."</a>'";
+                                echo "'<a id=job".$row['id'].">".$row['title']."</a>'";
                                 echo "</script>";
                                 
                             }
@@ -239,13 +241,26 @@
                     var j = "desc" + i;
                     var job = document.getElementById(j).value;
                     document.getElementById("job"+i).onclick=function() {
-                        document.getElementById('job_details_row').style.display = "block";
                         document.getElementById('job_details').innerHTML = job;
+                        document.getElementById('job_details_row').style.display = "block";
                     };
                 }
 
-                for(i=1; i<=<?php echo $jobcount; ?>; i++) {
+                for(var i=1; i<=<?php echo $jobcount; ?>; i++) {
                     handleElement(i);
+                }
+                
+                function handleFeatElement(i) {
+                    var j = "featdesc" + i;
+                    var job = document.getElementById(j).value;
+                    document.getElementById("featjob"+i).onclick=function() {
+                        document.getElementById('job_details').innerHTML = job;
+                        document.getElementById('job_details_row').style.display = "block";
+                    };
+                }
+
+                for(var i=1; i<=<?php echo $featcount; ?>; i++) {
+                    handleFeatElement(i);
                 }
             </script>
         </div>
