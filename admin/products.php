@@ -8,10 +8,10 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
+    unset($_SESSION['randomString']);
     unset($_SESSION['updateProdSuccess']);
     unset($_SESSION['updateProdError']);
     unset($_SESSION['addProdSuccess']);
-    unset($_SESSION['addProdError']);
     $selectSql = "Select * from products where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 
@@ -119,7 +119,7 @@ if (isset($_GET['id'])) {
             <legend>Add/Edit Product</legend>
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
-                   value='<?php if (isset($_GET['id'])) { echo $erow['pid']; }?>'/>
+                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             
             <label for='code' >Product Code*:</label>
             <input type='text' name='code' id='code' value ="<?php 
@@ -173,6 +173,39 @@ if (isset($_GET['id'])) {
                     ?>"/>
                 <br>
             </div>
+            <label for='width' >Width*:</label>
+            <input type='text' name='width' id='width' 
+                   onkeypress="return isNumber(event)" value ="<?php 
+            if (!empty($erow['width'])) {
+                echo $erow['width'];
+            }
+                ?>"/>
+            <br>
+            <?php 
+                if (!empty($erow['measurement'])) {
+                    $measureArr = explode("-", $erow['measurement']);
+                }
+            ?>
+            <label for='measurement' >Measurements*:</label>
+            <input type='text' name='measurement1' id='measurement1' 
+                   onkeypress="return isNumber(event)" value ="<?php 
+            if (!empty($measureArr[0])) {
+                echo $measureArr[0];
+            }
+                ?>"/>-
+            <input type='text' name='measurement2' id='measurement2' 
+                   onkeypress="return isNumber(event)" value ="<?php 
+            if (!empty($measureArr[1])) {
+                echo $measureArr[1];
+            }
+                ?>"/>-
+            <input type='text' name='measurement3' id='measurement3' 
+                   onkeypress="return isNumber(event)" value ="<?php 
+            if (!empty($measureArr[2])) {
+                echo $measureArr[2];
+            }
+                ?>"/>
+            <br>
             Type*:
             <select name="type">
                 <?php 
@@ -294,6 +327,19 @@ if (isset($_GET['id'])) {
                 ?>">
             <br>
             <?php 
+                if (!empty($erow['featured'])) {
+                    $featArr = explode(",", $erow['featured']);
+                    for($i =0; $i < count($featArr); $i++) {
+                        echo "<img src='".$featArr[$i]."' width=200>";
+                    }
+                    echo "<br><input type='hidden' name='oldFeaturedImages' value='".$erow['featured']."'>";
+                }
+            ?>
+            
+            Featured Image(s): 
+            <input type="file" name="featured[]" id='featured' multiple accept='image/*'/>
+            <br>
+            <?php 
                 if (!empty($erow['images'])) {
                     $imgArr = explode(",", $erow['images']);
                     for($i =0; $i < count($imgArr); $i++) {
@@ -302,7 +348,6 @@ if (isset($_GET['id'])) {
                     echo "<br><input type='hidden' name='oldImage' value='".$erow['images']."'>";
                 }
             ?>
-            
             Image(s): 
             <input type="file" name="images[]" id='images' multiple accept='image/*'/>
             <br>

@@ -49,19 +49,20 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         $editid = $_POST['editid'];
 
         $order = $_POST['order'];
+        $status = $_POST['status'];
         if (empty($editid)) {
-            $faqSql = "INSERT INTO careers (title, html, type, fieldorder) VALUES "
-                    . "('$title', '$html', 'section', '$order');";
+            $faqSql = "INSERT INTO careers (title, html, type, fieldorder, status) VALUES "
+                    . "('$title', '$html', 'section', '$order', '$status');";
             unset($_SESSION['updateCareerSuccess']);
             unset($_SESSION['updateCareerError']);
             unset($_SESSION['addCareerError']);
             unset($_SESSION['addCareerBannerError']);
             unset($_SESSION['addCareerBannerSuccess']);
             mysqli_query($link, $faqSql);
-            $_SESSION['addCareerError'] = "Career section successfully added";
+            $_SESSION['addCareerSuccess'] = "Career section successfully added";
         } else {
             $faqSql = "UPDATE careers SET title='$title', html='$html', "
-                . "type='section', fieldorder ='$order' where id = '$editid';";
+                . "type='section', fieldorder ='$order', status='$status' where id = '$editid';";
             if (mysqli_query($link, $faqSql)) {
                 unset($_SESSION['updateCareerError']);
                 unset($_SESSION['addCareerSuccess']);
@@ -232,6 +233,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 <thead>
                     <th>Order</th>
                     <th>Title</th>
+                    <th>Status</th>
                     <th>Edit</th>
                     <th>Delete</th>                        
                 </thead>
@@ -242,7 +244,8 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                     $rowCount++;
                     echo "<tr>";
                     echo "<td>".$row['fieldorder'] ."</td>";
-                    echo "<td>".$row['title'] ."</td>";                        
+                    echo "<td>".$row['title'] ."</td>";   
+                    echo "<td>".$row['status'] ."</td>";                      
                     echo '<td><button onClick="window.location.href=`careers.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
@@ -299,6 +302,24 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             <input type='text' name='order' id='order'  
                onkeypress="return isNumber(event)" 
                    value="<?php if (isset($editrow['fieldorder'])) { echo $editrow['fieldorder']; } else { echo $rowCount+1; } ?>"/>
+            <br>
+            <label for='status' >Status*:</label>
+            <select name='status'>
+                <option value='active' <?php 
+                    if(isset($editrow['status'])) {
+                        if (strcmp($editrow['status'], "active") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Active</option>
+                <option value='inactive' <?php 
+                    if(isset($editrow['status'])) {
+                        if (strcmp($editrow['status'], "inactive") === 0) {
+                            echo " selected";
+                        }
+                    }
+                ?>>Inactive</option>
+            </select>
             <br>
             Content*: 
             <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>

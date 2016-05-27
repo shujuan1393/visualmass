@@ -85,7 +85,7 @@
                                 
                                 $imgpos = strpos($imgArr[0], '/');
                                 $imgurl = substr($imgArr[0], $pos+1);
-                                echo "<div class='products col-md-3'>";
+                                echo "<div class='products col-md-4'>";
                                 echo "<a href='product.php?id=".$row['pid']."'><img src='".$imgurl."'></a><br>";
                                 echo "<a href='product.php?id=".$row['pid']."'>".$row['name']."</a>";
                                 echo "</div>";

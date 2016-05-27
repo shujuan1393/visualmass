@@ -34,6 +34,14 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         $status = $_POST['status'];
         
         if (!empty($_POST['editid'])) {
+            //update all fields with edited form name;
+            $formName = "Select * from forms where id='".$_POST['editid']."';";
+            $res = mysqli_query($link, $formName);
+            $row = mysqli_fetch_assoc($res);
+            
+            $updateField = "UPDATE forms set form='$name' where type='field' and form='".$row['name']."';";
+            mysqli_query($link, $updateField);
+            
             $sql = "UPDATE forms set name='$name', status='$status', type='form' where id='".$_POST['editid']."';";
             mysqli_query($link, $sql);
             
@@ -112,17 +120,18 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         $fieldorder = $_POST['order'];
         $form = $_POST['form'];
         $options = $_POST['options'];
+        $status = $_POST['status'];
         
         if (!empty($_POST['editfieldid'])) {
             $sql = "UPDATE forms set name='$name', type='field', field='$type', options='$options',"
-                    . "form='$form', fieldorder='$fieldorder' where id='".$_POST['editfieldid']."';";
+                    . "form='$form', fieldorder='$fieldorder', status='$status' where id='".$_POST['editfieldid']."';";
             
             mysqli_query($link, $sql);
             unset($_SESSION['addFormFieldError']);
             $_SESSION['addFormFieldSuccess'] = "Form field updated successfully";
         } else {
-            $sql = "INSERT INTO forms (name, type, field, options, form, fieldorder) VALUES (".
-                    "'$name', 'field', '$type', '$options', '$form', '$fieldorder');";
+            $sql = "INSERT INTO forms (name, type, field, options, form, fieldorder, status) VALUES (".
+                    "'$name', 'field', '$type', '$options', '$form', '$fieldorder', '$status');";
             mysqli_query($link, $sql);
             unset($_SESSION['addFormFieldError']);
             $_SESSION['addFormFieldSuccess'] = "Form field added successfully";
@@ -266,6 +275,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                     <th>Order</th>
                     <th>Name</th>
                     <th>Field Type</th>
+                    <th>Status</th>
                     <th>Edit</th>
                     <th>Delete</th>                        
                 </thead>
@@ -277,7 +287,8 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                     echo "<td>".$row['form'] ."</td>"; 
                     echo "<td>".$row['fieldorder'] ."</td>";  
                     echo "<td>".$row['name'] ."</td>";  
-                    echo "<td>".$row['field'] ."</td>";                        
+                    echo "<td>".$row['field'] ."</td>";  
+                    echo "<td>".$row['status'] ."</td>";                       
                     echo '<td><button onClick="window.location.href=`formSettings.php?id='.$row['id'].'`">E</button>';
                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                     echo "</tr>";
@@ -368,6 +379,24 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                     }
                 ?>
                 </select>
+                <label for='status' >Status:</label>
+                <select name="status">
+                    <option value="active" <?php 
+                        if (!empty($editrow['status'])) {
+                            if(strcmp("active", $editrow['status']) === 0) {
+                                echo " selected";
+                            }
+                        }
+                        ?>>Active</option>
+                    <option value="inactive" <?php 
+                        if (!empty($editrow['status'])) {
+                            if(strcmp("inactive", $editrow['status']) === 0) {
+                                echo " selected";
+                            }
+                        }
+                        ?>>Inactive</option>
+                </select>
+                <br>
                 <label for='type' >Type*:</label>
                 <select name='type'>
                     <option value='textbox'

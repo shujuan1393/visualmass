@@ -92,7 +92,7 @@ input, textarea, select{
     font-size: inherit;
 }
 
-input[type=text], input[type=password], select {
+input[type=text], input[type=password], select{
     width: 100%;
     height: 50px;
     padding: 15px 15px;
@@ -740,7 +740,7 @@ div.product_display.col-md-6 {
     margin: 0 auto;
 }
 
-#shipping_terms, #virtual_tryon, #ourstory, #recommended {
+#shipping_terms, #virtual_tryon, #ourstory, #recommended, .career_section_full {
     height: 100%;
     margin: 0 auto;
 }
@@ -749,12 +749,34 @@ div.product_display.col-md-6 {
     background-color: #ddd;
 }
 
-#shipping_terms, #virtual_tryon, #recommended, #ourstory {
+#featured_jobs, #job_openings, .career_section_half {
+    height: 50%;
+    padding: 20px 0;
+}
+
+#shipping_terms, #virtual_tryon, #recommended, #ourstory, #job_openings, #retailJobs, #hqJobs, #featured_jobs, #job_details, #job_form {
     text-align: center;
     margin: 10px auto;
 }
 
-#virtual_tryon .col-md-4 button{
+
+#virtual_tryon .col-md-4 button, #job_openings a, #retailJobs a, #hqJobs a, #featured_jobs a{
     border: 1px solid #ccc!important;
     background-color: #fff;
+    text-decoration: none;
+    color: #000;
+    margin: 10px;
+    padding: 10px;
+}
+
+#job_openings a:hover, #retailJobs a:hover, #hqJobs a:hover, #featured_jobs a:hover {
+    background-color: #ccc;
+    border: 1px solid #fff;
+    text-decoration: none;
+    color: #fff;
+}
+
+#job_form input, select, textarea {
+    text-align: center;
+    margin: 10px auto;
 }
