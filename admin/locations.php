@@ -42,7 +42,7 @@ if (isset($_GET['id'])) {
         <h2>Manage Locations</h2>
         
         <?php 
-            $qry = "Select * from locations";
+            $qry = "Select * from locations where name<> 'banner'";
             
             $result = mysqli_query($link, $qry);
 

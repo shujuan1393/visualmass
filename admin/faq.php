@@ -180,7 +180,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                     if (in_array($ext, $imgArr)) {
                         echo "<img src='".$brow['html']."' width=450>";
                     } else {
-                        echo '<video width="500" height="400" autoplay>
+                        echo '<video width="500" height="400" controls>
                         <source src="'.$brow['html'].'" type="video/mp4">
                         Your browser does not support the video tag.
                         </video>';

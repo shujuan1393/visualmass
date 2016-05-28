@@ -91,6 +91,9 @@ unset($_SESSION['addContactSuccess']);
 unset($_SESSION['addContactError']);
 unset($_SESSION['setContactDetailsError']);
 unset($_SESSION['setContactDetailsSuccess']);
+
+unset($_SESSION['addProdBannerSuccess']);
+unset($_SESSION['addProdBannerError']);
 ?>
 <script>
     var date = new Date();

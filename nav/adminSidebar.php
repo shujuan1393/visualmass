@@ -89,6 +89,8 @@ require_once '../config/db.php';
                 <li><a href='culturestory.php'>CULTURE</a></li>
                 <li><a href='designstory.php'>DESIGN</a></li>
                 <li><a href='onestory.php'>GIFT INITIATIVE</a></li>
+                <li><a href='locBanner.php'>LOCATIONS</a></li>
+                <li><a href='prodBanner.php'>PRODUCTS</a></li>
                 <li><a href='terms.php'>TERMS</a></li>
             </ul>
         </div>
