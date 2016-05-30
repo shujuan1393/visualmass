@@ -10,11 +10,11 @@
 
 <html>
     <head>
-        <title>Visual Mass</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        <div id='whole_footer'>
         <div class="left_nav">
             <ul>
                 <li>GIFT CARDS</li>
@@ -70,6 +70,7 @@
 //                echo "Welcome, " .$_SESSION['loggedUser']; 
 //                echo "&nbsp<a href='../logout.php'>Logout</a>";
             ?>
+        </div>
         </div>
     </body>
 </html>

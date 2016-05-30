@@ -13,7 +13,9 @@ and open the template in the editor.
         <div id="wrapper">
             <div id="header"><?php require_once 'nav/header.php';?></div>
             
-            <div id="content"></div>
+            <div id="content">
+                
+            </div>
             
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
         </div>

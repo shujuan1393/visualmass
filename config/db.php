@@ -24,3 +24,16 @@ if (!$link) {
 
 mysqli_select_db($link, "visual_mass");
 
+function GetCartId() {
+// This function will generate an encrypted string and
+// will set it as a cookie using set_cookie. This will
+// also be used as the cookieId field in the cart table
+    if(isset($_COOKIE["cartId"])) {
+        return $_COOKIE["cartId"];
+    } else {
+        // There is no cookie set. We will set the cookie
+        // and return the value of the users session ID
+        setcookie("cartId", session_id(), time() + ((3600 * 24) * 30));
+        return session_id();
+    }
+} 

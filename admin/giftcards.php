@@ -126,6 +126,16 @@ if (isset($_GET['id'])) {
             <input type='hidden' name='editid' id='editid' 
                    value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             
+            <label for='code' >Discount Code*:</label>
+            <input type='text' name='code' id='code' value ="<?php 
+            if(isset($_SESSION['randomString'])) { 
+                echo $_SESSION['randomString']; } 
+            if (!empty($erow['code'])) {
+                echo $erow['code'];
+            }
+                ?>" maxlength="50" />
+            <button type='button' onclick="randomString()">Generate</button>
+            <br>
             <label for='name' >Name*:</label>
             <input type='text' name='name' id='name'  maxlength="50" 
                    value='<?php if (!empty($erow['name'])) { echo $erow['name']; }?>'/>
@@ -222,6 +232,17 @@ if (isset($_GET['id'])) {
 
             document.getElementById('nanError').style.display='none';
             return true;
+        }
+        
+        function randomString() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for( var i=0; i < 20; i++ )
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            document.getElementById('code').value = text;
+            return false;
         }
         
         function deleteFunction(locId) {

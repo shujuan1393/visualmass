@@ -112,6 +112,16 @@ input[type=text], input[type=password], select{
     text-transform: uppercase;
 }
 
+.product-button {
+    background-color: #808080;
+    height: 30px;
+    border: none;
+    color: #fff;
+/*    padding: 15px;*/
+    /*margin-top: 8px;*/
+    text-transform: uppercase;
+}
+
 table {
     border-collapse: collapse;
     font-family: inherit;
@@ -374,13 +384,13 @@ td {
 }
 
 
-.left_nav ul, .rightheader ul, .rightfooter ul, .righticons ul {
+.left_nav ul, .rightheader ul, .rightfooter ul, .righticons ul, #retail_locs ul, #popup_locs ul, #scrollable_loc ul{
     list-style-type: none;
     overflow: hidden;
     display: inline-block;
 }
 
-.left_nav li, #footer li, .rightfooter li, .rightheader li {
+.left_nav li, #footer li, .rightfooter li, .rightheader li, #retail_locs li, #popup_locs li{
     float: left;
     margin-top: 8px;
     padding: 10px;
@@ -390,7 +400,8 @@ td {
     float: left;
 }
 
-.left_nav li a , .rightheader li a, .righticons li a, .rightfooter li a, #products_table a, #recommended a {
+.left_nav li a , .rightheader li a, .righticons li a, .rightfooter li a, #products_table a, 
+#recommended a {
     display: block;
     color: black;
     text-align: center;
@@ -399,7 +410,7 @@ td {
 
 .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), #products_table a:hover:not(.active),
 #recommended a:hover:not(.active), #showGlasses  a:hover:not(.active), #showStory  a:hover:not(.active), 
-#showSunglasses a:hover:not(.active) {
+#showSunglasses a:hover:not(.active), #scrollable_loc a:hover:not(.active) {
     color: #808080;
 }
 
@@ -647,6 +658,18 @@ div.panel.show {
     width: 100%;
 }
 
+#banner .carousel, #banner .item,#banner .active{
+    height:100%;
+}
+
+#banner .active, #myCarousel .active {
+    background: #cccccc;
+}
+
+#banner .carousel-inner{
+    height:100%;
+}
+
 .carousel {
     overflow: hidden;
 }
@@ -694,12 +717,13 @@ div.panel.show {
 }
 
 .product_desc {
-    margin: 0;
+    margin: 20px 20px;
     float: left;
 }
 
 .product_measurements {
-    margin: 0 auto;
+    text-align: center;
+    margin: 20px auto;
     bottom: 0;
     float: left;
 }
@@ -708,9 +732,20 @@ div.panel.show {
     display: inline;
 }
 
+#recom_prod img {
+    width: 100%;
+}
+
 #myCarousel {
     width:100%;
-    margin: 10px 0;
+    text-align: center;
+    margin: 15px 20px;
+    height: 50%;
+
+}
+
+.thumbnail {
+    height: 100%;
 }
 
 .img-responsive {
@@ -726,6 +761,10 @@ div.panel.show {
 .carousel-control {
   padding-top:10%;
   width:5%;
+}
+
+#myCarousel .col-md-4 img {
+    height: 100%;
 }
 
 div.product_display.col-md-6 {
@@ -779,4 +818,101 @@ div.product_display.col-md-6 {
 #job_form input, select, textarea {
     text-align: center;
     margin: 10px auto;
+}
+
+#service_filter .heading {
+    width: 100%;
+    background-color: #ddd;
+    border: 1px solid #fff;
+    margin: auto!important;
+}
+
+#service_filter h3 {
+    padding: 50px 0;
+    margin: 0;
+}
+
+.service {
+    background-color: #ddd;
+    border: 1px solid #fff;
+    text-align: center;
+    margin: 5px 15px;
+    height: 55px;
+    padding-top: 10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.service a {
+    text-decoration: none;
+    color: #000;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.service a:hover {
+    text-decoration: underline;
+    
+}
+
+#retail_locs h3, #retail_locs h4, #retail_locs p, #popup_locs h3, #popup_locs h4, #popup_locs p {
+    text-align: center;
+    margin: 10px auto;
+}
+
+.loc_serv {
+    text-align: center;
+    padding: 10px;
+}
+
+.store_header {
+    text-decoration: underline;
+}
+
+
+#scrollable_loc {
+    margin: 0 20px; 
+    z-index: 10;
+    top: 60px;
+}
+
+#scrollable_loc a {
+    display: block;
+    color: black;
+    text-decoration: none;
+}
+
+.stuck {
+    position: fixed;
+}
+
+#cart {
+    text-align: center;
+    margin: auto;
+}
+
+#cart input {
+    padding: 0px 5px;
+    margin: 20px 5px;
+    width: 100%;
+}
+
+.totalprice {
+    margin: 30px 10px;
+}
+
+.product_dets {
+    margin: 20px 0;
+}
+
+#cart {
+    margin: 10px auto;
+}
+
+#cart h3, #cart button {
+    margin: 20px auto;
+}
+
+#emptyCart {
+    margin: 20px;
 }

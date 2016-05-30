@@ -142,7 +142,7 @@ if (isset($_POST['submit'])) {
                 <option value='women'>Women</option>
             </select>
             <select id='categories' name='categories'>
-                <option value='glasses'>Glasses</option>
+                <option value='frames'>Glasses</option>
                 <option value='sunglasses'>Sunglasses</option>
             </select>
             <label for='image' >Image:</label>

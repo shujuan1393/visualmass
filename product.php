@@ -76,8 +76,8 @@
                     </div>
                     <div class='product-buttons'>
                         <ul>
-                            <li>Try at home for free</li>
-                            <li>BUY FROM $<?php echo $brow['price'];?></li>
+                            <li><button id='hometry' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processHometry()'>Try at home for free</button></li>
+                            <li><button id='buy_now' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processPurchase()'>BUY FROM $<?php echo $brow['price'];?></button></li>
                         </ul>
                     </div>
                 </div>
@@ -90,31 +90,37 @@
                             </div>
 
                             <div class='product_measurements col-md-12'>
-                                <h5>WIDTH</h5>
-                                <?php echo $brow['width']; ?>
-                                <h5>MEASUREMENTS</h5>
-                                <?php echo $brow['measurement']; ?>
-
-                                <hr>
+                                <div class='col-md-6'>
+                                    <h5>WIDTH</h5><br>
+                                    <?php echo $brow['width']; ?>
+                                </div>
+                                <div class='col-md-6'>
+                                    <h5>MEASUREMENTS</h5><br>
+                                    <?php echo $brow['measurement']; ?>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-12 col-md-offset-1'><hr></div>
                             </div>
                             <div id="myCarousel" class="carousel slide">
                                 <!-- Carousel items -->
                                 <div class="carousel-inner">
                                     <div class="item active">
-                                        <div class="image row">
+                                        <div class="col-md-12">
                                             <?php 
                                                 $count = 0;
                                                 for($i = 0; $i < count($browArr); $i++) {
                                                     $count++;
                                                     $pos = strpos($browArr[$i], '/');
                                                     $url = substr($browArr[$i], $pos+1);
-                                                    echo "<div class='col-md-3'><a href='#x' id='thumb$count' class='thumbnail'>"
-                                                    . "<img src='".$url."' class='img-responsive'>";
+                                                    
+                                                    echo "<div class='col-md-4'><a href='#x' id='thumb$count' class='thumbnail'>"
+                                                    . "<img class='img-responsive' src='".$url."'>";
                                                     echo "</a><input type='hidden' id='url".$count."' value='$url'></div>";
                                                     if ($count % 3 === 0 && $i !== (count($browArr)-1)) {
                                                         echo "</div></div>";
                                                         echo "<div class='item'>";
-                                                        echo "<div class='image row'>";
+                                                        echo "<div class='col-md-12'>";
                                                     }
                                                     if ($i === (count($browArr)-1)) {
                                                         echo "</div></div>";
@@ -123,9 +129,13 @@
                                             ?>
                                         </div>
                                         <!--/carousel-inner--> 
-                                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
+                                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        </a>
 
-                                        <a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
+                                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -177,7 +187,7 @@
                                 $imgpos = strpos($imgArr[0], '/');
                                 $imgurl = substr($imgArr[0], $imgpos+1);
                     ?>
-                        <div class='col-md-4'>
+                        <div id='recom_prod' class='col-md-4'>
                             <a href='product.php?id=<?php echo $rec['pid']; ?>'><img src='<?php echo $imgurl; ?>'></a> <br>
                             <?php echo "<a href='product.php?id=".$rec['pid']."'>".$rec['name']."</a>"; ?>
                         </div>
@@ -196,6 +206,16 @@
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
             
             <script>
+                function processHometry() {
+                    var sel = document.getElementById('hometry').value;
+                    window.location="addCart.php?type=hometry&id=" + sel;
+                }
+                
+                function processPurchase() {
+                    var sel = document.getElementById('buy_now').value;
+                    window.location="addCart.php?type=purchase&id=" + sel;
+                }
+                
                 $(document).ready(function() {
                     $('#myCarousel').carousel({
                         interval: 10000
@@ -228,6 +248,27 @@
                 var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 //                alert(clientHeight + " " + height);
                 document.getElementById('banner').style.maxHeight = height - clientHeight;
+                
+                var $item = $('.carousel .item');
+                var $wHeight = $(window).height();
+
+                $item.height($wHeight); 
+
+                $('.carousel img').each(function() {
+                  var $src = $(this).attr('src');
+                  var $color = $(this).attr('data-color');
+                  $(this).parent().css({
+                    'background-image' : 'url(' + $src + ')',
+                    'background-color' : $color
+                  });
+                  $(this).remove();
+                });
+
+                $(window).on('resize', function (){
+                  $wHeight = $(window).height();
+                  $item.height($wHeight);
+                });
+                $item.eq(0).addClass('active');
             </script>
         </div>
     </body>

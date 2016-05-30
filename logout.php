@@ -15,11 +15,10 @@ if (isset($_SESSION['loggedUserEmail']) && isset($_SESSION['userType'])) {
     
     mysqli_query($link, $updateSql);
     session_destroy();
-    setcookie("user", "", time() - 3600);
     header("Location: admin/login.php");  
 } else {
     session_destroy();
-    setcookie("user", "", time() - 3600);
+    setcookie("cartId", "", time() - 3600);
     header("Location: index.php");
 }
 ?>

@@ -12,28 +12,27 @@
             
             <div id="content">
                 <?php
-                    $banner = "Select * from products where name='banner' and type='".$_GET['type']."' and "
-                            . "gender LIKE '%".$_GET['gender']."%';";
-
+                    $banner = "Select * from productbanner where categories='".$_GET['type']."' and "
+                            . "gender = '".$_GET['gender']."';";
+                    
                     $bresult = mysqli_query($link, $banner);
                     
                     if (!mysqli_query($link, $banner)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
                         if ($bresult -> num_rows == 0) {
-                            echo "<h3 class='banner-title'>Sorry, this page is under construction.</h3>";
+                            echo "<h3 id='banner' class='banner-title'>Sorry, this page is under construction.</h3>";
                         } else {
                             $brow = mysqli_fetch_assoc($bresult);
-                            
-                            $browArr = explode(".", $brow['images']);
+                            $browArr = explode(".", $brow['image']);
 
                             $ext = $browArr[count($browArr)-1];
 
                             $imgArr = array("jpg", "jpeg", "png", "gif");
                             $vidArr = array("mp3", "mp4", "wma");
  
-                            $pos = strpos($brow['images'], '/');
-                            $url = substr($brow['images'], $pos+1);
+                            $pos = strpos($brow['image'], '/');
+                            $url = substr($brow['image'], $pos+1);
                             echo "<div class='webbanner'>";
                             
                             if (in_array($ext, $imgArr)) {
@@ -106,7 +105,11 @@
                 var clientHeight = document.getElementById('header').clientHeight;
                 var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 //                alert(clientHeight + " " + height);
-                document.getElementById('banner').style.maxHeight = height - clientHeight;
+                var obj = document.getElementById('banner');
+                
+                if (obj !== null) {
+                    obj.style.maxHeight = height - clientHeight;
+                }
             </script>
         </div>
     </body>
