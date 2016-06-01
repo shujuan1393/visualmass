@@ -176,18 +176,19 @@ if (isset($_GET['id'])) {
             <br>
             <br>
             <label for='type' >Type*:</label>
-            <input type='radio' name='type' id='type' value='physical' <?php 
-                        if(!empty($erow['type'])) {
-                            if (strcmp($erow['type'], "physical") === 0) {
+            <?php 
+                $typeArr = explode(",", $erow['type']);
+            ?>
+            <input type='checkbox' name='type[]' id='type' value='physical' <?php 
+                        if(!empty($typeArr)) {
+                            if (in_array("physical", $typeArr)) {
                                 echo " checked";
                             }
-                        } else {
-                            echo " checked";
                         }
                     ?>>Physical 
-            <input type='radio' name='type' id='type' value='ecard' <?php 
-                        if(!empty($erow['type'])) {
-                            if (strcmp($erow['type'], "ecard") === 0) {
+            <input type='checkbox' name='type[]' id='type' value='ecard' <?php 
+                        if(!empty($typeArr)) {
+                            if (in_array("ecard", $typeArr)) {
                                 echo " checked";
                             }
                         }

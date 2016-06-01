@@ -17,7 +17,7 @@
         <div id='whole_footer'>
         <div class="left_nav">
             <ul>
-                <li>GIFT CARDS</li>
+                <li><a href='giftcard.php'>GIFT CARDS</a></li>
                 <li><a href='career.php'>CAREER</a></li>
                 <li><a href='blog.php'>BLOG</a></li>
             </ul>

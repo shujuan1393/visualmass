@@ -18,6 +18,8 @@
         <link href="styles.css" rel="stylesheet" type="text/css" />     
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
+        <link rel="stylesheet" type="text/css" href="calendar/codebase/dhtmlxcalendar.css"/>
+        <script type="text/javascript" src="calendar/codebase/dhtmlxcalendar.js"></script>  
     </head>
     <body>
         <div id='whole_header'>

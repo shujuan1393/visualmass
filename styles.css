@@ -102,6 +102,15 @@ input[type=text], input[type=password], select{
     box-sizing: border-box;
 }
 
+textarea {
+    width: 100%;
+    padding: 15px 15px;
+    margin: 2px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
 .button, input[type=button], input[type=submit], input[type=reset] {
     background-color: #808080;
     height: 50px;
@@ -117,8 +126,6 @@ input[type=text], input[type=password], select{
     height: 30px;
     border: none;
     color: #fff;
-/*    padding: 15px;*/
-    /*margin-top: 8px;*/
     text-transform: uppercase;
 }
 
@@ -401,7 +408,7 @@ td {
 }
 
 .left_nav li a , .rightheader li a, .righticons li a, .rightfooter li a, #products_table a, 
-#recommended a {
+#recommended a, .button a {
     display: block;
     color: black;
     text-align: center;
@@ -779,8 +786,8 @@ div.product_display.col-md-6 {
     margin: 0 auto;
 }
 
-#shipping_terms, #virtual_tryon, #ourstory, #recommended, .career_section_full {
-    height: 100%;
+#shipping_terms, #virtual_tryon, #ourstory, #recommended, .career_section_full, .full_section {
+    height: 100%!important;
     margin: 0 auto;
 }
 
@@ -886,7 +893,7 @@ div.product_display.col-md-6 {
     position: fixed;
 }
 
-#cart {
+#cart, .giftcard {
     text-align: center;
     margin: auto;
 }
@@ -915,4 +922,49 @@ div.product_display.col-md-6 {
 
 #emptyCart {
     margin: 20px;
+}
+
+#cart a {
+    color: #fff;
+}
+
+#cart a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.giftcard h3, .giftcard h4, .giftcard h5, .giftcard p {
+    margin: 25px;
+}
+
+.giftcard {
+    margin-top: 30px;
+}
+
+.giftcard a:hover:not(.active) {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.giftbox {
+    border: #333 1px solid;
+    padding: 30px;
+    cursor: pointer;
+}
+
+#giftcardamounts {
+    margin: 20px;
+    width: 100%;
+}
+
+.borderless tr {
+    border: none;
+}
+
+#giftcardForm input, #giftcardForm textarea {
+    border-radius: 5px;
+}
+
+div#calendar {
+    padding: 20px;
 }

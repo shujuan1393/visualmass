@@ -21,9 +21,9 @@ and open the template in the editor.
                     <form method='post' action='addCart.php?update=1'>
                     <div id='cart' class='row'>
                     <?php
-                        $cartSql = "Select * from cart where cartid='".GetCartId()."' and type='purchase';";
+                        $cartSql = "Select * from cart where cartid='".GetCartId()."' and type LIKE '%giftcard' OR type = 'purchase';";
                         $res = mysqli_query($link, $cartSql);
-
+                        
                         if(!mysqli_query($link, $cartSql)) {
                             echo "Error: ".mysqli_error($link);
                         } else {
@@ -33,6 +33,7 @@ and open the template in the editor.
                             } else {
                                 echo "<script>document.getElementById('emptyCart').style.display='none';</script>";
                                 while($row = mysqli_fetch_assoc($res)) {
+                                    $type = $row['type'];
                                     $pid = $row['pid'];
 
                                     $productSql = "Select * from products where pid='$pid';";
@@ -45,19 +46,34 @@ and open the template in the editor.
                                     $url = substr($img[0], $pos+1);
 
                                     $total = $row['price'] * $row['quantity'];
+                                    $typeArr = explode("@", $type);
 
                                     echo "<div class='col-md-10 col-md-offset-2'>";
                                     echo "<div class='col-md-3'>";
-                                    echo "<img src='".$url."' style='width:100%'></div>";
+                                    if (in_array("giftcard", $typeArr)) {
+                                        echo "<h4>GIFTCARD IMAGE</h4>";
+                                    } else {
+                                        echo "<img src='".$url."' style='width:100%'>";
+                                    }
+                                    echo "</div>";
                                     echo "<div class='product_dets col-md-3'>";
-                                    echo "<h4>".$prow['name']."</h4><br>".html_entity_decode($prow['description']);
+                                    
+                                    if (in_array("giftcard", $typeArr)) {
+                                        echo "<h4>Giftcard</h4><br>";
+                                        $detArr = explode(",", $row['details']);
+                                        echo "To: " .$detArr[0]."<br>";
+                                        echo "From: " .$detArr[1]."<br>";
+                                        echo "Note: " .$detArr[2]."<br>";
+                                   } else {
+                                        echo "<h4>".$prow['name']."</h4><br>".html_entity_decode($prow['description']);
+                                    }
                                     echo "</div>";
                                     echo "<div class='col-md-4'>";
                                     echo "<input type='hidden' name='prod".$count."' value='$pid'>";
                                     echo "<div class='col-md-2'><input type='text' name='quantity".$count."' value='".$row['quantity']."'>"
                                     . "</div>";
                                     echo "<div class='col-md-2'><p class='totalprice'>$".$total."</p></div>";  
-                                    echo "<div class='col-md-2'><button class='button' onclick=deleteProduct('".$pid."')>X</button></div>";  
+                                    echo "<div class='col-md-2'><button class='button'><a href='addCart.php?delete=1&id=".$type."-".$pid."'>X</a></button></div>";  
                                     echo "</div>";
                                     echo "</div>";
                                     $count++;
@@ -80,7 +96,8 @@ and open the template in the editor.
                                     echo "<script>document.getElementById('emptyCart').style.display='none';</script>";
                                     while($row = mysqli_fetch_assoc($tryres)) {
                                         $pid = $row['pid'];
-
+                                        $type = $row['type'];
+                                        
                                         $productSql = "Select * from products where pid='$pid';";
                                         $pres = mysqli_query($link, $productSql);
                                         $prow = mysqli_fetch_assoc($pres);
@@ -103,7 +120,7 @@ and open the template in the editor.
                                         echo "<div class='col-md-2'><input type='text' name='quantity".$count."' value='".$row['quantity']."'>"
                                         . "</div>";
                                         echo "<div class='col-md-2'><p class='totalprice'>$0</p></div>";  
-                                        echo "<div class='col-md-2'><button class='button' onclick=deleteProduct('".$pid."')>X</button></div>";  
+                                        echo "<div class='col-md-2'><button class='button'><a href='addCart.php?delete=1&id=".$type."-".$pid."'>X</a></button></div>";  
                                         echo "</div>";
                                         echo "</div>";
                                         $count++;
@@ -126,15 +143,4 @@ and open the template in the editor.
         </div>
     </body>
     
-    <script>
-        function updateCart() {
-            for (var i = 0; i < <?php echo $count; ?>; i++) {
-                
-            }
-        };
-        
-        function deleteProduct(pid) {
-            window.location = "addCart.php?delete=1&id="+pid;
-        };
-    </script>
 </html>

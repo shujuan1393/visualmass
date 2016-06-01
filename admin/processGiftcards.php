@@ -40,7 +40,17 @@ if (isset($_GET['delete'])) {
         $amount = $_POST['amount'];
         $status = $_POST['status'];
         $customise = $_POST['customise'];
-        $type = $_POST['type'];
+        $typeArr = $_POST['type'];
+        $type = "";
+        
+        for($i = 0; $i < count($typeArr); $i++) {
+            $type .= $typeArr[$i];
+
+            if ($i+1 !== count($typeArr)) {
+                $type.=",";
+            }
+        }
+        
         $code = $_POST['code'];
         
         if (!empty($_POST['editid'])) {  
