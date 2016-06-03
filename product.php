@@ -1,5 +1,15 @@
 <?php 
     require_once 'config/db.php';
+    
+    $fav = "Select * from favourites where email='".$_SESSION['loggedUserEmail']."';";
+    $fres = mysqli_query($link, $fav);
+    
+    if (!mysqli_query($link, $fav)) {
+        echo "Error: ".mysqli_error($link);
+    } else {
+        $frow = mysqli_fetch_assoc($fres);
+        $favArr = explode(",", $frow['pid']);
+    }
 ?>
 <html>
     <head>
@@ -76,8 +86,15 @@
                     </div>
                     <div class='product-buttons'>
                         <ul>
+                            <?php 
+                                if (in_array($brow['pid'], $favArr)) {
+                                    echo '<li class="heart"><a id="heart" href="addFavourite.php?delete=1&id='.$brow['pid'].'"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>';
+                                } else {
+                                    echo '<li class="heart"><a id="heart" href="addFavourite.php?id='.$brow['pid'].'"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>';
+                                }
+                            ?>
                             <li><button id='hometry' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processHometry()'>Try at home for free</button></li>
-                            <li><button id='buy_now' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processPurchase()'>BUY FROM $<?php echo $brow['price'];?></button></li>
+                            <li><button id='buy_now' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processPurchase()'><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;BUY FROM $<?php echo $brow['price'];?></button></li>
                         </ul>
                     </div>
                 </div>

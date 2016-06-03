@@ -84,6 +84,7 @@ form {
 .form_header {
     font-family: inherit;
     font-size: 14px;
+    color: #000;
     /*margin-bottom: 20px;*/
 }
 
@@ -138,7 +139,7 @@ table {
     
 }
 
-#content h3 {
+#content h3, .updateProfile {
     text-align: center;
     margin: 0;
 }
@@ -173,6 +174,14 @@ td {
 }
 
 /*  HEADER BAR */
+#logoheader, #user {
+    cursor:pointer;
+}
+
+#user {
+    text-transform: uppercase;
+    padding-right: 20px;
+}
 
 .logo {
     margin: auto;
@@ -202,6 +211,11 @@ td {
 .rightheader ul {
     list-style-type: none;
     margin: 0;
+}
+
+.close_modal {
+    right: 20px;
+    top: 10px;
 }
 
 #frameheader{
@@ -391,7 +405,7 @@ td {
 }
 
 
-.left_nav ul, .rightheader ul, .rightfooter ul, .righticons ul, #retail_locs ul, #popup_locs ul, #scrollable_loc ul{
+.left_nav ul, .rightheader ul, .rightfooter ul, .righticons ul, #retail_locs ul, #popup_locs ul, #scrollable_loc ul, .cart_icons ul{
     list-style-type: none;
     overflow: hidden;
     display: inline-block;
@@ -403,26 +417,32 @@ td {
     padding: 10px;
 }
 
+.cart_icons li {
+    float: left;
+    padding: 5px;
+}
+
 .righticons {
     float: left;
 }
 
-.left_nav li a , .rightheader li a, .righticons li a, .rightfooter li a, #products_table a, 
-#recommended a, .button a {
+.left_nav li a , .rightheader li a, .righticons li a, .rightfooter li a, .products a, 
+#recommended a, .button a, .cart_icons li a, .rightsearch a  {
     display: block;
-    color: black;
+    color: #000;
     text-align: center;
     text-decoration: none;
 }
 
-.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), #products_table a:hover:not(.active),
+.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .products a:hover:not(.active),
 #recommended a:hover:not(.active), #showGlasses  a:hover:not(.active), #showStory  a:hover:not(.active), 
-#showSunglasses a:hover:not(.active), #scrollable_loc a:hover:not(.active) {
+#showSunglasses a:hover:not(.active), #scrollable_loc a:hover:not(.active), 
+.rightsearch a:hover:not(.active), .rightfooter li a:hover:not(.active) {
     color: #808080;
 }
 
 .active {
-background-color:#4CAF50;
+    background-color:#4CAF50;
 }
 
 #footer {
@@ -436,7 +456,7 @@ background-color:#4CAF50;
     cursor: pointer;
 }
 
-#glasses, #sunglasses, #ourstoryheader {
+#glasses, #sunglasses, #ourstoryheader, #userMenu {
     width: 100%;
     text-align: center;
     margin: 0 auto;
@@ -618,6 +638,20 @@ div.panel.show {
     display: block !important;
 }
 
+.addcart, #heart {
+    position: relative;
+    color: #333;
+}
+
+a:hover#heart {
+    color: #ccc;
+}
+
+.cart_icons {
+    float: right;
+    padding: 5px;
+}
+
 .search_filter, .product_title {
     text-align: center;
     margin-left: 10px;
@@ -697,9 +731,18 @@ div.panel.show {
 .product_title li {
     float: left;
     margin: 0 20px;
+}
+
+.product-button {
     padding: 5px 20px;
     background-color: #808080;
     color: #fff;
+    
+}
+.product_name {
+    /*position: absolute;*/
+    margin-left: 150px;
+    margin-top: 10px;
 }
 
 .color_swatch {
@@ -711,6 +754,7 @@ div.panel.show {
     right: 20px;
     padding: 0;
 }
+
 
 .details {
     width: 100%;
@@ -786,7 +830,7 @@ div.product_display.col-md-6 {
     margin: 0 auto;
 }
 
-#shipping_terms, #virtual_tryon, #ourstory, #recommended, .career_section_full, .full_section {
+#shipping_terms, #virtual_tryon, #ourstory, #recommended, .career_section_full, .full_section, .products {
     height: 100%!important;
     margin: 0 auto;
 }
@@ -967,4 +1011,54 @@ div.product_display.col-md-6 {
 
 div#calendar {
     padding: 20px;
+}
+
+.modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+}
+
+.modal {
+    overflow-y: hidden!important;
+}
+
+.modal.modal-fullscreen .modal-content {
+    /*background: rgba(192,192,192, 0.2);*/
+}
+.modal.modal-fullscreen .modal-header {
+  border: 0;
+  color: #fff;
+}
+.modal.modal-fullscreen .modal-footer {
+  /*border-color: rgba(192,192,192, 0.2);*/
+}
+
+.cart_button {
+    background-color: #808080;
+    height: 50px;
+    border: none;
+    color: #fff;
+    padding: 15px 50px;
+    margin: 20px auto;
+    position: absolute;
+    text-transform: uppercase;
+}
+
+#searchWrapper {
+    margin: 10px;
+}
+
+.searchResults {
+    margin-top: 10px;
+    max-width:100%;
+    height:70%;
+    overflow-y: auto;
 }

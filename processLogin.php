@@ -8,10 +8,10 @@
 
 require_once 'config/db.php';
 
-if(empty($_POST['email']) || empty($_POST['password'])) {
-    $_SESSION['loginFormError'] = "Email/password field(s) empty";
-    header('Location: login.php');
-} else {
+//if(empty($_POST['email']) || empty($_POST['password'])) {
+//    $_SESSION['loginFormError'] = "Email/password field(s) empty";
+//    header('Location: login.php');
+//} else {
     unset($_SESSION['loginFormError']);
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
@@ -36,11 +36,12 @@ if(empty($_POST['email']) || empty($_POST['password'])) {
                 if (strcmp($type, "customer") === 0) {
                     $_SESSION['user_time'] = time();
 //                    setcookie("user", $row['email'], time() + (86400 * 30), "/"); // 86400 = 1 day
+                    $_SESSION['loggedUserEmail'] = $row['email'];
                     $_SESSION['loggedUser'] = $row['firstname'];
                     header('Location: index.php');
                 } 
             }
         } 
     }
-}
+//}
   

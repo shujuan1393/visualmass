@@ -195,7 +195,7 @@
                                     /******* GEOCODE ******/
 
                                     // get latitude, longitude and formatted address
-                                    $data_arr = geocode($row['country']. " ". $row[zip]);
+                                    $data_arr = geocode($row['country']. " ". $row['zip']);
 
                                     // if able to geocode the address
                                     if($data_arr){
@@ -298,7 +298,7 @@
                                 /******* GEOCODE ******/
                                 
                                 // get latitude, longitude and formatted address
-                                $data_arr = geocode($row['country']. " ". $row[zip]);
+                                $data_arr = geocode($row['country']. " ". $row['zip']);
 
                                 // if able to geocode the address
                                 if($data_arr){

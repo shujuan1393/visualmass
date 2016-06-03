@@ -1,5 +1,22 @@
 <?php 
     require_once 'config/db.php';
+    
+    $fav = "Select * from favourites where email='".$_SESSION['loggedUserEmail']."';";
+    $fres = mysqli_query($link, $fav);
+    
+    if (!mysqli_query($link, $fav)) {
+        echo "Error: ".mysqli_error($link);
+    } else {
+        $frow = mysqli_fetch_assoc($fres);
+        $favArr = explode(",", $frow['pid']);
+    }
+    if (isset($_SESSION['searchResult'])) {
+        unset($_SESSION['searchResult']);
+        unset($_SESSION['searchVal']);
+    }
+    if (isset($_SESSION['searchError'])) {
+        unset($_SESSION['searchError']);
+    }
 ?>
 <html>
     <head>
@@ -38,7 +55,7 @@
                             if (in_array($ext, $imgArr)) {
                                 echo "<img id='banner' src='".$url."'>";
                             } else {
-                                echo '<video id="banner" autoplay>
+                                echo '<video id="banner" controls>
                                 <source src="'.$url.'" type="video/mp4">
                                 Your browser does not support the video tag.
                                 </video>';
@@ -60,7 +77,7 @@
                         <li>MATERIAL</li>
                     </ul>
                 <div class='rightsearch'>
-                    SEARCH FRAMES
+                    <a href='searchFrames.php' data-toggle="modal" data-target="#searchModal">SEARCH FRAMES</a>
                 </div>
                 </div>
                 <?php 
@@ -83,10 +100,22 @@
                                 $imgArr = explode(",", $row['images']);
                                 
                                 $imgpos = strpos($imgArr[0], '/');
-                                $imgurl = substr($imgArr[0], $pos+1);
+                                $imgurl = substr($imgArr[0], $imgpos+1);
                                 echo "<div class='products col-md-4'>";
                                 echo "<a href='product.php?id=".$row['pid']."'><img src='".$imgurl."'></a><br>";
-                                echo "<a href='product.php?id=".$row['pid']."'>".$row['name']."</a>";
+                                echo "<div class='product_name col-md-2'><a href='product.php?id=".$row['pid']."'>".$row['name']."</a></div>";
+                                echo '<div class="cart_icons col-md-3">'
+                                . '<ul>'
+                                        . '<li><a class="addcart" href="addCart.php?type=purchase&id='.$row['pid'].
+                                        '"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i></a></li>';
+                                if (isset($_SESSION['loggedUserEmail'])) {
+                                    if (in_array($row['pid'], $favArr)) {
+                                        echo '<li><a id="heart" href="addFavourite.php?delete=1&id='.$row['pid'].'"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>';
+                                    } else {
+                                        echo '<li><a id="heart" href="addFavourite.php?id='.$row['pid'].'"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>';
+                                    }
+                                }
+                                echo '</ul></div>';
                                 echo "</div>";
                             }
                         ?>
@@ -112,5 +141,26 @@
                 }
             </script>
         </div>
+        <div class="modal fade modal-fullscreen force-fullscreen" id="searchModal" tabindex="-1" 
+             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
     </body>
+    
+    <script>
+        $('#searchModal').appendTo("body");
+    </script>
 </html>

@@ -45,7 +45,8 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
             }
 
             mysqli_query($link, $sql);
-            header("Location: product.php?id=".$pid);
+            echo "<script>window.history.back();</script>";
+//            header("Location: product.php?id=".$pid);
         }
     }
 } else if (isset($_GET['update'])) {
@@ -60,7 +61,8 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
         for ($i = 0; $i < $count; $i++) {
             $pid = $_POST['prod'.$i];
             $qty = $_POST['quantity'.$i];
-            $sql = "UPDATE cart set quantity='$qty' where pid='$pid' and cartid='".GetCartId()."';";
+            $type = $_POST['type'.$i];
+            $sql = "UPDATE cart set quantity='$qty' where pid='$pid' and cartid='".GetCartId()."' and type='$type';";
             
             mysqli_query($link, $sql);
         }

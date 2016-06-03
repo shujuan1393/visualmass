@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 
+ob_start();
 session_start();
 $curUrl = $_SERVER['REQUEST_URI'];
 $urlArr = explode("/", $curUrl);

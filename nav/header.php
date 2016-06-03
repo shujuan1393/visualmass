@@ -20,11 +20,13 @@
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
         <link rel="stylesheet" type="text/css" href="calendar/codebase/dhtmlxcalendar.css"/>
         <script type="text/javascript" src="calendar/codebase/dhtmlxcalendar.js"></script>  
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+        <link rel="stylesheet" href="styles/font-awesome.min.css">
     </head>
     <body>
         <div id='whole_header'>
             <div class="left_nav">
-                <div class="logo_sidebar"></div>
+                <div id='logoheader' class="logo_sidebar"></div>
                 <ul>
                     <li><div id='showGlasses'><a>GLASSES</a></div></li>
                     <li><div id='showSunglasses'><a>SUNGLASSES</a></div></li>
@@ -34,7 +36,25 @@
                 </ul>
                 <div class ="rightheader">
                     <ul>
-                        <li><a href='login.php'>SIGN IN</a></li>
+                        <?php 
+                            if (isset($_SESSION['loggedUser'])) {
+                        ?>
+                        <li id='user'><a><?php echo $_SESSION['loggedUser']; ?></a>
+                            <div id='userMenu' style='float: none;display:none;'>
+                                <p><a href='profile.php'>PROFILE</a></p>
+                                <p><a href='favourites.php'>FAVOURITES</a></p>
+                                <p>ORDERS</p>
+                                <p><a href='logout.php'>LOGOUT</a></p>
+                            </div>
+                        </li>
+                            
+                        <?php 
+                            } else {
+                        ?>
+                        <li><a href='login.php' data-toggle="modal" data-target="#myModal">SIGN IN</a></li>
+                        <?php 
+                            } 
+                        ?>
                         <li><a href='faq.php'>HELP</a></li>
                         <li><a href='cart.php'>CART</a></li>
                     </ul>
@@ -67,7 +87,26 @@
                 </ul>
             </div>
         </div>
-        <script>
+        
+        <div class="modal fade modal-fullscreen force-fullscreen" id="myModal" tabindex="-1" 
+             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+          
+        <script>          
             document.getElementById('showGlasses').onclick = function(){  
                 var e = document.getElementById('glasses');
                 if (e.style.display === 'block') {
@@ -115,6 +154,17 @@
                     document.getElementById('sunglasses').style.display = 'none';
                 }
             };
+            
+            document.getElementById('logoheader').onclick = function(){  
+                window.location = "index.php";
+            };
+            
+            $('#user').mouseover(function () {
+                $('#userMenu').show();   
+            });
+            $('#user').mouseout(function () {
+                $('#userMenu').hide();      
+            });
         </script>
     </body>
 </html>
