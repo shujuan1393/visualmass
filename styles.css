@@ -139,9 +139,14 @@ table {
     
 }
 
-#content h3, .updateProfile {
+#content h3, .updateProfile, #mailingWrapper {
     text-align: center;
     margin: 0;
+}
+
+#mailingWrapper {
+    margin: 20px;
+    height: 330px;
 }
 
 .content tr {
@@ -174,7 +179,7 @@ td {
 }
 
 /*  HEADER BAR */
-#logoheader, #user {
+#logoheader, #user , .swatch{
     cursor:pointer;
 }
 
@@ -411,13 +416,14 @@ td {
     display: inline-block;
 }
 
-.left_nav li, #footer li, .rightfooter li, .rightheader li, #retail_locs li, #popup_locs li{
+.left_nav li, #footer li, .rightfooter li, .rightheader li, #retail_locs li, #popup_locs li {
     float: left;
     margin-top: 8px;
     padding: 10px;
 }
 
-.cart_icons li {
+
+.cart_icons li, .colours li {
     float: left;
     padding: 5px;
 }
@@ -466,7 +472,7 @@ td {
     z-index: 15;
 }
 
-#glasses ul, #sunglasses ul, #ourstoryheader ul {
+#glasses ul, #sunglasses ul, #ourstoryheader ul, .colours ul {
     list-style-type: none;
     display: inline-block;
 }
@@ -1013,20 +1019,20 @@ div#calendar {
     padding: 20px;
 }
 
-.modal-dialog {
+#searchModal .modal-dialog, #myModal .modal-dialog{
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
-.modal-content {
+#searchModal .modal-content, #myModal .modal-content  {
   height: auto;
   min-height: 100%;
   border-radius: 0;
 }
 
-.modal {
+#searchModal .modal, #myModal .modal {
     overflow-y: hidden!important;
 }
 
@@ -1061,4 +1067,11 @@ div#calendar {
     max-width:100%;
     height:70%;
     overflow-y: auto;
+}
+
+/* ADMIN CMS */
+
+#newProduct span, #existingProd span {
+    float: right;
+    cursor: pointer;
 }

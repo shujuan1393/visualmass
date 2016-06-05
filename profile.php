@@ -33,6 +33,25 @@
                 . "password='$pwd', address='$add', marketing='$marketing' where email='".$_SESSION['loggedUserEmail']."';";
         
         mysqli_query($link, $update);
+        
+            $getMailing = "Select * from mailinglist where email='".$_SESSION['loggedUserEmail']."';";
+            $mailingRes = mysqli_query($link, $getMailing);        
+
+            if (!mysqli_query($link, $getMailing)) {
+                die(mysqli_error($link));
+            } else {
+                if (strcmp($marketing, "yes") === 0) {
+                    if ($mailingRes -> num_rows === 0) {
+                        $mailing = "INSERT INTO mailinglist (email, preference) VALUES ('$email', 'all');";
+                    } else {
+                        $mailing = "UPDATE mailinglist set email='$email' where email='".$_SESSION['loggedUserEmail'].";";
+                    }
+                } else {
+                    $mailing = "DELETE FROM mailinglist where email='".$_SESSION['loggedUserEmail']."'";
+                }
+            }
+            mysqli_query($link, $mailing);
+        $_SESSION['loggedUserEmail'] = $email;
         $_SESSION['updateProfile'] = "Profile updated";
     } 
     

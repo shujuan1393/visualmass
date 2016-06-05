@@ -65,7 +65,7 @@ if (isset($_GET['id'])) {
                 // output data of each row
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>";
-                    echo "<td>".$row['name']."</td>";
+                    echo "<td>".$row['name']." (".$row['pid'].")</td>";
                     echo "<td>".$row['type']."</td>";                            
                     echo "<td>".$row['price']."</td>";                           
                     echo "<td>".$row['quantity']."</td>";                           
@@ -120,17 +120,46 @@ if (isset($_GET['id'])) {
             <input type='hidden' name='submitted' id='submitted' value='1'/>
             <input type='hidden' name='editid' id='editid' 
                    value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
+            <input type='hidden' id='addExisting' name='addExisting'>
+            <div id='newProduct'>
+                <label for='code' >Product Code*:</label>
+                <span id='selectExisting'>+ Select from existing products</span>
+                <input type='text' name='code' id='code' value ="<?php 
+                if(isset($_SESSION['randomString'])) { 
+                    echo $_SESSION['randomString']; } 
+                if (!empty($erow['pid'])) {
+                    echo $erow['pid'];
+                }
+                    ?>" maxlength="50" />
+                <button type='button' onclick="randomString()">Generate</button>
+                <br>
+            </div>
             
-            <label for='code' >Product Code*:</label>
-            <input type='text' name='code' id='code' value ="<?php 
-            if(isset($_SESSION['randomString'])) { 
-                echo $_SESSION['randomString']; } 
-            if (!empty($erow['pid'])) {
-                echo $erow['pid'];
-            }
-                ?>" maxlength="50" />
-            <button type='button' onclick="randomString()">Generate</button>
-            <br>
+            <div id='existingProd' style='display:none;'>
+                <span id='selectNew'>+ Create new product</span>
+                <label for='existing' >Product Code*:</label>
+                <select name='existing'>
+                <?php 
+                    $prodSql = "Select * from products;";
+                    $pres = mysqli_query($link, $prodSql);
+                    
+                    if(!mysqli_query($link, $prodSql)){
+                        die(mysqli_error($link));
+                    } else {
+                        while($row = mysqli_fetch_assoc($pres)) {
+                            $pid = $row['pid'];
+                            //get related products
+                            $relpos = strpos($pid, '-');
+                            if (!is_numeric($relpos)) {
+                                echo "<option value='".$pid."'>".$pid."</option>";
+                            }
+                        }
+                    }
+                ?>
+                </select>
+                <label for='code' >Color*:</label>
+                <input type='text' name='code'>
+            </div>
             
             <label for='name' >Name*:</label>
             <input type='text' name='name' id='name'  maxlength="50" value ="<?php 
@@ -285,7 +314,7 @@ if (isset($_GET['id'])) {
             <table width='500px' style='margin-left: 80px; margin-top:-22px'>
                 <tr><td>
             <?php
-                $locSql = "Select * from locations";
+                $locSql = "Select * from locations where name <> 'banner'";
                 $locResult = mysqli_query($link, $locSql);
 
             if (!mysqli_query($link,$locSql))
@@ -357,6 +386,18 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <script>   
+        document.getElementById('selectExisting').onclick = function() {
+            document.getElementById('existingProd').style.display = "block";
+            document.getElementById('newProduct').style.display = "none";
+            document.getElementById('addExisting').value = "yes";
+        };
+        
+        document.getElementById('selectNew').onclick = function() {
+            document.getElementById('existingProd').style.display = "none";
+            document.getElementById('newProduct').style.display = "block";
+            document.getElementById('addExisting').value = "no";
+        };
+        
         if (document.getElementById('track').checked) {
            document.getElementById('showQty').style.display = "block";            
         }

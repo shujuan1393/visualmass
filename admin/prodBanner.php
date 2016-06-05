@@ -36,6 +36,13 @@ if (isset($_POST['submit'])) {
             unset($_SESSION['addProdBannerSuccess']);
             $_SESSION['addProdBannerError'] = "Sorry, only JPG, JPEG, PNG, GIF, MP3, MP4 & WMA files are allowed.";
         }
+        
+        // Check file size
+        if ($_FILES["image"]["size"] > 5000000) {
+            unset($_SESSION['addProdBannerSuccess']);
+            $_SESSION['addProdBannerError'] = "Sorry, uploads cannot be greater than 5MB.";
+        }
+        
         if (!isset($_SESSION['addProdBannerError'])) {
             if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                 unset($_SESSION['addProdBannerSuccess']);

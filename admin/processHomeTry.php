@@ -52,6 +52,13 @@ if (isset($_GET['delete'])) {
             header('Location: homeTry.php');
         }
 
+        // Check file size
+        if ($_FILES["image"]["size"] > 5000000) {
+            unset($_SESSION['addHomeBannerSuccess']);
+            $_SESSION['addHomeBannerError'] = "Sorry, uploads cannot be greater than 5MB.";
+            header('Location: homeTry.php');
+        }
+        
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
             unset($_POST['addHomeBannerError']);
         } else { 

@@ -49,7 +49,14 @@ if (isset($_GET['delete'])) {
             $_SESSION['addMainBannerError'] = "Sorry, only JPG, JPEG, PNG, GIF, MP3, MP4 & WMA files are allowed.";
             header('Location: mainstory.php');
         }
-
+   
+        // Check file size
+        if ($_FILES["image"]["size"] > 5000000) {
+            unset($_SESSION['addMainBannerSuccess']);
+            $_SESSION['addMainBannerError'] = "Sorry, uploads cannot be greater than 5MB.";
+            header('Location: mainstory.php');
+        }
+        
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
             unset($_POST['addMainBannerError']);
         } else { 

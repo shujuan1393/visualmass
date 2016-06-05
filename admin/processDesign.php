@@ -51,6 +51,13 @@ if (isset($_GET['delete'])) {
             header('Location: designstory.php');
         }
 
+        // Check file size
+        if ($_FILES["image"]["size"] > 5000000) {
+            unset($_SESSION['addDesBannerSuccess']);
+            $_SESSION['addDesBannerError'] = "Sorry, uploads cannot be greater than 5MB.";
+            header('Location: designstory.php');
+        }
+        
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
             unset($_POST['addDesBannerError']);
         } else { 

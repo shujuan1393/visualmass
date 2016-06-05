@@ -1,14 +1,16 @@
 <?php 
     require_once 'config/db.php';
     
-    $fav = "Select * from favourites where email='".$_SESSION['loggedUserEmail']."';";
-    $fres = mysqli_query($link, $fav);
-    
-    if (!mysqli_query($link, $fav)) {
-        echo "Error: ".mysqli_error($link);
-    } else {
-        $frow = mysqli_fetch_assoc($fres);
-        $favArr = explode(",", $frow['pid']);
+    if (isset($_SESSION['loggedUserEmail'])) {
+        $fav = "Select * from favourites where email='".$_SESSION['loggedUserEmail']."';";
+        $fres = mysqli_query($link, $fav);
+
+        if (!mysqli_query($link, $fav)) {
+            echo "Error: ".mysqli_error($link);
+        } else {
+            $frow = mysqli_fetch_assoc($fres);
+            $favArr = explode(",", $frow['pid']);
+        }
     }
 ?>
 <html>
@@ -53,16 +55,18 @@
                     <div class="carousel-inner" role="listbox">
                         <?php
                             for ($i = 0; $i < count($browArr); $i++) {
-                                echo "<div class='item ";
-                                if ($i === 0) {
-                                    echo "active";
-                                }
-                                echo "'>";
+                                    if (strcmp($browArr[$i], "") !== 0) {
+                                    echo "<div class='item ";
+                                    if ($i === 0) {
+                                        echo "active";
+                                    }
+                                    echo "'>";
 
-                                $pos = strpos($browArr[$i], '/');
-                                $url = substr($browArr[$i], $pos+1);
-                                echo "<img src='".$url."'>";
-                                echo "</div>";
+                                    $pos = strpos($browArr[$i], '/');
+                                    $url = substr($browArr[$i], $pos+1);
+                                    echo "<img src='".$url."'>";
+                                    echo "</div>";
+                                }
                             }
                         ?>
                     </div>
@@ -81,16 +85,61 @@
                 <div class='product_title'>
                     <div>
                         <h3><?php echo $brow['name']; ?></h3>
-                        <div>COLOR SWATCH</div>
+                        <div class='colours'>
+                            <ul>
+                                <?php 
+                                    $idToCheck;
+                                    
+                                    $selPid = $_GET['id'];
+                                    $pos = strpos($selPid, '-');
+                                    if (is_numeric($pos)) {
+                                        $idArr = explode("-", $selPid);
+                                        $idToCheck = $idArr[0];
+                                    } else {
+                                        $idToCheck = $selPid;
+                                    }
+                                    
+                                    
+                                    $relProds = "Select * from products where pid like '".$idToCheck."%';";
+                                    $relres = mysqli_query($link, $relProds);
+                                    
+                                    if (!mysqli_query($link, $relProds)) {
+                                        die(mysqli_error($link));
+                                    } else {
+                                        $relcount = 0;
+                                        while($row = mysqli_fetch_assoc($relres)) {
+                                            $pid = $row['pid'];
+                                            if (strcmp($pid, $selPid) !== 0) {
+                                                $relpos = strpos($pid, "-");
+                                                
+                                                if (is_numeric($relpos)) {
+                                                    $pidArr = explode("-", $pid);
+                                                    $color = $pidArr[1];
+                                                } else {
+                                                    $color = $row['name'];
+                                                }
+                                                echo "<script>alert($color);</script>";
+                                                
+                                                echo "<input type='hidden' id='selectedId$relcount' value='".$pid."'>";
+                                                echo "<li id='colour$relcount' class='swatch'>".$color."</li>";
+                                                $relcount++;
+                                            }
+                                        }
+                                    }
+                                ?>
+                            </ul>
+                        </div>
 
                     </div>
                     <div class='product-buttons'>
                         <ul>
                             <?php 
-                                if (in_array($brow['pid'], $favArr)) {
-                                    echo '<li class="heart"><a id="heart" href="addFavourite.php?delete=1&id='.$brow['pid'].'"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>';
-                                } else {
-                                    echo '<li class="heart"><a id="heart" href="addFavourite.php?id='.$brow['pid'].'"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>';
+                                if (isset($favArr)) {
+                                    if (in_array($brow['pid'], $favArr)) {
+                                        echo '<li class="heart"><a id="heart" href="addFavourite.php?delete=1&id='.$brow['pid'].'"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>';
+                                    } else {
+                                        echo '<li class="heart"><a id="heart" href="addFavourite.php?id='.$brow['pid'].'"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>';
+                                    }
                                 }
                             ?>
                             <li><button id='hometry' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processHometry()'>Try at home for free</button></li>
@@ -223,6 +272,21 @@
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
             
             <script>
+                function changeColour(num) {
+                    var color = "colour" + num;
+                    var colObj = document.getElementById(color);
+                    
+                    colObj.onclick = function() {
+                        var sel = "selectedId" + num;
+                        var selVal = document.getElementById(sel).value;
+                        window.location = "product.php?id=" + selVal;                        
+                    };
+                }
+                
+                for (var s = 0; s < <?php echo $relcount; ?>; s++) {
+                    changeColour(s);
+                }
+                
                 function processHometry() {
                     var sel = document.getElementById('hometry').value;
                     window.location="addCart.php?type=hometry&id=" + sel;

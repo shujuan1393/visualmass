@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 require_once '../config/db.php';
-require_once('../calendar/classes/tc_calendar.php');
+//require_once('../calendar/classes/tc_calendar.php');
 require_once('../nav/adminHeader.php');
 
 if (isset($_GET['id'])) {

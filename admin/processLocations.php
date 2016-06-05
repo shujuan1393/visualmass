@@ -73,34 +73,55 @@ if (isset($_GET['delete'])) {
                 } else {
                     unset($_SESSION['addLocSuccess']);
                     $_SESSION['uploadLocError'] = "File is not an image.";
-                    header('Location: locations.php');
+                    if (!empty($_POST['editid'])) {
+                        header('Location: locations.php?id='.$_POST['editid']);
+                    } else {
+                        header('Location: locations.php');
+                    }
                 }
             }
             // Check if file already exists
             if (file_exists($target_file)) {
                 unset($_SESSION['addLocSuccess']);
                 $_SESSION['uploadLocError'] = "Sorry, file already exists.";
-                header('Location: locations.php');
+                if (!empty($_POST['editid'])) {
+                    header('Location: locations.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: locations.php');
+                }
             }
             // Check file size
-            if ($_FILES["image"]["size"] > 500000) {
+            if ($_FILES["image"]["size"] > 5000000) {
                 unset($_SESSION['addLocSuccess']);
-                $_SESSION['uploadLocError'] = "Sorry, your file is too large.";
-                header('Location: locations.php');
+                $_SESSION['uploadLocError'] = "Sorry, uploads cannot be greater than 5MB.";
+                if (!empty($_POST['editid'])) {
+                    header('Location: locations.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: locations.php');
+                }
             }
+         
             // Allow certain file formats
             if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
             && $imageFileType != "gif" ) {
                 unset($_SESSION['addLocSuccess']);
                 $_SESSION['uploadLocError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-                header('Location: locations.php');
+                if (!empty($_POST['editid'])) {
+                    header('Location: locations.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: locations.php');
+                }
             }
             // Check if $uploadOk is set to 0 by an error
             if ($uploadOk == 1) {
                 if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                     unset($_SESSION['addLocSuccess']);
                     $_SESSION['uploadLocError'] = "Sorry, there was an error uploading your file.";
-                    header('Location: locations.php');
+                    if (!empty($_POST['editid'])) {
+                        header('Location: locations.php?id='.$_POST['editid']);
+                    } else {
+                        header('Location: locations.php');
+                    }
                 } else {
                     unset($_SESSION['uploadLocError']);
                     $image = $target_file;

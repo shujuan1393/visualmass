@@ -99,33 +99,53 @@ if (isset($_GET['delete'])) {
                 } else {
                     unset($_SESSION['addBlogSuccess']);
                     $_SESSION['uploadBlogError'] = "File is not an image.";
-                    header('Location: blog.php');
+                    if (!empty($_POST['editid'])) {
+                        header('Location: blog.php?id='.$_POST['editid']);
+                    } else {
+                        header('Location: blog.php');
+                    }
                 }
             }
             // Check if file already exists
             if (file_exists($target_file)) {
                 unset($_SESSION['addBlogSuccess']);
                 $_SESSION['uploadBlogError'] = "Sorry, file already exists.";
-                header('Location: blog.php');
+                if (!empty($_POST['editid'])) {
+                    header('Location: blog.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: blog.php');
+                }
             }
             // Check file size
-            if ($_FILES["image"]["size"] > 500000) {
+            if ($_FILES["image"]["size"] > 5000000) {
                 unset($_SESSION['addBlogSuccess']);
-                $_SESSION['uploadBlogError'] = "Sorry, your file is too large.";
-                header('Location: blog.php');
+                $_SESSION['uploadBlogError'] = "Sorry, uploads cannot be greater than 5MB.";
+                if (!empty($_POST['editid'])) {
+                    header('Location: blog.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: blog.php');
+                }
             }
             // Allow certain file formats
             if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
             && $imageFileType != "gif" ) {
                 unset($_SESSION['addBlogSuccess']);
                 $_SESSION['uploadBlogError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-                header('Location: blog.php');
+                if (!empty($_POST['editid'])) {
+                    header('Location: blog.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: blog.php');
+                }
             }
-            if ($uploadOk === 1) {
+            if (!isset($_SESSION['uploadBlogError'])) {
                 if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                     unset($_SESSION['addBlogSuccess']);
                     $_SESSION['uploadBlogError'] = "Sorry, there was an error uploading your file.";
-                    header('Location: blog.php');   
+                    if (!empty($_POST['editid'])) {
+                        header('Location: blog.php?id='.$_POST['editid']);
+                    } else {
+                        header('Location: blog.php');
+                    }   
                 } else {
                     unset($_SESSION['uploadBlogError']);
                     $image .= $target_file;

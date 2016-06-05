@@ -8,10 +8,9 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['updateAdvSuccess']);    
-    unset($_SESSION['updateAdvError']);
-    unset($_SESSION['addAdvSuccess']);
-    unset($_SESSION['uploadAdvError']);
+//    unset($_SESSION['updateAdvSuccess']);    
+//    unset($_SESSION['updateAdvError']);
+//    unset($_SESSION['addAdvSuccess']);
     $selectSql = "Select * from advertisements where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

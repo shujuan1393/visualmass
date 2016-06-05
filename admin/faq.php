@@ -105,6 +105,13 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             $_SESSION['addFaqBannerError'] = "Sorry, only JPG, JPEG, PNG, GIF, MP3, MP4 & WMA files are allowed.";
 //            header('Location: faq.php');
         }
+        
+        // Check file size
+        if ($_FILES["image"]["size"] > 5000000) {
+            unset($_SESSION['addFaqBannerSuccess']);
+            $_SESSION['addFaqBannerError'] = "Sorry, uploads cannot be greater than 5MB.";
+        }
+        
         if (!isset($_SESSION['addFaqBannerError'])) {
             if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                 unset($_SESSION['addFaqBannerSuccess']);

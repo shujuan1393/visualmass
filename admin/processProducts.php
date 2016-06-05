@@ -18,7 +18,19 @@ if (isset($_GET['delete'])) {
         header("Location: products.php");
     } 
 } else if (isset($_POST['submit'])) {
-    if(empty($_POST['name']) || empty($_POST['desc']) || empty($_POST['price']) 
+    $exist = $_POST['addExisting'];
+    if (strcmp($exist, "yes") === 0 && (empty($_POST['code']))) {
+        unset($_SESSION['addProdSuccess']);
+        unset($_SESSION['updateProdError']);
+        unset($_SESSION['updateProdSuccess']);
+        $_SESSION['randomString'] = $_POST['code'];
+        $_SESSION['addProdError'] = "Empty field(s)";
+        if (isset($_POST['editid'])) {
+            header('Location: products.php?id='.$_POST['editid']);
+        } else {
+            header('Location: products.php');
+        }
+    } else if(empty($_POST['name']) || empty($_POST['desc']) || empty($_POST['price']) 
             || empty($_POST['type']) || empty($_POST['tags']) || empty($_POST['gender']) 
             || empty($_POST['visibility']) || empty($_POST['availability']) 
             || empty($_POST['locations']) || empty($_POST['code'] 
@@ -67,14 +79,19 @@ if (isset($_GET['delete'])) {
                 
                 $j = $j + 1; //increment the number of uploaded images according to the files in array       
 
-//                if (($_FILES["images"]["size"][$i] > 100000) //Approx. 100kb files can be uploaded.
-//                    || !in_array($file_extension, $validextensions)) {
-//                    //if file size and file type was incorrect.
-//                    unset($_SESSION['updateProdError']);
-//                    unset($_SESSION['addProdSuccess']);
-//                    $_SESSION['addProdError'] = "Invalid image size or type";
-//                    header('Location: products.php');
-//                } else { 
+                if (($_FILES["images"]["size"][$i] > 5242880)) {
+                    //if file size and file type was incorrect.
+                    unset($_SESSION['updateProdError']);
+                    unset($_SESSION['addProdSuccess']);
+                    $_SESSION['addProdError'] = "Sorry, uploads cannot be greater than 5MB.";
+                    header('Location: products.php');
+                } else if (!in_array($file_extension, $validextensions)) {
+                    //if file size and file type was incorrect.
+                    unset($_SESSION['updateProdError']);
+                    unset($_SESSION['addProdSuccess']);
+                    $_SESSION['addProdError'] = "Sorry, file uploads must be of .jpeg, .jpg or .png formats";
+                    header('Location: products.php');
+                } else { 
                     if (!move_uploaded_file($_FILES['featured']['tmp_name'][$i], $feat_target_path)) { 
                         //if file was not moved.
                         unset($_SESSION['updateProdError']);
@@ -95,14 +112,14 @@ if (isset($_GET['delete'])) {
                             unset($_SESSION['addProdError']);
                         }
                     }
-//                }
+                }
             }
             if (!empty($_POST['oldFeaturedImages'])) {
-                $featured .= $_POST['oldFeaturedImages'];
+                $featured .=",". $_POST['oldFeaturedImages'];
             }
         } else {
             if (!empty($_POST['oldFeaturedImages'])) {
-                $featured = $_POST['oldFeaturedImages'];
+                $featured =",". $_POST['oldFeaturedImages'];
             }
         }
         
@@ -147,14 +164,15 @@ if (isset($_GET['delete'])) {
 //                }
             }
             if (!empty($_POST['oldImages'])) {
-                $images .= $_POST['oldImages'];
+                $images .=",". $_POST['oldImages'];
             }
         } else {
             if (!empty($_POST['oldImages'])) {
-                $images = $_POST['oldImages'];
+                $images =",". $_POST['oldImages'];
             }
         }
         if (!isset($_SESSION['addProdError'])) {
+            
             $code = $_POST['code'];
             $name = $_POST['name'];
             $desc = htmlentities($_POST['desc']);
@@ -169,6 +187,10 @@ if (isset($_GET['delete'])) {
             
             $measurement = $measure1."-".$measure2."-".$measure3;
             
+            if(strcmp($exist, "yes") === 0) {
+                $existing = $_POST['existing'];
+                $code = $existing ."-".$code;
+            }
             $genderArr = $_POST['gender'];
             $gender = "";
 
@@ -219,7 +241,7 @@ if (isset($_GET['delete'])) {
                 $editproductSql = "UPDATE products set name='$name', description='$desc',"
                         . " price='$price', quantity='$qty', type='$type',"
                         . " images='$images', tags='$tags', visibility='$vis',"
-                        . " availability='$avai', locations ='$loc', gender='$gender',"
+                        . " availability='$avai', locations ='$loc', track='$track', gender='$gender',"
                         . "width='$width', measurement='$measurement', featured='$featured' "
                         . "where id='$editcode'";
                 

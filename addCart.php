@@ -62,11 +62,17 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
             $pid = $_POST['prod'.$i];
             $qty = $_POST['quantity'.$i];
             $type = $_POST['type'.$i];
-            $sql = "UPDATE cart set quantity='$qty' where pid='$pid' and cartid='".GetCartId()."' and type='$type';";
+            $colour = $_POST['colour'.$i];
+            $colpos = strpos($colour, "giftcard");
+            
+            if (is_numeric($colpos)) {
+                $sql = "UPDATE cart set quantity='$qty', type ='$colour' where pid='$pid' and cartid='".GetCartId()."' and type='$type';";
+            } else {
+                $sql = "UPDATE cart set quantity='$qty', pid ='$colour' where pid='$pid' and cartid='".GetCartId()."' and type='$type';";
+            }
             
             mysqli_query($link, $sql);
         }
-        
         header("Location: cart.php");
     }
 } else if (isset($_GET['card'])) {

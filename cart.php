@@ -48,11 +48,12 @@ and open the template in the editor.
                                     $url = substr($img[0], $pos+1);
 
                                     $total = $row['price'] * $row['quantity'];
-                                    $typeArr = explode("@", $type);
+                                    
+                                    $giftpos = strpos($type, 'giftcard');
 
-                                    echo "<div class='col-md-10 col-md-offset-3'>";
+                                    echo "<div class='col-md-9 col-md-offset-3'>";
                                     echo "<div class='col-md-2'>";
-                                    if (in_array("giftcard", $typeArr)) {
+                                    if (is_numeric($giftpos)) {
                                         echo "<h4>GIFTCARD IMAGE</h4>";
                                     } else {
                                         echo "<img src='".$url."' style='width:100%'>";
@@ -60,15 +61,68 @@ and open the template in the editor.
                                     echo "</div>";
                                     echo "<div class='product_dets col-md-3'>";
                                     
-                                    if (in_array("giftcard", $typeArr)) {
+                                    if (is_numeric($giftpos)) {
                                         echo "<h4>Giftcard</h4><br>";
-                                        $detArr = explode(",", $row['details']);
+                                        if (!empty($row['details'])) {
+                                            $detArr = explode(",", $row['details']);
+                                        }
                                         echo "To: " .$detArr[0]."<br>";
                                         echo "From: " .$detArr[1]."<br>";
                                         echo "Note: " .$detArr[3]."<br>";
+                                        $giftArr = array("physical@giftcard", "ecard@giftcard");
+                                        echo "<select name='colour$count'>";
+                                            for ($i = 0; $i < count($giftArr); $i++) {
+                                                echo "<option value='physical@giftcard' ";
+
+                                                if (strcmp($type, $giftArr[$i]) === 0) {
+                                                    echo "selected";
+                                                }
+                                                echo ">";
+                                                $gift = explode("@", $giftArr[$i]);
+                                                echo $gift[0];
+                                                echo "</option>";
+                                            }
+                                        echo "</select>";
                                    } else {
                                         echo "<h4>".$prow['name']."</h4><br>".html_entity_decode($prow['description']);
                                     }
+                                        //get related products
+                                        $relpos = strpos($pid, '-');
+                                        if (is_numeric($relpos)) {
+                                            $idArr = explode("-", $pid);
+                                            $idToCheck = $idArr[0];
+                                        } else {
+                                            $idToCheck = $pid;
+                                        }
+                                        
+                                        $relsql = "Select * from products where pid like '".$idToCheck."%';";
+                                        $relres = mysqli_query($link, $relsql);
+                                        
+                                        if (!mysqli_query($link, $relsql)) {
+                                            die(mysqli_error($link));
+                                        } else {
+                                            if ($relres -> num_rows > 1) {
+                                                echo "<select name='colour".$count."'>";
+                                                while($relrow = mysqli_fetch_assoc($relres)) {
+                                                    $relpid = $relrow['pid'];
+                                                    echo "<option value='".$relpid."'";
+                                                    if (strcmp($relpid, $pid) === 0) {
+                                                        echo " selected";
+                                                    }
+                                                    echo ">";
+                                                    $newpos = strpos($relpid, '-');
+                                                    if (is_numeric($newpos)) {
+                                                        $relidArr = explode("-", $relpid);
+                                                        echo $relidArr[1];
+                                                    } else {
+                                                        echo $relrow['name'];
+                                                    }
+                                                    echo "</option>";
+                                                }
+                                                echo "</select>";
+                                            }
+                                        }
+                                        
                                     echo "</div>";
 //                                    echo "<div class='col-md-4'>";
                                     echo "<input type='hidden' name='prod".$count."' value='$pid'>";
@@ -112,28 +166,64 @@ and open the template in the editor.
 
     //                                    $total = $row['price'] * $row['quantity'];
 
-                                        echo "<div class='col-md-10 col-md-offset-2'>";
-                                        echo "<div class='col-md-3'>";
+                                        echo "<div class='col-md-9 col-md-offset-3'>";
+                                        echo "<div class='col-md-2'>";
                                         echo "<img src='".$url."' style='width:100%'></div>";
                                         echo "<div class='product_dets col-md-3'>";
                                         echo "<h4>".$prow['name']."</h4><br>".html_entity_decode($prow['description']);
-                                        echo "</div>";
-                                        echo "<div class='col-md-4'>";
-                                        echo "<input type='hidden' name='prod".$count."' value='$pid'>";
                                         
+                                        //get related products
+                                        $relpos = strpos($pid, '-');
+                                        if (is_numeric($relpos)) {
+                                            $idArr = explode("-", $pid);
+                                            $idToCheck = $idArr[0];
+                                        } else {
+                                            $idToCheck = $pid;
+                                        }
+                                        
+                                        $relsql = "Select * from products where pid like '".$idToCheck."%';";
+                                        $relres = mysqli_query($link, $relsql);
+                                        
+                                        if (!mysqli_query($link, $relsql)) {
+                                            die(mysqli_error($link));
+                                        } else {
+                                            if ($relres -> num_rows > 1) {
+                                                echo "<select name='colour".$count."'>";
+                                                while($relrow = mysqli_fetch_assoc($relres)) {
+                                                    $relpid = $relrow['pid'];
+                                                    echo "<option value='".$relpid."'";
+                                                    if (strcmp($relpid, $pid) === 0) {
+                                                        echo " selected";
+                                                    }
+                                                    echo ">";
+                                                    
+                                                    $newpos = strpos($relpid, '-');
+                                                    if (is_numeric($newpos)) {
+                                                        $relidArr = explode("-", $relpid);
+                                                        echo $relidArr[1];
+                                                    } else {
+                                                        echo $relrow['name'];
+                                                    }
+                                                    
+                                                    echo "</option>";
+                                                }
+                                                echo "</select>";
+                                            }
+                                        }
+                                        
+                                        echo "</div>";
+//                                        echo "<div class='col-md-4'>";
+                                        echo "<input type='hidden' name='prod".$count."' value='$pid'>";
+                                        echo "<input type='hidden' name='type".$count."' value='$type'>";                                     
                                     ?>
-                                        <div class='col-md-2'>
-                                            <input type='text' name='quantity<?php echo $count; ?>' value='<?php echo $row['quantity']; ?>'
-                                                onkeypress='return isNumber(event)'>
-                                        </div>
                                     <?php 
-                                        echo "<div class='col-md-2'><input type='text' name='quantity".$count."' value='".$row['quantity']."'"
+                                        echo "<div class='col-md-1'><input type='text' name='quantity".$count."' value='".$row['quantity']."'"
                                                 . " onkeypress='return isNumber(event)'>"
                                         . "</div>";
-                                        echo "<div class='col-md-2'><p class='totalprice'>$0</p></div>";  
-                                        echo "<div class='col-md-2'><a class='cart_button' href='addCart.php?delete=1&id=".$type."-".$pid."'>X</a></div>";  
+                                        echo "<div class='col-md-1'><p class='totalprice'>$0</p></div>";  
+                                        echo "<div class='col-md-1'><a class='cart_button' href='addCart.php?delete=1&id=".$type."-".$pid."'>X</a></div>";  
                                         echo "</div>";
-                                        echo "</div>";
+//                                        echo "</div>";
                                         $count++;
                                     }
                                 }
@@ -144,7 +234,7 @@ and open the template in the editor.
                     <div id='updateCart' class='row' style='display:none;'>
                         <div class='col-md-5 col-md-offset-7'>
                             <input type="submit" name='submit' value='UPDATE'>
-                            <button class='button'>CHECKOUT</button>
+                            <button class='button' onclick="processCheckout()">CHECKOUT</button>
                         </div>
                     </div>
                         
@@ -175,6 +265,12 @@ and open the template in the editor.
         } else {
             document.getElementById('emptyCart').style.display = "none";
             document.getElementById('updateCart').style.display = "block";            
+        }
+        
+        function processCheckout() {
+            <?php if (isset($_SESSION['loggedUserEmail'])) { ?>
+//                    window.location = "checkout.php";
+            <?php } ?>
         }
     </script>
 </html>

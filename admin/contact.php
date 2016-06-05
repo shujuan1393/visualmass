@@ -123,10 +123,9 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
 //            header('Location: faq.php');
         }
         // Check file size
-        if ($_FILES["image"]["size"] > 500000) {
+        if ($_FILES["image"]["size"] > 5000000) {
             unset($_SESSION['setContactDetailsSuccess']);
-            $_SESSION['setContactDetailsError'] = "Sorry, your file is too large.";
-//            header('Location: faq.php');
+            $_SESSION['setContactDetailsSuccess'] = "Sorry, uploads cannot be greater than 5MB.";
         }
         // Allow certain file formats
         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"

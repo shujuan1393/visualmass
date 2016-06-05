@@ -6,6 +6,24 @@
  * and open the template in the editor.
  */
     
+require_once 'config/db.php';
+
+if (isset($_SESSION['searchResult'])) {
+    unset($_SESSION['searchResult']);
+    unset($_SESSION['searchVal']);
+}
+if (isset($_SESSION['searchError'])) {
+    unset($_SESSION['searchError']);
+}
+
+if (isset($_SESSION['mailError'])) {
+    unset($_SESSION['mailError']);
+    unset($_SESSION['mailAdd']);
+}
+
+if (isset($_SESSION['mailSuccess'])) {
+    unset($_SESSION['mailSuccess']);
+}
 ?>
 
 <html>
@@ -51,7 +69,7 @@
                         <?php 
                             } else {
                         ?>
-                        <li><a href='login.php' data-toggle="modal" data-target="#myModal">SIGN IN</a></li>
+                        <li><a href='login.php' id='signin' data-toggle="modal" data-target="#myModal">SIGN IN</a></li>
                         <?php 
                             } 
                         ?>

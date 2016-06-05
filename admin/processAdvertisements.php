@@ -142,33 +142,53 @@ if (isset($_GET['delete'])) {
                 } else {
                     unset($_SESSION['addAdvSuccess']);
                     $_SESSION['uploadAdvError'] = "File is not an image.";
-                    header('Location: advertisements.php');
+                    if (!empty($_POST['editid'])) {
+                        header('Location: advertisements.php?id='.$_POST['editid']);
+                    } else {
+                        header('Location: advertisements.php');
+                    }
                 }
             }
             // Check if file already exists
             if (file_exists($target_file)) {
                 unset($_SESSION['addAdvSuccess']);
                 $_SESSION['uploadAdvError'] = "Sorry, file already exists.";
-                header('Location: advertisements.php');
+                if (!empty($_POST['editid'])) {
+                    header('Location: advertisements.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: advertisements.php');
+                }
             }
             // Check file size
-            if ($_FILES["image"]["size"] > 500000) {
+            if ($_FILES["image"]["size"] > 5000000) {
                 unset($_SESSION['addAdvSuccess']);
-                $_SESSION['uploadAdvError'] = "Sorry, your file is too large.";
-                header('Location: advertisements.php');
+                $_SESSION['uploadAdvError'] = "Sorry, uploads cannot be greater than 5MB.";
+                if (!empty($_POST['editid'])) {
+                    header('Location: advertisements.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: advertisements.php');
+                }
             }
             // Allow certain file formats
             if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
             && $imageFileType != "gif" ) {
                 unset($_SESSION['addAdvSuccess']);
                 $_SESSION['uploadAdvError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-                header('Location: advertisements.php');
+                if (!empty($_POST['editid'])) {
+                    header('Location: advertisements.php?id='.$_POST['editid']);
+                } else {
+                    header('Location: advertisements.php');
+                }
             }
-            if ($uploadOk === 1) {
+            if (!isset($_SESSION['uploadAdvError'])) {
                 if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                     unset($_SESSION['addAdvSuccess']);
                     $_SESSION['uploadAdvError'] = "Sorry, there was an error uploading your file.";
-                    header('Location: advertisements.php');   
+                    if (!empty($_POST['editid'])) {
+                        header('Location: advertisements.php?id='.$_POST['editid']);
+                    } else {
+                        header('Location: advertisements.php');
+                    }
                 } else {
                     unset($_SESSION['uploadAdvError']);
                     $image .= $target_file;
