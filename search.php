@@ -23,6 +23,14 @@ require_once 'config/db.php';
                         if (isset($_SESSION['searchError'])) {
                             echo $_SESSION['searchError'];
                         }
+                        if (isset($_SESSION['searchResult'])) {
+                            $sql = $_SESSION['searchResult'];
+                            if (mysqli_multi_query($link,$sql)) {
+                                if (!mysqli_next_result($link)) {
+                                    echo "No results matching your search";
+                                } 
+                            }
+                        }
                     ?>
                 </div>
                 <form id='searchForm' autofocus>
@@ -37,25 +45,29 @@ require_once 'config/db.php';
                             $sql = $_SESSION['searchResult'];
                             echo "<div class='col-md-12'>";
                             if (mysqli_multi_query($link,$sql)) {
-                                do {
-                                    /* store first result set */
-                                    if ($result = mysqli_store_result($link)) {
-                                        while ($row = mysqli_fetch_row($result)) {
-                                            echo "<h5>".$row[1]."</h5>";
-                                            echo html_entity_decode($row[2]);
-    //                                        printf("%s\n", $row[1]);
+                                if (mysqli_next_result($link)) {
+                                    do {
+                                        /* store first result set */
+                                        if ($result = mysqli_store_result($link)) {
+                                            while ($row = mysqli_fetch_row($result)) {
+                                                echo "<h5>".$row[1]."</h5>";
+                                                echo html_entity_decode($row[2]);
+        //                                        printf("%s\n", $row[1]);
+                                            }
+                                            mysqli_free_result($result);
                                         }
-                                        mysqli_free_result($result);
+                                        /* print divider */
+                                        if (mysqli_more_results($link)) {
+        //                                    printf("-----------------\n");
+                                            echo "</div> <div class='col-md-12'>";
+                                        }
                                     }
-                                    /* print divider */
-                                    if (mysqli_more_results($link)) {
-    //                                    printf("-----------------\n");
-                                        echo "</div> <div class='col-md-12'>";
-                                    }
+                                    while (mysqli_next_result($link));
                                 }
-                                while (mysqli_next_result($link));
-                            }
+                            } 
                         }
+                        unset($_SESSION['searchVal']);
+                        unset($_SESSION['searchResult']);
                     ?>
                 </div>
             </div>

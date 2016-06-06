@@ -18,6 +18,8 @@ if (isset($_GET['frames'])) {
         die(mysqli_error($link));
     } else {
         if ($result -> num_rows === 0) {
+            unset($_SESSION['searchResult']);
+            unset($_SESSION['searchVal']);
             $_SESSION['searchError'] = "No results matching '".$searchVal."';";
         } else {
             unset($_SESSION['searchError']);
@@ -28,6 +30,32 @@ if (isset($_GET['frames'])) {
             $_SESSION['searchVal'] = $searchVal;
         }
         header("Location: searchFrames.php");
+    }
+} else if (isset($_GET['blog'])) {
+    $searchVal = $_POST['search'];
+    $sql = "Select * from blog where title like '%".$searchVal."%' "
+            . "or html like '%".$searchVal."%' or excerpt like '%".$searchVal."%'"
+            . " or author like '%".$searchVal."%';";
+    $result = mysqli_query($link, $sql);
+    $bid = "";
+    if (!mysqli_query($link, $sql)) {
+        die(mysqli_error($link));
+    } else {
+        if ($result -> num_rows === 0) {
+            unset($_SESSION['searchResult']);
+            unset($_SESSION['searchVal']);
+            $_SESSION['searchError'] = "No blog entries matching '".$searchVal."';";
+        } else {
+            unset($_SESSION['searchError']);
+            while($row= mysqli_fetch_assoc($result)) {
+                $bid.= $row['id'].",";
+            }
+//            echo $bid;
+//            exit();
+            $_SESSION['searchResult'] = $bid;
+            $_SESSION['searchVal'] = $searchVal;
+        }
+        header("Location: searchBlog.php");
     }
 } else if (isset($_GET['general'])) {
     $searchVal = $_POST['search'];
@@ -51,27 +79,4 @@ if (isset($_GET['frames'])) {
     $_SESSION['searchVal'] = $searchVal;
     $_SESSION['searchResult'] = $sql;
     header("Location: search.php");
-//    if (mysqli_multi_query($link,$sql)) {
-//        do {
-//            /* store first result set */
-//            if ($result = mysqli_store_result($link)) {
-//                while ($row = mysqli_fetch_row($result)) {
-//                    printf("%s\n", $row[1]);
-//                }
-//                mysqli_free_result($result);
-//            }
-//            /* print divider */
-//            if (mysqli_more_results($link)) {
-//                printf("-----------------\n");
-//            }
-//        }
-//        while (mysqli_next_result($link));
-//    }
-//
-////    $sql = "Select * from locations, blog, faq, terms, ourstory, hometry, homepage, careers"
-////            . " where locations.name like '%".$searchVal."%' or blog.title like ='%".$searchVal."%' "
-////            . "or faq.title like ='%".$searchVal."%' or terms.title like ='%".$searchVal."%' or ourstory.title like ='%".$searchVal."%'"
-////            . " or hometry.title like ='%".$searchVal."%' or homepage.title like ='%".$searchVal."%' or careers.title like ='%".$searchVal."%';";
-//    echo $sql;
-//    exit();
 }

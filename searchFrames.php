@@ -79,6 +79,8 @@ if (!mysqli_query($link, $fav)) {
                                 }
                             }
                         }
+                        unset($_SESSION['searchVal']);
+                        unset($_SESSION['searchResult']);
                     ?>
                 </div>
             </div>

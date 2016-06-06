@@ -70,9 +70,11 @@ and open the template in the editor.
                                         echo "From: " .$detArr[1]."<br>";
                                         echo "Note: " .$detArr[3]."<br>";
                                         $giftArr = array("physical@giftcard", "ecard@giftcard");
+                                        echo "<input type='hidden' name='prod".$count."' value='".$row['pid']."'>";
+                                        echo "<input type='hidden' name='id$count' value='".$row['id']."'>";
                                         echo "<select name='colour$count'>";
                                             for ($i = 0; $i < count($giftArr); $i++) {
-                                                echo "<option value='physical@giftcard' ";
+                                                echo "<option value='".$giftArr[$i]."' ";
 
                                                 if (strcmp($type, $giftArr[$i]) === 0) {
                                                     echo "selected";
@@ -84,6 +86,7 @@ and open the template in the editor.
                                             }
                                         echo "</select>";
                                    } else {
+                                        echo "<input type='hidden' name='prod".$count."' value='$pid'>";
                                         echo "<h4>".$prow['name']."</h4><br>".html_entity_decode($prow['description']);
                                     }
                                         //get related products
@@ -125,7 +128,6 @@ and open the template in the editor.
                                         
                                     echo "</div>";
 //                                    echo "<div class='col-md-4'>";
-                                    echo "<input type='hidden' name='prod".$count."' value='$pid'>";
                                     echo "<input type='hidden' name='type".$count."' value='$type'>";
                                     echo "<div class='col-md-1'><input type='text' name='quantity".$count."' value='".$row['quantity']."'>"
                                     . "</div>";

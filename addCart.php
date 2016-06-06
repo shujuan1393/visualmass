@@ -59,6 +59,7 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
         $count = $res -> num_rows;
         
         for ($i = 0; $i < $count; $i++) {
+            $id = $_POST['id'.$i];
             $pid = $_POST['prod'.$i];
             $qty = $_POST['quantity'.$i];
             $type = $_POST['type'.$i];
@@ -66,13 +67,14 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
             $colpos = strpos($colour, "giftcard");
             
             if (is_numeric($colpos)) {
-                $sql = "UPDATE cart set quantity='$qty', type ='$colour' where pid='$pid' and cartid='".GetCartId()."' and type='$type';";
+                $sql = "UPDATE cart set quantity='$qty', type ='$colour' where pid='$pid' and cartid='".GetCartId()."' and type='$type' and id='$id';";
             } else {
-                $sql = "UPDATE cart set quantity='$qty', pid ='$colour' where pid='$pid' and cartid='".GetCartId()."' and type='$type';";
+                $sql = "UPDATE cart set quantity='$qty', pid ='$colour' where pid='$pid' and cartid='".GetCartId()."' and type='$type' and id='$id';";
             }
             
             mysqli_query($link, $sql);
         }
+        
         header("Location: cart.php");
     }
 } else if (isset($_GET['card'])) {
@@ -104,7 +106,7 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
             $grow = mysqli_fetch_assoc($gres);
             $price = $grow['amount'];
             $gifttype = $type."@giftcard";
-            $query = "Select * from cart where pid='$code' and cartid='$cartid' and type='$gifttype' and datetime='$date';";
+            $query = "Select * from cart where pid='$code' and cartid='$cartid' and type='$gifttype' and details='$details' and datetime='$date';";
             $result = mysqli_query($link, $query);
 
             if (!mysqli_query($link, $query)) {
@@ -120,7 +122,7 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
                     $sql = "UPDATE cart set quantity='$newQty', details = '$details' where pid='$code' and "
                             . "cartid='$cartid' and type='$gifttype' and datetime='$date';";
                 }
-
+                
                 mysqli_query($link, $sql);
                 header("Location: giftcard.php");
             }

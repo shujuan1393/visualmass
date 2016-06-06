@@ -28,6 +28,9 @@
         if (empty($marketing)) {
             $marketing = "no";
         }
+        $updateFav = "UPDATE favourites set email='$email' where email='".$_SESSION['loggedUserEmail']."';";
+        
+        mysqli_query($link, $updateFav);
         
         $update = "UPDATE user set firstname='$first', lastname='$last', email='$email', "
                 . "password='$pwd', address='$add', marketing='$marketing' where email='".$_SESSION['loggedUserEmail']."';";

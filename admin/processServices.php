@@ -30,11 +30,12 @@ if (isset($_GET['delete'])) {
         
         $code = $_POST['code'];
         $name = $_POST['name'];
-
+        $desc = htmlentities($_POST['desc']);
+        
         if (!empty($_POST['editid'])) {
             $editid = $_POST['editid'];
             $updateSql = "UPDATE services SET servicecode='". $code. "', "
-                    . "servicename ='" .$name. "' where id='". $editid. "'";
+                    . "servicename ='" .$name. "', description='$desc' where id='". $editid. "'";
 
             if (mysqli_query($link, $updateSql)) {
                 unset($_SESSION['addServSuccess']);
@@ -46,8 +47,8 @@ if (isset($_GET['delete'])) {
             }
         } else {
             // output data of each row
-            $sql = "INSERT INTO services (servicecode, servicename) "
-                    . "VALUES ('$code','$name');";
+            $sql = "INSERT INTO services (servicecode, servicename, description) "
+                    . "VALUES ('$code','$name', '$desc');";
 
             mysqli_query($link, $sql);
 

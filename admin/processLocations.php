@@ -44,6 +44,8 @@ if (isset($_GET['delete'])) {
         $zip = $_POST['zip'];
         $country = $_POST['country'];
         $loctype = $_POST['type'];
+        $desc = htmlentities($_POST['desc']);
+        $opening = htmlentities($_POST['opening']);
         $serviceArr = $_POST['services'];
         $services = "";
 
@@ -55,7 +57,10 @@ if (isset($_GET['delete'])) {
             }
         }
         
+        $j = 0; //Variable for indexing uploaded image 
         $image;
+        $images = '';
+        $target_path = "../uploads/locations/";
         
         if (!empty($_FILES['image']['name'])) {
             $random_digit=md5(uniqid(rand(), true));
@@ -128,8 +133,60 @@ if (isset($_GET['delete'])) {
                 }
             }
         } else {
-            if (!empty($_POST['oldImage'])) {
-                $image = $_POST['oldImage'];
+            if (!empty($_POST['oldFeaturedImage'])) {
+                $image = $_POST['oldFeaturedImage'];
+            }
+        }
+        
+        if (count($_FILES['otherimage']['name']) > 1) {
+            for ($i = 0; $i < count($_FILES['otherimage']['name']); $i++) { //loop to get individual element from the array
+
+                $validextensions = array("jpeg", "jpg", "png"); //Extensions which are allowed
+                $ext = explode('.', basename($_FILES['otherimage']['name'][$i])); //explode file name from dot(.) 
+                $file_extension = end($ext); //store extensions in the variable
+
+                $target_path = $target_path.md5(uniqid()).".".$ext[count($ext) - 1]; //set the target path with a new name of image
+                $j = $j + 1; //increment the number of uploaded images according to the files in array       
+
+                if (($_FILES["otherimage"]["size"][$i] > 5000000)) {
+                    //if file size and file type was incorrect.
+                    unset($_SESSION['updateLocError']);
+                    unset($_SESSION['addLocSuccess']);
+                    $_SESSION['uploadLocError'] = "Sorry, uploads cannot be greater than 5MB.";
+                    if (isset($_POST['editid'])) {
+                        header('Location: locations.php?id='.$_POST['editid']);
+                    } else {
+                        header('Location: locations.php');
+                    }
+                }  else { 
+                    if (!move_uploaded_file($_FILES['otherimage']['tmp_name'][$i], $target_path)) { 
+                        //if file was not moved.
+                        unset($_SESSION['updateLocError']);
+                        unset($_SESSION['addLocSuccess']);
+                        $_SESSION['uploadLocError'] = "Could not upload your image. Please try again!";
+                        if (isset($_POST['editid'])) {
+                            header('Location: locations.php?id='.$_POST['editid']);
+                        } else {
+                            header('Location: locations.php');
+                        }
+                    } else { 
+                        $images .= $target_path;
+
+                        if ($i+1 !== count($_FILES['otherimage']['name'])) {
+                            $images .= ",";
+                        }
+                        if (isset($_SESSION['addProdError'])) {
+                            unset($_SESSION['addProdError']);
+                        }
+                    }
+                }
+            }
+            if (!empty($_POST['oldImages'])) {
+                $images .=",". $_POST['oldImages'];
+            }
+        } else {
+            if (!empty($_POST['oldImages'])) {
+                $images =",". $_POST['oldImages'];
             }
         }
         
@@ -139,9 +196,9 @@ if (isset($_GET['delete'])) {
                 
                 $updateSql = "UPDATE locations SET name='". $locname. "', "
                 . "address ='" .$address. "', phone ='".$phone."', "
-                . "apt='".$apt."', city ='".$city."', "
-                . "zip='".$zip."', country ='".$country."', "
-                . "image='".$image."', type ='".$loctype."', "
+                . "apt='".$apt."', city ='".$city."', description='$desc', "
+                . "zip='".$zip."', country ='".$country."', opening = '$opening', "
+                . "featured='$image', images = '$images', type ='".$loctype."', "
                 . "services='".$services."' where id='". $editid. "'";
                 
                 if (mysqli_query($link, $updateSql)) {
@@ -157,10 +214,10 @@ if (isset($_GET['delete'])) {
                 unset($_SESSION['randomString']);
                 // output data of each row
                 $locSql = "INSERT INTO locations (code, name, address, phone, apt, city, zip"
-                        . ", country, image, type, services) "
+                        . ", country, image, type, services, featured, images, description, opening) "
                         . "VALUES ('$loccode',
                 '$locname', '$address', '$phone', '$apt', '$city', '$zip', '$country',"
-                        . "'$target_file', '$loctype', '$services');";
+                        . "'$target_file', '$loctype', '$services', '$image', '$images', '$desc', '$opening');";
 
                 mysqli_query($link, $locSql);
                 unset($_SESSION['uploadLocError']);

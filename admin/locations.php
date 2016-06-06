@@ -171,13 +171,44 @@ if (isset($_GET['id'])) {
                 echo $erow['country']; }?>"/>
             <br>
             <?php 
-                if (!empty($erow['image'])) {
-                    echo "<img src='".$erow['image']."' width=200><br>";
-                    echo "<input type='hidden' name='oldImage' id='oldImage' value='".$erow['image']."'>";
+                if (!empty($erow['featured'])) {
+                    echo "<img src='".$erow['featured']."' width=200><br>";
+                    echo "<input type='hidden' name='oldFeaturedImage' id='oldFeaturedImage' value='".$erow['featured']."'>";
                 }
             ?>
-            <label for='image' >Image:</label>
+            <label for='opening' >Opening Hours:</label>
+            <textarea name="opening" id='opening'><?php 
+            if(!empty($erow['opening'])) { echo $erow['opening']; }?></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('opening');
+            </script>
+            <br>
+            
+            <label for='desc' >Description:</label>
+            <textarea name="desc" id='desc'><?php 
+            if(!empty($erow['description'])) { echo $erow['description']; }?></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('desc');
+            </script>
+            <br>
+            
+            <label for='image' >Featured Image:</label>
             <input type="file" name="image" id='image' accept="image/*" />
+            <br>
+            <?php 
+                if (!empty($erow['images'])) {
+                    $imgArr = explode(",", $erow['images']);
+                    for($i =0; $i < count($imgArr); $i++) {
+                        if (!empty($imgArr[$i])) {
+                            echo "<img src='".$imgArr[$i]."' width=200>";
+                        }
+                    }
+                    echo "<br><input type='hidden' name='oldImages' value='".$erow['images']."'>";
+                }
+            ?>
+            Image(s): 
+            <input type="file" name="otherimage[]" id='images' multiple accept='image/*'/>
+            <br>
 <!--             Button trigger modal 
             <button type="button" id='showModal' class="btn btn-primary btn-lg" data-toggle="modal" data-target="#popupModal">
               Select from existing images

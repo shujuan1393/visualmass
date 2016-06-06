@@ -79,7 +79,7 @@ if (isset($_GET['delete'])) {
                 
                 $j = $j + 1; //increment the number of uploaded images according to the files in array       
 
-                if (($_FILES["images"]["size"][$i] > 5242880)) {
+                if (($_FILES["images"]["size"][$i] > 5000000)) {
                     //if file size and file type was incorrect.
                     unset($_SESSION['updateProdError']);
                     unset($_SESSION['addProdSuccess']);

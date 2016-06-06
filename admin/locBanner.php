@@ -57,9 +57,9 @@ if (isset($_POST['submit'])) {
                     $crow = mysqli_fetch_assoc($cresult);
                     
                     if ($cresult -> num_rows != 0) {
-                        $locBanner = "UPDATE locations SET image='$target_file' where name='banner'";
+                        $locBanner = "UPDATE locations SET featured='$target_file' where name='banner'";
                     } else {
-                        $locBanner = "INSERT INTO locations (name, image) VALUES "
+                        $locBanner = "INSERT INTO locations (name, featured) VALUES "
                                 . "('banner', '$target_file');";
                     }
                     if (!empty($locBanner)) {

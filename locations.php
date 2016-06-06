@@ -54,7 +54,7 @@
         <div id="wrapper">
             <div id="header"><?php require_once 'nav/header.php';?></div>
             
-            <div id="content">
+            <div id="locContent">
                 <?php
                     $banner = "Select * from locations where name='banner';";
                     
@@ -67,15 +67,15 @@
                             echo "<h3 id='banner' class='banner-title'>Sorry, this page is under construction.</h3>";
                         } else {
                             $brow = mysqli_fetch_assoc($bresult);
-                            $browArr = explode(".", $brow['image']);
+                            $browArr = explode(".", $brow['featured']);
 
                             $ext = $browArr[count($browArr)-1];
 
                             $imgArr = array("jpg", "jpeg", "png", "gif");
                             $vidArr = array("mp3", "mp4", "wma");
  
-                            $pos = strpos($brow['image'], '/');
-                            $url = substr($brow['image'], $pos+1);
+                            $pos = strpos($brow['featured'], '/');
+                            $url = substr($brow['featured'], $pos+1);
                             echo "<div id='banner_space' class='webbanner'>";
                             
                             if (in_array($ext, $imgArr)) {
@@ -131,40 +131,43 @@
                     </div>
                 </div>
                 
-                <div id='scrollable_loc' style='float:left;'>
-                    <ul>
-                        <?php 
-                            $ret = "Select * from locations where type='retail';";
-                            $retres = mysqli_query($link, $ret);
+                <div class='row'>
+                    <div id='loc_sidemenu' class='col-md-2'>
+                        <div id='scrollable_loc' style='float:left;'>
+                            <ul>
+                                <?php 
+                                    $ret = "Select * from locations where type='retail';";
+                                    $retres = mysqli_query($link, $ret);
 
-                            if (!mysqli_query($link, $ret)) {
-                                echo "Error: ".mysqli_error($link);                                
-                            } else {
-                                echo "<li class='store_header'>RETAIL STORE</li>";
-                                $locCount = 0;
-                                while($row = mysqli_fetch_assoc($retres)) {
-                                    echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
-                                    $locCount++;
-                                }
-                            }
+                                    if (!mysqli_query($link, $ret)) {
+                                        echo "Error: ".mysqli_error($link);                                
+                                    } else {
+                                        echo "<li class='store_header'>RETAIL STORE</li>";
+                                        $locCount = 0;
+                                        while($row = mysqli_fetch_assoc($retres)) {
+                                            echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
+                                            $locCount++;
+                                        }
+                                    }
 
-                            $pop = "Select * from locations where type='popup';";
-                            $popres = mysqli_query($link, $pop);
+                                    $pop = "Select * from locations where type='popup';";
+                                    $popres = mysqli_query($link, $pop);
 
-                            if (!mysqli_query($link, $pop)) {
-                                echo "Error: ".mysqli_error($link);                                
-                            } else {
-                                echo "<li class='store_header'>POP-UP STORE</li>";
-                                while($row = mysqli_fetch_assoc($popres)) {
-                                    echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
-                                    $locCount++;
-                                }
-                            }
-                        ?>
-                    </ul>
-                </div>
-                
-                <div id='retail_locs' class='row'>
+                                    if (!mysqli_query($link, $pop)) {
+                                        echo "Error: ".mysqli_error($link);                                
+                                    } else {
+                                        echo "<li class='store_header'>POP-UP STORE</li>";
+                                        while($row = mysqli_fetch_assoc($popres)) {
+                                            echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
+                                            $locCount++;
+                                        }
+                                    }
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                <div id='retail_locs' class='col-md-9'>
                     <h3 id='retail'>RETAIL</h3>
                     <div id='retail_filter' style='display: none;'>
                         <h4>There are no retail stores for this filter.</h4>
@@ -180,12 +183,12 @@
                         } else {
                             $count = 0;
                             while ($row = mysqli_fetch_assoc($retailres)) {
-                                $pos = strpos($row['image'], '/');
-                                $url = substr($row['image'], $pos+1);
+                                $pos = strpos($row['featured'], '/');
+                                $url = substr($row['featured'], $pos+1);
                                 
                                 echo "<div id='loc".$count."' class='row'>";
                                     echo "<div id='retailadd".$count."' class='col-md-10'>";
-                                    echo "<h4 id='".$row['name']."'>".$row['name']."</h4>";
+                                    echo "<h4 id='".$row['name']."'><a href='location.php?id=".$row['id']."'>".$row['name']."</a></h4>";
                                     echo "<p>".$row['address']." ".$row['apt']. "</p>";
                                     echo "<p>".$row['country']." ".$row['zip']."</p>";
                                     echo "</div>";
@@ -269,6 +272,7 @@
                     </div>
                 </div>
                 
+                </div>
                 <div id='popup_locs' class='row'>
                     <h3 id='popup'>POP-UP</h3>
                     <div id='popup_filter' style='display: none;'>
@@ -283,12 +287,12 @@
                             echo "Error: ".mysqli_error($link);
                         } else {
                             while ($row = mysqli_fetch_assoc($popupres)) {
-                                $pos = strpos($row['image'], '/');
-                                $url = substr($row['image'], $pos+1);
+                                $pos = strpos($row['featured'], '/');
+                                $url = substr($row['featured'], $pos+1);
                                 
                                 echo "<div id='loc".$count."' class='row'>";
                                 echo "<div id='popupadd".$count."' class='col-md-10'>";
-                                echo "<h4 id='".$row['name']."'>".$row['name']."</h4>";
+                                echo "<h4 id='".$row['name']."'><a href='location.php?id=".$row['id']."'>".$row['name']."</a></h4>";
                                 echo "<p>".$row['address']." ".$row['apt']. "</p>";
                                 echo "<p>".$row['country']." ".$row['zip']."</p>";
                                 echo "</div>";
@@ -395,6 +399,7 @@
                 
                 $(window).scroll(function() {
                     var current = $(window).scrollTop();
+                    floating.addClass('above');
                     if (current >= fixtop && current <= lowpoint) {
                         floating.addClass('stuck').css('top', 60);
                     } else if (current > lowpoint) {

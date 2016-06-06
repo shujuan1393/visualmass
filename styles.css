@@ -139,7 +139,7 @@ table {
     
 }
 
-#content h3, .updateProfile, #mailingWrapper {
+#content h3, .updateProfile, #mailingWrapper, #emptyCart {
     text-align: center;
     margin: 0;
 }
@@ -432,7 +432,7 @@ td {
     float: left;
 }
 
-.left_nav li a , .rightheader li a, .righticons li a, .rightfooter li a, .products a, 
+a, .left_nav li a , .rightheader li a, .righticons li a, .rightfooter li a, .products a, 
 #recommended a, .button a, .cart_icons li a, .rightsearch a  {
     display: block;
     color: #000;
@@ -440,7 +440,7 @@ td {
     text-decoration: none;
 }
 
-.left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .products a:hover:not(.active),
+a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .products a:hover:not(.active),
 #recommended a:hover:not(.active), #showGlasses  a:hover:not(.active), #showStory  a:hover:not(.active), 
 #showSunglasses a:hover:not(.active), #scrollable_loc a:hover:not(.active), 
 .rightsearch a:hover:not(.active), .rightfooter li a:hover:not(.active) {
@@ -838,7 +838,8 @@ div.product_display.col-md-6 {
 
 #shipping_terms, #virtual_tryon, #ourstory, #recommended, .career_section_full, .full_section, .products {
     height: 100%!important;
-    margin: 0 auto;
+    margin: 10px auto;
+    text-align: center;
 }
 
 #shipping_terms {
@@ -915,11 +916,18 @@ div.product_display.col-md-6 {
 #retail_locs h3, #retail_locs h4, #retail_locs p, #popup_locs h3, #popup_locs h4, #popup_locs p {
     text-align: center;
     margin: 10px auto;
+    padding: 10px;
 }
 
-.loc_serv {
+.loc_serv{
     text-align: center;
     padding: 10px;
+}
+
+#locImages {
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .store_header {
@@ -929,8 +937,12 @@ div.product_display.col-md-6 {
 
 #scrollable_loc {
     margin: 0 20px; 
-    z-index: 10;
+    z-index: 20;
     top: 60px;
+}
+
+.spacer {
+    width: 90px;
 }
 
 #scrollable_loc a {
@@ -1007,8 +1019,17 @@ div.product_display.col-md-6 {
     width: 100%;
 }
 
+#giftcardamounts .giftbox {
+    margin: 10px;
+}
+
 .borderless tr {
     border: none;
+    margin: 0 auto;
+}
+
+.borderless input {
+    margin: 0 auto;
 }
 
 #giftcardForm input, #giftcardForm textarea {
@@ -1067,6 +1088,7 @@ div#calendar {
     max-width:100%;
     height:70%;
     overflow-y: auto;
+    text-align: center;
 }
 
 /* ADMIN CMS */

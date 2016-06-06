@@ -103,6 +103,8 @@ if (isset($_GET['id'])) {
             
             $result = mysqli_query($link, $qry);
 
+            // output data of each row
+            $rowCount = 0;
             if (!mysqli_query($link,$qry))
             {
                 echo("Error description: " . mysqli_error($link));
@@ -119,8 +121,6 @@ if (isset($_GET['id'])) {
                     <th>Delete</th>                        
                 </thead>
             <?php
-                // output data of each row
-                $rowCount = 0;
                 
                 while ($row = mysqli_fetch_assoc($result)) {
                     $rowCount++;

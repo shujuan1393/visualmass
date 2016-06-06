@@ -11,11 +11,14 @@
             <div id="header"><?php require_once 'nav/header.php';?></div>
             
             <div id="content">
+                <div id='giftBanner'>
                 <div id='banner' class='giftcard'>
                     <h1>IMAGE</h1>
                     <h3>Makes great presents</h3>
                     <p>Surprise someone special by giving them a Visual Mass gift card.</p>
-                    <a class='button' href='#start'>SHOP NOW</a>
+                    <input type='hidden' name='startShopping' id='startShopping'>
+                    <div class='col-md-4 col-md-offset-4'><a class='button' href='#start'>SHOP NOW</a></div>
+                </div>
                 </div>
                 <form id='giftcardForm' action='addCart.php?card=1' method='post'>
                     <div id='selGiftType' class='full_section giftcard'>
@@ -34,34 +37,35 @@
 
                             <div class='row'>
                                 <input type='hidden' name='selectedType' id='selectedType'>
-                                <div id='physical' class='col-md-2 col-md-offset-3 giftbox'>
+                                <div id='physical' onclick="displayAmounts('physical')" class='col-md-2 col-md-offset-3 giftbox'>
                                     <h5>PHYSICAL</h5>
                                     <p>Some Text</p>
                                 </div>
-                                <div id='ecard' class='col-md-2 col-md-offset-2 giftbox'>
+                                <div id='ecard' onclick="displayAmounts('ecard')" class='col-md-2 col-md-offset-2 giftbox'>
                                     <h5>E-GIFT</h5>  
                                     <p>Some Text</p>                              
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div id='amount' class='full_section giftcard col-md-12'>
-                        <h4>CIRCLE CIRCLE THING HERE</h4>
-                        <h4>WHAT AMOUNT?</h4>
-                        <div id='giftcardamounts'>
-                            <input type='hidden' name='selectedAmount' id='selectedAmount'>
-                            <?php 
-                                if (isset($_SESSION['type'])) {
-                                    $giftcard = "Select * from giftcards where type LIKE '%".$_SESSION['type']."%'";
+                    
+                    <div id='selAmount'>
+                        <div id='amount' class='full_section giftcard col-md-12'>
+                            <h4>CIRCLE CIRCLE THING HERE</h4>
+                            <h4>WHAT AMOUNT?</h4>
+                            <div id='giftcardamounts'>
+                                <input type='hidden' name='selectedAmount' id='selectedAmount'>
+                                <?php 
+                                    $giftcard = "Select * from giftcards;";
                                     $result = mysqli_query($link, $giftcard);
-
+                                    
                                     if(!mysqli_query($link, $giftcard)) {
                                         echo "Error: ".mysqli_error($link);
                                     } else {
                                         $count = 0;
                                         while($row = mysqli_fetch_assoc($result)) {
-                                            echo "<div id='amount".$count."' class='col-md-2 giftbox'>";
+                                            echo "<div id='amount".$count."' class='col-md-2 giftbox' style='display:none;'>";
+                                            echo "<input type='hidden' id='type".$count."' value='".$row['type']."'>";
                                             echo "<input type='hidden' id='value".$count."' value='".$row['code']."'>";
                                             echo "<h5>$".$row['amount']."</h5>";
                                             echo html_entity_decode($row['description']);
@@ -69,49 +73,58 @@
                                             $count++;
                                         }
                                     }
-                                }
-                            ?>
+                                ?>
+                            </div>
                         </div>
                     </div>
-
-                    <div id='date' class='full_section giftcard col-md-12'>
-                        <h4>CIRCLE CIRCLE THING HERE</h4>
-                        <h4>WHEN DO YOU WANT IT?</h4>
-                        <p>You pick the date, and we'll send it to you.</p>
-                        <input type='hidden' name='selectedDate' id='selectedDate'>
-                        <div id='calendar' class='col-md-2 col-md-offset-5' style='height: 300px;'></div>
+                    <div id='selDate'>
+                        <div id='date' class='full_section giftcard col-md-12'>
+                            <h4>CIRCLE CIRCLE THING HERE</h4>
+                            <h4>WHEN DO YOU WANT IT?</h4>
+                            <p>You pick the date, and we'll send it to you.</p>
+                            <input type='hidden' name='selectedDate' id='selectedDate'>
+                            <div id='calendar' class='col-md-2 col-md-offset-5' style='height: 300px;'></div>
+                        </div>
                     </div>
-
-                    <div id='message' class='full_section giftcard col-md-12 row'>
-                        <h4>CIRCLE CIRCLE THING HERE</h4>
-                        <h4>WHO IS THE LUCKY RECIPIENT?</h4>
-                        <p>Add a little note to go with your gift.</p>
-                        <div class='col-md-6 col-md-offset-3'>
-                            <table class="borderless">
-                                <tr>
-                                    <td>
-                                        <input type='text' name='recipientname' placeholder="Recipient's Name">
-                                    </td>
-                                    <td>
-                                        <input type='text' name='yourname' placeholder="Your Name">
-                                    </td>                                
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <input type='text' name='email' placeholder="Recipient's Email">
-                                    </td>                               
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <textarea name='yourmessage' id='yourmessage' rows="10">Say something</textarea>
-                                    </td>                               
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <input type='submit' name='submit' value="ADD TO CART">
-                                    </td>                               
-                                </tr>
-                            </table>
+                    <div id='selMessage' class='full_section'>
+                        <div id='message' class='giftcard col-md-12'>
+                            <h4>CIRCLE CIRCLE THING HERE</h4>
+                            <h4>WHO IS THE LUCKY RECIPIENT?</h4>
+                            <p>Add a little note to go with your gift.</p>
+                            <div class='col-md-6 col-md-offset-3'>
+                                <table class="borderless">
+                                    <tr>
+                                        <td>
+                                            <input type='text' name='recipientname' placeholder="Recipient's Name">
+                                        </td>
+                                        <td>
+                                            <input type='text' name='yourname' placeholder="Your Name">
+                                        </td>                                
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input type='text' name='email' placeholder="Recipient's Email">
+                                        </td>                               
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <textarea name='yourmessage' id='yourmessage' rows="10">Say something</textarea>
+                                        </td>                               
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input type='submit' name='submit' value="ADD TO CART">
+                                        </td>                               
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id='giftterms' class='col-md-12'>
+                            <div class='col-md-10 col-md-offset-1'><p>Gift cards do not expire. Gift cards cannot be replaced or refunded if lost or stolen. 
+                                Visual Mass gift cards cannot be purchased/used with other coupons, promo codes and other discounts.
+                             As gift cards are non-refundable, if a purchase made using a gift card is returned, 
+                             the original gift card value will be re-credited. </p>
+                                <p><a href='giftterms.php' data-toggle="modal" data-target="#giftModal">MORE DETAILS ></a></p></div>
                         </div>
                     </div>
                 </form>
@@ -120,6 +133,32 @@
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
             
             <script>
+//                var scroll = true;
+//
+//                $(document).bind('touchmove', function(){
+//                    scroll = false;
+//                }).unbind('touchmove', function(){
+//                    scroll = true;
+//                });
+//
+//                $(window).scroll(function() {
+//                    if ($('button').is(':checked') && scroll === false) {
+//                        $(document).scrollTop(0);
+//                    }
+//                });
+                $(document).ready(function(){
+                    $('body').on({
+                        'mousewheel': function(e) {
+                            if (e.target.id === 'giftBanner' ||
+                                    e.target.id === 'selGiftType' || 
+                                    e.target.id === 'selAmount' || 
+                                    e.target.id === 'selDate' ||
+                                    e.target.id === 'selMessage') return;
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                    });
+                });
                 var myCalendar = new dhtmlXCalendarObject("calendar");
                 myCalendar.hideTime();
                 myCalendar.show();
@@ -129,17 +168,29 @@
 //                alert(clientHeight + " " + height);
                 document.getElementById('banner').style.height = height - clientHeight;
                 
-                document.getElementById('physical').onclick = function() {
-                    document.getElementById('selectedType').value = 'physical';
-                    <?php $_SESSION['type'] = "physical"; ?>
-                    window.location = "giftcard.php#amount";
-                };
+                function searchAmounts(num) {
+                    var type="type" + num;
+                    var typeObj = document.getElementById(type);
+                    var val = typeObj.value;
+                    var type = document.getElementById('selectedType').value;
+                    var amt = "amount" + num;
+                    var amtObj = document.getElementById(amt);
+                    
+                    if (val.indexOf(type) > -1) {
+                        amtObj.style.display = "block";
+                    } else {
+                        amtObj.style.display = "none";                        
+                    }
+                }
                 
-                document.getElementById('ecard').onclick = function() {
-                    document.getElementById('selectedType').value = 'ecard';
-                    <?php $_SESSION['type'] = "ecard"; ?>
+                function displayAmounts(type) {
+                    document.getElementById('selectedType').value = type;
+                    for (var i = 0; i < <?php echo $count; ?>; i++) {
+                        searchAmounts(i);
+                    }
                     window.location = "giftcard.php#amount";
-                };
+                }
+                
                 
                 var myEvent = myCalendar.attachEvent("onClick", function(){
                     // your code here

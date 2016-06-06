@@ -123,6 +123,14 @@ if (isset($_GET['id'])) {
                    value='<?php if (!empty($erow['servicename'])) 
                        { echo $erow['servicename']; }?>'/>
             <br>
+            <label for='desc' >Description:</label>
+            <textarea name="desc" id='desc'><?php 
+            if(!empty($erow['description'])) { echo $erow['description']; }?></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('desc');
+            </script>
+            <br>
+            
             <input type='submit' name='submit' value='Submit' />
             </fieldset>
         </form>
