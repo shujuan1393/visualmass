@@ -23,112 +23,142 @@ if (isset($_GET['id'])) {
     }
 }
 ?>
-<html>    
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-            <h2>Settings - Services</h2><br>
-        <?php 
-            $qry = "Select * from services";
 
-            $result = mysqli_query($link, $qry);
+<!DOCTYPE html>
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
+            
+            <!-- Content -->
+            <div id="page-wrapper">
 
-            if (!mysqli_query($link,$qry))
-            {
-                echo("Error description: " . mysqli_error($link));
-            } else {
-                if ($result->num_rows === 0) {
-                    echo "You have not created any services yet.";
-                } else {
-            ?>
-            <table>
-                <thead>
-                    <th>Service Code</th>
-                    <th>Name</th>
-                    <th>Edit</th>
-                    <th>Delete</th>                        
-                </thead>
-            <?php
-                // output data of each row
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>".$row['servicecode']."</td>";
-                    echo "<td>".$row['servicename']."</td>";                          
-                    echo '<td><button onClick="window.location.href=`serviceSettings.php?id='.$row['id'].'`">E</button>';
-                    echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
-                    echo "</tr>";
-                }
-            ?>
-            </table>
-            <?php
-                } 
-            }
-            ?>  
-            <div id="updateServSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['updateServSuccess'])) {
-                        echo $_SESSION['updateServSuccess'];
-                    }
-                ?>
-            </div>
-            <div id="updateServError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['updateServError'])) {
-                        echo $_SESSION['updateServError'];
-                    }
-                ?>
-            </div>
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
+                            </li>
+                            <li>
+                                Settings
+                            </li>
+                            <li class="active">
+                                Service
+                            </li>
+                        </ol>
+            
+                        <h1 class="page-header">Manage Services</h1>
+                        
+                        <div id="updateServSuccess" style="color:green">
+                            <?php 
+                                if (isset($_SESSION['updateServSuccess'])) {
+                                    echo $_SESSION['updateServSuccess'];
+                                }
+                            ?>
+                        </div>
+                        <div id="updateServError" style="color:red">
+                            <?php 
+                                if (isset($_SESSION['updateServError'])) {
+                                    echo $_SESSION['updateServError'];
+                                }
+                            ?>
+                        </div>
         
-        <hr><br>
+                        <?php 
+                            $qry = "Select * from services";
+
+                            $result = mysqli_query($link, $qry);
+
+                            if (!mysqli_query($link,$qry))
+                            {
+                                echo("Error description: " . mysqli_error($link));
+                            } else {
+                                if ($result->num_rows === 0) {
+                                    echo "You have not created any services yet.";
+                                } else {
+                        ?>
+                        
+                        <p class="text-right">
+                            <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Service</a>
+                        </p>
+                        
+                        <table>
+                            <thead>
+                                <th>Service Code</th>
+                                <th>Name</th>
+                                <th>Edit</th>
+                                <th>Delete</th>                        
+                            </thead>
+                            <?php
+                                // output data of each row
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<tr>";
+                                    echo "<td>".$row['servicecode']."</td>";
+                                    echo "<td>".$row['servicename']."</td>";                          
+                                    echo '<td><button onClick="window.location.href=`serviceSettings.php?id='.$row['id'].'`">E</button>';
+                                    echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
+                                    echo "</tr>";
+                                }
+                            ?>
+                        </table>
+                        <?php
+                            } 
+                        }
+                        ?>
         
-        <form id='addService' action='processServices.php' method='post' accept-charset='UTF-8'>
-            <fieldset >
+                        <form id='addService' action='processServices.php' method='post' accept-charset='UTF-8'>
                 
-            <div id="addServError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addServError'])) {
-                        echo $_SESSION['addServError'];
-                    }
-                ?>
-            </div>
+                            <div id="addServError" style="color:red">
+                                <?php 
+                                    if (isset($_SESSION['addServError'])) {
+                                        echo $_SESSION['addServError'];
+                                    }
+                                ?>
+                            </div>
+
+                            <div id="addServSuccess" style="color:green">
+                                <?php 
+                                    if (isset($_SESSION['addServSuccess'])) {
+                                        echo $_SESSION['addServSuccess'];
+                                    }
+                                ?>
+                            </div>
             
-            <div id="addServSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addServSuccess'])) {
-                        echo $_SESSION['addServSuccess'];
-                    }
-                ?>
-            </div>
-            <legend>Add/Edit Service</legend>
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <input type='hidden' name='editid' id='editid' 
-                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
+                            <h1 id="add" class="page-header">Add/Edit Service</h1>
+                            
+                            <input type='hidden' name='submitted' id='submitted' value='1'/>
+                            <input type='hidden' name='editid' id='editid' 
+                                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             
-            <label for='code' >Service Code*:</label>
-            <input type='text' name='code' id='code'  maxlength="50" 
-                   value='<?php if (!empty($erow['servicecode'])) 
-                       { echo $erow['servicecode']; }?>'/>
-            <br>
-            <label for='name' >Name*:</label>
-            <input type='text' name='name' id='name'  maxlength="50" 
-                   value='<?php if (!empty($erow['servicename'])) 
-                       { echo $erow['servicename']; }?>'/>
-            <br>
-            <input type='submit' name='submit' value='Submit' />
-            </fieldset>
-        </form>
+                            Service Code*:
+                            <input type='text' name='code' id='code'  maxlength="50" 
+                                   value='<?php if (!empty($erow['servicecode'])) 
+                                       { echo $erow['servicecode']; }?>'/>
+            
+                            Name*:
+                            <input type='text' name='name' id='name'  maxlength="50" 
+                                   value='<?php if (!empty($erow['servicename'])) 
+                                       { echo $erow['servicename']; }?>'/>
+                            
+                            <input type='submit' name='submit' value='Submit' />
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
         </div>
+        <!-- /#page-wrapper -->
     </div>
-    <script>
+</html>
+
+<script>
     function deleteFunction(empId) {
         var r = confirm("Are you sure you wish to delete this service?");
         if (r === true) {
@@ -141,6 +171,4 @@ if (isset($_GET['id'])) {
             window.location='serviceSettings.php';
         }
     }
-    </script>
-</html>
-
+</script>

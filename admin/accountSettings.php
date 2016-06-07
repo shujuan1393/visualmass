@@ -27,300 +27,323 @@ if (!mysqli_query($link,$selectSql)) {
     $savedrow = mysqli_fetch_assoc($savedresult);
     $valArr = explode("&", $savedrow['value']);
 ?>
-<html>    
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-        <h2>Settings - Accounts</h2>
-        <h3>Employee Types</h3> 
-        <?php 
-            $empTypeSql = "select * from employeeTypes";
-            $empresult = mysqli_query($link, $empTypeSql);
-            if (!mysqli_query($link,$empTypeSql)) {
-                echo("Error description: " . mysqli_error($link));
-            } else {
-                if ($empresult->num_rows === 0) {
-                    echo "There are no employee types yet.";
-                } else {
-            ?>
-            <table>
-                <thead>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </thead>
-            <?php 
-                    while($row=  mysqli_fetch_assoc($empresult)) {
-                        echo "<tr>";
-                        echo "<td>".$row['code']."</td>";
-                        echo "<td>".$row['name']."</td>";
-                        echo '<td><button onClick="window.location.href=`accountSettings.php?id='.$row['id'].'`">E</button>';
-                        echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
-                        echo "</tr>";
-                    }
-                    echo "</table>";
-        ?>
-            <div id="updateEmpTypeError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['updateEmpTypeError'])) {
-                        echo $_SESSION['updateEmpTypeError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="updateEmpTypeSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['updateEmpTypeSuccess'])) {
-                        echo $_SESSION['updateEmpTypeSuccess'];
-                    }
-                ?>
-            </div>
-        <?php
-                }
-            }
-        ?>
-        <form id='addEmpType' method='post' action='saveAccountSettings.php?add=1'>
-            <fieldset >
-            <div id="addEmpTypeError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addEmpTypeError'])) {
-                        echo $_SESSION['addEmpTypeError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addEmpTypeSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addEmpTypeSuccess'])) {
-                        echo $_SESSION['addEmpTypeSuccess'];
-                    }
-                ?>
-            </div>
-            <legend>Add/Edit Employee Type</legend>
-            <input type='hidden' name='editid' id='editid' value='<?php 
-                    if (isset($erow['id'])) {
-                        echo $erow['id'];
-                    }
-                   ?>'/>
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <label for='code' >Code*:</label>
-            <input type='text' name='code' id='code'  maxlength="50" value='<?php 
-                    if (isset($erow['code'])) {
-                        echo $erow['code'];
-                    }
-                   ?>'/>
-            <br>
-            <label for='name' >Name*:</label>
-            <input type='text' name='name' id='name'  maxlength="50" value='<?php 
-                    if (isset($erow['name'])) {
-                        echo $erow['name'];
-                    }
-                   ?>'/>
-            <br>
-            <input type='submit' name='submit' value='Submit' />
-            </fieldset>
-        </form> 
-                    
-        <form id='accountSettings' action='saveAccountSettings.php?save=1' method='post'>
-        <h3>Manage employee restrictions</h3>  
-        <div id="accSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateAccSetSuccess'])) {
-                    echo $_SESSION['updateAccSetSuccess'];
-                }
-            ?>
-        </div>
-            <table>
-                <thead>
-                <th>Type</th>
-                <th>Access Rights</th>
-                </thead>
-                <?php 
-                    $empTypeResult = mysqli_query($link, $empTypeSql);
-                    if (!mysqli_query($link,$empTypeSql)) {
-                        echo("Error description: " . mysqli_error($link));
-                    } else {
-                        if ($empTypeResult->num_rows === 0) {
-                            echo "No employee types created yet.";
-                        } else {
-                            $count = 0;
-                            while ($row1 = mysqli_fetch_assoc($empTypeResult)) {
-                                $str = $row1['code']."=";
-                                if (stripos($savedrow['value'], $str) !== FALSE) {
-                                    $checkArr = explode($str, $valArr[$count]);
-                                    $count++;
-                                    $accessArr;
-                                    if (!empty($checkArr[1])) {
-                                        $accessArr = explode(",", $checkArr[1]);
-                                    }else{
-                                        $accessArr = array();
-                                    }
-                                }
-                                echo "<tr>";
-                                echo "<td>".$row1['name']."</td>";
-                                
-                    ?>
-                        <td>
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='cust'
-                                   <?php 
-                                    if (in_array("cust", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Customers
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='disc' 
-                                   <?php 
-                                    if (in_array("disc", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Discounts
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='gift' 
-                                   <?php 
-                                    if (in_array("gift", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Gift Cards<br>
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='inv' 
-                                   <?php 
-                                    if (in_array("inv", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Inventory
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='loc' 
-                                   <?php 
-                                    if (in_array("loc", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Locations
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='media'
-                                   <?php 
-                                    if (in_array("media", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?> 
-                                   > Media Gallery<br>
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='orders' 
-                                   <?php 
-                                    if (in_array("orders", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Orders
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='partners' 
-                                   <?php 
-                                    if (in_array("partners", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Partners
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='products' 
-                                   <?php 
-                                    if (in_array("products", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Products<br>
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='settings' 
-                                   <?php 
-                                    if (in_array("settings", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Settings
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='stats' 
-                                   <?php 
-                                    if (in_array("stats", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Statistics
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='emp' 
-                                   <?php 
-                                    if (in_array("emp", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Users
-                            <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='web' 
-                                   <?php 
-                                    if (in_array("web", $accessArr)) {
-                                        echo " checked";
-                                    }
-                                   ?>
-                                   > Web
-                        </td>
-                    <?php 
-                            echo "</tr>";
-                            }
-                        }
-                    }
-                ?>
-            </table>
-            <input type='submit' name='submit' value='Save Changes' />
-        </form>
-                <h3>All Employees</h3> 
-            <?php
-                $empSql = "Select * from staff ";
-                
-                $result = mysqli_query($link, $empSql);
-                
-                if (!mysqli_query($link,$empSql)) {
-                    echo("Error description: " . mysqli_error($link));
-                } else {
-                    if ($result->num_rows === 0) {
-                        echo "You have not created any employee accounts yet.<br>";
-                        echo "Create an account <a href='users.php'>here</a>";
-                    } else {
-                    ?>
-                    <table>
-                        <thead>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Last Login</th>
-                        <th>Last Logout</th>
-                        </thead>
-                    <?php
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            echo "<tr>";
-                            echo "<td>".$row['firstname']." ".$row['lastname']."</td>";
-                            echo "<td>".$row['email']."</td>";
-                            if (empty($row['lastlogin'])) {
-                                echo "<td>-</td>"; 
-                            } else {
-                                echo "<td>".$row['lastlogin']."</td>";
-                            }
 
-                            if (empty($row['lastlogout'])) {
-                                echo "<td>-</td>";
-                            } else {
-                                echo "<td>".$row['lastlogout']."</td>";
-                            }
-                            echo "</tr>";
-                       } 
-                    ?>
-                        </table><br>
-            <?php
-                    }
-                }
-            ?>
-        
+<!DOCTYPE html>
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
+            
+            <!-- Content -->
+            <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
+                            </li>
+                            <li>
+                                Settings
+                            </li>
+                            <li>
+                                Accounts
+                            </li>
+                        </ol>
+                        
+                        <ul class="nav nav-tabs" id="myTabs">
+                            <li class="active"><a data-toggle="tab" href="#emprest">Employee Restrictions</a></li>
+                            <li><a data-toggle="tab" href="#menu1">Employee Roles</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="emprest" class="tab-pane fade in active">
+                                <h1 class="page-header">Manage Employee Restrictions</h1>
+                                <p>
+                                    <form id='accountSettings' action='saveAccountSettings.php?save=1' method='post'>
+                                        <div id="accSetSuccess" style='color:green'>
+                                            <?php
+                                                if (isset($_SESSION['updateAccSetSuccess'])) {
+                                                    echo $_SESSION['updateAccSetSuccess'];
+                                                }
+                                            ?>
+                                        </div>
+                                        <table class="content-table">
+                                            <thead>
+                                            <th>Roles</th>
+                                            <th>Access Rights</th>
+                                            </thead>
+                                            <?php 
+                                                $empTypeSql = "select * from employeeTypes";
+                                                $empTypeResult = mysqli_query($link, $empTypeSql);
+                                                if (!mysqli_query($link,$empTypeSql)) {
+                                                    echo("Error description: " . mysqli_error($link));
+                                                } else {
+                                                    if ($empTypeResult->num_rows === 0) {
+                                                        echo "No employee types created yet.";
+                                                    } else {
+                                                        $count = 0;
+                                                        while ($row1 = mysqli_fetch_assoc($empTypeResult)) {
+                                                            $str = $row1['code']."=";
+                                                            if (stripos($savedrow['value'], $str) !== FALSE) {
+                                                                $checkArr = explode($str, $valArr[$count]);
+                                                                $count++;
+                                                                $accessArr;
+                                                                if (!empty($checkArr[1])) {
+                                                                    $accessArr = explode(",", $checkArr[1]);
+                                                                }else{
+                                                                    $accessArr = array();
+                                                                }
+                                                            }
+                                                            echo "<tr>";
+                                                            echo "<td>".$row1['name']."</td>";
+                                            ?>
+                                            <td>
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='cust'
+                                                       <?php 
+                                                        if (in_array("cust", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Customers
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='disc' 
+                                                       <?php 
+                                                        if (in_array("disc", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Discounts
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='gift' 
+                                                       <?php 
+                                                        if (in_array("gift", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Gift Cards
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='inv' 
+                                                       <?php 
+                                                        if (in_array("inv", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Inventory
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='career' 
+                                                       <?php 
+                                                        if (in_array("career", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Jobs
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='loc' 
+                                                       <?php 
+                                                        if (in_array("loc", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Locations
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='media'
+                                                       <?php 
+                                                        if (in_array("media", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?> 
+                                                       > Media Gallery<br>
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='orders' 
+                                                       <?php 
+                                                        if (in_array("orders", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Orders
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='partners' 
+                                                       <?php 
+                                                        if (in_array("partners", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Partners
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='products' 
+                                                       <?php 
+                                                        if (in_array("products", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Products
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='settings' 
+                                                       <?php 
+                                                        if (in_array("settings", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Settings
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='stats' 
+                                                       <?php 
+                                                        if (in_array("stats", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Statistics
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='emp' 
+                                                       <?php 
+                                                        if (in_array("emp", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Users
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='web' 
+                                                       <?php 
+                                                        if (in_array("web", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > Web
+                                            </td>
+                                            <?php 
+                                                        echo "</tr>";
+                                                        }
+                                                    }
+                                                }
+                                            ?>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <input type='submit' name='submit' value='Save Changes' />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                </p>
+                            </div>
+                            
+                            <div id="menu1" class="tab-pane fade">
+                                
+                                <h1 class="page-header">Manage Employee Roles</h1>
+                                
+                                <div id="updateEmpTypeError" style="color:red">
+                                    <?php 
+                                        if (isset($_SESSION['updateEmpTypeError'])) {
+                                            echo $_SESSION['updateEmpTypeError'];
+                                        }
+                                    ?>
+                                </div>
+
+                                <div id="updateEmpTypeSuccess" style="color:green">
+                                    <?php 
+                                        if (isset($_SESSION['updateEmpTypeSuccess'])) {
+                                            echo $_SESSION['updateEmpTypeSuccess'];
+                                        }
+                                    ?>
+                                </div>
+                                
+                                <p>
+                                    <?php 
+                                        $empresult = mysqli_query($link, $empTypeSql);
+                                        if (!mysqli_query($link,$empTypeSql)) {
+                                            echo("Error description: " . mysqli_error($link));
+                                        } else {
+                                            if ($empresult->num_rows === 0) {
+                                                echo "There are no employee types yet.";
+                                            } else {
+                                    ?>
+                                    
+                                    <p class="text-right">
+                                        <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Roles</a>
+                                    </p>
+                                    
+                                    <table>
+                                        <thead>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </thead>
+                                        <?php 
+                                            while($row=  mysqli_fetch_assoc($empresult)) {
+                                                echo "<tr>";
+                                                echo "<td>".$row['code']."</td>";
+                                                echo "<td>".$row['name']."</td>";
+                                                echo '<td><button onClick="window.location.href=`accountSettings.php?id='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
+                                                echo "</tr>";
+                                            }
+                                            echo "</table>";
+                                        ?>
+                                    <?php
+                                            }
+                                        }
+                                    ?>
+                                        
+                                    <form id='addEmpType' method='post' action='saveAccountSettings.php?add=1'>
+                                        
+                                        <h1 id="add" class="page-header">Add/Edit Employee Role</h1>
+                                        
+                                        <div id="addEmpTypeError" style="color:red">
+                                            <?php 
+                                                if (isset($_SESSION['addEmpTypeError'])) {
+                                                    echo $_SESSION['addEmpTypeError'];
+                                                }
+                                            ?>
+                                        </div>
+
+                                        <div id="addEmpTypeSuccess" style="color:green">
+                                            <?php 
+                                                if (isset($_SESSION['addEmpTypeSuccess'])) {
+                                                    echo $_SESSION['addEmpTypeSuccess'];
+                                                }
+                                            ?>
+                                        </div>
+                                        
+                                        <table class="content">
+                                            <input type='hidden' name='editid' id='editid' value='<?php 
+                                                    if (isset($erow['id'])) {
+                                                        echo $erow['id'];
+                                                    }
+                                                   ?>'/>
+                                            <input type='hidden' name='submitted' id='submitted' value='1'/>
+                                            <tr>
+                                                <td>
+                                                    Code*:
+                                                    <input type='text' name='code' id='code'  maxlength="50" value='<?php 
+                                                            if (isset($erow['code'])) {
+                                                                echo $erow['code'];
+                                                            }
+                                                           ?>'/>
+                                                </td>
+                                                <td>
+                                                    Name*:
+                                                    <input type='text' name='name' id='name'  maxlength="50" value='<?php 
+                                                            if (isset($erow['name'])) {
+                                                                echo $erow['name'];
+                                                            }
+                                                           ?>'/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><input type='submit' name='submit' value='Submit' /></td>
+                                            </tr>
+                                        </table>
+                                    </form> 
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
         </div>
+        <!-- /#page-wrapper -->
     </div>
-    <script>
+</html>
+
+<?php } ?>
+
+<script>
     function deleteFunction(empId) {
         var r = confirm("Are you sure you wish to delete this employee type?");
         if (r === true) {
@@ -336,6 +359,17 @@ if (!mysqli_query($link,$selectSql)) {
             window.location='accountSettings.php';
         }
     }
-    </script>
-</html>
-<?php } ?>
+    
+    $(document).ready(function() {
+        if(location.hash) {
+            $('a[href=' + location.hash + ']').tab('show');
+        }
+        $(document.body).on("click", "a[data-toggle]", function(event) {
+            location.hash = this.getAttribute("href");
+        });
+    });
+    $(window).on('popstate', function() {
+        var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
+        $('a[href=' + anchor + ']').tab('show');
+    });
+</script>

@@ -40,55 +40,79 @@ if (!mysqli_query($link,$selectSql)) {
     $savedrow = mysqli_fetch_assoc($savedresult);
     $valArr = explode("#", $savedrow['value']);
 ?>
-<html>    
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-        <h2>Settings - Web</h2>
+
+<!DOCTYPE html>
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
+            
+            <!-- Content -->
+            <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
+                            </li>
+                            <li>
+                                Settings
+                            </li>
+                            <li class="active">
+                                Web
+                            </li>
+                        </ol>
+                        
+                        <h1 class="page-header">Update Web Settings</h1>
         
-        <form id='generalSettings' action='webSettings.php' method='post'>
-        
-        <div id="updateWebSetError" style='color:red'>
-            <?php
-                if (isset($_SESSION['updateWebSetError'])) {
-                    echo $_SESSION['updateWebSetError'];
-                }
-            ?>
+                        <form id='generalSettings' action='webSettings.php' method='post'>
+
+                            <div id="updateWebSetError" style='color:red'>
+                                <?php
+                                    if (isset($_SESSION['updateWebSetError'])) {
+                                        echo $_SESSION['updateWebSetError'];
+                                    }
+                                ?>
+                            </div>
+                            <div id="updateWebSetSuccess" style='color:green'>
+                                <?php
+                                    if (isset($_SESSION['updateWebSetSuccess'])) {
+                                        echo $_SESSION['updateWebSetSuccess'];
+                                    }
+                                ?>
+                            </div>
+
+                            Web Store Title:
+                            <?php 
+                                $web = explode("web=", $valArr[0]);
+                            ?>
+                            <input type='text' name='title' 
+                                   value='<?php if (!empty($web[1])) { echo $web[1]; } ?>'><br>
+                            Metadata Description:
+                            <?php 
+                                $meta = explode("meta=", $valArr[1]);
+                            ?>
+                            <textarea name='metadata'><?php if (!empty($meta[1])) { echo $meta[1]; } ?></textarea>
+                            <script type="text/javascript">
+                                CKEDITOR.replace('metadata');
+                            </script>
+
+                            <input type='submit' name='submit' value='Save Changes' />
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
         </div>
-        <div id="updateWebSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateWebSetSuccess'])) {
-                    echo $_SESSION['updateWebSetSuccess'];
-                }
-            ?>
-        </div>
-            Web Store Title:
-            <?php 
-                $web = explode("web=", $valArr[0]);
-            ?>
-            <input type='text' name='title' 
-                   value='<?php if (!empty($web[1])) { echo $web[1]; } ?>'><br>
-            Metadata Description:
-            <?php 
-                $meta = explode("meta=", $valArr[1]);
-            ?>
-            <textarea name='metadata'><?php if (!empty($meta[1])) { echo $meta[1]; } ?></textarea>
-            <script type="text/javascript">
-                CKEDITOR.replace('metadata');
-            </script>
-            <br>
-            <input type='submit' name='submit' value='Save Changes' />
-        </form>
-        </div>
+        <!-- /#page-wrapper -->
     </div>
 </html>
 <?php } ?>

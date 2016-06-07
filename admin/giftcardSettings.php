@@ -43,73 +43,102 @@ if (!mysqli_query($link,$selectSql)) {
     $savedrow = mysqli_fetch_assoc($savedresult);
     $valArr = explode("&", $savedrow['value']);
 ?>
-<html>    
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-        <h2>Settings - Gift cards</h2>
-        
-        <form id='giftcardSettings' action='giftcardSettings.php' method='post'>
+
+<!DOCTYPE html>
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
             
-        <div id="updateGcSetError" style='color:red'>
-            <?php
-                if (isset($_SESSION['updateGcSetError'])) {
-                    echo $_SESSION['updateGcSetError'];
-                }
-            ?>
+            <!-- Content -->
+            <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
+                            </li>
+                            <li>
+                                Settings
+                            </li>
+                            <li class="active">
+                                Gift Cards
+                            </li>
+                        </ol>
+        
+                        <h1 class="page-header">Update Gift Cards Settings</h2>
+        
+                        <form id='giftcardSettings' action='giftcardSettings.php' method='post'>
+
+                            <div id="updateGcSetError" style='color:red'>
+                                <?php
+                                    if (isset($_SESSION['updateGcSetError'])) {
+                                        echo $_SESSION['updateGcSetError'];
+                                    }
+                                ?>
+                            </div>
+                            <div id="updateGcSetSuccess" style='color:green'>
+                                <?php
+                                    if (isset($_SESSION['updateGcSetSuccess'])) {
+                                        echo $_SESSION['updateGcSetSuccess'];
+                                    }
+                                ?>
+                            </div>
+                            
+                            <?php
+                                $expiry = explode("expiry=", $valArr[0]);
+                            ?>
+                            Enable Expiry:
+                            <input type="radio" name='expiry' id="expiry" value='on' 
+                                   <?php 
+                                    if (strcmp("on", $expiry[1])===0) {
+                                        echo " checked";
+                                        $_SESSION['expiryOff'] = "on";
+                                    }
+                                   ?>
+                                   onclick="toggleTextbox(true);">On
+                            <input type="radio" name='expiry' value='off' 
+                                   <?php 
+                                    if (strcmp("off", $expiry[1])===0) {
+                                        echo " checked";
+                                        $_SESSION['expiryOff'] = "off";
+                                    }
+                                   ?>
+                                   onclick="toggleTextbox(false);">Off
+            <br/><br/>
+                            <?php 
+                            $duration = explode("duration=", $valArr[1]);
+                            ?>
+                            Duration (days): <input type='text' name='duration' id='duration' 
+                                             value='<?php 
+                                                if (!empty($duration[1])) {
+                                                    echo $duration[1];
+                                                }
+                                             ?>' onkeypress="return isNumber(event)">
+                            <!--<span id='days'>days</span>-->
+                            
+                            <p class='setting-tooltips'>*Set the default validity period for purchased gift cards</p>
+                            <input type='submit' name='submit' value='Save Changes' />
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
         </div>
-        <div id="updateGcSetSuccess" style='color:green'>
-            <?php
-                if (isset($_SESSION['updateGcSetSuccess'])) {
-                    echo $_SESSION['updateGcSetSuccess'];
-                }
-            ?>
-        </div>
-            <?php
-                $expiry = explode("expiry=", $valArr[0]);
-            ?>
-            Enable Expiry:
-            <input type="radio" name='expiry' id="expiry" value='on' 
-                   <?php 
-                    if (strcmp("on", $expiry[1])===0) {
-                        echo " checked";
-                        $_SESSION['expiryOff'] = "on";
-                    }
-                   ?>
-                   onclick="toggleTextbox(true);">On
-            <input type="radio" name='expiry' value='off' 
-                   <?php 
-                    if (strcmp("off", $expiry[1])===0) {
-                        echo " checked";
-                        $_SESSION['expiryOff'] = "off";
-                    }
-                   ?>
-                   onclick="toggleTextbox(false);">Off
-            <br><br>
-            <?php 
-            $duration = explode("duration=", $valArr[1]);
-            ?>
-            Duration: <input type='text' name='duration' id='duration' 
-                             value='<?php 
-                                if (!empty($duration[1])) {
-                                    echo $duration[1];
-                                }
-                             ?>' onkeypress="return isNumber(event)"> <span id='days'>days</span><br>
-            <p class='setting-tooltips'>*Set the default validity period for purchased gift cards</p>
-            <input type='submit' name='submit' value='Save Changes' />
-        </form>
-        </div>
+        <!-- /#page-wrapper -->
     </div>
-    <script type="text/javascript">
+</html>
+<?php } ?>
+
+<script>
         function isNumber(evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -124,11 +153,6 @@ if (!mysqli_query($link,$selectSql)) {
         
         function toggleTextbox(rdo) {
             document.getElementById("duration").disabled = !rdo;
-            if (rdo) {
-                document.getElementById("days").style.display = "inline";
-            } else {
-                document.getElementById("days").style.display = "none";
-            }
         }
         
         window.onload = function() {
@@ -143,5 +167,3 @@ if (!mysqli_query($link,$selectSql)) {
             <?php } ?>
         };
     </script>
-</html>
-<?php } ?>
