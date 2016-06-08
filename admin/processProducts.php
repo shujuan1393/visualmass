@@ -189,7 +189,9 @@ if (isset($_GET['delete'])) {
             
             if(strcmp($exist, "yes") === 0) {
                 $existing = $_POST['existing'];
-                $code = $existing ."-".$code;
+                $code = $existing ."-".$_POST['colorcode'];
+            } else {
+                $code = $_POST['code'];
             }
             $genderArr = $_POST['gender'];
             $gender = "";
@@ -238,7 +240,7 @@ if (isset($_GET['delete'])) {
             
             if (!empty($_POST['editid'])) {
                 $editcode = $_POST['editid'];
-                $editproductSql = "UPDATE products set name='$name', description='$desc',"
+                $editproductSql = "UPDATE products set pid = '$code', name='$name', description='$desc',"
                         . " price='$price', quantity='$qty', type='$type',"
                         . " images='$images', tags='$tags', visibility='$vis',"
                         . " availability='$avai', locations ='$loc', track='$track', gender='$gender',"

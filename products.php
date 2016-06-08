@@ -80,6 +80,9 @@
                             . "gender LIKE '%".$_GET['gender']."%';";
                     $result = mysqli_query($link, $sql);
                     
+                    $count = 0;
+                    $rowcount = 1;
+                    $relcount = 0;
                     if (!mysqli_query($link, $sql)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
@@ -91,15 +94,15 @@
                     <!--<div id='terms_content'>-->
                     <div id='product_table' class='products row'>
                         <div id='noHometry' style='display:none;'><h3>There are no products available for Home Try</h3></div>
+                        <div class="col-md-12" id='row0'>
                         <?php 
-                            $count = 0;
-                            $relcount = 0;
                             //for each product
                             while ($row = mysqli_fetch_assoc($result)) {
                                 //get product id
                                 $pid = $row['pid'];
-                                $pidArr = explode("-", $pid);
-                                if (count($pidArr) === 1) {
+                                $idpos = strpos($pid, "-");
+                                if (!is_numeric($idpos)) {
+                                    $pidArr = explode("-", $pid);
                                     $imgArr = explode(",", $row['images']);
                                     $imgpos = strpos($imgArr[0], '/');
                                     $imgurl = substr($imgArr[0], $imgpos+1);
@@ -153,7 +156,12 @@
                                     }
                                     echo "</div>";
                                     $count++;
+                                    if ($count % 3 === 0) {
+                                        echo "</div><div class='col-md-12' id='row$rowcount'>";
+                                        $rowcount++;                            
+                                    }
                                 }
+                                
                             }
                         ?>
                     </div>
@@ -217,6 +225,96 @@
     </body>
     
     <script>
+        
+        
+        for (var i = 0; i < <?php echo $rowcount; ?>; i++) {
+//            var container = document.getElementById('products_table'),
+//                firstChild = container.childNodes[i+2];
+            var str = "row" + i;
+            var sectionObj = document.getElementById(str);
+
+            if (sectionObj !== null) {
+            var secheight = sectionObj.offsetTop;
+
+                <?php 
+                    $advSql = "Select * from advertisements where status='active' and visibility like '%catalogue%';";
+
+                    $advres = mysqli_query($link, $advSql);
+
+                    if (!mysqli_query($link, $advSql)) {
+                        die(mysqli_error($link));
+                    } else {
+                        while ($advrow = mysqli_fetch_assoc($advres)) {
+                            $minheight = $advrow['minheight'];
+                ?>
+                        if (secheight > <?php echo $minheight; ?>) {
+                <?php
+                    $advimg = $advrow['image'];
+                    $advimagepos = strpos($advimg, '/');
+                    $advimageurl = substr($advimg, $advimagepos+1);
+                    $toPrint = "";
+//home-section 
+                    $toPrint .= "<div class='col-md-12' ";
+                    if (strcmp($advrow['imagepos'], "background") === 0) {
+                        $image = '"'.$advimageurl.'"';
+                        $toPrint .= "style='background-image: url($advimg); background-repeat: no-repeat; background-size: 500px auto;'>";
+//                                    echo "<script>document.getElementById('section".$count."').style.backgroundImage = 'url('$imageurl')';"
+//                                    . "document.getElementById('section".$count."').style.backgroundRepeat='no-repeat';</script>";
+                    } else {
+                        $toPrint .= ">";
+                        $toPrint .= "<div class='section-image' style='text-align:".$row['imagepos']."; float:".$row['imagepos']."'>";
+                        $toPrint .= "<img src='".$advimageurl."'>";
+                        $toPrint .= "</div>";
+                    }
+
+                    if (!empty($advrow['html'])) {
+                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
+                        $toPrint .= html_entity_decode($advrow['html'])."</div>";
+                    }
+
+                    if (!empty($advrow['buttontext'])) {
+                        $textArr = explode(",", $advrow['buttontext']);
+                        $linkArr = explode(",", $advrow['link']);
+                        $linkposArr = explode(",", $advrow['linkpos']);
+                        $prevpos = $linkposArr[0];
+
+//                                    echo "<div class='section-link'>";
+                        $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
+                        for ($i = 0; $i < count($textArr); $i++) {
+                            if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                                $toPrint .= "</div>";
+                            }
+                            if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                                $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
+                            }
+                            $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
+                            $prevpos = $linkposArr[$i];
+                        }
+
+                    }
+                    $toPrint .= "</div>";
+                    $toPrint .= "</div>";
+                ?>    
+//                    if (container && firstChild) {
+//                        var newElm = document.createElement('div');
+//                        newElm.className = "home-section";
+//                        newElm.innerHTML = "<?php echo $toPrint; ?>";  
+//                        firstChild.parentNode.insertBefore(newPre, firstChild.nextSibling);    
+//                    }
+                    var newElm = document.createElement('div');
+//                    newElm.className = "home-section";
+                    newElm.innerHTML = "<?php echo $toPrint; ?>";  
+                    sectionObj.parentNode.insertBefore(newElm, sectionObj);// firstChild.nextSibling);
+
+//                            sectionObj.innerHTML = sectionObj.innerHTML + "<?php echo $toPrint; ?>";
+                        }
+                <?php
+                        }
+                    }
+                ?>
+            }
+        }
+        
         $('#searchModal').appendTo("body");
         
         function checkAllProducts() {
@@ -326,6 +424,7 @@
                 heartLinkObj.innerHTML = "<a id='heart' href='addFavourite.php?id=" + selIdVal +"'><i class='fa fa-heart-o fa-2x' aria-hidden='true'></i></a>";
             }
         }
+        
         function findParent(parentId, numToReplace) {
             for (var i = 0; i < <?php echo $count; ?>; i++) {
                 var id = "id" + i;
@@ -345,7 +444,6 @@
                 var parent = "parent" +num;
                 var parObj = document.getElementById(parent);
                 var newParVal = parObj.value;
-                
                 findParent(newParVal, num);
             };
         }
@@ -353,20 +451,5 @@
         for (var i = 0; i < <?php echo $relcount; ?>; i++) {
             handleElements(i);
         }
-        
-//        function handleHeartClick(num) {
-//            var heart = "heartLink" +num;
-//            var hObj = document.getElementById(heart);
-//            
-//            hObj.onclick = function() {
-//                <?php if (!isset($_SESSION['loggedUserEmail'])) {?>
-//                      
-//                <?php } ?>
-//            };
-//        }
-//        
-//        for (var h = 0; h < <?php echo $count; ?>; h++) {
-//            handleHeartClick(h);
-//        }
     </script>
 </html>

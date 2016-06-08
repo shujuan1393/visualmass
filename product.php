@@ -118,7 +118,7 @@
                                                 } else {
                                                     $color = $row['name'];
                                                 }
-                                                echo "<script>alert($color);</script>";
+//                                                echo "<script>alert($color);</script>";
                                                 
                                                 echo "<input type='hidden' id='selectedId$relcount' value='".$pid."'>";
                                                 echo "<li id='colour$relcount' class='swatch'>".$color."</li>";

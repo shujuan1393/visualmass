@@ -16,6 +16,7 @@
                     <h1>IMAGE</h1>
                     <h3>Makes great presents</h3>
                     <p>Surprise someone special by giving them a Visual Mass gift card.</p>
+                    <p><a href='giftterms.php' data-toggle="modal" data-target="#giftModal">GIFT CARD FAQs ></a></p>
                     <input type='hidden' name='startShopping' id='startShopping'>
                     <div class='col-md-4 col-md-offset-4'><a class='button' href='#start'>SHOP NOW</a></div>
                 </div>
@@ -129,36 +130,57 @@
                     </div>
                 </form>
             </div>
+            <div class="modal fade modal-fullscreen force-fullscreen" id="giftModal" tabindex="-1" 
+                role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+               <div class="modal-dialog">
+                 <div class="modal-content">
+                   <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                     <h4 class="modal-title">Modal title</h4>
+                   </div>
+                   <div class="modal-body">
+                   </div>
+                   <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                     <button type="button" class="btn btn-primary">Save changes</button>
+                   </div>
+                 </div><!-- /.modal-content -->
+               </div><!-- /.modal-dialog -->
+             </div><!-- /.modal -->
             
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
             
             <script>
-//                var scroll = true;
-//
-//                $(document).bind('touchmove', function(){
-//                    scroll = false;
-//                }).unbind('touchmove', function(){
-//                    scroll = true;
+//                $(document).ready(function(){
+//                    $('body').on({
+//                        'mousewheel': function(e) {
+//                            if (e.target.id === 'giftBanner' ||
+//                                    e.target.id === 'selGiftType' || 
+//                                    e.target.id === 'selAmount' || 
+//                                    e.target.id === 'selDate' ||
+//                                    e.target.id === 'selMessage') return;
+//                            e.preventDefault();
+//                            e.stopPropagation();
+//                        }
+//                    });
 //                });
-//
-//                $(window).scroll(function() {
-//                    if ($('button').is(':checked') && scroll === false) {
-//                        $(document).scrollTop(0);
-//                    }
-//                });
-                $(document).ready(function(){
-                    $('body').on({
-                        'mousewheel': function(e) {
-                            if (e.target.id === 'giftBanner' ||
-                                    e.target.id === 'selGiftType' || 
-                                    e.target.id === 'selAmount' || 
-                                    e.target.id === 'selDate' ||
-                                    e.target.id === 'selMessage') return;
-                            e.preventDefault();
-                            e.stopPropagation();
-                        }
-                    });
+                $('html, body').bind('DOMMouseScroll mousewheel MozMousePixelScroll', function(e) {
+                    var scrollTo = 0;
+
+                  if (e.type === 'mousewheel') {
+                      scrollTo = (e.originalEvent.wheelDelta * -1);
+                  }
+                  else if (e.type === 'DOMMouseScroll') {
+                      // scrollTo = 20 * e.originalEvent.detail; // turns out, this sometimes works better as expected...
+                      scrollTo = e.originalEvent.detail;
+                  }
+
+                  if (scrollTo > 0) {
+                    e.preventDefault();
+                    return false;
+                  }
                 });
+                
                 var myCalendar = new dhtmlXCalendarObject("calendar");
                 myCalendar.hideTime();
                 myCalendar.show();

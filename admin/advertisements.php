@@ -49,7 +49,6 @@ if (isset($_GET['id'])) {
                                 Advertisement
                             </li>
                         </ol>
-                        
                         <h1 class="page-header">Manage Advertisements</h1>
 
                         <div id="updateAdvSuccess" style="color:green">
@@ -146,7 +145,7 @@ if (isset($_GET['id'])) {
                                     ?>
                                 </div>
             
-                                <h1 class="page-header">Add/Edit Advertisement</h1>
+                                <h1 id='add' class="page-header">Add/Edit Advertisement</h1>
             
                                 <input type='hidden' name='submitted' id='submitted' value='1'/>
                                 <input type='hidden' name='editid' id='editid' 
@@ -301,15 +300,6 @@ if (isset($_GET['id'])) {
                                                         }
                                                     }
                                                     ?>>Product Catalogue
-                                                
-                                                <input name='visibility[]' type='checkbox' value='prodDetails' <?php 
-                                                    if (!empty($erow['visibility'])) {
-                                                        if (in_array("prodDetails", $visib)) {
-                                                            echo " checked";
-                                                        }
-                                                    }
-                                                    ?>>Product Details
-                                                <br/>
                                                 <input name='visibility[]' type='checkbox' value='locations' <?php 
                                                     if (!empty($erow['visibility'])) {
                                                         if (in_array("locations", $visib)) {

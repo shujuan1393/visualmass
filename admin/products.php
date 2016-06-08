@@ -30,10 +30,9 @@ if (isset($_GET['id'])) {
     <body>
         <div id="wrapper">
             <?php require '../nav/adminMenubar.php'; ?>
-            
+    
             <!-- Content -->
             <div id="page-wrapper">
-
             <div class="container-fluid">
 
                 <!-- Page Heading -->
