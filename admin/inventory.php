@@ -18,155 +18,202 @@ if (isset($_GET['id'])) {
     $resrow = mysqli_fetch_assoc($res);    
 }
 ?>
-<html>    
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-        <h2>Inventory</h2>
-        <br>
-        <?php
-            $sql = "Select * from inventory";
-            $result = mysqli_query($link, $sql);
-            
-            if (!mysqli_query($link,$sql))
-            {
-                echo("Error description: " . mysqli_error($link));
-            } else {
-                if ($result->num_rows === 0) {
-                    echo "There is no inventory.";
-                } else {
-            ?>
-            <table>
-                <thead>
-                    <th>Product ID</th>
-                    <th>Type</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Update</th>                       
-                </thead>
-            <?php
-                // output data of each row
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>".$row['pid']."</td>";
-                    echo "<td>".$row['type']."</td>";                            
-                    echo "<td>".$row['price']."</td>";                           
-                    echo "<td>".$row['quantity']."</td>";                        
-                    echo '<td><button onClick="window.location.href=`inventory.php?id='.$row['id'].'`">E</button>';
-//                    echo '<td><button onClick="window.location.href=`editInventory.php?id='.$row['id'].'`">E</button>';
-                    echo "</tr>";
-                }
 
-            ?>
-            </table>
-            <?php
-                } 
-            }
-            ?> 
-        <br><hr>
-        <form id='addInventory' action='processInventory.php' method='post' accept-charset='UTF-8'>
-            <fieldset >
-            <div id="updateInvSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['updateInvSuccess'])) {
-                        echo $_SESSION['updateInvSuccess'];
-                    }
-                ?>
-            </div>
-            <div id="updateInvError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['updateInvError'])) {
-                        echo $_SESSION['updateInvError'];
-                    }
-                ?>
-            </div>
-            <legend>Add Inventory</legend>
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
+<!DOCTYPE html>
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
             
-            <label for='code' >Product*:</label>
-            <?php 
-                $prodSql = "Select * from products";
-                $prodResult = mysqli_query($link, $prodSql);
-                
-                echo "<select name='product'>";
-                
-                while ($row = mysqli_fetch_assoc($prodResult)) {
-                    echo "<option value='".$row['pid']."' ";
-                    if (isset($_GET['id'])) {
-                        if (strcmp($resrow['pid'], $row['pid']) === 0) {
-                            echo "selected";
+            <!-- Content -->
+            <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
+                            </li>
+                            <li class="active">
+                                Inventory
+                            </li>
+                        </ol>
+                        
+                        <h1 class="page-header">Manage Inventory</h1>
+                        
+                        <?php
+                            $sql = "Select * from inventory";
+                            $result = mysqli_query($link, $sql);
+
+                            if (!mysqli_query($link,$sql))
+                            {
+                                echo("Error description: " . mysqli_error($link));
+                            } else {
+                                if ($result->num_rows === 0) {
+                                    echo "There is no inventory.";
+                                } else {
+                        ?>
+                        
+                        <p class="text-right">
+                            <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Inventory</a>
+                        </p>
+                        
+                        <table>
+                            <thead>
+                                <th>Product ID</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Update</th>                       
+                            </thead>
+                            <?php
+                                // output data of each row
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<tr>";
+                                    echo "<td>".$row['pid']."</td>";
+                                    echo "<td>".$row['type']."</td>";                            
+                                    echo "<td>".$row['price']."</td>";                           
+                                    echo "<td>".$row['quantity']."</td>";                        
+                                    echo '<td><button onClick="window.location.href=`inventory.php?id='.$row['id'].'`">E</button>';
+                //                    echo '<td><button onClick="window.location.href=`editInventory.php?id='.$row['id'].'`">E</button>';
+                                    echo "</tr>";
+                                }
+
+                            ?>
+                        </table>
+                        
+                        <?php
+                            } 
                         }
-                    }
-                    
-                    echo ">";
-                    echo $row['name']." (".$row['pid'].")</option>";
-                }
-                echo "</select>";
-            ?>
-            <br>
-            <?php 
-                if (isset($_GET['id'])) {
-            ?>
-            <label for='price' >Price*:</label>
-            <input type='text' name='price' id='price' 
-                   <?php 
-                    if (isset($_GET['id'])) {
-                        echo "value='".$resrow['price']."'";
-                    }
-                   ?>
-                   onkeypress="return isNumberKey(event)" />
-            <br>
-            <?php 
-                }
-            ?>
-            <label for='qty' >Quantity*:</label>
-            <input type='text' name='qty' id='qty' 
-                   <?php 
-                    if (isset($_GET['id'])) {
-                        echo "value='".$resrow['quantity']."'";
-                    }
-                   ?>
-                   onkeypress="return isNumber(event)" />
-            <br>
-            <p id='nanError' style="display: none;">Please enter numbers only</p>
-            <input type='submit' name='submit' value='Submit' />
-            </fieldset>
-        </form>
-        </div>
-    </div>
-    <script>
-        
-        function isNumberKey(evt) {
-            var charCode = (evt.which) ? evt.which : event.keyCode
-            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
-                document.getElementById('nanError').style.display='block';
-                document.getElementById('nanError').style.color='red';
-                return false;
-           }
+                        ?>
+                        
+                        <form id='addInventory' action='processInventory.php' method='post' accept-charset='UTF-8'>
+                            
+                            <div id="updateInvSuccess" style="color:green">
+                                <?php 
+                                    if (isset($_SESSION['updateInvSuccess'])) {
+                                        echo $_SESSION['updateInvSuccess'];
+                                    }
+                                ?>
+                            </div>
+                            <div id="updateInvError" style="color:red">
+                                <?php 
+                                    if (isset($_SESSION['updateInvError'])) {
+                                        echo $_SESSION['updateInvError'];
+                                    }
+                                ?>
+                            </div>
+                            
+                            
+                            
+                            <input type='hidden' name='submitted' id='submitted' value='1'/>
+                            
+                            <h1 id="add" class="page-header">Add/Edit Inventory</h1>
+                            
+                            <table class="content">
+                                <tr>
+                                    <td colspan="2">
+                                        Product*:
+                                        <?php 
+                                            $prodSql = "Select * from products";
+                                            $prodResult = mysqli_query($link, $prodSql);
 
-            document.getElementById('nanError').style.display='none';
-            return true;
-        }
-        function isNumber(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                document.getElementById('nanError').style.display='block';
-                document.getElementById('nanError').style.color='red';
-                return false;
-            }
-            document.getElementById('nanError').style.display='none';
-            return true;
-        }
-    </script>
+                                            echo "<select name='product'>";
+
+                                            while ($row = mysqli_fetch_assoc($prodResult)) {
+                                                echo "<option value='".$row['pid']."' ";
+                                                if (isset($_GET['id'])) {
+                                                    if (strcmp($resrow['pid'], $row['pid']) === 0) {
+                                                        echo "selected";
+                                                    }
+                                                }
+
+                                                echo ">";
+                                                echo $row['name']." (".$row['pid'].")</option>";
+                                            }
+                                            echo "</select>";
+                                        ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                <?php 
+                                    if (isset($_GET['id'])) {
+                                ?>
+                                    <td>
+
+                                    Price*:
+                                    <input type='text' name='price' id='price' 
+                                           <?php 
+                                            if (isset($_GET['id'])) {
+                                                echo "value='".$resrow['price']."'";
+                                            }
+                                           ?>
+                                           onkeypress="return isNumberKey(event)" />
+
+                                    </td>
+                                    <td>
+                                <?php 
+                                    }
+                                    else {
+                                        echo "<td colspan='2'>";
+                                    }
+                                ?>
+                                        Quantity*:
+                                        <input type='text' name='qty' id='qty' 
+                                               <?php 
+                                                if (isset($_GET['id'])) {
+                                                    echo "value='".$resrow['quantity']."'";
+                                                }
+                                               ?>
+                                               onkeypress="return isNumber(event)" />
+                                        <p id='nanError' style="display: none;">Please enter numbers only</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='submit' name='submit' value='Save Changes' />
+                                    </td>
+                                </tr>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
 </html>
+
+<script>
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+            document.getElementById('nanError').style.display='block';
+            document.getElementById('nanError').style.color='red';
+            return false;
+       }
+
+        document.getElementById('nanError').style.display='none';
+        return true;
+    }
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            document.getElementById('nanError').style.display='block';
+            document.getElementById('nanError').style.color='red';
+            return false;
+        }
+        document.getElementById('nanError').style.display='none';
+        return true;
+    }
+</script>
 

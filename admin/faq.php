@@ -152,198 +152,277 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
 } 
 ?>
 
-<html>  
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-        <h2>FAQs</h2>
-        <br>
-        <?php 
-            $getBanner = "Select * from faq where type='banner';";
-            $bresult = mysqli_query($link, $getBanner);
-            
-            if (!mysqli_query($link, $getBanner)) {
-                echo "Error description: ". mysqli_error($link);
-            } else {
-                if ($bresult -> num_rows == 0 ) {
-                    echo "You have not uploaded a banner image yet.<br><br>";
-                } else {
-                    $brow = mysqli_fetch_assoc($bresult);
-                    $browArr = explode(".", $brow['html']);
-                    $ext = $browArr[count($browArr)-1];
-                    
-                    $imgArr = array("jpg", "jpeg", "png", "gif");
-                    $vidArr = array("mp3", "mp4", "wma");
-                    
-                    if (in_array($ext, $imgArr)) {
-                        echo "<img src='".$brow['html']."' width=450>";
-                    } else {
-                        echo '<video width="500" height="400" controls>
-                        <source src="'.$brow['html'].'" type="video/mp4">
-                        Your browser does not support the video tag.
-                        </video>';
-                    }
-                }
-            }
-        ?>
-        <form id='addFaqBanner' action='faq.php' method='post' enctype="multipart/form-data">
-            <fieldset >
-            <div id="addFaqBannerError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addFaqBannerError'])) {
-                        echo $_SESSION['addFaqBannerError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addFaqBannerSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addFaqBannerSuccess'])) {
-                        echo $_SESSION['addFaqBannerSuccess'];
-                    }
-                ?>
-            </div>
-            <legend>Update FAQ Banner</legend>
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <label for='image' >Image:</label>
-            <input type="file" name="image" id='image' />
-            <br>
-            <input type='submit' name='submit' value='Submit' />
-            </fieldset>
-        </form>
-        <h3>FAQ Sections</h3>
-        <?php 
-            $qry = "Select * from faq where type <> 'banner' order by fieldorder asc";
-            
-            $result = mysqli_query($link, $qry);
+<!DOCTYPE html>
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
 
-            if (!mysqli_query($link,$qry))
-            {
-                echo("Error description: " . mysqli_error($link));
-            } else {
-                if ($result->num_rows === 0) {
-                    echo "You have not created any FAQs yet.";
-                } else {
-            ?>
-            <table>
-                <thead>
-                    <th>Order</th>
-                    <th>Title</th>
-                    <th>Edit</th>
-                    <th>Delete</th>                        
-                </thead>
-            <?php
-                // output data of each row
-            $rowCount = 0;
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $rowCount++;
-                    echo "<tr>";
-                    echo "<td>".$row['fieldorder'] ."</td>";   
-                    echo "<td>".$row['title'] ."</td>";                        
-                    echo '<td><button onClick="window.location.href=`faq.php?id='.$row['id'].'`">E</button>';
-                    echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
-                    echo "</tr>";
-                }
-            ?>
-            </table>
-            <?php
-                } 
-            }
-            ?>
-            <div id="updateFaqSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['updateFaqSuccess'])) {
-                        echo $_SESSION['updateFaqSuccess'];
-                    }
-                ?>
-            </div>
-            <div id="updateFaqError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['updateFaqError'])) {
-                        echo $_SESSION['updateFaqError'];
-                    }
-                ?>
-            </div>
-        <hr><br>
-        <form id='addFaqSection' action='faq.php?update=1' method='post'>
-            <fieldset >
+            <!-- Content -->
+            <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
+                            </li>
+                            <li>
+                                Web
+                            </li>
+                            <li class="active">
+                                FAQ
+                            </li>
+                        </ol>
+        
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#faqb">FAQ Banner</a></li>
+                            <li><a data-toggle="tab" href="#menu1">FAQ Sections</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="faqb" class="tab-pane fade in active">
+                                <h1 class="page-header">Update FAQ Banner</h1>
+                                <p>
+                                    <?php 
+                                        $getBanner = "Select * from faq where type='banner';";
+                                        $bresult = mysqli_query($link, $getBanner);
+
+                                        if (!mysqli_query($link, $getBanner)) {
+                                            echo "Error description: ". mysqli_error($link);
+                                        } else {
+                                            if ($bresult -> num_rows == 0 ) {
+                                                echo "You have not uploaded a banner image yet.<br><br>";
+                                            } else {
+                                                $brow = mysqli_fetch_assoc($bresult);
+                                                $browArr = explode(".", $brow['html']);
+                                                $ext = $browArr[count($browArr)-1];
+
+                                                $imgArr = array("jpg", "jpeg", "png", "gif");
+                                                $vidArr = array("mp3", "mp4", "wma");
+
+                                                if (in_array($ext, $imgArr)) {
+                                                    echo "<img src='".$brow['html']."' width=450>";
+                                                } else {
+                                                    echo '<video width="500" height="400" autoplay>
+                                                    <source src="'.$brow['html'].'" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                    </video>';
+                                                }
+                                            }
+                                        }
+                                    ?>
+                                    
+                                    <form id='addFaqBanner' action='faq.php' method='post' enctype="multipart/form-data">
+                            
+                                        <div id="addFaqBannerError" style="color:red">
+                                            <?php 
+                                                if (isset($_SESSION['addFaqBannerError'])) {
+                                                    echo $_SESSION['addFaqBannerError'];
+                                                }
+                                            ?>
+                                        </div>
+
+                                        <div id="addFaqBannerSuccess" style="color:green">
+                                            <?php 
+                                                if (isset($_SESSION['addFaqBannerSuccess'])) {
+                                                    echo $_SESSION['addFaqBannerSuccess'];
+                                                }
+                                            ?>
+                                        </div>
+
+                                        <input type='hidden' name='submitted' id='submitted' value='1'/>
+
+                                        Image:
+                                        <input type="file" name="image" id='image' />
+                                        <br/>
+                                        <input type='submit' name='submit' value='Submit' />
+                                    </form>
+                                </p>
+                            </div>
+                            <div id="menu1" class="tab-pane fade">
+                                <h1 class="page-header">Manage FAQ Sections</h1>
+                                
+                                <div id="updateFaqSuccess" style="color:green">
+                                    <?php 
+                                        if (isset($_SESSION['updateFaqSuccess'])) {
+                                            echo $_SESSION['updateFaqSuccess'];
+                                        }
+                                    ?>
+                                </div>
+                                <div id="updateFaqError" style="color:red">
+                                    <?php 
+                                        if (isset($_SESSION['updateFaqError'])) {
+                                            echo $_SESSION['updateFaqError'];
+                                        }
+                                    ?>
+                                </div>
+                                
+                                <p>
+                                    <?php 
+                                        $qry = "Select * from faq where type <> 'banner' order by fieldorder asc";
+
+                                        $result = mysqli_query($link, $qry);
+
+                                        if (!mysqli_query($link,$qry))
+                                        {
+                                            echo("Error description: " . mysqli_error($link));
+                                        } else {
+                                            if ($result->num_rows === 0) {
+                                                echo "You have not created any FAQs yet.";
+                                            } else {
+                                    ?>
+                                    
+                                    <p class="text-right">
+                                        <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Section</a>
+                                    </p>
+                                    
+                                    <table>
+                                        <thead>
+                                            <th>Order</th>
+                                            <th>Title</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>                        
+                                        </thead>
+                                        <?php
+                                            // output data of each row
+                                            $rowCount = 0;
+                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                $rowCount++;
+                                                echo "<tr>";
+                                                echo "<td>".$row['fieldorder'] ."</td>";   
+                                                echo "<td>".$row['title'] ."</td>";                        
+                                                echo '<td><button onClick="window.location.href=`faq.php?id='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
+                                                echo "</tr>";
+                                            }
+                                        ?>
+                                    </table>
+                                    <?php
+                                        } 
+                                    }
+                                    ?>
+
+                                    <form id='addFaqSection' action='faq.php?update=1' method='post'>
+                                        <div id="addFaqError" style="color:red">
+                                            <?php 
+                                                if (isset($_SESSION['addFaqError'])) {
+                                                    echo $_SESSION['addFaqError'];
+                                                }
+                                            ?>
+                                        </div>
+                                        <p id='nanError' style="display: none;">Please enter numbers only</p>
+
+                                        <div id="addFaqSuccess" style="color:green">
+                                            <?php 
+                                                if (isset($_SESSION['addFaqSuccess'])) {
+                                                    echo $_SESSION['addFaqSuccess'];
+                                                }
+                                            ?>
+                                        </div>
+
+                                        <h1 id="add" class="page-header">Add/Edit FAQ Section</h1>
+
+                                        <input type="hidden" name="editid" id="editid" 
+                                               value="<?php if(isset($_GET['id'])) { echo $_GET['id']; } ?>"
+                                        <input type='hidden' name='submitted' id='submitted' value='1'/>
+
+                                        <table class="content">
+                                            <tr>
+                                                <td>
+                                                    Title*:
+                                                    <input type='text' name='title' id='title' 
+                                                           value="<?php if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
+                                                </td>
+                                                <td>
+                                                    Order*:
+                                                    <input type='text' name='order' id='order'  
+                                                       onkeypress="return isNumber(event)" 
+                                                           value="<?php 
+                                                                if(!empty($editrow['fieldorder'])){
+                                                                    if (isset($editrow['fieldorder'])) { 
+                                                                        echo $editrow['fieldorder']; 
+                                                                    } else { 
+                                                                        echo $rowCount+1; 
+
+                                                                    } 
+                                                                }?>"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    Content*: 
+                                                    <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
+                                                    <script type="text/javascript">
+                                                        CKEDITOR.replace('html');
+                                                    </script>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <input type='submit' name='submit' value='Submit' />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
                 
-            <div id="addFaqError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addFaqError'])) {
-                        echo $_SESSION['addFaqError'];
-                    }
-                ?>
             </div>
-            <p id='nanError' style="display: none;">Please enter numbers only</p>
-            
-            <div id="addFaqSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addFaqSuccess'])) {
-                        echo $_SESSION['addFaqSuccess'];
-                    }
-                ?>
-            </div>
-            <legend>Add/Edit FAQ Section</legend>
-            <input type="hidden" name="editid" id="editid" 
-                   value="<?php if(isset($_GET['id'])) { echo $_GET['id']; } ?>"
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <label for='title' >Title*:</label>
-            <input type='text' name='title' id='title' 
-                   value="<?php if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
-            <br>
-            <label for='order' >Order*:</label>
-            <input type='text' name='order' id='order'  
-               onkeypress="return isNumber(event)" 
-                   value="<?php if (isset($editrow['fieldorder'])) { echo $editrow['fieldorder']; } else { echo $rowCount+1; } ?>"/>
-            <br>
-            Content*: 
-            <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
-            <script type="text/javascript">
-                CKEDITOR.replace('html');
-            </script>
-            <br>
-            <input type='submit' name='submit' value='Submit' />
-            </fieldset>
-        </form>
+            <!-- /.container-fluid -->
+
         </div>
+        <!-- /#page-wrapper -->
     </div>
-    <script>
-        function isNumber(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                document.getElementById('nanError').style.display='block';
-                document.getElementById('nanError').style.color='red';
-                return false;
-            }
-            document.getElementById('nanError').style.display='none';
-            return true;
-        }
-        function deleteFunction(locId) {
-            var r = confirm("Are you sure you wish to delete this FAQ section?");
-            if (r === true) {
-                window.location="faq.php?delete=1&id=" + locId;
-            } else if (r === false) {
-                <?php
-                    unset($_SESSION['addFaqError']);
-                    unset($_SESSION['addFaqSuccess']);
-                    unset($_SESSION['updateFaqSuccess']);
-                    unset($_SESSION['addFaqBannerSuccess']);
-                    unset($_SESSION['addFaqBannerError']);
-                    $_SESSION['updateFaqError'] = "Nothing was deleted";
-                ?>
-                window.location='faq.php';
-            }
-        }
-    </script>
 </html>
+
+<script>
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            document.getElementById('nanError').style.display='block';
+            document.getElementById('nanError').style.color='red';
+            return false;
+        }
+        document.getElementById('nanError').style.display='none';
+        return true;
+    }
+    function deleteFunction(locId) {
+        var r = confirm("Are you sure you wish to delete this FAQ section?");
+        if (r === true) {
+            window.location="faq.php?delete=1&id=" + locId;
+        } else if (r === false) {
+            <?php
+                unset($_SESSION['addFaqError']);
+                unset($_SESSION['addFaqSuccess']);
+                unset($_SESSION['updateFaqSuccess']);
+                unset($_SESSION['addFaqBannerSuccess']);
+                unset($_SESSION['addFaqBannerError']);
+                $_SESSION['updateFaqError'] = "Nothing was deleted";
+            ?>
+            window.location='faq.php';
+        }
+    }
+    
+    $(document).ready(function() {
+        if(location.hash) {
+            $('a[href=' + location.hash + ']').tab('show');
+        }
+        $(document.body).on("click", "a[data-toggle]", function(event) {
+            location.hash = this.getAttribute("href");
+        });
+    });
+    $(window).on('popstate', function() {
+        var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
+        $('a[href=' + anchor + ']').tab('show');
+    });
+</script>

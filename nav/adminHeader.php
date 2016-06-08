@@ -8,23 +8,43 @@
 require_once '../config/db.php';
 ?>
 
-<html>
-    <head>
-        <title>Visual Mass Admin Panel</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="../calendar/codebase/dhtmlxcalendar.css"/>
-        <script type="text/javascript" src="../calendar/codebase/dhtmlxcalendar.js"/>   
-        <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
-        <link href="../styles.css" rel="stylesheet" type="text/css" />     
-    </head>
-    <body>
-        <div class="logo_sidebar"></div>
-        <div class ="rightheader">
-            <ul>
-                <li><a href='profile.php'><?php echo $_SESSION['loggedUser'] ?></a></li>
-                <li><a href='../logout.php'>Logout</a></li>
-            </ul>
-        </div>
-    </body>
-</html>
+<head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../calendar/codebase/dhtmlxcalendar.css"/>
+    <script type="text/javascript" src="../calendar/codebase/dhtmlxcalendar.js"/>   
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- jQuery -->
+    <script src="../bootstrap/js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <!-- Bootstrap Core CSS -->
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../bootstrap/css/sb-admin.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="../bootstrap/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- CK Editor -->
+    <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+    
+    <link href="../styles.css" rel="stylesheet" type="text/css" />
+    
+    <meta name="description" content="Singapore Eyewear">
+    <meta name="author" content="Visual Mass">
+
+    <title>Visual Mass Admin Panel</title>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+</head>

@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/Applications/MAMP/htdocs/visualmassgit/login.php</file>
             <file>file:/Applications/MAMP/htdocs/visualmassgit/nav/header.php</file>
             <file>file:/Applications/MAMP/htdocs/visualmassgit/faq.php</file>
@@ -19,6 +20,14 @@
             <file>file:/Applications/MAMP/htdocs/visualmassgit/terms.php</file>
             <file>file:/Applications/MAMP/htdocs/visualmassgit/blog.php</file>
             <file>file:/Applications/MAMP/htdocs/visualmassgit/admin/processDiscounts.php</file>
+=======
+            <file>file:/C:/wamp/www/visualmassgit/nav/adminSidebar.php</file>
+            <file>file:/C:/wamp/www/visualmassgit/admin/accountSettings.php</file>
+            <file>file:/C:/wamp/www/visualmassgit/admin/profile.php</file>
+            <file>file:/C:/wamp/www/visualmassgit/admin/media.php</file>
+            <file>file:/C:/wamp/www/visualmassgit/nav/adminHeader.php</file>
+            <file>file:/C:/wamp/www/visualmassgit/styles.css</file>
+>>>>>>> jacinta
         </group>
     </open-files>
 </project-private>

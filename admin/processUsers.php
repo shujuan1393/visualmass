@@ -15,7 +15,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addEmpError']);
         unset($_SESSION['updateError']);
         $_SESSION['updateSuccess'] = "Record deleted successfully";
-        header("Location: users.php");
+        echo "<script>window.history.back()</script>";
     } 
 } else {
     if(empty($_POST['email']) || empty($_POST['firstName']) 
@@ -25,13 +25,13 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateSuccess']);
         
         $_SESSION['addEmpError'] = "Empty field(s)";
-        header('Location: users.php');
+        echo "<script>window.history.back()</script>";
     } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         unset($_SESSION['addEmpSuccess']);
         unset($_SESSION['updateError']);
         unset($_SESSION['updateSuccess']);
         $_SESSION['addEmpError'] = "Invalid email";
-        header('Location: users.php');
+        echo "<script>window.history.back()</script>";
     } else {        
         $empfirst = $_POST['firstName'];
         $emplast = $_POST['lastName'];
@@ -49,7 +49,7 @@ if (isset($_GET['delete'])) {
                 unset($_SESSION['addEmpSuccess']);
                 unset($_SESSION['updateError']);
                 $_SESSION['updateSuccess'] = "Record updated successfully";
-                header("Location: users.php");
+                echo "<script>window.history.back()</script>";
             } else {
                 echo "Error updating record: " . mysqli_error($link);
             }
@@ -68,7 +68,7 @@ if (isset($_GET['delete'])) {
                     unset($_SESSION['updateSuccess']);
                     unset($_SESSION['updateError']);
                     $_SESSION['addEmpError'] = "Account already exists";
-                    header('Location: users.php');
+                    echo "<script>window.history.back()</script>";
                 } else {               
                     //code to send email to new user
 
@@ -108,7 +108,7 @@ if (isset($_GET['delete'])) {
                         unset($_SESSION['updateSuccess']);
                         unset($_SESSION['updateError']);
                         $_SESSION['addEmpError'] = 'Invalid email address';
-                        header("Location: users.php");
+                        echo "<script>window.history.back()</script>";
                     } else {
                         unset($_SESSION['addEmpError']);
                         unset($_SESSION['updateSuccess']);
@@ -120,7 +120,7 @@ if (isset($_GET['delete'])) {
 
                         mysqli_query($link, $sql);
                         $_SESSION['addEmpSuccess'] = "Account successfully added";
-                        header('Location: users.php');
+                        echo "<script>window.history.back()</script>";
                     }
 
                 } 

@@ -19,7 +19,7 @@ if (isset($_GET['edit'])) {
         unset($_SESSION['addEmpTypeSuccess']);
         unset($_SESSION['updateEmpTypeError']);
         $_SESSION['updateEmpTypeSuccess'] = "Record updated successfully";
-        header("Location: accountSettings.php");
+        echo "<script>window.history.back()</script>";
     } else {
         echo "Error updating record: " . mysqli_error($link);
     }
@@ -31,14 +31,14 @@ if (isset($_GET['edit'])) {
         unset($_SESSION['addEmpTypeError']);
         unset($_SESSION['updateEmpTypeError']);
         $_SESSION['updateEmpTypeSuccess'] = "Record deleted successfully";
-        header("Location: accountSettings.php");
+        echo "<script>window.history.back()</script>";
     } 
 } else if (isset($_GET['add'])) {
     if(empty($_POST['code']) || empty($_POST['name']) ) {
         unset($_SESSION['addEmpTypeSuccess']);
         unset($_SESSION['updateEmpTypeError']);
         $_SESSION['addEmpTypeError'] = "Empty field(s)";
-        header('Location: accountSettings.php');
+        echo "<script>window.history.back()</script>";
     } else {        
         $code = $_POST['code'];
         $name = $_POST['name'];
@@ -57,7 +57,7 @@ if (isset($_GET['edit'])) {
                     unset($_SESSION['addEmpTypeSuccess']);
                     unset($_SESSION['updateEmpTypeError']);
                     $_SESSION['addEmpTypeError'] = "Code already exists";
-                    header('Location: accountSettings.php');
+                    echo "<script>window.history.back()</script>";
                 } else {               
 
                     unset($_SESSION['addEmpTypeError']);
@@ -68,9 +68,7 @@ if (isset($_GET['edit'])) {
 
                     mysqli_query($link, $sql);
                     $_SESSION['addEmpTypeSuccess'] = "Employee type successfully added";
-                    header('Location: accountSettings.php');
-
-
+                    echo "<script>window.history.back()</script>";
                 } 
             }
         } else {
@@ -82,7 +80,7 @@ if (isset($_GET['edit'])) {
                 unset($_SESSION['addEmpTypeSuccess']);
                 unset($_SESSION['updateEmpTypeError']);
                 $_SESSION['updateEmpTypeSuccess'] = "Record updated successfully";
-                header("Location: accountSettings.php");
+                echo "<script>window.history.back()</script>";
             } else {
                 echo "Error updating record: " . mysqli_error($link);
             }
@@ -129,7 +127,7 @@ if (isset($_GET['edit'])) {
                 }
                 if (mysqli_query($link, $sql)) {
                     $_SESSION['updateAccSetSuccess'] = "Changes saved successfully";
-                    header("Location: accountSettings.php");
+                    echo "<script>window.history.back()</script>";
                 } else {
                     echo "Error updating record: " . mysqli_error($link);
                 }

@@ -95,6 +95,7 @@ unset($_SESSION['setContactDetailsSuccess']);
 unset($_SESSION['addProdBannerSuccess']);
 unset($_SESSION['addProdBannerError']);
 ?>
+
 <script>
     var date = new Date();
     var hrs = date.getHours();
@@ -110,24 +111,38 @@ unset($_SESSION['addProdBannerError']);
         welcome = "Good night, ";
     }
 </script>
-<html>
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-            <h2><?php 
-                    echo $welcome = "<script>document.write(welcome)</script>" .$_SESSION['loggedUser'];
-                ?></h2>
-        </div>
-    </div>
-    
-</html>
 
+<!DOCTYPE html>
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
+            
+            <!-- Content -->
+            <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li class="active">
+                                <i class="fa fa-home"></i>  Home
+                            </li>
+                        </ol>
+                        <h1 class="page-header">
+                            <?php echo $welcome = "<script>document.write(welcome)</script>" .$_SESSION['loggedUser']; ?>
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+    </body>
+</html>

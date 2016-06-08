@@ -17,7 +17,7 @@ if (isset($_GET['delete'])) {
         $_SESSION['updateProdSuccess'] = "Record deleted successfully";
         header("Location: products.php");
     } 
-} else if (isset($_POST['submit'])) {
+} else if (isset($_POST['submitted'])) {
     $exist = $_POST['addExisting'];
     if (strcmp($exist, "yes") === 0 && (empty($_POST['code']))) {
         unset($_SESSION['addProdSuccess']);
@@ -253,9 +253,6 @@ if (isset($_GET['delete'])) {
 
                     mysqli_query($link, $editinvSql);
                 }
-//                echo $editinvSql."<br>";
-//                echo $editproductSql;
-//                exit();
                 $_SESSION['updateProdSuccess'] = "Product updated successfully";
                     header('Location: products.php');
             } else {

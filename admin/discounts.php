@@ -19,241 +19,259 @@ if (isset($_GET['id'])) {
     }
 }
 ?>
+
 <!DOCTYPE html>
-<html>
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-        <h2>Manage Discounts</h2>
-        
-        <?php 
-            $qry = "Select * from discounts";
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
             
-            $result = mysqli_query($link, $qry);
+            <!-- Content -->
+            <div id="page-wrapper">
 
-            if (!mysqli_query($link,$qry))
-            {
-                echo("Error description: " . mysqli_error($link));
-            } else {
-                if ($result->num_rows === 0) {
-                    echo "You have not created any discounts yet.";
-                } else {
-            ?>
-        <div style='float: right;'><a href='#addDiscount'>+ Add Discount</a></div>
-            <table>
-                <thead>
-                    <th>Discount Name</th>
-                    <th>Use Limit</th>
-                    <th>Recurrence</th>
-                    <th>Usage (C/E)</th>
-                    <th>Validity</th>
-                    <th>Status</th>
-                    <th>Edit</th>
-                    <th>Delete</th>                        
-                </thead>
-            <?php
-                // output data of each row
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>".$row['name']."(".$row['code'].")</td>";                            
-                    echo "<td>".$row['disclimit']."</td>";                           
-                    echo "<td>".$row['recurrence']."</td>";                           
-                    echo "<td>".$row['discusage']."</td>";                              
-                    echo "<td>".date("d M Y", strtotime($row['start']))." to ".date("d M Y", strtotime($row['end']))."</td>";                           
-                    echo "<td>".$row['status']."</td>";                        
-                    echo '<td><button onClick="window.location.href=`discounts.php?id='.$row['id'].'`">E</button>';
-                    echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
-                    echo "</tr>";
-                }
-            ?>
-            </table>
-            <?php
-                } 
-            }
-            ?>
-            <div id="updateDiscSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['updateDiscSuccess'])) {
-                        echo $_SESSION['updateDiscSuccess'];
-                    }
-                ?>
-            </div>
-            <div id="updateDiscError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['updateDiscError'])) {
-                        echo $_SESSION['updateDiscError'];
-                    }
-                ?>
-            </div>
-        
-        <div class="content_container-2">
-        <table class='content'>
-            <tr>
-                <td colspan='2'><div class="form_header">Add/Edit Discount</div></td>
-            </tr>
-            <tr>
-                <td colspan='2'>
-                <form id='addDiscount' action='processDiscounts.php' method='post'>
-                    <div id="addDiscError" style="color:red">
-                        <?php 
-                            if (isset($_SESSION['addDiscError'])) {
-                                echo $_SESSION['addDiscError'];
-                            }
-                        ?>
-                    </div>
-                    <p id='nanError' style="display: none;">Please enter numbers only</p>
+            <div class="container-fluid">
 
-                    <div id="addDiscSuccess" style="color:green">
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
+                            </li>
+                            <li class="active">
+                                Discounts
+                            </li>
+                        </ol>
+                        
+                        <h1 class="page-header">Manage Discounts</h1>
+                        
+                        <div id="updateDiscSuccess" style="color:green">
+                            <?php 
+                                if (isset($_SESSION['updateDiscSuccess'])) {
+                                    echo $_SESSION['updateDiscSuccess'];
+                                }
+                            ?>
+                        </div>
+                        <div id="updateDiscError" style="color:red">
+                            <?php 
+                                if (isset($_SESSION['updateDiscError'])) {
+                                    echo $_SESSION['updateDiscError'];
+                                }
+                            ?>
+                        </div>
+
                         <?php 
-                            if (isset($_SESSION['addDiscSuccess'])) {
-                                echo $_SESSION['addDiscSuccess'];
-                            }
+                            $qry = "Select * from discounts";
+
+                            $result = mysqli_query($link, $qry);
+
+                            if (!mysqli_query($link,$qry))
+                            {
+                                echo("Error description: " . mysqli_error($link));
+                            } else {
+                                if ($result->num_rows === 0) {
+                                    echo "You have not created any discounts yet.";
+                                } else {
                         ?>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan='2'>
-                    <input type='hidden' name='submitted' id='submitted' value='1'/>
-                    <input type='hidden' name='editid' id='editid' 
-                           value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
-                    <label for='name' >Name:</label>
-                    <input type='text' name='name' id='name'  maxlength="50" 
-                           value ="<?php 
-                    if (!empty($erow['name'])) {
-                        echo $erow['name'];
-                    }
-                        ?>"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan='2'>
-                    <label for='code' >Discount Code*:</label>
-                    <input type='text' name='code' id='code' value ="<?php 
-                    if(isset($_SESSION['randomString'])) { 
-                        echo $_SESSION['randomString']; } 
-                    if (!empty($erow['code'])) {
-                        echo $erow['code'];
-                    }
-                        ?>" maxlength="50" />
-                    <button type='button' onclick="randomString()">Generate</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for='limit' >Limit*:</label>
-                    <input type='text' name='limit' id='limit'  maxlength="50"  
-                           onkeypress="return isNumber(event)" value ="<?php 
-                            if (!empty($erow['disclimit'])) {
-                                echo $erow['disclimit'];
-                            }
-                        ?>"/>
-                </td>
-                <td>
-                    <?php
-                        if (!empty($erow['discusage'])) { 
-                            $usageArr = explode(",", $erow['discusage']);
+
+                        <p class="text-right">
+                            <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Discount</a>
+                        </p>
+
+                        <table>
+                            <thead>
+                                <th>Discount Name</th>
+                                <th>Use Limit</th>
+                                <th>Recurrence</th>
+                                <th>Usage (C/E)</th>
+                                <th>Validity</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                                <th>Delete</th>                        
+                            </thead>
+                            <?php
+                                // output data of each row
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<tr>";
+                                    echo "<td>".$row['name']."(".$row['code'].")</td>";                            
+                                    echo "<td>".$row['disclimit']."</td>";                           
+                                    echo "<td>".$row['recurrence']."</td>";                           
+                                    echo "<td>".$row['discusage']."</td>";                              
+                                    echo "<td>".date("d M Y", strtotime($row['start']))." to ".date("d M Y", strtotime($row['end']))."</td>";                           
+                                    echo "<td>".$row['status']."</td>";                        
+                                    echo '<td><button onClick="window.location.href=`discounts.php?id='.$row['id'].'`">E</button>';
+                                    echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
+                                    echo "</tr>";
+                                }
+                            ?>
+                        </table>
+
+                        <?php
+                            } 
                         }
-                    ?>
-                    <label for='usage' >Usage*:</label>
-                    <input type='checkbox' name='usage[]' value="cust" <?php 
-                            if (!empty($erow['discusage'])) {
-                                if (in_array("cust", $usageArr)) {
-                                    echo " checked";
-                                }
-                            }
-                        ?>>Customer 
-                    <input type='checkbox' name='usage[]' value='emp' <?php 
-                            if (!empty($erow['discusage'])) {
-                                if (in_array("emp", $usageArr)) {
-                                    echo " checked";
-                                }
-                            }
-                        ?>>Employee
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for='recurrence' >Recurrence*:</label>
-                    <select name='recurrence'>
-                        <option value='adhoc' <?php 
-                            if (!empty($erow['recurrence'])) {
-                                if (strcmp($erow['recurrence'], "adhoc") === 0) {
-                                    echo " selected";
-                                }
-                            }
-                        ?>>Ad-hoc</option>
-                        <option value='weekly' <?php 
-                            if (!empty($erow['recurrence'])) {
-                                if (strcmp($erow['recurrence'], "weekly") === 0) {
-                                    echo " selected";
-                                }
-                            }
-                        ?>>Weekly</option>
-                        <option value='monthly' <?php 
-                            if (!empty($erow['recurrence'])) {
-                                if (strcmp($erow['recurrence'], "monthly") === 0) {
-                                    echo " selected";
-                                }
-                            }
-                        ?>>Monthly</option>
-                        <option value='yearly' <?php 
-                            if (!empty($erow['recurrence'])) {
-                                if (strcmp($erow['recurrence'], "yearly") === 0) {
-                                    echo " selected";
-                                }
-                            }
-                        ?>>Yearly</option>
-                    </select>
-                </td>
-                <td>
-                    <label for='status' >Status*:</label>
-                    <select name='status'>
-                        <option value='active' <?php 
-                            if (!empty($erow['status'])) {
-                                if (strcmp($erow['status'], "active") === 0) {
-                                    echo " selected";
-                                }
-                            }
-                        ?>>Active</option>
-                        <option value='inactive' <?php 
-                            if (!empty($erow['status'])) {
-                                if (strcmp($erow['status'], "inactive") === 0) {
-                                    echo " selected";
-                                }
-                            }
-                        ?>>Inactive</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Start date:
-                    <input type="text" id="date3" name="date3">
-                </td>
-                <td>
-                    End date:
-                    <input type="text" id="date4" name="date4">
-                </td>
-            </tr>
-            <tr>
-                <td colspan='2'><input type='submit' name='submit' value='Submit' /></td>
-            </tr>
-        </table>
+                        ?>
+                        
+                        <h1 id="add" class="page-header">Add/Edit Discount</h1>
+                        
+                        <form id='addDiscount' action='processDiscounts.php' method='post'>
+                            <div id="addDiscError" style="color:red">
+                                <?php 
+                                    if (isset($_SESSION['addDiscError'])) {
+                                        echo $_SESSION['addDiscError'];
+                                    }
+                                ?>
+                            </div>
+                            <p id='nanError' style="display: none;">Please enter numbers only</p>
+
+                            <div id="addDiscSuccess" style="color:green">
+                                <?php 
+                                    if (isset($_SESSION['addDiscSuccess'])) {
+                                        echo $_SESSION['addDiscSuccess'];
+                                    }
+                                ?>
+                            </div>
+                            
+                        <table class='content'>
+                            <tr>
+                                <td>
+                                    <input type='hidden' name='submitted' id='submitted' value='1'/>
+                                    <input type='hidden' name='editid' id='editid' 
+                                           value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
+                                    Name:
+                                    <input type='text' name='name' id='name'  maxlength="50" 
+                                           value ="<?php 
+                                    if (!empty($erow['name'])) {
+                                        echo $erow['name'];
+                                    }
+                                        ?>"/>
+                                </td>
+                                <td>
+                                    Discount Code*:
+                                    <input type='text' name='code' id='code' value ="<?php 
+                                    if(isset($_SESSION['randomString'])) { 
+                                        echo $_SESSION['randomString']; } 
+                                    if (!empty($erow['code'])) {
+                                        echo $erow['code'];
+                                    }
+                                        ?>" maxlength="50" />
+                                    <button type='button' onclick="randomString()">Generate</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Limit*:
+                                    <input type='text' name='limit' id='limit'  maxlength="50"  
+                                           onkeypress="return isNumber(event)" value ="<?php 
+                                            if (!empty($erow['disclimit'])) {
+                                                echo $erow['disclimit'];
+                                            }
+                                        ?>"/>
+                                </td>
+                                <td>
+                                    <?php
+                                        if (!empty($erow['discusage'])) { 
+                                            $usageArr = explode(",", $erow['discusage']);
+                                        }
+                                    ?>
+                                    Usage*: <br/>
+                                    <input type='checkbox' name='usage[]' value="cust" <?php 
+                                            if (!empty($erow['discusage'])) {
+                                                if (in_array("cust", $usageArr)) {
+                                                    echo " checked";
+                                                }
+                                            }
+                                        ?>>Customer 
+                                    <input type='checkbox' name='usage[]' value='emp' <?php 
+                                            if (!empty($erow['discusage'])) {
+                                                if (in_array("emp", $usageArr)) {
+                                                    echo " checked";
+                                                }
+                                            }
+                                        ?>>Employee
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Recurrence*:
+                                    <select name='recurrence'>
+                                        <option value='adhoc' <?php 
+                                            if (!empty($erow['recurrence'])) {
+                                                if (strcmp($erow['recurrence'], "adhoc") === 0) {
+                                                    echo " selected";
+                                                }
+                                            }
+                                        ?>>Ad-hoc</option>
+                                        <option value='weekly' <?php 
+                                            if (!empty($erow['recurrence'])) {
+                                                if (strcmp($erow['recurrence'], "weekly") === 0) {
+                                                    echo " selected";
+                                                }
+                                            }
+                                        ?>>Weekly</option>
+                                        <option value='monthly' <?php 
+                                            if (!empty($erow['recurrence'])) {
+                                                if (strcmp($erow['recurrence'], "monthly") === 0) {
+                                                    echo " selected";
+                                                }
+                                            }
+                                        ?>>Monthly</option>
+                                        <option value='yearly' <?php 
+                                            if (!empty($erow['recurrence'])) {
+                                                if (strcmp($erow['recurrence'], "yearly") === 0) {
+                                                    echo " selected";
+                                                }
+                                            }
+                                        ?>>Yearly</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    Status*:
+                                    <select name='status'>
+                                        <option value='active' <?php 
+                                            if (!empty($erow['status'])) {
+                                                if (strcmp($erow['status'], "active") === 0) {
+                                                    echo " selected";
+                                                }
+                                            }
+                                        ?>>Active</option>
+                                        <option value='inactive' <?php 
+                                            if (!empty($erow['status'])) {
+                                                if (strcmp($erow['status'], "inactive") === 0) {
+                                                    echo " selected";
+                                                }
+                                            }
+                                        ?>>Inactive</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Start date:
+                                    <input type="text" id="date3" name="date3">
+                                </td>
+                                <td>
+                                    End date:
+                                    <input type="text" id="date4" name="date4">
+                                </td>
+                            </tr>
+                                <td colspan='2'><input type='submit' name='submit' value='Submit' /></td>
+                            </tr>
+                            </form>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
         </div>
-        </form>
-        </div>
+        <!-- /#page-wrapper -->
     </div>
-    <script>
+</html>
+
+ <script>
         var myCalendar = new dhtmlXCalendarObject(["date3"]);
                 myCalendar.hideTime();
         var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
@@ -296,6 +314,3 @@ if (isset($_GET['id'])) {
             }
         }
     </script>
-    
-</html>
-
