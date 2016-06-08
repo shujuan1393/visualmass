@@ -125,7 +125,7 @@
                             ?>
                         </div>
                         <div id='loc-search' class='col-md-1 col-md-offset-11'>
-                            SEARCH
+                            <a href='searchLocations.php' data-toggle="modal" data-target="#searchModal">SEARCH LOCATIONS</a>
                         </div>
                         <div class='col-md-12'><hr></div>
                     </div>
@@ -167,7 +167,7 @@
                         </div>
                     </div>
                     
-                <div id='retail_locs' class='col-md-9'>
+                <div id='retail_locs' class='locrow'>
                     <h3 id='retail'>RETAIL</h3>
                     <div id='retail_filter' style='display: none;'>
                         <h4>There are no retail stores for this filter.</h4>
@@ -273,7 +273,8 @@
                 </div>
                 
                 </div>
-                <div id='popup_locs' class='row'>
+                
+                <div id='popup_locs' class='locrow row'>
                     <h3 id='popup'>POP-UP</h3>
                     <div id='popup_filter' style='display: none;'>
                         <h4>There are no popup stores for this filter.</h4>
@@ -373,15 +374,37 @@
                                 $count++;
                             }
                         }
+                        $advSql = "Select * from advertisements where status='active' and visibility like '%locations%';";
+                        $advres = mysqli_query($link, $advSql);
                     ?>
                     </div>
                 </div>
                 
             </div>
             
+            <div class="modal fade modal-fullscreen force-fullscreen" id="searchModal" tabindex="-1" 
+             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+          
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
             
             <script>
+                $('#searchModal').appendTo("body");
+                
                 function makeActive(num) {
                     for(var i = 0; i < <?php echo $locCount; ?>; i++) {
                         var link = "link" + i;
@@ -506,6 +529,77 @@
                     filterServices(s);
                 }
                 
+                var sections = document.getElementsByClassName("locrow");
+                
+                for (var i = 0; i < sections.length; i++) {
+                   var sectionObj = sections[i];
+                   var secheight = sectionObj.offsetTop;
+//                   alert(secheight);
+                <?php 
+                    if (!mysqli_query($link, $advSql)) {
+                        die(mysqli_error($link));
+                    } else {
+                        while ($advrow = mysqli_fetch_assoc($advres)) {
+                            $minheight = $advrow['minheight'];
+                ?>
+                        if (secheight > <?php echo $minheight; ?>) {
+                <?php
+                    $advimg = $advrow['image'];
+                    $advimagepos = strpos($advimg, '/');
+                    $advimageurl = substr($advimg, $advimagepos+1);
+                    $toPrint = "";
+                    
+                    $toPrint .= "<div class='home-section' ";
+                    if (strcmp($advrow['imagepos'], "background") === 0) {
+                        $image = '"'.$advimageurl.'"';
+                        $toPrint .= "style='background-image: url($advimg); background-repeat: no-repeat; background-size: 500px auto;'>";
+//                                    echo "<script>document.getElementById('section".$count."').style.backgroundImage = 'url('$imageurl')';"
+//                                    . "document.getElementById('section".$count."').style.backgroundRepeat='no-repeat';</script>";
+                    } else {
+                        $toPrint .= ">";
+                        $toPrint .= "<div class='section-image' style='text-align:".$row['imagepos']."; float:".$row['imagepos']."'>";
+                        $toPrint .= "<img src='".$advimageurl."'>";
+                        $toPrint .= "</div>";
+                    }
+
+                    if (!empty($advrow['html'])) {
+                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
+                        $toPrint .= html_entity_decode($advrow['html'])."</div>";
+                    }
+
+                    if (!empty($advrow['buttontext'])) {
+                        $textArr = explode(",", $advrow['buttontext']);
+                        $linkArr = explode(",", $advrow['link']);
+                        $linkposArr = explode(",", $advrow['linkpos']);
+                        $prevpos = $linkposArr[0];
+
+//                                    echo "<div class='section-link'>";
+                        $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
+                        for ($i = 0; $i < count($textArr); $i++) {
+                            if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                                $toPrint .= "</div>";
+                            }
+                            if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                                $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
+                            }
+                            $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
+                            $prevpos = $linkposArr[$i];
+                        }
+                        
+                    }
+                    $toPrint .= "</div>";
+                    $toPrint .= "</div>";
+                ?>    
+                    var newElm = document.createElement('div');
+                    newElm.className = "home-section";
+                    newElm.innerHTML = "<?php echo $toPrint; ?>";  
+                    sectionObj.parentNode.insertBefore(newElm, sectionObj);//firstChild.nextSibling
+                    }
+                <?php
+                        }
+                    }
+                ?>
+                }
             </script>
         </div>
     </body>

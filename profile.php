@@ -8,54 +8,6 @@
         echo "Error: ".mysqli_error($link);
     } else {
         $row = mysqli_fetch_assoc($ures);
-    }
-    
-    if (isset($_POST['submit'])) {
-        unset($_SESSION['updateProfile']);
-        $first = isset($_POST['firstname']) ? $_POST['firstname'] : '';
-        $last = isset($_POST['lastname']) ? $_POST['lastname'] : '';
-        $email = isset($_POST['email']) ? $_POST['email'] : '';
-        $password = isset($_POST['password']) ? $_POST['password'] : '';
-        
-        if (strcmp($password, "")===0) {
-            $pwd = $row['password'];
-        } else {
-            $pwd = md5($password);
-        }
-        $add = isset($_POST['address']) ? $_POST['address'] : '';
-        $marketing = isset($_POST['marketing']) ? $_POST['marketing'] : '';
-        
-        if (empty($marketing)) {
-            $marketing = "no";
-        }
-        $updateFav = "UPDATE favourites set email='$email' where email='".$_SESSION['loggedUserEmail']."';";
-        
-        mysqli_query($link, $updateFav);
-        
-        $update = "UPDATE user set firstname='$first', lastname='$last', email='$email', "
-                . "password='$pwd', address='$add', marketing='$marketing' where email='".$_SESSION['loggedUserEmail']."';";
-        
-        mysqli_query($link, $update);
-        
-            $getMailing = "Select * from mailinglist where email='".$_SESSION['loggedUserEmail']."';";
-            $mailingRes = mysqli_query($link, $getMailing);        
-
-            if (!mysqli_query($link, $getMailing)) {
-                die(mysqli_error($link));
-            } else {
-                if (strcmp($marketing, "yes") === 0) {
-                    if ($mailingRes -> num_rows === 0) {
-                        $mailing = "INSERT INTO mailinglist (email, preference) VALUES ('$email', 'all');";
-                    } else {
-                        $mailing = "UPDATE mailinglist set email='$email' where email='".$_SESSION['loggedUserEmail'].";";
-                    }
-                } else {
-                    $mailing = "DELETE FROM mailinglist where email='".$_SESSION['loggedUserEmail']."'";
-                }
-            }
-            mysqli_query($link, $mailing);
-        $_SESSION['loggedUserEmail'] = $email;
-        $_SESSION['updateProfile'] = "Profile updated";
     } 
     
 ?>
@@ -78,6 +30,13 @@ and open the template in the editor.
                 <div class='row'>
                     <div class='col-md-8 col-md-offset-2'>
                         <h3>PROFILE</h3>
+                        <div class='updateProfile' style='color: red'>
+                            <p><?php 
+                                if (isset($_SESSION['updateProfileError'])) {
+                                    echo $_SESSION['updateProfileError'];
+                                }
+                            ?></p>
+                        </div>
                         <div class='updateProfile' style='color: green'>
                             <p><?php 
                                 if (isset($_SESSION['updateProfile'])) {
@@ -85,7 +44,7 @@ and open the template in the editor.
                                 }
                             ?></p>
                         </div>
-                        <form id='updateProfile' method="post" action='profile.php' class='col-md-offset-2'>
+                        <form id='updateProfile' method="post" action='saveProfile.php' class='col-md-offset-2'>
                             <div class='row'>
                                 <div class='col-md-3 col-md-offset-2'>First Name*: <input type='text' name='firstname' 
                                                                                           value='<?php echo $row['firstname'];?>'></div>
@@ -109,7 +68,7 @@ and open the template in the editor.
                             
                             <div class='row'>
                                 <div class='col-md-6 col-md-offset-2'>
-                                    <input type='checkbox' name='marketing' value='yes'
+                                    <input type='checkbox' name='marketing' id='marketing' value='yes'
                                            <?php 
                                                 if (!empty($row['marketing'])) {
                                                     if (strcmp($row['marketing'], "yes") === 0) {
@@ -119,6 +78,43 @@ and open the template in the editor.
                                            ?>> I'd like to get emails from Visual Mass
                                 </div>
                             </div>
+                            
+                            <div id='showPref' class='row' style='display:none;'>
+                                <div class='col-md-6 col-md-offset-2'>
+                                    <?php 
+                                        $pref = "Select * from mailinglist where email='".$_SESSION['loggedUserEmail']."';";
+                                        $prefres = mysqli_query($link, $pref);
+
+                                        if (!mysqli_query($link, $pref)) {
+                                            die(mysqli_error($link));
+                                        } else {
+                                            $row = mysqli_fetch_assoc($prefres);
+                                            $pos = strpos($row['preference'], ",");
+                                            if (is_numeric($pos)) {
+                                                $prefArr = explode(",", $row['preference']);
+                                            } else if (strcmp($row['preference'], "all") === 0) {  
+                                                $prefArr = array("male", "female");
+                                            } else {
+                                                $prefArr = array($row['preference']);
+                                            }
+                                    ?>
+                                    <input type='checkbox' name='preference[]' value='male' <?php 
+                                        if (in_array("male", $prefArr)) {
+                                            echo " checked";
+                                        }
+                                    ?>> Male
+                                    <input type='checkbox' name='preference[]' value='female' <?php 
+                                        if (in_array("female", $prefArr)) {
+                                            echo " checked";
+                                        }
+                                    ?>> Female
+
+                                    <?php
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                            
                             <div class='row'>
                                 <div class='col-md-6 col-md-offset-2'>
                                     <input type='submit' name='submit' value='SAVE PROFILE'>
@@ -132,4 +128,12 @@ and open the template in the editor.
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
         </div>
     </body>
+    <script>
+        if (document.getElementById('marketing').checked) {
+           document.getElementById('showPref').style.display = "block";            
+        }
+        document.getElementById('marketing').onclick = function(){ 
+           document.getElementById('showPref').style.display = "block";
+        };
+    </script>
 </html>

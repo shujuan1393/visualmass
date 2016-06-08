@@ -84,15 +84,15 @@ if (isset($_SESSION['mailSuccess'])) {
             </div>
             <div id='glasses' style='display:none;'>
                 <ul>
-                    <li><a href='products.php?type=frames&gender=men'>SHOP MEN</a></li>
-                    <li><a href='products.php?type=frames&gender=women'>SHOP WOMEN</a></li>
+                    <li><button id='glassesmen' class='button'>SHOP MEN</button></li>
+                    <li><button id='glasseswomen' class='button'>SHOP WOMEN</button></li>
                 </ul>
             </div>
 
             <div id='sunglasses' style='display:none;'>
                 <ul>
-                    <li><a href='products.php?type=sunglasses&gender=men'>SHOP MEN</a></li>
-                    <li><a href='products.php?type=sunglasses&gender=women'>SHOP WOMEN</a></li>
+                    <li><button id='sunglassesmen' class='button'>SHOP MEN</button></li>
+                    <li><button id='sunglasseswomen' class='button'>SHOP WOMEN</button></li>
                 </ul>
             </div>
 
@@ -183,6 +183,22 @@ if (isset($_SESSION['mailSuccess'])) {
             $('#user').mouseout(function () {
                 $('#userMenu').hide();      
             });
+            
+            document.getElementById('glassesmen').onclick = function() {
+                window.location = 'products.php?type=frames&gender=men';
+            };
+            
+            document.getElementById('glasseswomen').onclick = function() {
+                window.location = 'products.php?type=frames&gender=women';
+            };
+            
+            document.getElementById('sunglassesmen').onclick = function() {
+                window.location = 'products.php?type=sunglasses&gender=men';
+            };
+            
+            document.getElementById('sunglasseswomen').onclick = function() {
+                window.location = 'products.php?type=sunglasses&gender=women';
+            };
         </script>
     </body>
 </html>

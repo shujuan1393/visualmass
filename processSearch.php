@@ -57,6 +57,31 @@ if (isset($_GET['frames'])) {
         }
         header("Location: searchBlog.php");
     }
+} else if (isset($_GET['locations'])) {
+    $searchVal = $_POST['search'];
+    $sql = "Select * from locations where name like '%".$searchVal."%' "
+            . "or services like '%".$searchVal."%' or description like '%".$searchVal."%'"
+            . " or opening like '%".$searchVal."%' or type like '%".$searchVal."%'"
+            . " or address like '%".$searchVal."%';";
+    $result = mysqli_query($link, $sql);
+    $bid = "";
+    if (!mysqli_query($link, $sql)) {
+        die(mysqli_error($link));
+    } else {
+        if ($result -> num_rows === 0) {
+            unset($_SESSION['searchResult']);
+            unset($_SESSION['searchVal']);
+            $_SESSION['searchError'] = "No locations matching '".$searchVal."';";
+        } else {
+            unset($_SESSION['searchError']);
+            while($row= mysqli_fetch_assoc($result)) {
+                $bid.= $row['id'].",";
+            }
+            $_SESSION['searchResult'] = $bid;
+            $_SESSION['searchVal'] = $searchVal;
+        }
+        header("Location: searchLocations.php");
+    }
 } else if (isset($_GET['general'])) {
     $searchVal = $_POST['search'];
     

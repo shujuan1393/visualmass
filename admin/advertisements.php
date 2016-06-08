@@ -261,13 +261,6 @@ if (isset($_GET['id'])) {
                     }
                 }
                 ?>><label>Product Catalogue</label>
-            <input name='visibility[]' type='checkbox' value='prodDetails' <?php 
-                if (!empty($erow['visibility'])) {
-                    if (in_array("prodDetails", $visib)) {
-                        echo " checked";
-                    }
-                }
-                ?>><label>Product Details</label>
             
             <input name='visibility[]' type='checkbox' value='locations' <?php 
                 if (!empty($erow['visibility'])) {

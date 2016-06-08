@@ -158,7 +158,7 @@ if (isset($_GET['id'])) {
                 ?>
                 </select>
                 <label for='code' >Color*:</label>
-                <input type='text' name='code'>
+                <input type='text' name='colorcode'>
             </div>
             
             <label for='name' >Name*:</label>
