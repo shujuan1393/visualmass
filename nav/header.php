@@ -44,7 +44,8 @@ if (isset($_SESSION['mailSuccess'])) {
     <body>
         <div id='whole_header'>
             <div class="left_nav">
-                <div id='logoheader' class="logo_sidebar"></div>
+                <a id='logoheader' class="navbar-brand" href="index.html"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
+                <!--<div id='logoheader' class="logo_sidebar"></div>-->
                 <ul>
                     <li><div id='showGlasses'><a>GLASSES</a></div></li>
                     <li><div id='showSunglasses'><a>SUNGLASSES</a></div></li>

@@ -92,7 +92,7 @@ textarea {
     box-sizing: border-box;
 }
 
-.button, input[type=button], input[type=submit], input[type=reset] {
+button, input[type=button], input[type=submit], input[type=reset] {
     background-color: #808080;
     height: 50px;
     border: none;
@@ -197,6 +197,7 @@ td {
 #user {
     text-transform: uppercase;
     padding-right: 20px;
+    color: #fff!important;
 }
 
 .logo {
@@ -432,6 +433,7 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
 #showSunglasses a:hover:not(.active), #scrollable_loc a:hover:not(.active), 
 .rightsearch a:hover:not(.active), .rightfooter li a:hover:not(.active) {
     color: #808080;
+    text-decoration: underline;
 }
 
 #footer {
@@ -441,7 +443,7 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
     height: 3em;
 }
 
-#showGlasses, #showSunglasses, #showStory {
+#showGlasses, #showSunglasses, #showStory, .addMore {
     cursor: pointer;
 }
 
@@ -453,6 +455,10 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
     position: absolute;
     background-color: #fff;
     z-index: 15;
+}
+
+#userMenu a:hover {
+    text-decoration: underline;
 }
 
 #glasses ul, #sunglasses ul, #ourstoryheader ul, .colours ul {
@@ -548,7 +554,7 @@ a:hover#heart {
     float: left;
     margin: 0;
     padding: 5px 20px;
-    background-color: #808080;
+    background-color: #bbb;
     color: #fff;
 }
 
@@ -718,8 +724,18 @@ a:hover#heart {
     text-decoration: none;
 }
 
+.section-link .button {
+    background-color: #808080;
+    padding: 20px 150px;
+}
+
+.section-link .button {
+    color: #fff!important;    
+}
+
 .read_link:hover, .section-link .button:hover {
     text-decoration: underline;
+    color: #fff!important;
 }
 
 #faq_content {
@@ -730,7 +746,7 @@ a:hover#heart {
 
 button.accordion {
     background-color: #fff;
-    color: #444;
+    color: #444!important;
     cursor: pointer;
     padding: 18px;
     width: 100%;
@@ -743,6 +759,7 @@ button.accordion {
 
 button.accordion.active, button.accordion:hover {
     background-color: #ddd; 
+    color: #fff!important;
 }
 
 div.panel {
@@ -1065,7 +1082,7 @@ div#calendar {
     background-color: #808080;
     height: 50px;
     border: none;
-    color: #fff;
+    color: #fff!important;
     padding: 15px 50px;
     margin: 20px auto;
     position: absolute;

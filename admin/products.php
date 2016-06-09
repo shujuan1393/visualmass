@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
     unset($_SESSION['updateProdSuccess']);
     unset($_SESSION['updateProdError']);
     unset($_SESSION['addProdSuccess']);
-    $selectSql = "Select * from products where id ='" .$_GET['id']."';";
+    $selectSql = "Select * from products where pid ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 
     if (!mysqli_query($link,$selectSql))
@@ -87,7 +87,7 @@ if (isset($_GET['id'])) {
                                     echo "<td>".$row['quantity']."</td>";                           
                                     echo "<td>".$row['visibility']."</td>";                          
                                     echo "<td>".$row['availability']."</td>";                         
-                                    echo '<td><button onClick="window.location.href=`products.php?id='.$row['id'].'`">E</button>';
+                                    echo '<td><button onClick="window.location.href=`products.php?id='.$row['pid'].'`">E</button>';
                                     echo '<td><button onClick="deleteFunction(\''.$row['pid'].'\')">D</button></td>';
                                     echo "</tr>";
                                 }
@@ -138,7 +138,7 @@ if (isset($_GET['id'])) {
                                    value='<?php if (isset($_GET['id'])) { echo $erow['pid']; }?>'/>
                                        
                             <input type='hidden' id='addExisting' name='addExisting'>
-                            <table class="content">
+                            <table id='prodForm' class="content">
                                 <tr>
                                     <td>
                                         <div id='newProduct'>
@@ -148,7 +148,13 @@ if (isset($_GET['id'])) {
                                                 if(isset($_SESSION['randomString'])) { 
                                                     echo $_SESSION['randomString']; } 
                                                 if (!empty($erow['pid'])) {
-                                                    echo $erow['pid'];
+                                                    $pos = strpos($erow['pid'], "-");
+                                                    if (is_numeric($pos)) {
+                                                        $pids = explode("-", $erow['pid']);
+                                                        echo $pids[0];
+                                                    } else {
+                                                        echo $erow['pid'];
+                                                    }
                                                 }
                                                 ?>" maxlength="50" />
                                             <button type='button' onclick="randomString()">Generate</button>
@@ -180,8 +186,14 @@ if (isset($_GET['id'])) {
                                         </div>
                                     </td>
                                     <td>
-                                        Color*:
-                                        <input type='text' name='code'>
+                                        Colour*:
+                                        <input type='text' name='colourcode' value='<?php 
+                                            $pos = strpos($erow['pid'], "-");
+                                            if (is_numeric($pos)) {
+                                                $pids = explode("-", $erow['pid']);
+                                                echo $pids[1];
+                                            } 
+                                        ?>'>
                                     </td>
                                 </tr>
                                 <tr>
@@ -239,30 +251,6 @@ if (isset($_GET['id'])) {
                                             echo $erow['price'];
                                         }
                                             ?>"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        Track Inventory?*:
-                                        <input type='radio' name='track' id='track' value ="yes" <?php 
-                                        if (!empty($erow['track'])) {
-                                            if (strcmp($erow['track'], "yes") === 0) {
-                                                echo " checked";
-                                            }
-                                        }
-                                            ?>/>
-                                        <br>
-
-                                        <div id='showQty' style='display: none;'>
-                                            Quantity*:
-                                            <input type='text' name='qty' id='qty' 
-                                                   onkeypress="return isNumber(event)" value ="<?php 
-                                            if (!empty($erow['quantity'])) {
-                                                echo $erow['quantity'];
-                                            }
-                                                ?>"/>
-                                            <br>
-                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -348,7 +336,7 @@ if (isset($_GET['id'])) {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td colspan='2'>
                                         <?php 
                                             if (!empty($erow['availability'])) {
                                                 $avai = explode(",", $erow['availability']);
@@ -369,48 +357,6 @@ if (isset($_GET['id'])) {
                                                 }
                                             }
                                             ?>><label>Home Try-on</label>
-                                    </td>
-                                    <td>
-                                        <?php 
-                                            if (!empty($erow['locations'])) {
-                                                $locs = explode(",", $erow['locations']);
-                                            }
-                                        ?>
-                                        Locations*: <br/>
-                                        <?php
-                                            $locSql = "Select * from locations where name <> 'banner'";
-                                            $locResult = mysqli_query($link, $locSql);
-
-                                            if (!mysqli_query($link,$locSql))
-                                            {
-                                                echo("Error description: " . mysqli_error($link));
-                                            } else {
-                                                if ($locResult->num_rows === 0) {
-                                        ?>
-
-                                        <input type="checkbox" name="locations[]" value="nil"><label>No locations</label>
-                                        <?php
-                                            } else {
-                                                $count = 0;
-                                                while($row = mysqli_fetch_assoc($locResult)) {
-                                                    echo '<input type="checkbox" name="locations[]" 
-                                                value="'.$row['code'].'"';
-
-                                                    if (!empty($erow['locations'])) {
-                                                        if (in_array($row['code'], $locs)) {
-                                                            echo " checked";
-                                                        }
-                                                    }
-                                                    echo '><label>'.$row['name'].'</label>';
-                                                    $count++;
-
-                                                    if ($count % 2 === 0) {
-                                                        echo "<br>";
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -453,13 +399,173 @@ if (isset($_GET['id'])) {
                                         <input type="file" name="images[]" id='images' multiple accept='image/*'/>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id='locationLinks'>
                                     <td>
-                                        <input type='hidden' name='submitted' value='1' />
-                                        <input type='submit' name='submit' value='Submit' />
+                                        <?php 
+                                            if(!empty($erow['locations'])) {
+                                                $slocs = explode(",", $erow['locations']);
+                                                $slocqty = explode(",", $erow['locationqty']);
+                                            }
+                                        ?>
+                                        <input type='hidden' name='locno' id='locno' value='<?php 
+                                                if(!empty($slocs)) {
+                                                    echo count($slocs);
+                                                } else {
+                                                    echo '1';
+                                                }
+                                        ?>'>
+                                        
+                                        <h4 class="pull-left">Location
+                                        <div id='nanLocError' style="display: none;"><h6 class="pull-left">Please enter numbers only</h6></div>
+                                        </h4>
+                                        <div onclick="addLocation()" class="addMore text-right">
+                                            <i class="fa fa-fw fa-plus"></i> Add Location
+                                        </div><br><br></td>
+                                    <td></td>
+                                </tr>
+                        <?php 
+                            if (!empty($slocs)) {
+                                for ($i = 0; $i < count($slocs); $i++) {
+                                    if (!empty($slocs[$i])) {
+                        ?>
+                                <tr><td>
+                        <?php
+                            $locSql = "Select * from locations where name <> 'banner'";
+                            $locResult = mysqli_query($link, $locSql);
+
+                            if (!mysqli_query($link,$locSql))
+                            {
+                                echo("Error description: " . mysqli_error($link));
+                            } else {
+                                if ($locResult->num_rows !== 0) {
+                                    $index = $i +1;
+                                    $locNames = "";
+                                    $locCodes = "";
+                                echo '<h5 class="page-header">Location '.$index.'</h5>';
+                                echo "<select name='locations$index'>";
+                                while($row = mysqli_fetch_assoc($locResult)) {
+                                    $locCodes .= $row['code'].",";
+                                    $locNames .= $row['name'].",";
+                                    echo '<option value="'.$row['code'].'"';
+                                    if (strcmp($row['code'], $slocs[$i])) {
+                                        echo " selected";
+                                    }
+                                    echo '><label>'.$row['name'].'</label>';
+//
+//                                    if ($i % 2 === 0) {
+//                                        echo "<br>";
+//                                    }
+                                }
+                                echo "</select>";
+                                echo "<input type='hidden' name='allLocNames' id='allLocNames' value='".$locNames."'>";
+                                echo "<input type='hidden' name='allLocCodes' id='allLocCodes' value='".$locCodes."'>";
+                    ?>
+                    </td>
+
+                    <td>
+                        Track Inventory for Location <?php echo $index; ?>?*:
+                        <input type='checkbox' name='track<?php echo $index; ?>' id='track<?php echo $index; ?>' value ="yes" <?php 
+                        if (!empty($slocqty[$i])) {
+                            echo " checked";
+                        }
+                            ?>/>
+                        <br>
+
+                        <div id='showQty<?php echo $index; ?>' style='display: none;'>
+                            Quantity*:
+                            <input type='text' name='qty<?php echo $index; ?>' id='qty<?php echo $index; ?>' 
+                                   onkeypress="return isLocNumber(event)" value ="<?php 
+                            if (!empty($slocqty[$i])) {
+                                echo $slocqty[$i];
+                            }
+                                ?>"/>
+                            <br>
+                        </div>
+                    </td>
+                                </tr>
+                    <?php   
+                            }
+                        }
+                    ?>
+                        <?php
+                                    }   
+                                }
+                            } else {
+                        ?>
+                                <tr><td>
+                                      <?php
+                                            $locSql = "Select * from locations where name <> 'banner'";
+                                            $locResult = mysqli_query($link, $locSql);
+
+                                            if (!mysqli_query($link,$locSql))
+                                            {
+                                                echo("Error description: " . mysqli_error($link));
+                                            } else {
+                                                if ($locResult->num_rows !== 0) {
+                                                $count = 1;
+                                                $locNames = "";
+                                                $locCodes = "";
+                                                echo '<h5 class="page-header">Location '.$count.'</h5>';
+                                                echo "<select name='locations$count'>";
+                                                while($row = mysqli_fetch_assoc($locResult)) {
+                                                    $locCodes .= $row['code'].",";
+                                                    $locNames .= $row['name'].",";
+                                                    echo '<option value="'.$row['code'].'"';
+
+                                                    if (!empty($erow['locations'])) {
+                                                        if (in_array($row['code'], $locs)) {
+                                                            echo " selected";
+                                                        }
+                                                    }
+                                                    echo '><label>'.$row['name'].'</label>';
+
+                                                    if ($count % 2 === 0) {
+                                                        echo "<br>";
+                                                    }
+                                                }
+                                                echo "</select>";
+                                                echo "<input type='hidden' name='allLocNames' id='allLocNames' value='".$locNames."'>";
+                                                echo "<input type='hidden' name='allLocCodes' id='allLocCodes' value='".$locCodes."'>";
+                                    ?>
+                                    </td>
+                                    
+                                    <td>
+                                        Track Inventory for Location 1?*:
+                                        <input type='checkbox' name='track<?php echo $count; ?>' id='track<?php echo $count; ?>' value ="yes" <?php 
+                                        if (!empty($erow['track'])) {
+                                            if (strcmp($erow['track'], "yes") === 0) {
+                                                echo " checked";
+                                            }
+                                        }
+                                            ?>/>
+                                        <br>
+
+                                        <div id='showQty<?php echo $count; ?>' style='display: none;'>
+                                            Quantity*:
+                                            <input type='text' name='qty<?php echo $count; ?>' id='qty<?php echo $count; ?>' 
+                                                   onkeypress="return isLocNumber(event)" value ="<?php 
+                                            if (!empty($erow['quantity'])) {
+                                                echo $erow['quantity'];
+                                            }
+                                                ?>"/>
+                                            <br>
+                                        </div>
                                     </td>
                                 </tr>
+                                    <?php   
+                                            }
+                                        }
+                                    ?>
+                            <?php
+                                }
+                            ?>
                             </table>
+<!--                                <tr>
+                                    <td>-->
+                                        <input type='hidden' name='submitted' value='1' />
+                                        <input type='submit' name='submit' value='Submit' />
+<!--                                    </td>
+                                </tr>-->
                         </form>
                     </div>
                 </div>
@@ -473,7 +579,83 @@ if (isset($_GET['id'])) {
     </div>
 </html>
         
-<script>   
+<script>  
+    
+    function checkTrack(num) {
+        var track = "track" + num;
+        var qty = "showQty" + num;
+        document.getElementById(track).onclick = function(){  
+            var el = document.getElementById(qty);
+            if (el.style.display === "none") {
+                el.style.display = "block";
+            } else {
+                el.style.display = "none";
+            }
+        };
+    }
+    
+    function attachTrack(num) {
+        
+        for (var i = 1; i <= num; i++) {
+            checkTrack(i);
+            var track = "track" + i;
+            var qty = 'showQty' + i;
+            if (document.getElementById(track).checked) {
+                document.getElementById(qty).style.display = "block";            
+            }   
+        }
+    }
+    
+    window.onload = function () {
+        var num = document.getElementById('locno').value;
+        attachTrack(num);
+    };
+    
+    var locNames = document.getElementById('allLocNames').value;
+    var locCodes = document.getElementById('allLocCodes').value;
+
+    function addLocation() {
+        var count = document.getElementById('locno').value;
+        count++;
+        document.getElementById('locno').value = count;
+        
+        var x=document.getElementById('prodForm');
+        // deep clone the targeted row
+        var new_row = x.rows[1].cloneNode(true);
+           // get the total number of rows
+        var len = x.rows.length;
+           // set the innerHTML of the first row 
+           
+        new_row.cells[0].innerHTML = "<h5 class='page-header'>Location " + count + "</h5>";
+
+        var select = document.createElement( 'select' );
+        select.name = "locations" +count;
+        var nameArr = locNames.split(",");
+        var codeArr = locCodes.split(",");
+        var option;
+
+        for (var i = 0; i < nameArr.length; i++) {
+
+            if (nameArr[i] !== "" && codeArr[i] !== "") {
+                option = document.createElement( 'option' );
+                option.value = codeArr[i];
+                option.textContent = nameArr[i];
+                select.appendChild( option );
+            }
+         };
+        new_row.cells[0].appendChild(select);
+        new_row.cells[1].innerHTML = "Track Inventory for Location "+count+"? *:" +
+            "<input type='checkbox' name='track" + count +
+                    "' id='track" + count + "' value='yes' /><br>" +
+                    "<div id='showQty" + count + "' style='display:none;'>" + 
+                    "Quantity*:<input type='text' name='qty" + count +"' id='qty" + count + "'" +
+                    " onkeypress='return isLocNumber(event)'><br></div>";
+        
+           // append the new row to the table
+        x.appendChild( new_row );
+        attachTrack(count);
+    }
+    
     document.getElementById('selectExisting').onclick = function() {
         document.getElementById('existingProd').style.display = "block";
         document.getElementById('newProduct').style.display = "none";
@@ -484,13 +666,6 @@ if (isset($_GET['id'])) {
         document.getElementById('existingProd').style.display = "none";
         document.getElementById('newProduct').style.display = "block";
         document.getElementById('addExisting').value = "no";
-    };
-        
-    if (document.getElementById('track').checked) {
-       document.getElementById('showQty').style.display = "block";            
-    }
-    document.getElementById('track').onclick = function(){  
-       document.getElementById('showQty').style.display = "block";
     };
 
     function isNumberKey(evt) {
@@ -515,6 +690,20 @@ if (isset($_GET['id'])) {
         document.getElementById('nanError').style.display='none';
         return true;
     }
+    
+    
+    function isLocNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            document.getElementById('nanLocError').style.display='block';
+            document.getElementById('nanLocError').style.color='red';
+            return false;
+        }
+        document.getElementById('nanLocError').style.display='none';
+        return true;
+    }
+    
     function randomString() {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -538,5 +727,6 @@ if (isset($_GET['id'])) {
             window.location='products.php';
         }
     }
+    
 </script>
 
