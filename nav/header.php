@@ -24,6 +24,13 @@ if (isset($_SESSION['mailError'])) {
 if (isset($_SESSION['mailSuccess'])) {
     unset($_SESSION['mailSuccess']);
 }
+
+require_once('braintree/lib/Braintree.php');
+
+Braintree_Configuration::environment('sandbox');
+Braintree_Configuration::merchantId('t6f3x7thfrp85fxr');
+Braintree_Configuration::publicKey('zwffr27gfdksxmxz');
+Braintree_Configuration::privateKey('f4d205166ddd37027a37a5fed3cdbba5');
 ?>
 
 <html>
@@ -39,6 +46,7 @@ if (isset($_SESSION['mailSuccess'])) {
         <link rel="stylesheet" type="text/css" href="calendar/codebase/dhtmlxcalendar.css"/>
         <script type="text/javascript" src="calendar/codebase/dhtmlxcalendar.js"></script>  
         <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+        <script src="https://js.braintreegateway.com/js/braintree-2.24.1.min.js"></script>
         <link rel="stylesheet" href="styles/font-awesome.min.css">
     </head>
     <body>
@@ -62,7 +70,7 @@ if (isset($_SESSION['mailSuccess'])) {
                             <div id='userMenu' style='float: none;display:none;'>
                                 <p><a href='profile.php'>PROFILE</a></p>
                                 <p><a href='favourites.php'>FAVOURITES</a></p>
-                                <p>ORDERS</p>
+                                <p><a href='orders.php'>ORDERS</a></p>
                                 <p><a href='logout.php'>LOGOUT</a></p>
                             </div>
                         </li>
