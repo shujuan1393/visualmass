@@ -65,7 +65,10 @@ and open the template in the editor.
                                     <textarea name='address'><?php echo $row['address']; ?></textarea>
                                 </div>
                             </div>
-                            
+                            <div class='row'>
+                                <div class='col-md-6 col-md-offset-2'>Phone*: <input type='text' name='phone' 
+                                                onkeypress='isNumber(event)' value='<?php echo $row['phone'];?>'></div>
+                            </div>
                             <div class='row'>
                                 <div class='col-md-6 col-md-offset-2'>
                                     <input type='checkbox' name='marketing' id='marketing' value='yes'
@@ -129,6 +132,18 @@ and open the template in the editor.
         </div>
     </body>
     <script>
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                document.getElementById('nanError').style.display='block';
+                document.getElementById('nanError').style.color='red';
+                return false;
+            }
+            document.getElementById('nanError').style.display='none';
+            return true;
+        }
+        
         if (document.getElementById('marketing').checked) {
            document.getElementById('showPref').style.display = "block";            
         }

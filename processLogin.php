@@ -70,63 +70,79 @@ if(isset($_GET['forget'])) {
         }
     }
 } else {
-    $favId = $_POST['addToCart'];
-    
-    unset($_SESSION['loginFormError']);
-    $username = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $pwdmd5 = md5($password);
-
-    $qry = "Select * from user ".
-        " where email='$username' and password='$pwdmd5' ";
-
-    $result = mysqli_query($link, $qry);
-
-    if (!mysqli_query($link,$qry))
-    {
-        echo("Error description: " . mysqli_error($link));
-    } else {
-        if ($result->num_rows === 0) {
-            $_SESSION['loginFormError'] = "Invalid email/password ";
-            header('Location: login.php');
-        } else {
-            // output data of each row
-            while ($row = mysqli_fetch_assoc($result)) {
-                $type = $row['accountType'];
-                if (strcmp($type, "customer") === 0) {
-                    $_SESSION['user_time'] = time();
-//                    setcookie("user", $row['email'], time() + (86400 * 30), "/"); // 86400 = 1 day
-                    $_SESSION['loggedUserEmail'] = $row['email'];
-                    $_SESSION['loggedUser'] = $row['firstname'];
-                    if (isset($favId)) {
-                        $query = "Select * from favourites where email='".$_SESSION['loggedUserEmail']."';";
-                        $result = mysqli_query($link, $query);
-
-                        if (!mysqli_query($link, $query)) {
-                            echo "Error: ". mysqli_error($link);
-                        } else {
-                            $sql;
-                            if ($result -> num_rows === 0) {
-                                $sql = "INSERT into favourites (pid, email) "
-                                        . "VALUES ('$favId', '".$_SESSION['loggedUserEmail']."')";
-                            } else {
-                                $row = mysqli_fetch_assoc($result);
-                                if (strcmp($row['pid'], "")=== 0) {
-                                    $pids = $favId;
-                                } else {
-                                    $pids = $row['pid'].",".$favId;
-                                }
-                                $sql = "UPDATE favourites set pid='$pids' where email='".$_SESSION['loggedUserEmail']."';";
-                            }
-
-                            mysqli_query($link, $sql);
-                        }
-                    }
-                    echo "<script>window.history.back();</script>";
-//                    header('Location: index.php');
-                } 
-            }
+    if (empty($_POST['email']) || empty($_POST['password'])) {
+        $_SESSION['loginFormError'] = "Empty field(s)";
+        if (isset($_GET['checkout'])) {
+            header("Location: checkout.php?error=1");
         } 
+    } else {
+        $favId = $_POST['addToCart'];
+
+        unset($_SESSION['loginFormError']);
+        $username = trim($_POST['email']);
+        $password = trim($_POST['password']);
+        $pwdmd5 = md5($password);
+
+        $qry = "Select * from user ".
+            " where email='$username' and password='$pwdmd5' ";
+
+        $result = mysqli_query($link, $qry);
+
+        if (!mysqli_query($link,$qry))
+        {
+            echo("Error description: " . mysqli_error($link));
+        } else {
+            if ($result->num_rows === 0) {
+                $_SESSION['loginFormError'] = "Invalid email/password ";
+                if (isset($_GET['checkout'])) {
+                    header("Location: checkout.php?error=1");
+                } else {
+                    header('Location: login.php');
+                }
+            } else {
+                // output data of each row
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $type = $row['accountType'];
+                    if (strcmp($type, "customer") === 0) {
+                        $_SESSION['user_time'] = time();
+    //                    setcookie("user", $row['email'], time() + (86400 * 30), "/"); // 86400 = 1 day
+                        $_SESSION['loggedUserEmail'] = $row['email'];
+                        $_SESSION['loggedUser'] = $row['firstname'];
+                        if (isset($favId)) {
+                            $query = "Select * from favourites where email='".$_SESSION['loggedUserEmail']."';";
+                            $result = mysqli_query($link, $query);
+
+                            if (!mysqli_query($link, $query)) {
+                                echo "Error: ". mysqli_error($link);
+                            } else {
+                                $sql;
+                                if ($result -> num_rows === 0) {
+                                    $sql = "INSERT into favourites (pid, email) "
+                                            . "VALUES ('$favId', '".$_SESSION['loggedUserEmail']."')";
+                                } else {
+                                    $row = mysqli_fetch_assoc($result);
+                                    if (strcmp($row['pid'], "")=== 0) {
+                                        $pids = $favId;
+                                    } else {
+                                        $pids = $row['pid'].",".$favId;
+                                    }
+                                    $sql = "UPDATE favourites set pid='$pids' where email='".$_SESSION['loggedUserEmail']."';";
+                                }
+
+                                mysqli_query($link, $sql);
+                            }
+                        }
+
+                        if (isset($_GET['checkout'])) {
+                            header("Location: checkout.php?signin=1");
+                        } else {
+                            echo "<script>window.history.back();</script>";
+                        }
+    //                    header('Location: index.php');
+                    } 
+                }
+            } 
+        }
     }
 }
   

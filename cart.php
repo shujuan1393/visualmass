@@ -18,7 +18,14 @@ and open the template in the editor.
             
             <div id="content">
                 <h3>CART</h3>
-                <div id='emptyCart' style='display:none;'><h4>Your cart is empty. Shop now!</h4></div>
+                <div id='emptyCart' style='display:none;'>
+                    <?php
+                        if (isset($_SESSION['order'])) {
+                            echo $_SESSION['order'];
+                        }
+                    ?>
+                    <h4>Your cart is empty. Shop now!</h4>
+                </div>
                     <form method='post' action='addCart.php?update=1'>
                         <input type='hidden' name='numrows' id='numrows'>
                     <div id='cart' class='row'>
@@ -88,6 +95,22 @@ and open the template in the editor.
                                         echo "</select>";
                                    } else {
                                         echo "<h4>".$prow['name']."</h4><br>".html_entity_decode($prow['description']);
+                                        $lens = $row['lens'];
+                                        
+                                        $getlens = "Select * from products where pid ='$lens';";
+                                        $lres = mysqli_query($link, $getlens);
+                                        
+                                        if(!mysqli_query($link, $getlens)) {
+                                            die(mysqli_error($link));
+                                        } else {
+                                            $lrow = mysqli_fetch_assoc($lres);
+                                            echo "<br> Lens: ";
+                                            if (empty($lrow['name'])) {
+                                                echo "-";
+                                            } else {
+                                                echo $lrow['name'];   
+                                            }
+                                        }
                                     }
                                         //get related products
                                         $relpos = strpos($pid, '-');
@@ -149,11 +172,13 @@ and open the template in the editor.
                                 echo "Error: ".mysqli_error($link);
                             } else {
                                 if ($tryres -> num_rows === 0) {
+                                    echo "<script>document.getElementById('numrows').value = 0;</script>";
                                     echo "<script>document.getElementById('emptyCart').style.display='block';</script>";
                                     echo "<script>document.getElementById('home').style.display='none';</script>";
                                 } else {
                                     echo "<script>document.getElementById('emptyCart').style.display='none';</script>";
                                     while($row = mysqli_fetch_assoc($tryres)) {
+                                        echo "<script>document.getElementById('numrows').value = ".$tryres->num_rows.";</script>";
                                         $pid = $row['pid'];
                                         $type = $row['type'];
                                         
@@ -216,6 +241,7 @@ and open the template in the editor.
                                         echo "</div>";
 //                                        echo "<div class='col-md-4'>";
                                         echo "<input type='hidden' name='prod".$count."' value='$pid'>";
+                                        echo "<input type='hidden' name='id$count' value='".$row['id']."'>";
                                         echo "<input type='hidden' name='type".$count."' value='$type'>";                                     
                                     ?>
                                     <?php 
@@ -236,7 +262,7 @@ and open the template in the editor.
                     <div id='updateCart' class='row' style='display:none;'>
                         <div class='col-md-5 col-md-offset-7'>
                             <input type="submit" name='submit' value='UPDATE'>
-                            <button class='button' onclick="processCheckout()">CHECKOUT</button>
+                            <a class='button' href='checkout.php'>CHECKOUT</a>
                         </div>
                     </div>
                         
@@ -265,14 +291,9 @@ and open the template in the editor.
             document.getElementById('emptyCart').style.display = "block";
             document.getElementById('updateCart').style.display = "none";
         } else {
+            <?php unset($_SESSION['order']); ?>
             document.getElementById('emptyCart').style.display = "none";
             document.getElementById('updateCart').style.display = "block";            
-        }
-        
-        function processCheckout() {
-            <?php if (isset($_SESSION['loggedUserEmail'])) { ?>
-//                    window.location = "checkout.php";
-            <?php } ?>
         }
     </script>
 </html>

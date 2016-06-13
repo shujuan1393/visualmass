@@ -24,7 +24,11 @@ body {
 }
 
 * {
-    color: #000!important;
+    /*color: #000!important;*/
+}
+
+#content {
+    text-align: center;
 }
 
 /*======*/
@@ -52,7 +56,7 @@ ul {
 }
 
 .error {
-   color: red; 
+   color: red!important; 
    padding: 5px;
 }
 
@@ -371,6 +375,10 @@ td {
     display: flex;
 }
 
+.left_nav {
+    text-align: left;
+}
+
 .rightfooter {
     position: absolute;
     top: 0px;
@@ -382,7 +390,7 @@ td {
 .rightcontact {
     position: absolute;
     top: 90px;
-    right: 15px;
+    right: 20px;
     padding: 0;
 }
 
@@ -457,11 +465,16 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
     z-index: 15;
 }
 
+#userMenu {
+    right: 55px;
+    background-color: #dddddd;
+}
+
 #userMenu a:hover {
     text-decoration: underline;
 }
 
-#glasses ul, #sunglasses ul, #ourstoryheader ul, .colours ul {
+#glasses ul, #sunglasses ul, #ourstoryheader ul, .colours ul, #lens_select ul {
     list-style-type: none;
     display: inline-block;
 }
@@ -516,7 +529,7 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
     padding: 30px 200px;
 }
 
-#terms_content .title {
+#terms_content .title, .caps {
     text-transform: uppercase;
 }
 
@@ -615,7 +628,21 @@ a:hover#heart {
     padding: 0;
 }
 
+#lens_select {
+    width: 15%;
+    float: right;
+    position: absolute;
+    padding: 4px 0px;
+    bottom: -27px;
+    right: 40px;
+    z-index: 15;
+    background-color: #ccc;
+}
 
+#lens_select li {
+    cursor: pointer;
+    padding: 0 5px;
+}
 .details {
     width: 100%;
 }
@@ -744,6 +771,15 @@ a:hover#heart {
     margin: 0 auto;
 }
 
+.accordion {
+    cursor: pointer;
+}
+
+.accordion.active, .accordion:hover {
+    text-decoration: underline;
+    color: #808080;
+}
+
 button.accordion {
     background-color: #fff;
     color: #444!important;
@@ -758,8 +794,9 @@ button.accordion {
 }
 
 button.accordion.active, button.accordion:hover {
-    background-color: #ddd; 
+    background-color: #ccc; 
     color: #fff!important;
+    text-decoration: none;
 }
 
 div.panel {
@@ -1003,6 +1040,16 @@ div.product_display.col-md-6 {
     text-decoration: underline;
 }
 
+#updateCart .button {
+    background-color: #808080;
+    padding: 20px 30px;
+    color: #fff!important;
+}
+
+#updateCart a:hover {
+    text-decoration: none;
+}
+
 .giftcard h3, .giftcard h4, .giftcard h5, .giftcard p {
     margin: 25px;
 }
@@ -1118,6 +1165,7 @@ div#calendar {
 
 .side-nav {
     background-color: #f2f2f2!important;
+    text-align: left;
 }
 
 .side-nav > li > ul > li.active {
@@ -1212,4 +1260,21 @@ textarea {
     width: 100%;
     resize: none;
     padding: 15px 15px;
+}
+
+#existingCust {
+    border-left: 1px #333 solid;
+    height: 100%;
+}
+
+#payments {
+    text-align: left;
+}
+
+#reviewHeadings {
+    text-align: left;
+}
+
+#reviewCosts {
+    text-align: right;
 }

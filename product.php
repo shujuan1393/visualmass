@@ -81,7 +81,26 @@
                       <span class="sr-only">Next</span>
                     </a>
                   </div>
-                
+                <div id='lens_select' class='text-center' style='display:none;'>
+                    <?php 
+                        $lens = "Select * from products where type='Lens';";
+                        $lenres = mysqli_query($link, $lens);
+
+                        if (!mysqli_query($link, $lens)) {
+                            die(mysqli_error($link));
+                        } else {
+                            echo "<input type='hidden' id='selected_lens'>";
+                            echo "<ul>";
+                            $lcount = 0;
+                            while($row1 = mysqli_fetch_assoc($lenres)) {
+                                echo "<input type='hidden' id='lval$lcount' value='".$row1['pid']."'>";
+                                echo "<li id='lens$lcount'>".$row1['name']."</li>";
+                                $lcount++;
+                            }
+                            echo "</ul>";
+                        }
+                    ?>
+                </div>
                 <div class='product_title'>
                     <div>
                         <h3><?php echo $brow['name']; ?></h3>
@@ -98,7 +117,6 @@
                                     } else {
                                         $idToCheck = $selPid;
                                     }
-                                    
                                     
                                     $relProds = "Select * from products where pid like '".$idToCheck."%';";
                                     $relres = mysqli_query($link, $relProds);
@@ -131,6 +149,7 @@
                         </div>
 
                     </div>
+                    
                     <div class='product-buttons'>
                         <ul>
                             <?php 
@@ -143,10 +162,16 @@
                                 }
                             ?>
                             <li><button id='hometry' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processHometry()'>Try at home for free</button></li>
-                            <li><button id='buy_now' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processPurchase()'><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;BUY FROM $<?php echo $brow['price'];?></button></li>
+                            <li><button id='buy_now' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='toggleLens()'><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;BUY FROM $<?php echo $brow['price'];?></button></li>
                         </ul>
                     </div>
+                        <?php
+                            if (isset($_SESSION['homeError'])) {
+                                echo "<p class='col-md-4 col-md-offset-2 error'>".$_SESSION['homeError']."</p>";
+                            }
+                        ?>
                 </div>
+                
                 <div class="details row">
                     <div class='product_details col-md-6'>
                         <div class='row'>
@@ -211,7 +236,6 @@
                         </div>
                 </div>
             </div>
-                
             <div id='shipping_terms' class='row'>
                 <h3>SHIPPING TERMS</h3>
             </div>
@@ -272,6 +296,29 @@
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
             
             <script>
+                function addLensSelector(num) {
+                    var str = "lens" + num;
+                    var lval = "lval" + num;
+                    var sel = document.getElementById('buy_now').value;
+                    document.getElementById(str).onclick = function() {
+                        var val = document.getElementById(lval).value;
+                        window.location="addCart.php?type=purchase&id=" + sel + "&lens=" + val;
+                    };
+                }
+                
+                for (var i = 0; i < <?php echo $lcount; ?>; i++) {
+                    addLensSelector(i);
+                }
+                
+                function toggleLens() {
+                    var el = document.getElementById('lens_select');
+                    if (el.style.display === "none") {
+                        el.style.display = "block";
+                    } else {
+                        el.style.display = "none";
+                    }         
+                }
+                
                 function changeColour(num) {
                     var color = "colour" + num;
                     var colObj = document.getElementById(color);
@@ -290,11 +337,6 @@
                 function processHometry() {
                     var sel = document.getElementById('hometry').value;
                     window.location="addCart.php?type=hometry&id=" + sel;
-                }
-                
-                function processPurchase() {
-                    var sel = document.getElementById('buy_now').value;
-                    window.location="addCart.php?type=purchase&id=" + sel;
                 }
                 
                 $(document).ready(function() {

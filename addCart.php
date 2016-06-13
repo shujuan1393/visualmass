@@ -15,38 +15,65 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
     mysqli_query($link, $delete);
     header("Location: cart.php");
 } else if (isset($_GET['id']) && isset($_GET['type'])) {
-    $pid = $_GET['id'];
-    $type = $_GET['type'];
-    $cartid = GetCartId();
-
-    $getproduct = "Select * from products where pid='$pid'";
-    $prodres = mysqli_query($link, $getproduct);
-
-    if (!mysqli_query($link, $getproduct)) {
-        echo "Error: ".mysqli_error($link);
+    $gethometry = "Select * from cart where cartid ='".GetCartId()."' and type='hometry';";
+    $result = mysqli_query($link, $gethometry);
+    $qty = 0;
+    while ($row = mysqli_fetch_assoc($result)) {
+        $qty += intval($row['quantity']);
+    }
+    
+    if ($result -> num_rows >= 5 || $qty >= 5) {
+        $_SESSION['homeError'] = "You can only choose a maximum of 5 pairs for home try-on";
+        header("Location: product.php?id=".$_GET['id']);
     } else {
-        $prod = mysqli_fetch_assoc($prodres);
-        $price = $prod['price'];
+        unset($_SESSION['homeError']);        
+        $pid = $_GET['id'];
+        $type = $_GET['type'];
+        $cartid = GetCartId();
+        $lens = $_GET['lens'];
+        $getproduct = "Select * from products where pid='$pid'";
+        $prodres = mysqli_query($link, $getproduct);
 
-        $query = "Select * from cart where pid='$pid' and cartid='$cartid' and type='$type';";
-        $result = mysqli_query($link, $query);
-
-        if (!mysqli_query($link, $query)) {
-            echo "Error: ". mysqli_error($link);
+        if (!mysqli_query($link, $getproduct)) {
+            echo "Error: ".mysqli_error($link);
         } else {
-            $sql;
-            if ($result -> num_rows === 0) {
-                $sql = "INSERT into cart (pid, cartid, price, quantity, type) "
-                        . "VALUES ('$pid', '$cartid', '$price', '1', '$type')";
-            } else {
-                $row = mysqli_fetch_assoc($result);
-                $newQty = $row['quantity'] + 1;
-                $sql = "UPDATE cart set quantity='$newQty' where pid='$pid' and cartid='$cartid' and type='$type';";
-            }
+            $prod = mysqli_fetch_assoc($prodres);
+            $price = $prod['price'];
 
-            mysqli_query($link, $sql);
-            echo "<script>window.history.back();</script>";
-//            header("Location: product.php?id=".$pid);
+            if (strcmp($type, "purchase") === 0) {
+                $query = "Select * from cart where pid='$pid' and cartid='$cartid' and type='$type' and lens='$lens';";
+            } else {
+                $query = "Select * from cart where pid='$pid' and cartid='$cartid' and type='$type';";
+            }
+    //        $query = "Select * from cart where pid='$pid' and cartid='$cartid' and type='$type';";
+            $result = mysqli_query($link, $query);
+
+            if (!mysqli_query($link, $query)) {
+                echo "Error: ". mysqli_error($link);
+            } else {
+                $sql;
+                if ($result -> num_rows === 0) {
+                    if (strcmp($type, "purchase") === 0) {
+                        $sql = "INSERT into cart (pid, cartid, price, quantity, type, lens) "
+                                . "VALUES ('$pid', '$cartid', '$price', '1', '$type', '$lens')";
+                    } else {
+                        $sql = "INSERT into cart (pid, cartid, price, quantity, type) "
+                                . "VALUES ('$pid', '$cartid', '$price', '1', '$type')";
+                    }
+                } else {
+                    $row = mysqli_fetch_assoc($result);
+                    $newQty = $row['quantity'] + 1;
+                    if (strcmp($type, "purchase") === 0) {
+                        $sql = "UPDATE cart set quantity='$newQty' where pid='$pid' and cartid='$cartid' and type='$type' and lens='$lens';";
+                    } else {
+                        $sql = "UPDATE cart set quantity='$newQty' where pid='$pid' and cartid='$cartid' and type='$type';";
+                    }
+                }
+
+                mysqli_query($link, $sql);
+                echo "<script>window.history.back();</script>";
+    //            header("Location: product.php?id=".$pid);
+            }
         }
     }
 } else if (isset($_GET['update'])) {
