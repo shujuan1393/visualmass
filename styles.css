@@ -197,10 +197,6 @@ td {
     vertical-align: top;
 }
 
-div {
-    margin: 4px 1px;
-}
-
 /*  HEADER BAR */
 #logoheader, #user , .swatch{
     cursor:pointer;
