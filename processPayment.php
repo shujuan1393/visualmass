@@ -35,6 +35,12 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 $type = $row['type'];
                 $price = $row['price'];
                 
+                if (strcmp($type, "hometry") === 0) {
+                    $unitcost = 0;
+                } else {
+                    $unitcost = $price * $quantity;
+                }
+                
                 if (is_numeric(strpos($type, "@"))) {
                     $details = $row['details'];
                 } else {
@@ -43,7 +49,7 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 $orderid = "ON-".rand();
                 $order = "INSERT INTO orders (orderid, pid, price, quantity, type, payment, details, status, orderedby, totalcost, dateordered)"
                         . " VALUES ('$orderid','$pid', '$price', '$quantity', '$type', '$payment','$details', 'paid', "
-                        . "'".$_SESSION['loggedUserEmail']."', '$cost', '".$row['datetime']."');";
+                        . "'".$_SESSION['loggedUserEmail']."', '$unitcost', '".$row['datetime']."');";
                 mysqli_query($link, $order);
                 $remove = "DELETE FROM cart where id ='".$row['id']."';";
                 mysqli_query($link, $remove);      

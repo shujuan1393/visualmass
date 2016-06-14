@@ -106,7 +106,7 @@
                 </li>
                 <li class="divider"></li>
                 <li>
-                    <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                    <a href="../logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                 </li>
             </ul>
         </li>
@@ -119,7 +119,7 @@
             </li>
             <?php if (in_array("cust", $checkArr)) { ?>
             <li <?php if (in_array("customers.php", $urlArr)) echo "class='active'"; ?> >
-                <a href='#'><i class="fa fa-fw fa-users"></i> CUSTOMERS</a>
+                <a href='customers.php'><i class="fa fa-fw fa-users"></i> CUSTOMERS</a>
             </li>
             <?php } ?>
             <?php if (in_array("disc", $checkArr)) { ?>
@@ -154,7 +154,7 @@
             <?php } ?>
             <?php if (in_array("orders", $checkArr)) { ?>
             <li <?php if (in_array("orders.php", $urlArr)) echo "class='active'"; ?> >
-                <a href='#'><i class="fa fa-fw fa-check-square-o"></i> ORDERS</a>
+                <a href='orders.php'><i class="fa fa-fw fa-check-square-o"></i> ORDERS</a>
             </li>
             <?php } ?>
             <?php if (in_array("partners", $checkArr)) { ?>

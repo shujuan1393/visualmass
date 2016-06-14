@@ -248,7 +248,7 @@ and open the template in the editor.
                                         echo "<div class='col-md-1'><input type='text' name='quantity".$count."' value='".$row['quantity']."'"
                                                 . " onkeypress='return isNumber(event)'>"
                                         . "</div>";
-                                        echo "<div class='col-md-1'><p class='totalprice'>$0</p></div>";  
+                                        echo "<div class='col-md-1'><p class='totalprice'>Free</p></div>";  
                                         echo "<div class='col-md-1'><a class='cart_button' href='addCart.php?delete=1&id=".$type."-".$pid."'>X</a></div>";  
                                         echo "</div>";
 //                                        echo "</div>";

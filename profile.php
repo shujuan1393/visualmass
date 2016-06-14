@@ -46,31 +46,49 @@ and open the template in the editor.
                         </div>
                         <form id='updateProfile' method="post" action='saveProfile.php' class='col-md-offset-2'>
                             <div class='row'>
-                                <div class='col-md-3 col-md-offset-2'>First Name*: <input type='text' name='firstname' 
+                                <div class='col-md-4 col-md-offset-1'>First Name*: <input type='text' name='firstname' 
                                                                                           value='<?php echo $row['firstname'];?>'></div>
-                                <div class='col-md-3'>Last Name*: <input type='text' name='lastname' value='<?php echo $row['lastname'];?>'></div>
+                                <div class='col-md-4'>Last Name*: <input type='text' name='lastname' value='<?php echo $row['lastname'];?>'></div>
                             </div>
                             <br>
                             <div class='row'>
-                                <div class='col-md-6 col-md-offset-2'>Email*: <input type='text' name='email' value='<?php echo $row['email'];?>'></div>
+                                <div class='col-md-8 col-md-offset-1'>Email*: <input type='text' name='email' value='<?php echo $row['email'];?>'></div>
                             </div>
                             <br>
                             <div class='row'>
-                                <div class='col-md-6 col-md-offset-2'>Change Password*: 
+                                <div class='col-md-8 col-md-offset-1'>Change Password*: 
                                     <input type='password' name='password'></div>
                             </div>
                             <br>
                             <div class='row'>
-                                <div class='col-md-6 col-md-offset-2'>Address*: 
+                                <div class='col-md-8 col-md-offset-1'>Address*: 
                                     <textarea name='address'><?php echo $row['address']; ?></textarea>
                                 </div>
                             </div>
                             <div class='row'>
-                                <div class='col-md-6 col-md-offset-2'>Phone*: <input type='text' name='phone' 
-                                                onkeypress='isNumber(event)' value='<?php echo $row['phone'];?>'></div>
+                                <div class='col-md-4 col-md-offset-1'>Apt, suite*: 
+                                    <input type='text' name='apt' value='<?php echo $row['apt']; ?>'>
+                                </div>
+                                <div class='col-md-4'>Zip Code*: 
+                                    <input type='text' name='zip' value='<?php echo $row['zip']; ?>' 
+                                           onkeypress="return isNumber(event)" >
+                                </div>
                             </div>
                             <div class='row'>
-                                <div class='col-md-6 col-md-offset-2'>
+                                <div class='col-md-4 col-md-offset-1'>City*: 
+                                    <input type='text' name='city' value='<?php echo $row['city']; ?>'>
+                                </div>
+                                <div class='col-md-4'>Country*: 
+                                    <input type='text' name='country' value='<?php echo $row['country']; ?>'>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-8 col-md-offset-1'>Phone*: <input type='text' name='phone' 
+                                                onkeypress="return isNumber(event)" value='<?php echo $row['phone'];?>'></div>
+                            </div>
+                            <p id='nanError' class='col-md-8 col-md-offset-1' style="display: none;">Please enter numbers only</p>
+                            <div class='row'>
+                                <div class='col-md-8 col-md-offset-1'>
                                     <input type='checkbox' name='marketing' id='marketing' value='yes'
                                            <?php 
                                                 if (!empty($row['marketing'])) {
