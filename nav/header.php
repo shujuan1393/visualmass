@@ -24,14 +24,32 @@ if (isset($_SESSION['mailError'])) {
 if (isset($_SESSION['mailSuccess'])) {
     unset($_SESSION['mailSuccess']);
 }
+
+$pageCanonical = "";
+$pageRobots = "";
 ?>
 
 <html>
     <head>
-        <title>Visual Mass</title>
+        <title><?php if(!empty($pageTitle)) echo $pageTitle; ?></title>
+        <meta name="description" content="<?php if(!empty($pageDescription)) echo $pageDescription; ?>">
+        <meta name="author" content="Visual Mass">
+        
+        <?php
+            // If canonical URL is specified, include canonical link element
+            if($pageCanonical) {
+                 if(!empty($pageCanonical)) echo '<link rel="canonical" href="' . $pageCanonical . '">';
+            }
+            // If meta robots content is specified, include robots meta tag
+            if($pageRobots) {
+                 if(!empty($pageRobots)) echo '<meta name="robots" content="' . $pageRobots . '">';
+            }
+        ?>
+        
         <meta charset="UTF-8">  
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCR78jxaf-XgjrUTFxK-jfaj9J_anb-kRA"></script> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCR78jxaf-XgjrUTFxK-jfaj9J_anb-kRA"></script> 
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link href="styles.css" rel="stylesheet" type="text/css" />     
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -39,12 +57,25 @@ if (isset($_SESSION['mailSuccess'])) {
         <link rel="stylesheet" type="text/css" href="calendar/codebase/dhtmlxcalendar.css"/>
         <script type="text/javascript" src="calendar/codebase/dhtmlxcalendar.js"></script>  
         <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+        
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
         <link rel="stylesheet" href="styles/font-awesome.min.css">
+    
+        <script>
+            //paste this code under the head tag or in a separate js file.
+            // Wait for window load
+            $(window).load(function() {
+                // Animate loader off screen
+                $(".se-pre-con").fadeOut("slow");;
+            });
+        </script>
     </head>
-    <body>
+    <body>	
+        <div class="se-pre-con"></div>
         <div id='whole_header'>
             <div class="left_nav">
-                <div id='logoheader' class="logo_sidebar"></div>
+                <a id='logoheader' class="navbar-brand" href="index.html"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
+                <!--<div id='logoheader' class="logo_sidebar"></div>-->
                 <ul>
                     <li><div id='showGlasses'><a>GLASSES</a></div></li>
                     <li><div id='showSunglasses'><a>SUNGLASSES</a></div></li>
@@ -65,7 +96,7 @@ if (isset($_SESSION['mailSuccess'])) {
                                 <p><a href='logout.php'>LOGOUT</a></p>
                             </div>
                         </li>
-                            
+
                         <?php 
                             } else {
                         ?>
@@ -105,24 +136,24 @@ if (isset($_SESSION['mailSuccess'])) {
                 </ul>
             </div>
         </div>
-        
+
         <div class="modal fade modal-fullscreen force-fullscreen" id="myModal" tabindex="-1" 
              role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" id='closeModal' data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title">Modal title</h4>
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-              </div><!-- /.modal-content -->
+                <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" id='closeModal' data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">Modal title</h4>
+                  </div>
+                  <div class="modal-body">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
-          </div><!-- /.modal -->
+        </div><!-- /.modal -->
           
         <script>          
             document.getElementById('showGlasses').onclick = function(){  

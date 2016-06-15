@@ -22,22 +22,32 @@ and open the template in the editor.
         
         <div id="wrapper">
             <div id="header">
-                <div class='left_nav'>
-                    <ul>
-                        <li><a href='index.php'>SHOP AT VISUAL MASS</a></li>
-                    </ul>
-                    <div class='blog_logo'></div>
-                </div>                
+                <div class='col-md-2'>
+                    <div class='text-left'>
+                        <a href='index.php'>SHOP AT VISUAL MASS</a>
+                    </div>
+                </div>
+                <div class='col-md-8'>
+                    <div class='text-center'>
+                        <a href='index.php'>
+                        <div class='navbar-blog'>
+                            <img class='navbar-logo' src='images/HorizontalLogo_black.png'/>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <div class='col-md-2'>
+                    <div class='text-right'>
+                        <a href='searchBlog.php' data-toggle="modal" data-target="#searchModal">SEARCH BLOG</a>
+                    </div>
+                </div>
             </div>
             
             <div id="content">
                 <div class='row'>
                     <div class='col-md-2'></div>
                     <div class='col-md-8'><h3 class='blog_title_page'>THE BLOG</h3></div>
-
-                    <div class='col-md-2'>
-                        <a href='searchBlog.php' data-toggle="modal" data-target="#searchModal">SEARCH BLOG</a>
-                    </div>
+                    <div class='col-md-2'></div>
                 </div>
                 <?php 
                     $sql = "Select * from categories where type='blog'";
@@ -46,9 +56,10 @@ and open the template in the editor.
                     if (!mysqli_query($link, $sql)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
-                        if ($result -> num_rows == 0) {
-                            echo "<h3>Sorry, this page is under construction.</h3>";
-                        } else {
+                        
+                        $count = 0;
+                        $total = 0;
+                        if ($result -> num_rows >= 0) {
                 ?>  
                     <div id='terms_nav'>
                         <ul>
@@ -64,7 +75,8 @@ and open the template in the editor.
                         
                     <div id='loc_sidemenu' class='col-md-2'>
                         <div id='scrollable_loc' style='float:left;'>
-                            <a href='mailingBlog.php' data-toggle="modal" data-target="#mailingModal">MAILING LIST</a>
+                            <a href='mailingBlog.php' data-toggle="modal" data-target="#mailingModal">MAILING LIST</a><br/>
+                            <a href='#whole_footer'>WRTIE WITH US</a>
                         </div>
                     </div>
                 
@@ -77,32 +89,35 @@ and open the template in the editor.
                             } else {
                                 $get = "Select * from blog order by dateposted desc";
                             }
+                            
                             $result = mysqli_query($link, $get);
-                            $count = 0;
-                            $total = 0;
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<div class='blog_post' id='lowest$total'>";
-                                $pos = strpos($row['image'], '/');
-                                $url = substr($row['image'], $pos+1);
-                                echo "<img src='$url'><br>";
-                                echo "<div class='blog_author'>";
-                                echo $row['author']."&nbsp;&nbsp;".date("M d, Y", strtotime($row['dateposted']));
-                                echo "</div>";
-                                echo "<span class='blog_title'>".$row['title']."</span><br>";
-                                if (!empty($row['excerpt'])) {
-                                    $count++;
-                                    echo "<div id='excerpt'>".html_entity_decode($row['excerpt']);
-                                    echo "</div><br>";
-                                    echo "<div id='readMore".$count."' class='read_link'>+ READ MORE</div>";    
-                                    echo "<div id='content".$count."' style='display:none;'>";
-                                }
-                                    echo html_entity_decode($row['html']);
-                                if (!empty($row['excerpt'])) {
+                            if (empty($result)){
+                                echo "<h3>Sorry, this page is under construction.</h3>";
+                            } else {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<div class='blog_post' id='lowest$total'>";
+                                    $pos = strpos($row['image'], '/');
+                                    $url = substr($row['image'], $pos+1);
+                                    echo "<img src='$url'/><br/>";
+                                    echo "<div class='blog_author'>";
+                                    echo $row['author']."&nbsp;&nbsp;".date("M d, Y", strtotime($row['dateposted']));
                                     echo "</div>";
+                                    echo "<span class='blog_title'>".$row['title']."</span><br>";
+                                    if (!empty($row['excerpt'])) {
+                                        $count++;
+                                        echo "<div id='excerpt'>".html_entity_decode($row['excerpt']);
+                                        echo "</div><br>";
+                                        echo "<div id='readMore".$count."' class='read_link'>+ READ MORE</div>";    
+                                        echo "<div id='content".$count."' style='display:none;'>";
+                                    }
+                                        echo html_entity_decode($row['html']);
+                                    if (!empty($row['excerpt'])) {
+                                        echo "</div>";
+                                    }
+
+                                    echo "</div>";
+                                    $total++;
                                 }
-                                
-                                echo "</div>";
-                                $total++;
                             }
                         ?>
                     </div>
@@ -113,7 +128,7 @@ and open the template in the editor.
                     $advres = mysqli_query($link, $advSql);
                 ?>
                 
-            <div id="footer"><?php // require_once 'nav/footer.php';?></div>
+            <div id="footer"><?php  require_once 'nav/blogfooter.php';?></div>
                 
             </div>
             <div class="modal fade modal-fullscreen force-fullscreen" id="searchModal" tabindex="-1" 
@@ -164,7 +179,7 @@ and open the template in the editor.
                     }
                 });
                 
-                if (<?php echo $count;?> > 0) {
+                if (<?php echo $count; ?> > 0) {
                     document.getElementById('readMore<?php echo $count; ?>').onclick = function(){  
                         var e = document.getElementById('content<?php echo $count; ?>');
                         if (e.style.display === 'block') {

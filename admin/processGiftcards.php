@@ -59,6 +59,7 @@ if (isset($_GET['delete'])) {
             $updateGiftSql = "UPDATE giftcards SET code='$code', name='$name', "
                     . "type='$type', description='$desc', amount='$amount', "
                     . "customise='$customise', status='$status' where id = '$editid';";
+            
             if (mysqli_query($link, $updateGiftSql)) {
                 unset($_SESSION['addGiftSuccess']);
                 unset($_SESSION['addGiftError']);
@@ -70,7 +71,7 @@ if (isset($_GET['delete'])) {
             }
         } else {
             $giftSql = "INSERT INTO giftcards (code, name, type, description, "
-                    . "amount, customise, status) VALUES ('$code', $name', '$type', '$desc', "
+                    . "amount, customise, status) VALUES ('$code', '$name', '$type', '$desc', "
                     . "'$amount', '$customise', '$status');";
             
             mysqli_query($link, $giftSql);

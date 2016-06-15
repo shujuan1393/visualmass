@@ -181,7 +181,7 @@ if (isset($_GET['id'])) {
                                     </td>
                                     <td>
                                         Color*:
-                                        <input type='text' name='code'>
+                                        <input type='text' name='colorcode'>
                                     </td>
                                 </tr>
                                 <tr>

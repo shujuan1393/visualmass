@@ -19,7 +19,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['updateAuthorError']);
         
         $_SESSION['addBlogCatError'] = "Empty field(s)";
-        header("Location: blogSettings.php");
+        echo "<script>window.history.back()</script>";
     } else {
         if (empty($_POST['editid'])) {
             $sql = "INSERT INTO categories (type, name) VALUES ('blog', '".$_POST['name']."');";
@@ -39,8 +39,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['addAuthorError']);
         unset($_SESSION['addAuthorSuccess']);
         unset($_SESSION['updateAuthorError']);
-        header("Location: blogSettings.php");
-        
+        echo "<script>window.history.back()</script>";
     }
 } else if (isset($_GET['delete']) && isset($_GET['id'])) { 
     $deletesql = "DELETE FROM categories where id ='". $_GET['id']."'";
@@ -54,7 +53,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['updateAuthorError']);
         unset($_SESSION['updateAuthorSuccess']);
         $_SESSION['updateBlogCatSuccess'] = "Record deleted successfully";
-        header("Location: blogSettings.php");
+        echo "<script>window.history.back()</script>";
     } 
 } else if (isset($_GET['delete']) && isset($_GET['aid'])) { 
     $deletesql = "DELETE FROM authors where id ='". $_GET['aid']."'";
@@ -68,7 +67,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['addAuthorError']);
         unset($_SESSION['updateAuthorError']);
         $_SESSION['updateAuthorSuccess'] = "Record deleted successfully";
-        header("Location: blogSettings.php");
+        echo "<script>window.history.back()</script>";
     } 
 } else if (isset($_GET['update'])) {
     if(empty($_POST['firstname']) || empty($_POST['lastname'])
@@ -82,7 +81,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['addAuthorSuccess']);
         unset($_SESSION['updateAuthorError']);
         $_SESSION['addAuthorError'] = "Empty field(s)";
-        header("Location: blogSettings.php");
+        echo "<script>window.history.back()</script>";
     } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         unset($_SESSION['addBlogCatSuccess']);
         unset($_SESSION['addBlogCatError']);
@@ -93,7 +92,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['addAuthorSuccess']);
         unset($_SESSION['updateAuthorError']);
         $_SESSION['addAuthorError'] = "Invalid email";
-        header("Location: blogSettings.php");
+        echo "<script>window.history.back()</script>";
     } else {
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
@@ -121,7 +120,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['updateAuthorSuccess']);
         unset($_SESSION['addAuthorError']);
         unset($_SESSION['updateAuthorError']);
-        header("Location: blogSettings.php");
+        echo "<script>window.history.back()</script>";
     }
 }
 
