@@ -38,7 +38,11 @@ if (isset($_GET['edit'])) {
         unset($_SESSION['addEmpTypeSuccess']);
         unset($_SESSION['updateEmpTypeError']);
         $_SESSION['addEmpTypeError'] = "Empty field(s)";
-        echo "<script>window.history.back()</script>";
+        if (isset($_POST['editid'])) {
+            header("Location: accountSettings.php?id=".$_POST['editid']."#menu1");
+        } else {
+           header("Location: accountSettings.php#menu1");
+        }
     } else {        
         $code = $_POST['code'];
         $name = $_POST['name'];
@@ -57,7 +61,7 @@ if (isset($_GET['edit'])) {
                     unset($_SESSION['addEmpTypeSuccess']);
                     unset($_SESSION['updateEmpTypeError']);
                     $_SESSION['addEmpTypeError'] = "Code already exists";
-                    echo "<script>window.history.back()</script>";
+                    header("Location: accountSettings.php#menu1");
                 } else {               
 
                     unset($_SESSION['addEmpTypeError']);
@@ -68,7 +72,7 @@ if (isset($_GET['edit'])) {
 
                     mysqli_query($link, $sql);
                     $_SESSION['addEmpTypeSuccess'] = "Employee type successfully added";
-                    echo "<script>window.history.back()</script>";
+                    header("Location: accountSettings.php#menu1");
                 } 
             }
         } else {
@@ -80,7 +84,7 @@ if (isset($_GET['edit'])) {
                 unset($_SESSION['addEmpTypeSuccess']);
                 unset($_SESSION['updateEmpTypeError']);
                 $_SESSION['updateEmpTypeSuccess'] = "Record updated successfully";
-                echo "<script>window.history.back()</script>";
+                header("Location: accountSettings.php#menu1");
             } else {
                 echo "Error updating record: " . mysqli_error($link);
             }
@@ -127,7 +131,7 @@ if (isset($_GET['edit'])) {
                 }
                 if (mysqli_query($link, $sql)) {
                     $_SESSION['updateAccSetSuccess'] = "Changes saved successfully";
-                    echo "<script>window.history.back()</script>";
+                    header("Location: accountSettings.php");
                 } else {
                     echo "Error updating record: " . mysqli_error($link);
                 }

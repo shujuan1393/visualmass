@@ -11,8 +11,6 @@ if (!isset($_SESSION['loggedUser'])) {
 } 
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['updateInvError']);
-    unset($_SESSION['updateInvSuccess']);
     $getSql = "Select * from inventory where id =". $_GET['id'];
     $res = mysqli_query($link, $getSql);
     $resrow = mysqli_fetch_assoc($res);    

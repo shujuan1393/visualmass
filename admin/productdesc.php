@@ -8,7 +8,7 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    $selectSql = "Select * from homepage where id ='" .$_GET['id']."';";
+    $selectSql = "Select * from productdescription where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 
     if (!mysqli_query($link,$selectSql))
@@ -43,66 +43,72 @@ if (isset($_GET['id'])) {
                                 Web
                             </li>
                             <li class="active">
-                                Homepage
+                                Product Description
                             </li>
                         </ol>
                         
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#homep">Homepage Banner</a></li>
-                            <li><a data-toggle="tab" href="#menu1">Homepage Sections</a></li>
+                            <li class="active"><a data-toggle="tab" href="#prodb">Product Description Banner</a></li>
+                            <li><a data-toggle="tab" href="#menu1">Product Description Sections</a></li>
                         </ul>
 
                         <div class="tab-content">
-                            <div id="homep" class="tab-pane fade in active">
-                                <h1 class="page-header">Update Homepage Banner</h1>
-                                <p>
-                                    <?php 
-                                        $getBanner = "Select * from homepage where type='banner';";
-                                        $bresult = mysqli_query($link, $getBanner);
+                            <div id="prodb" class="tab-pane fade in active">
+                                <h1 class="page-header">Manage Product Description Banners</h1>
+                                <div id='bannerPreview' style='display: none;'>
+                                    You have not uploaded a banner image yet.
+                                </div>
+                                <?php 
+                                    $getBanner = "Select * from productbanner where gender='all'";
+                                    $bresult = mysqli_query($link, $getBanner);
 
-                                        if (!mysqli_query($link, $getBanner)) {
-                                            echo "Error description: ". mysqli_error($link);
-                                        } else {
-                                            if ($bresult -> num_rows == 0 ) {
-                                                echo "You have not uploaded a banner image yet.<br><br>";
-                                            } else {
-                                                $brow = mysqli_fetch_assoc($bresult);
-                                                $browArr = explode(".", $brow['html']);
+                                    if (!mysqli_query($link, $getBanner)) {
+                                        echo "Error description: ". mysqli_error($link);
+                                    } else {
+                                        if ($bresult -> num_rows !== 0 ) {
+                                            while ($brow = mysqli_fetch_assoc($bresult)) {
+                                                $browArr = explode(".", $brow['image']);
                                                 $ext = $browArr[count($browArr)-1];
 
                                                 $imgArr = array("jpg", "jpeg", "png", "gif");
                                                 $vidArr = array("mp3", "mp4", "wma");
 
+                                                echo "<div class='prodbanners' id='banner_".$brow['categories']."' style='display:none;'>";
                                                 if (in_array($ext, $imgArr)) {
-                                                    echo "<img src='".$brow['html']."' width=450>";
+                                                    echo "<img src='".$brow['image']."' width=350>";
                                                 } else {
-                                                    echo '<video width="500" height="400" autoplay>
-                                                    <source src="'.$brow['html'].'" type="video/mp4">
+                                                    echo '<video width="300" height="400" controls>
+                                                    <source src="'.$brow['image'].'" type="video/mp4">
                                                     Your browser does not support the video tag.
                                                     </video>';
                                                 }
+                                                echo "</div>";
                                             }
                                         }
-                                    ?>
+                                    }
+                                ?>
 
-                                    <form id='addHomepageBanner' action='processHomepage.php?banner=1' method='post' enctype="multipart/form-data">
+                                    <form id='addProdDescBanner' action='processProdDesc.php?banner=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addHomepageBannerError" style="color:red">
+                                        <div id="addProdDescBannerError" style="color:red">
                                             <?php 
-                                                if (isset($_SESSION['addHomepageBannerError'])) {
-                                                    echo $_SESSION['addHomepageBannerError'];
+                                                if (isset($_SESSION['addProdDescBannerError'])) {
+                                                    echo $_SESSION['addProdDescBannerError'];
                                                 }
                                             ?>
                                         </div>
 
-                                        <div id="addHomepageBannerSuccess" style="color:green">
+                                        <div id="addProdDescBannerSuccess" style="color:green">
                                             <?php 
-                                                if (isset($_SESSION['addHomepageBannerSuccess'])) {
-                                                    echo $_SESSION['addHomepageBannerSuccess'];
+                                                if (isset($_SESSION['addProdDescBannerSuccess'])) {
+                                                    echo $_SESSION['addProdDescBannerSuccess'];
                                                 }
                                             ?>
                                         </div>
-
+                                        <select id='categories' name='categories'>
+                                            <option value='glasses'>Glasses</option>
+                                            <option value='sunglasses'>Sunglasses</option>
+                                        </select>
                                         <input type='hidden' name='submitted' id='submitted' value='1'/>
                                         <input type='hidden' name='oldImage' id='oldImage' value='<?php if(!empty($brow['html'])) echo $brow['html']; ?>'/>
 
@@ -114,26 +120,26 @@ if (isset($_GET['id'])) {
                                 </p>
                             </div>
                             <div id="menu1" class="tab-pane fade">
-                                <h1 class="page-header">Manage Homepage Sections</h1>
+                                <h1 class="page-header">Manage Product Description Sections</h1>
                                 
-                                <div id="updateHomepageSuccess" style="color:green">
+                                <div id="updateProdDescSuccess" style="color:green">
                                     <?php 
-                                        if (isset($_SESSION['updateHomepageSuccess'])) {
-                                            echo $_SESSION['updateHomepageSuccess'];
+                                        if (isset($_SESSION['updateProdDescSuccess'])) {
+                                            echo $_SESSION['updateProdDescSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateHomepageError" style="color:red">
+                                <div id="updateProdDescError" style="color:red">
                                     <?php 
-                                        if (isset($_SESSION['updateHomepageError'])) {
-                                            echo $_SESSION['updateHomepageError'];
+                                        if (isset($_SESSION['updateProdDescError'])) {
+                                            echo $_SESSION['updateProdDescError'];
                                         }
                                     ?>
                                 </div>
                                 
                                 <p>
                                     <?php 
-                                        $qry = "Select * from homepage where type='section'";
+                                        $qry = "Select * from productdescription order by type";
 
                                         $result = mysqli_query($link, $qry);
 
@@ -154,7 +160,9 @@ if (isset($_GET['id'])) {
 
                                     <table>
                                         <thead>
-                                            <th>Title</th> 
+                                            <th>Title</th>
+                                            <th>Page</th> 
+                                            <th>Order</th>
                                             <th>Status</th>
                                             <th>Edit</th>
                                             <th>Delete</th>                        
@@ -166,8 +174,10 @@ if (isset($_GET['id'])) {
                                                 $rowCount++;
                                                 echo "<tr>";
                                                 echo "<td>".$row['title'] ."</td>";   
+                                                echo "<td>".$row['type']."</td>";     
+                                                echo "<td>".$row['fieldorder']."</td>";  
                                                 echo "<td>".$row['status']."</td>";                        
-                                                echo '<td><button onClick="window.location.href=`homepage.php?id='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="window.location.href=`productdesc.php?id='.$row['id'].'#menu1`">E</button>';
                                                 echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                 echo "</tr>";
                                             }
@@ -176,31 +186,38 @@ if (isset($_GET['id'])) {
                                     <?php
                                         }
                                     }
+                                    
+                                    $rowsQry = "Select count(id) as count, type from productdescription group by type;";
+                                    $rowResult = mysqli_query($link, $rowsQry);
+
+                                    while($r1 = mysqli_fetch_assoc($rowResult)) {
+                                        echo "<input type='hidden' id='".$r1['type']."Value' value='".$r1['count']."'>";
+                                    }
                                     ?>
+                                    
+                                    <form id='addProdDescSection' action='processProdDesc.php' method='post' enctype="multipart/form-data">
 
-                                    <form id='addAdvertisement' action='processHomepage.php' method='post' enctype="multipart/form-data">
-
-                                        <div id="addHomepageError" style="color:red">
+                                        <div id="addProdDescError" style="color:red">
                                             <?php 
-                                                if (isset($_SESSION['addHomepageError'])) {
-                                                    echo $_SESSION['addHomepageError'];
+                                                if (isset($_SESSION['addProdDescError'])) {
+                                                    echo $_SESSION['addProdDescError'];
                                                 }
 
-                                                if (isset($_SESSION['uploadHomepageError'])) {
-                                                    echo $_SESSION['uploadHomepageError'];
+                                                if (isset($_SESSION['uploadProdDescError'])) {
+                                                    echo $_SESSION['uploadProdDescError'];
                                                 }
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addHomepageSuccess" style="color:green">
+                                        <div id="addProdDescSuccess" style="color:green">
                                             <?php 
-                                                if (isset($_SESSION['addHomepageSuccess'])) {
-                                                    echo $_SESSION['addHomepageSuccess'];
+                                                if (isset($_SESSION['addProdDescSuccess'])) {
+                                                    echo $_SESSION['addProdDescSuccess'];
                                                 }
                                             ?>
                                         </div>
 
-                                        <h1 id="add" class="page-header">Add/Edit Homepage Section</h1>
+                                        <h1 id="add" class="page-header">Add/Edit Product Description Section</h1>
 
                                         <input type='hidden' name='submitted' id='submitted' value='1'/>
                                         <input type='hidden' name='editid' id='editid' 
@@ -208,10 +225,27 @@ if (isset($_GET['id'])) {
 
                                         <table class="content">
                                             <tr>
-                                                <td colspan="2">
+                                                <td>
                                                     Title*:
                                                     <input type='text' name='title' id='title' maxlength="50" 
                                                            value='<?php if (!empty($erow['title'])) { echo $erow['title']; } ?>'/>
+                                                </td>
+                                                <td>
+                                                    Page*:
+                                                    <select id='type' name='type'>
+                                                        <option value='glasses' <?php 
+                                                        if (!empty($erow['type'])) {
+                                                            if (strcmp($erow['type'], "glasses") === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        } ?>>GLASSES</option>
+                                                        <option value='sunglasses' <?php 
+                                                        if (!empty($erow['type'])) {
+                                                            if (strcmp($erow['type'], "sunglasses") === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        } ?>>SUNGLASSES</option>
+                                                    </select>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -444,6 +478,90 @@ if (isset($_GET['id'])) {
 </html>
 
 <script> 
+    
+    document.getElementById('type').onchange = function() {
+        var index = this.selectedIndex;
+        var inputText = this.children[index].value;
+        var obj = document.getElementById(inputText+ "Value");
+        var str = inputText + "Value";
+        var count;
+        
+        if (obj !== null) {
+            count = obj.value;
+        } else {
+            count = 0;
+        }
+        <?php
+        if(!isset($_GET['id'])) {
+        ?>
+            document.getElementById('order').value = Number(count)+1;
+        <?php 
+        }
+        ?>
+    };
+
+    window.onload = function() {
+        var index = document.getElementById('type').selectedIndex;
+        var inputText = document.getElementById('type').children[index].value;
+        var str = inputText + "Value";
+        var obj = document.getElementById(str);
+        var count;
+        
+        if (obj !== null) {
+            count = obj.value;
+        } else {
+            count = 0;
+        }
+        <?php
+        if(!isset($_GET['id'])) {
+        ?>
+            document.getElementById('order').value = Number(count)+1;
+        <?php 
+        }
+        ?>
+    };
+    
+    function hideElements() {
+        var arr = document.getElementsByClassName('prodbanners');
+        for (var i = 0; i < arr.length; i++) {
+            arr[i].style.display = "none";
+        }
+    }
+    (function() {
+        // your page initialization code here
+        // the DOM will be available here
+        <?php
+            unset($_SESSION['addProdDescBannerError']);
+            unset($_SESSION['addProdDescBannerSuccess']);
+        ?>
+        hideElements();
+        var cat = document.getElementById('categories').value;
+        var str = "banner_" + cat;
+        var obj = document.getElementById(str);
+        if (obj === null) {
+            document.getElementById('bannerPreview').style.display = "block";
+        } else {
+            obj.style.display = "block";
+            document.getElementById('bannerPreview').style.display = "none";
+        }
+    })();
+    
+    document.getElementById('categories').onchange = function() {
+        hideElements();
+        var cat = "banner_" + this.value;
+        var obj = document.getElementById(cat);
+        if (obj === null) {
+            document.getElementById('bannerPreview').style.display = "block";
+        } else {
+            obj.style.display = "block";
+            document.getElementById('bannerPreview').style.display = "none";
+        }
+        <?php
+            unset($_SESSION['addProdDescBannerError']);
+            unset($_SESSION['addProdDescBannerSuccess']);
+        ?>
+    };
+    
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -459,15 +577,15 @@ if (isset($_GET['id'])) {
     function deleteFunction(locId) {
         var r = confirm("Are you sure you wish to delete this section?");
         if (r === true) {
-            window.location="processHomepage.php?delete=1&id=" + locId;
+            window.location="processProdDesc.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addHomepageError']);
-                unset($_SESSION['addHomepageSuccess']);
-                unset($_SESSION['updateHomepageSuccess']);
-                $_SESSION['updateHomepageError'] = "Nothing was deleted";
+                unset($_SESSION['addProdDescError']);
+                unset($_SESSION['addProdDescSuccess']);
+                unset($_SESSION['updateProdDescSuccess']);
+                $_SESSION['updateProdDescError'] = "Nothing was deleted";
             ?>
-            window.location='homepage.php';
+            window.location='productdesc.php';
         }
     }
 
@@ -484,7 +602,7 @@ if (isset($_GET['id'])) {
                     "<input type='radio' name='linkpos"+count+"' value='center'>Center " + 
                     "<input type='radio' name='linkpos"+count+"' value='right'>Right </td></tr>" +
                 "<tr><td colspan='2'>Link: <input type='text' name='link" + count + 
-                    "' id='link" + count + "' maxlength='50' /></td></tr></table>"+;
+                    "' id='link" + count + "' maxlength='50' /></td></tr></table>";
 
         document.getElementById('buttonlinks').appendChild(node); 
         document.getElementById('buttonno').value = count;

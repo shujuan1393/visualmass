@@ -12,10 +12,6 @@ $selectSql = "SELECT value from settings WHERE type='account'";
 $savedresult = mysqli_query($link, $selectSql);
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['addEmpTypeError']);
-    unset($_SESSION['addEmpTypeSuccess']);
-    unset($_SESSION['updateEmpTypeError']);
-    unset($_SESSION['updateEmpTypeSuccess']);
     $getEmpType = "Select * from employeetypes where id='".$_GET['id']."';";
     $eresult = mysqli_query($link, $getEmpType);
     $erow = mysqli_fetch_assoc($eresult);
@@ -270,7 +266,7 @@ if (!mysqli_query($link,$selectSql)) {
                                                 echo "<tr>";
                                                 echo "<td>".$row['code']."</td>";
                                                 echo "<td>".$row['name']."</td>";
-                                                echo '<td><button onClick="window.location.href=`accountSettings.php?id='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="window.location.href=`accountSettings.php?id='.$row['id'].'#menu1`">E</button>';
                                                 echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                 echo "</tr>";
                                             }

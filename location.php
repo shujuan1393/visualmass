@@ -195,9 +195,16 @@ function geocode($address){
                 </div>
                 
                 <div class='full_section'>
+                    <div class=' col-md-10 col-md-offset-1'>
                     <h3>Shop our frames</h3>
-                    <div class='col-md-6'>GLASSES</div>
-                    <div class='col-md-6'>SUNGLASSES</div>
+                    <div class='col-md-5 col-md-offset-1'>
+                        IMAGE
+                        <p class='text-center'><a href='description.php?type=glasses'>GLASSES</a></p>
+                    </div>
+                    <div class='col-md-5 col-md-offset-1'>
+                        IMAGE
+                        <p class='text-center'><a href='description.php?type=sunglasses'>SUNGLASSES</a></p>
+                    </div>
                 </div>
             </div>
         </div>

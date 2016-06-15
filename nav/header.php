@@ -92,25 +92,25 @@ Braintree_Configuration::privateKey('f4d205166ddd37027a37a5fed3cdbba5');
                 </div>
             </div>
             <div id='glasses' style='display:none;'>
-                <ul>
-                    <li><button id='glassesmen' class='button'>SHOP MEN</button></li>
-                    <li><button id='glasseswomen' class='button'>SHOP WOMEN</button></li>
+                <ul class='col-md-12'>
+                    <li class='col-md-6'><button id='glassesmen' class='button'>SHOP MEN</button></li>
+                    <li class='col-md-6'><button id='glasseswomen' class='button'>SHOP WOMEN</button></li>
                 </ul>
             </div>
 
             <div id='sunglasses' style='display:none;'>
-                <ul>
-                    <li><button id='sunglassesmen' class='button'>SHOP MEN</button></li>
-                    <li><button id='sunglasseswomen' class='button'>SHOP WOMEN</button></li>
+                <ul class='col-md-12'>
+                    <li class='col-md-6'><button id='sunglassesmen' class='button'>SHOP MEN</button></li>
+                    <li class='col-md-6'><button id='sunglasseswomen' class='button'>SHOP WOMEN</button></li>
                 </ul>
             </div>
 
             <div id='ourstoryheader' style='display:none;'>
-                 <ul>
-                    <li><a href='ourstory.php'>HISTORY</a></li>
-                    <li><a href='giftInitiative.php'>ONE FOR YOU, <br> ONE FOR THEM</a></li>
-                    <li><a href='culture.php'>CULTURE</a></li>
-                    <li><a href='design.php'>DESIGN</a></li>
+                 <ul class='col-lg-12'>
+                    <li class='col-sm-3'><button class='button' onclick='ourstory("main")'>HISTORY</button></li>
+                    <li class='col-sm-3'><button id='gift' class='button' onclick='ourstory("one")'>ONE FOR YOU, <br> ONE FOR THEM</button></li>
+                    <li class='col-sm-3'><button id='culture' class='button' onclick='ourstory("culture")'>CULTURE</button></li>
+                    <li class='col-sm-3'><button id='design' class='button' onclick='ourstory("design")'>DESIGN</button></li>
                 </ul>
             </div>
         </div>
@@ -133,7 +133,11 @@ Braintree_Configuration::privateKey('f4d205166ddd37027a37a5fed3cdbba5');
             </div><!-- /.modal-dialog -->
           </div><!-- /.modal -->
           
-        <script>          
+        <script>  
+            function ourstory(type) {
+                window.location = "ourstory.php?type=" + type;
+            }
+            
             document.getElementById('showGlasses').onclick = function(){  
                 var e = document.getElementById('glasses');
                 if (e.style.display === 'block') {

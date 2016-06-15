@@ -472,6 +472,7 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
 #userMenu {
     right: 55px;
     background-color: #dddddd;
+    z-index: 20!important;
 }
 
 #userMenu a:hover {
@@ -483,24 +484,46 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
     display: inline-block;
 }
 
+#glasses , #sunglasses, #ourstoryheader {
+    width: 100%;
+}
+/*
 #glasses li , #sunglasses li {
     float: left;
-    /*margin-top: 5px;*/
+    margin-top: 5px;
     margin: 15px;
+    margin-right: 20px;
+    width: 45%;
+}*/
+
+#ourstoryheader ul {
+    margin-left: -10px;
+}
+
+#glasses ul, #sunglasses ul {
+    margin-left: -15px;
 }
 
 #glasses .button, #sunglasses .button {
-    padding: 50px 240px 70px 230px;
+    /*padding: 60px 270px 80px 270px;*/
+    margin: 15px;
+    width: 100%;
+    height: 100%;
 }
 
 #ourstoryheader li {
-    float: left;
-    width: 280px;
-    height: 150px;
-    padding: 50px 10px;
-    margin: 10px 15px;
-    background-color: #ddd; 
-    vertical-align: middle; 
+    /*float: left;*/
+    /*padding: 0px 10px;*/
+    /*margin: 10px;*/
+}
+
+#ourstoryheader .button {
+    /*padding: 50px 110px 80px 110px;*/
+    /*padding: 50px;*/
+    margin: 10px;
+    /*margin-right: s0px;*/
+    width: 100%;
+    height: 100%;
 }
 
 /* TERMS */
@@ -1286,4 +1309,8 @@ textarea {
 .padded {
     padding: 5px;
     margin-left: 5px;
+}
+
+.prodbanners {
+    z-index: 0;
 }

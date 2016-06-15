@@ -108,8 +108,7 @@ if (isset($_GET['delete'])) {
         $linki = "link".$i;
         $linkposi = "linkpos".$i;
         $buttoni = "buttontext".$i;
-        if (!empty($_POST[$linki]) && (empty($_POST[$linkposi]) 
-                || empty($_POST[$buttoni]))) { 
+        if (!empty($_POST[$buttoni]) && (empty($_POST[$linkposi]) || empty($_POST[$linki]))) {
             unset($_SESSION['addHomepageSuccess']);
             unset($_SESSION['updateHomepageError']);
             unset($_SESSION['updateHomepageSuccess']);

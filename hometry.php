@@ -49,6 +49,8 @@
                     $sql = "Select * from hometry where type='section' and status='active' order by fieldorder asc";
                     $result = mysqli_query($link, $sql);
                     
+                    $count = 0;
+                    
                     if (!mysqli_query($link, $sql)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
@@ -58,7 +60,6 @@
                 ?>  
                     <!--<div id='terms_content'>-->
                         <?php 
-                            $count = 0;
                             while ($row = mysqli_fetch_assoc($result)) {
                                 $img = $row['image'];
                                 $imagepos = strpos($img, '/');

@@ -8,9 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['addGiftSuccess']);
-    unset($_SESSION['updateGiftError']);
-    unset($_SESSION['updateGiftSuccess']);
     $selectSql = "Select * from giftcards where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

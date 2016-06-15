@@ -8,10 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['updateHomeSuccess']);    
-    unset($_SESSION['updateHomeError']);
-    unset($_SESSION['addHomeSuccess']);
-    unset($_SESSION['uploadHomeError']);
     $selectSql = "Select * from hometry where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 
@@ -350,7 +346,7 @@ if (isset($_GET['id'])) {
                                                     ?>'>
 
                                                     <h4 class="pull-left">Button</h4>
-                                                    <p onclick="addButton()" class="text-right">
+                                                    <p onclick="addButton()" class="text-right addMore">
                                                         <i class="fa fa-fw fa-plus"></i> Add Button
                                                     </p>
 
@@ -488,7 +484,7 @@ if (isset($_GET['id'])) {
         var count = document.getElementById('buttonno').value;
         count++;
         var node = document.createElement('fieldset');  
-        node.innerHTML = "<h5 class='page-header'>Button " + count + "(optional)</h5>" +
+        node.innerHTML = "<h5 class='page-header'>Button " + count + " (optional)</h5>" +
                 "<table class='content-sub'><tr>" +
                 "<td>Text: <input type='text' name='buttontext" + count +
                     "' id='buttontext" + count + "' maxlength='50' /></td>" +

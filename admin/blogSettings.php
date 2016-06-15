@@ -11,12 +11,7 @@ require_once '../config/db.php';
 $selectSql = "SELECT value from settings WHERE type='blog'";
 $savedresult = mysqli_query($link, $selectSql);
 
-if (isset($_GET['id'])) {
-    unset($_SESSION['addBlogCatError']);
-    unset($_SESSION['addBlogCatSuccess']);
-    unset($_SESSION['updateBlogCatError']);
-    unset($_SESSION['updateBlogCatSuccess']);
-    
+if (isset($_GET['id'])) {    
     unset($_SESSION['addAuthorError']);
     unset($_SESSION['addAuthorSuccess']);
     unset($_SESSION['updateAuthorError']);
@@ -29,11 +24,6 @@ if (isset($_GET['id'])) {
     unset($_SESSION['addBlogCatSuccess']);
     unset($_SESSION['updateBlogCatError']);
     unset($_SESSION['updateBlogCatSuccess']);
-    
-    unset($_SESSION['addAuthorError']);
-    unset($_SESSION['addAuthorSuccess']);
-    unset($_SESSION['updateAuthorError']);
-    unset($_SESSION['updateAuthorSuccess']);
     $getAuthor = "Select * from authors where id='".$_GET['aid']."';";
     $result = mysqli_query($link, $getAuthor);
     $erow = mysqli_fetch_assoc($result);

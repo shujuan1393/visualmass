@@ -8,10 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['addServError']);
-    unset($_SESSION['addServSuccess']);
-    unset($_SESSION['updateServError']);
-    unset($_SESSION['updateServSuccess']);
     $selectSql = "Select * from services where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

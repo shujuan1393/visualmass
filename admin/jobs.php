@@ -8,10 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['updateJobSuccess']);
-    unset($_SESSION['updateJobError']);
-    unset($_SESSION['addJobSuccess']);
-    unset($_SESSION['addJobError']);
     $selectSql = "Select * from jobs where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

@@ -1,5 +1,9 @@
 <?php 
     require_once 'config/db.php';
+    
+    if (isset($_GET['type'])) {
+        $type = $_GET['type'];
+    }
 ?>
 <html>
     <head>
@@ -12,7 +16,7 @@
             
             <div id="content">
                 <?php
-                    $banner = "Select * from ourstory where page='one' and type='banner';";
+                    $banner = "Select * from productbanner where categories='$type' and gender='all';";
                     $bresult = mysqli_query($link, $banner);
                     
                     if (!mysqli_query($link, $banner)) {
@@ -23,14 +27,14 @@
                         } else {
                             $brow = mysqli_fetch_assoc($bresult);
                             
-                            $browArr = explode(".", $brow['html']);
+                            $browArr = explode(".", $brow['image']);
                             $ext = $browArr[count($browArr)-1];
 
                             $imgArr = array("jpg", "jpeg", "png", "gif");
                             $vidArr = array("mp3", "mp4", "wma");
                             
-                            $pos = strpos($brow['html'], '/');
-                            $url = substr($brow['html'], $pos+1);
+                            $pos = strpos($brow['image'], '/');
+                            $url = substr($brow['image'], $pos+1);
                             echo "<div class='webbanner'>";
                             
                             if (in_array($ext, $imgArr)) {
@@ -46,7 +50,7 @@
                     }
                 ?>
                 <?php 
-                    $sql = "Select * from ourstory where page='one' and type='section' and status='active' order by fieldorder asc";
+                    $sql = "Select * from productdescription where type='$type' and status='active' order by fieldorder asc";
                     $result = mysqli_query($link, $sql);
                     
                     $count = 0;
@@ -57,25 +61,63 @@
                             echo "<h3>Sorry, this page is under construction.</h3>";
                         } else {
                 ?>  
-                    <div id='ourstory'>
+                    <!--<div id='terms_content'>-->
                         <?php 
                             while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<div class='row' id='section$count'>";
-                                echo "<div class='col-md-2'></div>";
-                                echo "<div class='col-md-8'>";
-                                echo "<h3>".$row['title']."</h3>";
-                                echo html_entity_decode($row['html']);
+                                $img = $row['image'];
+                                $imagepos = strpos($img, '/');
+                                $imageurl = substr($img, $imagepos+1);
+                                
+                                echo "<div class='home-section' id='section".$count."' ";
+                                if (strcmp($row['imagepos'], "background") === 0) {
+                                    $image = '"'.$imageurl.'"';
+                                    echo "style='background-image: url($image); background-repeat: no-repeat; background-size: 500px auto;'>";
+//                                    echo "<script>document.getElementById('section".$count."').style.backgroundImage = 'url('$imageurl')';"
+//                                    . "document.getElementById('section".$count."').style.backgroundRepeat='no-repeat';</script>";
+                                } else {
+                                    echo ">";
+                                    echo "<div class='section-image' style='text-align:".$row['imagepos']."; float:".$row['imagepos']."'>";
+                                    echo "<img src='".$imageurl."'>";
+                                    echo "</div>";
+                                }
+                                
+                                if (!empty($row['html'])) {
+                                    echo "<div class='section-text' style='float:".$row['htmlpos']."'>"; 
+                                    echo html_entity_decode($row['html'])."</div>";
+                                }
+                                
+                                if (!empty($row['buttontext'])) {
+                                    $textArr = explode(",", $row['buttontext']);
+                                    $linkArr = explode(",", $row['link']);
+                                    $linkposArr = explode(",", $row['linkpos']);
+                                    $prevpos = $linkposArr[0];
+                                    
+//                                    echo "<div class='section-link'>";
+                                    echo "<div class='section-link' style='text-align:".$linkposArr[0]."'>";
+                                    for ($i = 0; $i < count($textArr); $i++) {
+                                        if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                                            echo "</div>";
+                                        }
+                                        if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                                            echo "<div class='section-link' style='text-align:".$linkposArr[$i]."'>";
+                                        }
+                                        echo "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
+                                        $prevpos = $linkposArr[$i];
+                                    }
+//                                    echo "</div>";
+                                }
+                                
                                 echo "</div>";
-                                echo "<div class='col-md-2'></div>";
                                 echo "</div>";
                                 $count++;
                             }
                         ?>
-                    </div>
+                    <!--</div>-->
                 <?php
                         }
                     }
-                    $advSql = "Select * from advertisements where status='active' and visibility like '%one%';";
+                    
+                    $advSql = "Select * from advertisements where status='active' and visibility like '%description%';";
                     $advres = mysqli_query($link, $advSql);
                 ?>
                 
@@ -86,7 +128,6 @@
             <script>
                 var clientHeight = document.getElementById('header').clientHeight;
                 var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-//                alert(clientHeight + " " + height);
                 document.getElementById('banner').style.maxHeight = height - clientHeight;
                 
                 for (var i = 0; i < <?php echo $count; ?>; i++) {
@@ -152,7 +193,7 @@
                     var newElm = document.createElement('div');
                     newElm.className = "home-section";
                     newElm.innerHTML = "<?php echo $toPrint; ?>";  
-                    sectionObj.parentNode.insertBefore(newElm, sectionObj);//firstChild.nextSibling
+                    sectionObj.parentNode.insertBefore(newElm);//firstChild.nextSibling
 
 //                            sectionObj.innerHTML = sectionObj.innerHTML + "<?php echo $toPrint; ?>";
                         }
