@@ -84,7 +84,6 @@ if (isset($_GET['delete'])) {
         $images = '';
         $featured = '';
         $target_path = "../uploads/products/"; //Declaring Path for uploaded images
-        $feat_target_path = "../uploads/products/";
         
         if (count($_FILES['featured']['name']) > 1) {
             for ($i = 0; $i < count($_FILES['featured']['name']); $i++) { //loop to get individual element from the array
@@ -93,7 +92,7 @@ if (isset($_GET['delete'])) {
                 $ext = explode('.', basename($_FILES['featured']['name'][$i])); //explode file name from dot(.) 
                 $file_extension = end($ext); //store extensions in the variable
 
-                $feat_target_path = $feat_target_path.md5(uniqid()).".".$ext[count($ext) - 1]; //set the target path with a new name of image
+                $feat_target_path = $target_path.md5(uniqid()).".".$ext[count($ext) - 1]; //set the target path with a new name of image
                 
                 $j = $j + 1; //increment the number of uploaded images according to the files in array       
 
@@ -122,7 +121,6 @@ if (isset($_GET['delete'])) {
                         }
                     } else { 
                         $featured .= $feat_target_path;
-
                         if ($i+1 !== count($_FILES['featured']['name'])) {
                             $featured .= ",";
                         }
@@ -137,7 +135,7 @@ if (isset($_GET['delete'])) {
             }
         } else {
             if (!empty($_POST['oldFeaturedImages'])) {
-                $featured =",". $_POST['oldFeaturedImages'];
+                $featured = $_POST['oldFeaturedImages'];
             }
         }
         
@@ -148,7 +146,7 @@ if (isset($_GET['delete'])) {
                 $ext = explode('.', basename($_FILES['images']['name'][$i])); //explode file name from dot(.) 
                 $file_extension = end($ext); //store extensions in the variable
 
-                $target_path = $target_path.md5(uniqid()).".".$ext[count($ext) - 1]; //set the target path with a new name of image
+                $target_img_path = $target_path.md5(uniqid()).".".$ext[count($ext) - 1]; //set the target path with a new name of image
                 $j = $j + 1; //increment the number of uploaded images according to the files in array       
 
                 if (($_FILES["images"]["size"][$i] > 5000000)) {
@@ -157,7 +155,7 @@ if (isset($_GET['delete'])) {
                     unset($_SESSION['addProdSuccess']);
                     $_SESSION['addProdError'] = "Sorry, uploads cannot be greater than 5MB.";
                     header('Location: products.php#add');
-                } else if (!move_uploaded_file($_FILES['images']['tmp_name'][$i], $target_path)) { 
+                } else if (!move_uploaded_file($_FILES['images']['tmp_name'][$i], $target_img_path)) { 
                         //if file was not moved.
                         unset($_SESSION['updateProdError']);
                         unset($_SESSION['addProdSuccess']);
@@ -168,8 +166,7 @@ if (isset($_GET['delete'])) {
                             header('Location: products.php#add');
                         }
                     } else { 
-                        $images .= $target_path;
-
+                        $images .= $target_img_path;
                         if ($i+1 !== count($_FILES['images']['name'])) {
                             $images .= ",";
                         }
@@ -184,9 +181,10 @@ if (isset($_GET['delete'])) {
             }
         } else {
             if (!empty($_POST['oldImages'])) {
-                $images =",". $_POST['oldImages'];
+                $images = $_POST['oldImages'];
             }
         }
+        
         if (!isset($_SESSION['addProdError'])) {
             $code = $_POST['code'];
             $color = $_POST['colourcode'];
