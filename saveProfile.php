@@ -21,6 +21,7 @@ if (isset($_POST['submit'])) {
         $last = isset($_POST['lastname']) ? $_POST['lastname'] : '';
         $email = isset($_POST['email']) ? $_POST['email'] : '';
         $password = isset($_POST['password']) ? $_POST['password'] : '';
+        $phone = isset($_POST['phone']) ? $_POST['phone'] : '';
 
         if (strcmp($password, "")===0) {
             $pwd = $row['password'];
@@ -37,7 +38,7 @@ if (isset($_POST['submit'])) {
         mysqli_query($link, $updateFav);
 
         $update = "UPDATE user set firstname='$first', lastname='$last', email='$email', "
-                . "password='$pwd', address='$add', marketing='$marketing' where email='".$_SESSION['loggedUserEmail']."';";
+                . "password='$pwd', address='$add',phone='$phone', marketing='$marketing' where email='".$_SESSION['loggedUserEmail']."';";
 
         mysqli_query($link, $update);
 

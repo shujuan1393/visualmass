@@ -28,6 +28,10 @@ body {
     letter-spacing: 1px;
 }
 
+#content {
+    text-align: center;
+}
+
 /*======*/
 
 .cke_editable {
@@ -60,33 +64,7 @@ ul {
 }
 
 .error {
-   color: red; 
-   padding: 5px;
-}
-ul {
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    position: relative;
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 30px;
-    max-width: 300px;
-    text-align: center;
-    margin:auto;
-    margin-bottom: 30px;
-}
-
-.table_container {
-    display: inline-block;
-    position: absolute;
-    padding-right: 30px;
-}
-
-.error {
-   color: red; 
+   color: red!important; 
    padding: 5px;
 }
 
@@ -238,6 +216,7 @@ table.dataTable thead .sorting_desc:after{
 }
 
 /*  HEADER BAR */
+
 #logoheader, #user , .swatch{
     cursor:pointer;
 }
@@ -438,7 +417,7 @@ table.dataTable thead .sorting_desc:after{
 .rightcontact {
     position: absolute;
     top: 90px;
-    right: 15px;
+    right: 20px;
     padding: 0;
 }
 
@@ -518,6 +497,12 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
     position: absolute;
     background-color: #fff;
     z-index: 15;
+}
+
+
+#userMenu {
+    right: 55px;
+    background-color: #dddddd;
 }
 
 #userMenu a:hover {
@@ -691,6 +676,21 @@ a:hover#heart {
     padding: 0;
 }
 
+#lens_select {
+    width: 15%;
+    float: right;
+    position: absolute;
+    padding: 4px 0px;
+    bottom: -27px;
+    right: 40px;
+    z-index: 15;
+    background-color: #ccc;
+}
+
+#lens_select li {
+    cursor: pointer;
+    padding: 0 5px;
+}
 
 .details {
     width: 100%;
@@ -821,6 +821,15 @@ a:hover#heart {
     margin: 0 auto;
 }
 
+.accordion {
+    cursor: pointer;
+}
+
+.accordion.active, .accordion:hover {
+    text-decoration: underline;
+    color: #808080;
+}
+
 button.accordion {
     background-color: #fff;
     color: #444!important;
@@ -835,8 +844,9 @@ button.accordion {
 }
 
 button.accordion.active, button.accordion:hover {
-    background-color: #ddd; 
+    background-color: #ccc; 
     color: #fff!important;
+    text-decoration: none;
 }
 
 div.panel {
@@ -994,7 +1004,6 @@ div.product_display.col-md-6 {
 
 .service a:hover {
     text-decoration: underline;
-    
 }
 
 #retail_locs h3, #retail_locs h4, #retail_locs p, #popup_locs h3, #popup_locs h4, #popup_locs p {
@@ -1017,7 +1026,6 @@ div.product_display.col-md-6 {
 .store_header {
     text-decoration: underline;
 }
-
 
 #scrollable_loc {
     margin: 0 20px; 
@@ -1077,6 +1085,16 @@ div.product_display.col-md-6 {
 #cart a:hover {
     color: #fff;
     text-decoration: underline;
+}
+
+#updateCart .button {
+    background-color: #808080;
+    padding: 20px 30px;
+    color: #fff!important;
+}
+
+#updateCart a:hover {
+    text-decoration: none;
 }
 
 .giftcard h3, .giftcard h4, .giftcard h5, .giftcard p {
@@ -1194,6 +1212,7 @@ div#calendar {
 
 .side-nav {
     background-color: #f2f2f2!important;
+    text-align: left;
 }
 
 .side-nav > li > ul > li.active {
@@ -1317,4 +1336,21 @@ if it's not present, don't show loader */
 	height: 100%;
 	z-index: 9999;
 	background: url(icons/Preloader_8.gif) center no-repeat #fff;
+}
+
+#existingCust {
+    border-left: 1px #333 solid;
+    height: 100%;
+}
+
+#payments {
+    text-align: left;
+}
+
+#reviewHeadings {
+    text-align: left;
+}
+
+#reviewCosts {
+    text-align: right;
 }
