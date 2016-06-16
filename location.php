@@ -206,6 +206,9 @@ function geocode($address){
                         <p class='text-center'><a href='description.php?type=sunglasses'>SUNGLASSES</a></p>
                     </div>
                 </div>
+                    <div class='col-md-10 col-md-offset-1'>
+                        <button class='button caps' id='allLocs'>Back to all locations</button>
+                    </div>
             </div>
         </div>
                         
@@ -219,6 +222,10 @@ function geocode($address){
                 var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 //                alert(clientHeight + " " + height);
                 document.getElementById('banner').style.maxHeight = height - clientHeight;
+                
+                document.getElementById('allLocs').onclick = function() {
+                  window.location = "locations.php";  
+                };
             </script>
         </div>
     </body>
