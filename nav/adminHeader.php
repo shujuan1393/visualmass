@@ -18,7 +18,7 @@ require_once '../config/db.php';
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <!-- jQuery -->
     <script src="../bootstrap/js/jquery.js"></script>
     <!-- Bootstrap Core JavaScript -->
@@ -29,6 +29,11 @@ require_once '../config/db.php';
     <link href="../bootstrap/css/sb-admin.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="../bootstrap/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
 
     <!-- CK Editor -->
     <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
@@ -48,3 +53,14 @@ require_once '../config/db.php';
     <![endif]-->
     
 </head>
+<script>
+    //paste this code under the head tag or in a separate js file.
+    // Wait for window load
+    $(window).load(function() {
+        // Animate loader off screen
+        $(".se-pre-con").fadeOut("slow");;
+    });
+</script>
+<body>	
+    <div class="se-pre-con"></div>
+</body>

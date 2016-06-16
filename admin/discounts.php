@@ -37,7 +37,7 @@ if (isset($_GET['id'])) {
                     <div class="col-lg-12">
                         <ol class="breadcrumb">
                             <li>
-                                <a href="index.php"><i class="fa fa-home"></i></a>
+                                <a href="home.php"><i class="fa fa-home"></i></a>
                             </li>
                             <li class="active">
                                 Discounts
@@ -147,15 +147,16 @@ if (isset($_GET['id'])) {
                                         ?>"/>
                                 </td>
                                 <td>
-                                    Discount Code*:
-                                    <input type='text' name='code' id='code' value ="<?php 
-                                    if(isset($_SESSION['randomString'])) { 
-                                        echo $_SESSION['randomString']; } 
-                                    if (!empty($erow['code'])) {
-                                        echo $erow['code'];
-                                    }
-                                        ?>" maxlength="50" />
-                                    <button type='button' onclick="randomString()">Generate</button>
+                                    Discount Code*: <br/>
+                                    <button type="button" onclick="randomString()" class="pull-right">Generate</button>
+                                    <div style="overflow: hidden;" >
+                                        <input type='text' name='code' id='code' value ="<?php 
+                                            if(isset($_SESSION['randomString'])) { 
+                                                echo $_SESSION['randomString']; } 
+                                            if (!empty($erow['code'])) {
+                                                echo $erow['code'];
+                                            } ?>" maxlength="50" />
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -272,45 +273,45 @@ if (isset($_GET['id'])) {
 </html>
 
  <script>
-        var myCalendar = new dhtmlXCalendarObject(["date3"]);
-                myCalendar.hideTime();
-        var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
-                myCalendar2.hideTime();
-                
-        function isNumber(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                document.getElementById('nanError').style.display='block';
-                document.getElementById('nanError').style.color='red';
-                return false;
-            }
-            document.getElementById('nanError').style.display='none';
-            return true;
-        }
-        function randomString() {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var myCalendar = new dhtmlXCalendarObject(["date3"]);
+            myCalendar.hideTime();
+    var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
+            myCalendar2.hideTime();
 
-            for( var i=0; i < 10; i++ )
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-            document.getElementById('code').value = text;
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            document.getElementById('nanError').style.display='block';
+            document.getElementById('nanError').style.color='red';
             return false;
         }
-        
-        function deleteFunction(locId) {
-            var r = confirm("Are you sure you wish to delete this discount?");
-            if (r === true) {
-                window.location="processDiscounts.php?delete=1&id=" + locId;
-            } else if (r === false) {
-                <?php
-                    unset($_SESSION['addDiscError']);
-                    unset($_SESSION['addDiscSuccess']);
-                    unset($_SESSION['updateDiscSuccess']);
-                    $_SESSION['updateDiscError'] = "Nothing was deleted";
-                ?>
-                window.location='discounts.php';
-            }
+        document.getElementById('nanError').style.display='none';
+        return true;
+    }
+    function randomString() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 10; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        document.getElementById('code').value = text;
+        return false;
+    }
+
+    function deleteFunction(locId) {
+        var r = confirm("Are you sure you wish to delete this discount?");
+        if (r === true) {
+            window.location="processDiscounts.php?delete=1&id=" + locId;
+        } else if (r === false) {
+            <?php
+                unset($_SESSION['addDiscError']);
+                unset($_SESSION['addDiscSuccess']);
+                unset($_SESSION['updateDiscSuccess']);
+                $_SESSION['updateDiscError'] = "Nothing was deleted";
+            ?>
+            window.location='discounts.php';
         }
-    </script>
+    }
+</script>

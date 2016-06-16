@@ -149,15 +149,16 @@ if (isset($_GET['id'])) {
                                                value='<?php if (!empty($erow['name'])) { echo $erow['name']; }?>'/>
                                     </td>
                                     <td>
-                                        Code*:
-                                        <input type='text' name='code' id='code' value ="<?php 
-                                        if(isset($_SESSION['randomString'])) { 
-                                            echo $_SESSION['randomString']; } 
-                                        if (!empty($erow['code'])) {
-                                            echo $erow['code'];
-                                        }
-                                            ?>" maxlength="50" />
-                                        <button type='button' onclick="randomString()">Generate</button>
+                                        Code*: <br/>
+                                        <button type="button" onclick="randomString()" class="pull-right">Generate</button>
+                                        <div style="overflow: hidden;" >
+                                            <input type='text' name='code' id='code' value ="<?php 
+                                                if(isset($_SESSION['randomString'])) { 
+                                                    echo $_SESSION['randomString']; } 
+                                                if (!empty($erow['code'])) {
+                                                    echo $erow['code'];
+                                                } ?>" maxlength="50" />
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>

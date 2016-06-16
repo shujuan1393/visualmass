@@ -193,9 +193,9 @@ if (isset($_GET['delete'])) {
                 
                 $updateSql = "UPDATE locations SET name='". $locname. "', "
                 . "address ='" .$address. "', phone ='".$phone."', "
-                . "apt='".$apt."', city ='".$city."', description='$desc', "
-                . "zip='".$zip."', country ='".$country."', opening = '$opening', "
-                . "featured='$image', images = '$images', type ='".$loctype."', "
+                . "apt='".$apt."', city ='".$city."', description='".$desc."', "
+                . "zip='".$zip."', country ='".$country."', opening ='".$opening."', "
+                . "featured='".$image."', images ='".$images."', type ='".$loctype."', "
                 . "services='".$services."' where id='". $editid. "'";
                 
                 if (mysqli_query($link, $updateSql)) {
@@ -211,10 +211,9 @@ if (isset($_GET['delete'])) {
                 unset($_SESSION['randomString']);
                 // output data of each row
                 $locSql = "INSERT INTO locations (code, name, address, phone, apt, city, zip"
-                        . ", country, image, type, services, featured, images, description, opening) "
-                        . "VALUES ('$loccode',
-                '$locname', '$address', '$phone', '$apt', '$city', '$zip', '$country',"
-                        . "'$target_file', '$loctype', '$services', '$image', '$images', '$desc', '$opening');";
+                        . ", country, type, services, featured, images, description, opening) "
+                        . "VALUES ('$loccode', '$locname', '$address', '$phone', '$apt', '$city', '$zip', '$country',"
+                        . "'$loctype', '$services', '$image', '$images', '$desc', '$opening');";
 
                 mysqli_query($link, $locSql);
                 unset($_SESSION['uploadLocError']);

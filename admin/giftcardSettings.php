@@ -11,6 +11,12 @@ if (isset($_POST['submit'])) {
     if (empty($_POST['expiry']) || 
             ($_POST['expiry'] === "on" && empty($_POST['duration']) )) {
         unset($_SESSION['updateGcSetSuccess']);
+        
+        if(!empty($_POST['expiry'])){
+            $_SESSION['expiry'] = $expiry;
+            
+        }
+        
         $_SESSION['updateGcSetError'] = "Empty field(s)";
     } else {
         unset($_SESSION['updateGcSetError']);
@@ -91,7 +97,9 @@ if (!mysqli_query($link,$selectSql)) {
                             </div>
                             
                             <?php
-                                $expiry = explode("expiry=", $valArr[0]);
+                                if(!empty($valArr[0])){
+                                    $expiry = explode("expiry=", $valArr[0]);
+                                }
                             ?>
                             Enable Expiry:
                             <input type="radio" name='expiry' id="expiry" value='on' 
