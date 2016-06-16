@@ -1,5 +1,7 @@
 <?php 
     require_once 'config/db.php';
+    
+    $type = $_GET['type'];
 ?>
 <html>
     <head>
@@ -12,7 +14,7 @@
             
             <div id="content">
                 <?php
-                    $banner = "Select * from ourstory where page='main' and type='banner';";
+                    $banner = "Select * from ourstory where page='$type' and type='banner';";
                     $bresult = mysqli_query($link, $banner);
                     
                     if (!mysqli_query($link, $banner)) {
@@ -46,7 +48,7 @@
                     }
                 ?>
                 <?php 
-                    $sql = "Select * from ourstory where page='main' and type='section' and status='active' order by fieldorder asc";
+                    $sql = "Select * from ourstory where page='$type' and type='section' and status='active' order by fieldorder asc";
                     $result = mysqli_query($link, $sql);
                     
                     $count = 0;

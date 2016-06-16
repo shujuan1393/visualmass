@@ -24,11 +24,24 @@ if (isset($_POST['submit'])) {
         $phone = isset($_POST['phone']) ? $_POST['phone'] : '';
 
         if (strcmp($password, "")===0) {
-            $pwd = $row['password'];
+            $getold = "select * from user where email = '".$_SESSION['loggedUserEmail']."';";
+            $gres = mysqli_query($link, $getold);
+            
+            if (!mysqli_query($link, $getold)) {
+                die(mysqli_error($link));
+            } else {
+                $row = mysqli_fetch_assoc($gres);
+                $pwd = $row['password'];
+            }
         } else {
             $pwd = md5($password);
         }
+        
         $add = isset($_POST['address']) ? $_POST['address'] : '';
+        $zip = isset($_POST['zip']) ? $_POST['zip'] : '';
+        $apt = isset($_POST['apt']) ? $_POST['apt'] : '';
+        $city = isset($_POST['city']) ? $_POST['city'] : '';
+        $country = isset($_POST['country']) ? $_POST['country'] : '';
 
         if (empty($marketing)) {
             $marketing = "no";
@@ -36,9 +49,10 @@ if (isset($_POST['submit'])) {
         $updateFav = "UPDATE favourites set email='$email' where email='".$_SESSION['loggedUserEmail']."';";
 
         mysqli_query($link, $updateFav);
-
+        
         $update = "UPDATE user set firstname='$first', lastname='$last', email='$email', "
-                . "password='$pwd', address='$add',phone='$phone', marketing='$marketing' where email='".$_SESSION['loggedUserEmail']."';";
+                . "password='$pwd', address='$add',phone='$phone', marketing='$marketing', "
+                . "zip='$zip', apt='$apt', city='$city', country='$country' where email='".$_SESSION['loggedUserEmail']."';";
 
         mysqli_query($link, $update);
 

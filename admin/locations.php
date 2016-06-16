@@ -8,12 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['addLocSuccess']);
-    unset($_SESSION['addLocError']);
-    unset($_SESSION['updateLocSuccess']);
-    unset($_SESSION['updateLocError']);
-    unset($_SESSION['uploadLocError']);
-    unset($_SESSION['randomString']);
     $selectSql = "Select * from locations where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

@@ -8,11 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['addDesSuccess']);
-    unset($_SESSION['addDesError']);
-    unset($_SESSION['updateDesError']);
-    unset($_SESSION['updateDesSuccess']);
-    unset($_SESSION['uploadDesError']);
     $selectSql = "Select * from ourstory where id ='" .$_GET['id']."';";
     
     $eresult = mysqli_query($link, $selectSql);

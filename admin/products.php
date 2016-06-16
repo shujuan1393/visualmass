@@ -8,10 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['randomString']);
-    unset($_SESSION['updateProdSuccess']);
-    unset($_SESSION['updateProdError']);
-    unset($_SESSION['addProdSuccess']);
     $selectSql = "Select * from products where pid ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

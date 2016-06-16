@@ -8,10 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['updateSuccess']);
-    unset($_SESSION['updateError']);
-    unset($_SESSION['addEmpSuccess']);
-    unset($_SESSION['addEmpError']);
     $selectSql = "Select * from staff where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

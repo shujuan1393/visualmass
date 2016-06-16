@@ -8,10 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-    unset($_SESSION['addTermError']);
-    unset($_SESSION['addTermSuccess']);
-    unset($_SESSION['updateTermError']);
-    unset($_SESSION['updateTermSuccess']);
     $selectSql = "Select * from terms where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

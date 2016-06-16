@@ -8,11 +8,6 @@
 require_once '../config/db.php';
 
 if (isset($_GET['id'])) {
-//    unset($_SESSION['addBlogSuccess']);
-//    unset($_SESSION['addBlogError']);
-//    unset($_SESSION['updateBlogError']);
-//    unset($_SESSION['updateBlogSuccess']);
-//    unset($_SESSION['uploadBlogError']);
     $selectSql = "Select * from blog where id ='" .$_GET['id']."';";
     $eresult = mysqli_query($link, $selectSql);
 

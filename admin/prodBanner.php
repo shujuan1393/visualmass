@@ -78,137 +78,168 @@ if (isset($_POST['submit'])) {
     } 
 } 
 ?>
+<!DOCTYPE html>
+<html lang="en">
+    <?php require '../nav/adminHeader.php'; ?>
+    <body>
+        <div id="wrapper">
+            <?php require '../nav/adminMenubar.php'; ?>
+    
+            <!-- Content -->
+            <div id="page-wrapper">
+            <div class="container-fluid">
 
-<html>  
-    <div id="frameheader">
-        <?php
-            require '../nav/adminHeader.php';
-        ?>
-    </div>
-    <div id="framecontent">
-        <?php
-            require '../nav/adminSidebar.php';
-        ?>
-    </div>
-    <div id="maincontent">
-        <div class="innertube">
-        <h2>Banner for Products Page</h2>
-        <div id='bannerPreview' style='display: none;'>
-            You have not uploaded a banner image yet.
-        </div>
-        <?php 
-            $getBanner = "Select * from productbanner";
-            $bresult = mysqli_query($link, $getBanner);
-            
-            if (!mysqli_query($link, $getBanner)) {
-                echo "Error description: ". mysqli_error($link);
-            } else {
-                if ($bresult -> num_rows !== 0 ) {
-                    while ($brow = mysqli_fetch_assoc($bresult)) {
-                        $browArr = explode(".", $brow['image']);
-                        $ext = $browArr[count($browArr)-1];
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
+                            </li>
+                            <li>
+                                Web
+                            </li>
+                            <li class="active">
+                                Product Banners
+                            </li>
+                        </ol>
+                        
+                        <h1 class="page-header">Manage Product Banners</h1>
+                        <div id='bannerPreview' style='display: none;'>
+                            You have not uploaded a banner image yet.
+                        </div>
+                        <?php 
+                            $getBanner = "Select * from productbanner";
+                            $bresult = mysqli_query($link, $getBanner);
 
-                        $imgArr = array("jpg", "jpeg", "png", "gif");
-                        $vidArr = array("mp3", "mp4", "wma");
+                            if (!mysqli_query($link, $getBanner)) {
+                                echo "Error description: ". mysqli_error($link);
+                            } else {
+                                if ($bresult -> num_rows !== 0 ) {
+                                    while ($brow = mysqli_fetch_assoc($bresult)) {
+                                        $browArr = explode(".", $brow['image']);
+                                        $ext = $browArr[count($browArr)-1];
 
-                        echo "<div class='prodbanners' id='".$brow['gender']."&".$brow['categories']."' style='display:none;'>";
-                        if (in_array($ext, $imgArr)) {
-                            echo "<img src='".$brow['image']."' width=450>";
-                        } else {
-                            echo '<video width="500" height="400" controls>
-                            <source src="'.$brow['image'].'" type="video/mp4">
-                            Your browser does not support the video tag.
-                            </video>';
-                        }
-                        echo "</div>";
-                    }
-                }
-            }
-        ?>
-        <form id='addProdBanner' action='prodBanner.php' method='post' enctype="multipart/form-data">
-            <fieldset >
-            <div id="addProdBannerError" style="color:red">
-                <?php 
-                    if (isset($_SESSION['addProdBannerError'])) {
-                        echo $_SESSION['addProdBannerError'];
-                    }
-                ?>
-            </div>
-            
-            <div id="addProdBannerSuccess" style="color:green">
-                <?php 
-                    if (isset($_SESSION['addProdBannerSuccess'])) {
-                        echo $_SESSION['addProdBannerSuccess'];
-                    }
-                ?>
-            </div>
-            <legend>Update Product Banner</legend>
-            <input type='hidden' name='submitted' id='submitted' value='1'/>
-            <select id='gender' name='gender'>
-                <option value='men'>Men</option>
-                <option value='women'>Women</option>
-            </select>
-            <select id='categories' name='categories'>
-                <option value='frames'>Glasses</option>
-                <option value='sunglasses'>Sunglasses</option>
-            </select>
-            <label for='image' >Image:</label>
-            <input type="file" name="image" id='image' />
-            <br>
-            <input type='submit' name='submit' value='Submit' />
-            </fieldset>
-        </form>
-        </div>
-    </div>
-    <script>
-        function hideElements() {
-            var arr = document.getElementsByClassName('prodbanners');
-            for (var i = 0; i < arr.length; i++) {
-                arr[i].style.display = "none";
-            }
-        }
-        (function() {
-            // your page initialization code here
-            // the DOM will be available here
-            hideElements();
-            var cat = document.getElementById('categories').value;
-            var gender = document.getElementById('gender').value;
-            var g = gender+"&"+cat;
-            var obj = document.getElementById(g);
-            if (obj === null) {
-                document.getElementById('bannerPreview').style.display = "block";
-            } else {
-                obj.style.display = "block";
-                document.getElementById('bannerPreview').style.display = "none";
-            }
-        })();
+                                        $imgArr = array("jpg", "jpeg", "png", "gif");
+                                        $vidArr = array("mp3", "mp4", "wma");
+
+                                        echo "<div class='prodbanners' id='".$brow['gender']."&".$brow['categories']."' style='display:none;'>";
+                                        if (in_array($ext, $imgArr)) {
+                                            echo "<img src='".$brow['image']."' width=350>";
+                                        } else {
+                                            echo '<video width="300" height="400" controls>
+                                            <source src="'.$brow['image'].'" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>';
+                                        }
+                                        echo "</div>";
+                                    }
+                                }
+                            }
+                        ?>
         
-        document.getElementById('gender').onchange = function() {
-            hideElements();
-            var cat = document.getElementById('categories').value;
-            var gender = this.value;
-            var g = gender+"&"+cat;
-            var obj = document.getElementById(g);
-            if (obj === null) {
-                document.getElementById('bannerPreview').style.display = "block";
-            } else {
-                obj.style.display = "block";
-                document.getElementById('bannerPreview').style.display = "none";
-            }
-        };
-        
-        document.getElementById('categories').onchange = function() {
-            hideElements();
-            var gender = document.getElementById('gender').value;
-            var cat = this.value;
-            var g = gender+"&"+cat;
-            var obj = document.getElementById(g);
-            if (obj === null) {
-                document.getElementById('bannerPreview').style.display = "block";
-            } else {
-                obj.style.display = "block";
-                document.getElementById('bannerPreview').style.display = "none";
-            }
-        };
-    </script>
+                        <form id='addProdBanner' action='prodBanner.php' method='post' enctype="multipart/form-data">
+                            <div id="addProdBannerError" style="color:red">
+                                <?php 
+                                    if (isset($_SESSION['addProdBannerError'])) {
+                                        echo $_SESSION['addProdBannerError'];
+                                    }
+                                ?>
+                            </div>
+
+                            <div id="addProdBannerSuccess" style="color:green">
+                                <?php 
+                                    if (isset($_SESSION['addProdBannerSuccess'])) {
+                                        echo $_SESSION['addProdBannerSuccess'];
+                                    }
+                                ?>
+                            </div>
+                            
+                            <h1 id="add" class="page-header">Add/Edit Product Banner</h1>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <select id='gender' name='gender'>
+                                            <option value='men'>Men</option>
+                                            <option value='women'>Women</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='categories' name='categories'>
+                                            <option value='frames'>Glasses</option>
+                                            <option value='sunglasses'>Sunglasses</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan='2'>
+                                        <span class='pull-left'>Image: </span>
+                                            &nbsp;<input type="file" name="image" id='image' />
+                                    </td>
+                                </tr>
+                            </table>
+                            <input type='submit' name='submit' value='Submit' />
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
 </html>
+
+<script>
+    function hideElements() {
+        var arr = document.getElementsByClassName('prodbanners');
+        for (var i = 0; i < arr.length; i++) {
+            arr[i].style.display = "none";
+        }
+    }
+    (function() {
+        // your page initialization code here
+        // the DOM will be available here
+        hideElements();
+        var cat = document.getElementById('categories').value;
+        var gender = document.getElementById('gender').value;
+        var g = gender+"&"+cat;
+        var obj = document.getElementById(g);
+        if (obj === null) {
+            document.getElementById('bannerPreview').style.display = "block";
+        } else {
+            obj.style.display = "block";
+            document.getElementById('bannerPreview').style.display = "none";
+        }
+    })();
+
+    document.getElementById('gender').onchange = function() {
+        hideElements();
+        var cat = document.getElementById('categories').value;
+        var gender = this.value;
+        var g = gender+"&"+cat;
+        var obj = document.getElementById(g);
+        if (obj === null) {
+            document.getElementById('bannerPreview').style.display = "block";
+        } else {
+            obj.style.display = "block";
+            document.getElementById('bannerPreview').style.display = "none";
+        }
+    };
+
+    document.getElementById('categories').onchange = function() {
+        hideElements();
+        var gender = document.getElementById('gender').value;
+        var cat = this.value;
+        var g = gender+"&"+cat;
+        var obj = document.getElementById(g);
+        if (obj === null) {
+            document.getElementById('bannerPreview').style.display = "block";
+        } else {
+            obj.style.display = "block";
+            document.getElementById('bannerPreview').style.display = "none";
+        }
+    };
+</script>

@@ -583,7 +583,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         <?php 
         }
         ?>
-    }
+    };
 
     window.onload = function() {
         var index = document.getElementById('form').selectedIndex;

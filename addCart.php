@@ -22,13 +22,14 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
         $qty += intval($row['quantity']);
     }
     
-    if ($result -> num_rows >= 5 || $qty >= 5) {
+    $type = $_GET['type'];
+    
+    if (strcmp($type, "hometry") === 0 && ($result -> num_rows >= 5 || $qty >= 5)) {
         $_SESSION['homeError'] = "You can only choose a maximum of 5 pairs for home try-on";
         header("Location: product.php?id=".$_GET['id']);
     } else {
         unset($_SESSION['homeError']);        
         $pid = $_GET['id'];
-        $type = $_GET['type'];
         $cartid = GetCartId();
         $lens = $_GET['lens'];
         $getproduct = "Select * from products where pid='$pid'";

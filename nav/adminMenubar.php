@@ -106,7 +106,7 @@
                 </li>
                 <li class="divider"></li>
                 <li>
-                    <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                    <a href="../logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                 </li>
             </ul>
         </li>
@@ -119,7 +119,7 @@
             </li>
             <?php if (in_array("cust", $checkArr)) { ?>
             <li <?php if (in_array("customers.php", $urlArr)) echo "class='active'"; ?> >
-                <a href='#'><i class="fa fa-fw fa-users"></i> CUSTOMERS</a>
+                <a href='customers.php'><i class="fa fa-fw fa-users"></i> CUSTOMERS</a>
             </li>
             <?php } ?>
             <?php if (in_array("disc", $checkArr)) { ?>
@@ -154,7 +154,7 @@
             <?php } ?>
             <?php if (in_array("orders", $checkArr)) { ?>
             <li <?php if (in_array("orders.php", $urlArr)) echo "class='active'"; ?> >
-                <a href='#'><i class="fa fa-fw fa-check-square-o"></i> ORDERS</a>
+                <a href='orders.php'><i class="fa fa-fw fa-check-square-o"></i> ORDERS</a>
             </li>
             <?php } ?>
             <?php if (in_array("partners", $checkArr)) { ?>
@@ -176,7 +176,7 @@
                         $settingsList = array("generalSettings.php", "accountSettings.php", "blogSettings.php", 
                             "checkoutSettings.php", "exportSettings.php", "formSettings.php", "giftcardSettings.php", 
                             "homeTrySettings.php", "notificationSettings.php", "paymentsSettings.php", 
-                            "productCatSettings.php", "receiptsSettings.php", "serviceSettings.php", 
+                            "productSettings.php", "receiptsSettings.php", "serviceSettings.php", 
                             "storeCreditSettings.php", "virtualTrySettings.php", "webSettings.php");
                         $countList = count(array_intersect($urlArr, $settingsList));
                     ?>
@@ -211,8 +211,8 @@
                     <li <?php if (in_array("paymentsSettings.php", $urlArr)) echo "class='active'" ?> >
                         <a href='#'>PAYMENTS</a>
                     </li>
-                    <li <?php if (in_array("productCatSettings.php", $urlArr)) echo "class='active'" ?> >
-                        <a href='productCatSettings.php'>PRODUCT CATEGORIES</a>
+                    <li <?php if (in_array("productSettings.php", $urlArr)) echo "class='active'" ?> >
+                        <a href='productSettings.php'>PRODUCT</a>
                     </li>
                     <li <?php if (in_array("receiptsSettings.php", $urlArr)) echo "class='active'" ?> >
                         <a href='#'>RECEIPTS</a>
@@ -250,7 +250,8 @@
                     <?php
                         $webList = array("advertisements.php", "blog.php", "careers.php", 
                             "faq.php", "homepage.php", "homeTry.php", "mainstory.php", 
-                            "culturestory.php", "designstory.php", "onestory.php", "terms.php", );
+                            "culturestory.php", "designstory.php", "onestory.php", "terms.php", 
+                            "productdesc.php", "prodBanner.php" );
                         $countList = count(array_intersect($urlArr, $webList));
                     ?>
                 <ul id="web" <?php if ($countList > 0) echo "class='collapse in'"; else echo "class='collapse'"; ?>>
@@ -286,6 +287,12 @@
                     </li>
                     <li <?php if (in_array("onestory.php", $urlArr)) echo "class='active'" ?> >
                         <a href='onestory.php'>GIFT INITIATIVE</a>
+                    </li>
+                    <li <?php if (in_array("prodBanner.php", $urlArr)) echo "class='active'" ?> >
+                        <a href='prodBanner.php'>PRODUCT BANNERS</a>
+                    </li>
+                    <li <?php if (in_array("productdesc.php", $urlArr)) echo "class='active'" ?> >
+                        <a href='productdesc.php'>PRODUCTS</a>
                     </li>
                     <li <?php if (in_array("terms.php", $urlArr)) echo "class='active'" ?> >
                         <a href='terms.php'>TERMS</a>
