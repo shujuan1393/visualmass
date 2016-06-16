@@ -37,10 +37,8 @@ and open the template in the editor.
                             echo "Error: ".mysqli_error($link);
                         } else {
                             $count = 0;
-                            if ($res -> num_rows === 0) {
-                                echo "<script>document.getElementById('numrows').value = 0;</script>";
-                            } else {
-                                echo "<script>document.getElementById('numrows').value = ".$res->num_rows.";</script>";
+                            $buyres = $res -> num_rows;
+                            if ($buyres !== 0) {
                                 while($row = mysqli_fetch_assoc($res)) {
                                     $type = $row['type'];
                                     $pid = $row['pid'];
@@ -171,14 +169,16 @@ and open the template in the editor.
                             if(!mysqli_query($link, $homeSql)) {
                                 echo "Error: ".mysqli_error($link);
                             } else {
-                                if ($tryres -> num_rows === 0) {
-                                    echo "<script>document.getElementById('numrows').value = 0;</script>";
+                                $trycount = $tryres -> num_rows;
+                                $totalcount = $trycount + $buyres;
+                                if ($trycount === 0) {
+                                    echo "<script>document.getElementById('numrows').value = ".$totalcount.";</script>";
                                     echo "<script>document.getElementById('emptyCart').style.display='block';</script>";
                                     echo "<script>document.getElementById('home').style.display='none';</script>";
                                 } else {
                                     echo "<script>document.getElementById('emptyCart').style.display='none';</script>";
                                     while($row = mysqli_fetch_assoc($tryres)) {
-                                        echo "<script>document.getElementById('numrows').value = ".$tryres->num_rows.";</script>";
+                                        echo "<script>document.getElementById('numrows').value = ".$totalcount.";</script>";
                                         $pid = $row['pid'];
                                         $type = $row['type'];
                                         
