@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
                         <h1 class="page-header">Manage Locations</h1>
 
                         <?php 
-                            $qry = "Select * from locations";
+                            $qry = "Select * from locations where name <> 'banner'";
 
                             $result = mysqli_query($link, $qry);
 

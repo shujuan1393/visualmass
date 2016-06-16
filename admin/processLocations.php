@@ -33,7 +33,6 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addLocError']);
         unset($_SESSION['updateLocSuccess']);
         unset($_SESSION['updateLocError']);
-        $target_dir = "../uploads/locations/";
         
         $loccode = $_POST['code'];
         $locname = $_POST['name'];
@@ -60,7 +59,6 @@ if (isset($_GET['delete'])) {
         $j = 0; //Variable for indexing uploaded image 
         $image;
         $images = '';
-        $target_path = "../uploads/locations/";
         
         if (!empty($_FILES['image']['name'])) {
             $random_digit=md5(uniqid(rand(), true));
@@ -145,7 +143,7 @@ if (isset($_GET['delete'])) {
                 $ext = explode('.', basename($_FILES['otherimage']['name'][$i])); //explode file name from dot(.) 
                 $file_extension = end($ext); //store extensions in the variable
 
-                $target_path = $target_path.md5(uniqid()).".".$ext[count($ext) - 1]; //set the target path with a new name of image
+                $target_path = $target_dir.md5(uniqid()).".".$ext[count($ext) - 1]; //set the target path with a new name of image
                 $j = $j + 1; //increment the number of uploaded images according to the files in array       
 
                 if (($_FILES["otherimage"]["size"][$i] > 5000000)) {
@@ -171,7 +169,6 @@ if (isset($_GET['delete'])) {
                         }
                     } else { 
                         $images .= $target_path;
-
                         if ($i+1 !== count($_FILES['otherimage']['name'])) {
                             $images .= ",";
                         }
@@ -186,7 +183,7 @@ if (isset($_GET['delete'])) {
             }
         } else {
             if (!empty($_POST['oldImages'])) {
-                $images =",". $_POST['oldImages'];
+                $images = $_POST['oldImages'];
             }
         }
         
