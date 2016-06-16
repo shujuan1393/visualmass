@@ -61,6 +61,9 @@ and open the template in the editor.
                                     echo "</div>";
                                     echo "<div class='product_dets col-md-3'>";
                                     
+                                    echo "<input type='hidden' name='prod".$count."' value='".$row['pid']."'>";
+                                    echo "<input type='hidden' name='id$count' value='".$row['id']."'>";
+                                    
                                     if (is_numeric($giftpos)) {
                                         echo "<h4>Giftcard</h4><br>";
                                         if (!empty($row['details'])) {
@@ -70,8 +73,6 @@ and open the template in the editor.
                                         echo "From: " .$detArr[1]."<br>";
                                         echo "Note: " .$detArr[3]."<br>";
                                         $giftArr = array("physical@giftcard", "ecard@giftcard");
-                                        echo "<input type='hidden' name='prod".$count."' value='".$row['pid']."'>";
-                                        echo "<input type='hidden' name='id$count' value='".$row['id']."'>";
                                         echo "<select name='colour$count'>";
                                             for ($i = 0; $i < count($giftArr); $i++) {
                                                 echo "<option value='".$giftArr[$i]."' ";
@@ -86,7 +87,6 @@ and open the template in the editor.
                                             }
                                         echo "</select>";
                                    } else {
-                                        echo "<input type='hidden' name='prod".$count."' value='$pid'>";
                                         echo "<h4>".$prow['name']."</h4><br>".html_entity_decode($prow['description']);
                                     }
                                         //get related products

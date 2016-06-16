@@ -392,7 +392,7 @@ if (isset($_GET['id'])) {
                                             ?>'>
                                             
                                             <h4 class="pull-left">Button</h4>
-                                            <p onclick="addButton()" class="text-right">
+                                            <p onclick="addButton()" class="addMore text-right">
                                                 <i class="fa fa-fw fa-plus"></i> Add Button
                                             </p>
                                             <div id='buttonlinks'>

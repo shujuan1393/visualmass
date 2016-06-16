@@ -29,25 +29,41 @@ if (isset($_GET['edit'])) {
     } else {
         $checkSql = "Select * from inventory where pid = '" . $_POST['product'] . "'";
         $checkResult = mysqli_query($link, $checkSql);
+        
+        $pcode = $_POST['product'];
+        $loc = $_POST['location'];
+        $price = $_POST['price'];
+        $qty = intval($_POST['qty']);
+        
+        $getType = "Select * from products where pid ='$pcode';";
+        $res = mysqli_query($link, $getType);
+        
+        if (!mysqli_query($link, $getType)) {
+            die(mysqli_error($link));
+        } else {
+            $prow = mysqli_fetch_assoc($res);
+            $type = $prow['type'];
+        }
+        
         if ($checkResult->num_rows != 0) {
-            $pcode = $_POST['product'];
-            $qty = intval($_POST['qty']);
             
-            $getQty = "Select * from inventory where pid ='$pcode'";
-            $qresult = mysqli_query($link, $getQty);
-            $qrow = mysqli_fetch_assoc($qresult);
+            $qrow = mysqli_fetch_assoc($checkResult);
             $oldQty = intval($qrow['quantity']);
+            $location = $qrow['location'];
             $newQty = $qty + $oldQty;
             
-            $addInvSql = "UPDATE inventory set quantity='$newQty'"
-                    . "where pid='$pcode'";
+            $addInvSql = "UPDATE inventory set quantity='$newQty', price='$price', type='$type' "
+                    . "where pid='$pcode' and location ='$location'";
+        } else {
+            $addInvSql = "INSERT INTO inventory (pid, location, quantity, price, type) VALUES"
+                    . "('$pcode','$loc', '$qty', '$price', '$type');";
+        }
+        
+        mysqli_query($link, $addInvSql);
             
-            mysqli_query($link, $addInvSql);
-            
-            unset($_SESSION["updateInvError"]);
-            $_SESSION['updateInvSuccess'] = "Inventory added successfully";
-            header('Location: inventory.php');
-        } 
+        unset($_SESSION["updateInvError"]);
+        $_SESSION['updateInvSuccess'] = "Inventory added successfully";
+        header('Location: inventory.php');
     }
 }
 

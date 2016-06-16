@@ -65,6 +65,7 @@ if (isset($_GET['id'])) {
                         <table>
                             <thead>
                                 <th>Product ID</th>
+                                <th>Location</th>
                                 <th>Type</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
@@ -74,7 +75,39 @@ if (isset($_GET['id'])) {
                                 // output data of each row
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     echo "<tr>";
-                                    echo "<td>".$row['pid']."</td>";
+                                    echo "<td>";
+                                    $getprod = "select * from products where pid='".$row['pid']."';";
+                                    $prodres = mysqli_query($link, $getprod);
+                                    
+                                    if (!mysqli_query($link, $getprod)) {
+                                        die(mysqli_error($link));
+                                    } else {
+                                        if ($prodres -> num_rows === 0) {
+                                            echo "-";
+                                        } else {
+                                            $prow = mysqli_fetch_assoc($prodres);
+                                            echo $prow['name']." (".$prow['pid'].")";
+                                        }
+                                    }
+                                    echo "</td>";
+                                    
+                                    
+                                    echo "<td>";
+                                    $getloc = "select * from locations where code='".$row['location']."';";
+                                    $locres = mysqli_query($link, $getloc);
+                                    
+                                    if (!mysqli_query($link, $getloc)) {
+                                        die(mysqli_error($link));
+                                    } else {
+                                        if ($locres -> num_rows === 0) {
+                                            echo "-";
+                                        } else {
+                                            $lrow = mysqli_fetch_assoc($locres);
+                                            echo $lrow['name']." (".$lrow['code'].")";
+                                        }
+                                    }
+                                    echo "</td>"; 
+                                    
                                     echo "<td>".$row['type']."</td>";                            
                                     echo "<td>".$row['price']."</td>";                           
                                     echo "<td>".$row['quantity']."</td>";                        
@@ -140,8 +173,33 @@ if (isset($_GET['id'])) {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td colspan="2">
+                                        Location*:
+                                        <?php 
+                                            $locSql = "Select * from locations where name <> 'banner'";
+                                            $locres = mysqli_query($link, $locSql);
+
+                                            echo "<select name='location'>";
+
+                                            while ($row = mysqli_fetch_assoc($locres)) {
+                                                echo "<option value='".$row['code']."' ";
+                                                if (isset($_GET['id'])) {
+                                                    if (strcmp($resrow['location'], $row['code']) === 0) {
+                                                        echo "selected";
+                                                    }
+                                                }
+
+                                                echo ">";
+                                                echo $row['name']."</option>";
+                                            }
+                                            echo "</select>";
+                                        ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                <tr>
                                 <?php 
-                                    if (isset($_GET['id'])) {
+//                                    if (isset($_GET['id'])) {
                                 ?>
                                     <td>
 
@@ -157,10 +215,10 @@ if (isset($_GET['id'])) {
                                     </td>
                                     <td>
                                 <?php 
-                                    }
-                                    else {
-                                        echo "<td colspan='2'>";
-                                    }
+//                                    }
+//                                    else {
+//                                        echo "<td colspan='2'>";
+//                                    }
                                 ?>
                                         Quantity*:
                                         <input type='text' name='qty' id='qty' 
