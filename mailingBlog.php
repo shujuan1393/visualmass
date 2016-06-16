@@ -9,7 +9,9 @@ require_once 'config/db.php';
 
 if (isset($_POST['submitted'])) {
     $email = $_POST['mailingemail'];
-    $preference = $_POST['preference'];
+    if (!empty($_POST['preference'])){
+        $preference = $_POST['preference'];
+    }
     
     $getmail = "Select * from mailinglist where email = '$email';";
     $mailresult = mysqli_query($link, $getmail);
