@@ -16,7 +16,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addHomepageError']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['updateHomepageSuccess'] = "Record deleted successfully";
-        header("Location: homepage.php");
+        header("Location: homepage.php#menu1");
     } 
 } else if (isset($_GET['banner'])) { 
     unset($_SESSION['addHomepageBannerError']);
@@ -105,7 +105,7 @@ if (isset($_GET['delete'])) {
     $buttonno = $_POST['buttonno'];
     
     for ($i = 1; $i <= $buttonno; $i++) {
-        $linki = "link".$i;
+        $linki = "type".$i;
         $linkposi = "linkpos".$i;
         $buttoni = "buttontext".$i;
         if (!empty($_POST[$buttoni]) && (empty($_POST[$linkposi]) || empty($_POST[$linki]))) {
@@ -114,10 +114,10 @@ if (isset($_GET['delete'])) {
             unset($_SESSION['updateHomepageSuccess']);
             unset($_SESSION['uploadHomepageError']);
             $_SESSION['addHomepageError'] = "Button text and Link position required";
-            if (!empty($_POST['editid'])) {
-                header("Location: homepage.php?id=".$_POST['editid']);
+            if (isset($_POST['editid'])) {
+                header("Location: homepage.php?id=".$_POST['editid']."#menu1");
             } else {
-                header('Location: homepage.php');
+                header("Location: homepage.php#menu1");
             }
         } 
     }
@@ -128,10 +128,10 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateHomepageSuccess']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['addHomepageError'] = "Empty field(s)";
-        if (!empty($_POST['editid'])) {
-            header("Location: homepage.php?id=".$_POST['editid']);
+        if (isset($_POST['editid'])) {
+            header("Location: homepage.php?id=".$_POST['editid']."#menu1");
         } else {
-            header('Location: homepage.php');
+            header("Location: homepage.php#menu1");
         }
     } else if (empty($_POST['oldImage']) && empty($_FILES['image']['name'])) { 
         unset($_SESSION['addHomepageSuccess']);
@@ -139,10 +139,10 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateHomepageSuccess']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['addHomepageError'] = "No image selected";
-        if (!empty($_POST['editid'])) {
-            header("Location: homepage.php?id=".$_POST['editid']);
+        if (isset($_POST['editid'])) {
+            header("Location: homepage.php?id=".$_POST['editid']."#menu1");
         } else {
-            header('Location: homepage.php');
+            header("Location: homepage.php#menu1");
         }
     } else if (!empty($_POST['html']) && empty($_POST['htmlpos'])) { 
         unset($_SESSION['addHomepageSuccess']);
@@ -150,10 +150,10 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateHomepageSuccess']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['addHomepageError'] = "Content position required";
-        if (!empty($_POST['editid'])) {
-            header("Location: homepage.php?id=".$_POST['editid']);
+        if (isset($_POST['editid'])) {
+            header("Location: homepage.php?id=".$_POST['editid']."#menu1");
         } else {
-            header('Location: homepage.php');
+            header("Location: homepage.php#menu1");
         }
     } else if (!empty($_FILES['image']['name']) && empty($_POST['imagepos'])) { 
         unset($_SESSION['addHomepageSuccess']);
@@ -161,10 +161,10 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateHomepageSuccess']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['addHomepageError'] = "Image position required";
-        if (!empty($_POST['editid'])) {
-            header("Location: homepage.php?id=".$_POST['editid']);
+        if (isset($_POST['editid'])) {
+            header("Location: homepage.php?id=".$_POST['editid']."#menu1");
         } else {
-            header('Location: homepage.php');
+            header("Location: homepage.php#menu1");
         }
     } else if (!isset($_SESSION['addHomepageError'])){
         unset($_SESSION['addHomepageError']);
@@ -177,11 +177,23 @@ if (isset($_GET['delete'])) {
         $buttonlink = "";
         
         for ($i = 1; $i <= $buttonno; $i++) {
-            $linki = "link".$i;
+            $linki = "type".$i;
             $linkposi = "linkpos".$i;
             $buttoni = "buttontext".$i;
             
-            $pagelink .= $_POST[$linki];
+            $selLink = $_POST[$linki];
+            if (strcmp($selLink, "products") === 0)  {
+                $secondLink = "productstype".$i;
+                $pagelink .= $selLink.".php?".$_POST[$secondLink];
+            } else if (strcmp($selLink, "product") === 0) {
+                $secondLink = "productItem".$i;
+                $pagelink .= $selLink.".php?id=".$_POST[$secondLink];
+            } else if (strcmp($selLink, "ourstory") === 0) {
+                $secondLink = "ourstorytype".$i;
+                $pagelink .= $selLink.".php?type=".$_POST[$secondLink];
+            }
+            
+//            $pagelink .= $_POST[$linki];
             $linkpos .= $_POST[$linkposi];
             $buttonlink .= $_POST[$buttoni];
             
@@ -270,7 +282,7 @@ if (isset($_GET['delete'])) {
                     unset($_SESSION['updateHomepageError']);
                     unset($_SESSION['editUploadHomepageError']);
                     $_SESSION['updateHomepageSuccess'] = "Record updated successfully";
-                    header("Location: homepage.php");
+                    header("Location: homepage.php#menu1");
                 } else {
                     echo "Error updating record: " . mysqli_error($link);
                 }
@@ -284,7 +296,7 @@ if (isset($_GET['delete'])) {
                 mysqli_query($link, $advSql);
                 unset($_SESSION['uploadHomepagepageError']);
                 $_SESSION['addHomepagepageSuccess'] = "Advertisement successfully added";
-                header('Location: homepage.php');
+                header('Location: homepage.php#menu1');
             }
         }
     }

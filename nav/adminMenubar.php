@@ -24,13 +24,14 @@
     
     
     $curUrl = $_SERVER['REQUEST_URI'];
-    $urlArr = explode("/", $curUrl);
+    $isAdminArr = explode("/", $curUrl);
 
-    if (in_array("admin", $urlArr)) {
+    if (in_array("admin", $isAdminArr)) {
         if (!isset($_SESSION['loggedUserEmail'])) {
             header("Location: login.php");
         }
     }
+    $urlArr = explode("?", $isAdminArr[3]);
 ?>
 
 <!-- Navigation -->

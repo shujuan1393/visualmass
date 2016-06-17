@@ -216,7 +216,7 @@ if (!mysqli_query($link,$selectSql)) {
                                                 echo "<td>".$row['firstname']." ".$row['lastname']."</td>";
                                                 echo "<td>".$row['email']."</td>";
                                                 echo "<td>".$row['phone']."</td>";
-                                                echo '<td><button onClick="window.location.href=`blogSettings.php?aid='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="window.location.href=`blogSettings.php?aid='.$row['id'].'#menu1`">E</button>';
                                                 echo '<td><button onClick="deleteAuthFunction('.$row['id'].')">D</button></td>';
 
                                                 echo "</tr>";
@@ -349,7 +349,7 @@ if (!mysqli_query($link,$selectSql)) {
                 unset($_SESSION['updateAuthorSuccess']);
                 $_SESSION['updateAuthorError'] = "Nothing was deleted";
             ?>
-            window.location='blogSettings.php';
+            window.location='blogSettings.php#menu1';
         }
     }
 

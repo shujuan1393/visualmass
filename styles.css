@@ -401,7 +401,7 @@ table.dataTable thead .sorting_desc:after{
 
 #header {
     height: 50px;
-    /*padding: 15px 10px;*/
+    padding: 15px 10px;
     margin-bottom: 30px;
 }
 
@@ -1386,4 +1386,8 @@ if it's not present, don't show loader */
 
 .prodbanners {
     z-index: 0;
+}
+
+.addMore {
+    cursor: pointer;
 }

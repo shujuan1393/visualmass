@@ -23,7 +23,7 @@ if (isset($_GET['delete'])) {
     $buttonno = $_POST['buttonno'];
     
     for ($i = 1; $i <= $buttonno; $i++) {
-        $linki = "link".$i;
+        $linki = "type".$i;
         $linkposi = "linkpos".$i;
         $buttoni = "buttontext".$i;
         if (!empty($_POST[$linki]) && (empty($_POST[$linkposi]) 
@@ -88,11 +88,22 @@ if (isset($_GET['delete'])) {
         $buttonlink = "";
         
         for ($i = 1; $i <= $buttonno; $i++) {
-            $linki = "link".$i;
+            $linki = "type".$i;
             $linkposi = "linkpos".$i;
             $buttoni = "buttontext".$i;
             
-            $pagelink .= $_POST[$linki];
+            $selLink = $_POST[$linki];
+            if (strcmp($selLink, "products") === 0)  {
+                $secondLink = "productstype".$i;
+                $pagelink .= $selLink.".php?".$_POST[$secondLink];
+            } else if (strcmp($selLink, "product") === 0) {
+                $secondLink = "productItem".$i;
+                $pagelink .= $selLink.".php?id=".$_POST[$secondLink];
+            } else if (strcmp($selLink, "ourstory") === 0) {
+                $secondLink = "ourstorytype".$i;
+                $pagelink .= $selLink.".php?type=".$_POST[$secondLink];
+            }
+            
             $linkpos .= $_POST[$linkposi];
             $buttonlink .= $_POST[$buttoni];
             
@@ -102,7 +113,6 @@ if (isset($_GET['delete'])) {
                 $buttonlink .= ",";
             }
         }
-        
         $title = $_POST['title'];
         $status = $_POST['status'];
         $expiry = $_POST['expiry'];

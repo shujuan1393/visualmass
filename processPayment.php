@@ -7,6 +7,7 @@
  */
 
 require_once 'config/db.php';
+require_once 'config/braintree.php';
 require_once 'mailer/PHPMailerAutoload.php';
 
 function getWelcomeTemplate($link) {
@@ -27,7 +28,7 @@ function getWelcomeTemplate($link) {
     }
 }
 
-function sendNewUserEmail($link, $email, $firstname, $lastname, $address, $phone) {
+function sendNewUserEmail($pwd, $link, $email, $firstname, $lastname, $address, $phone) {
     $mail = new PHPMailer;
     $mail->isSMTP();                                      // Set mailer to use SMTP
     $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
@@ -44,7 +45,24 @@ function sendNewUserEmail($link, $email, $firstname, $lastname, $address, $phone
     $mail->isHTML(true);                                  // Set email format to HTML
 
     $mail->Subject = 'Welcome to Visual Mass';
-    $str = getWelcomeTemplate($link);
+//    $str = getWelcomeTemplate($link);
+    
+    $noti = "Select * from settings where type='notifications'";
+    $res = mysqli_query($link, $noti);
+    
+    if (!mysqli_query($link, $noti)) {
+        die(mysqli_error($link));
+    } else {
+        $row = mysqli_fetch_assoc($res);
+        $valArr = explode("#", $row['value']);
+        if(!empty($valArr[0])){
+            $emailArr = explode("email=", $valArr[0]);
+            $emailVal = explode(",", $emailArr[1]);
+        }
+        
+        $str = $emailVal[0];
+    }
+    
     $mail->Body    = 'Hi '.$firstname.' '.$lastname.',<br><br>'
             . $str;
 //                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
@@ -58,6 +76,7 @@ function sendNewUserEmail($link, $email, $firstname, $lastname, $address, $phone
 
 
 if (isset($_GET['id']) && isset($_GET['cost'])) {
+    echo "paying";
     if (!isset($_SESSION['loggedUserEmail'])) {
         $email = $_GET['email'];
         $firstname = $_GET['firstname'];
@@ -75,8 +94,8 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 die(mysqli_error($link));
             } else {
                 if ($ures -> num_rows === 0) {
-                    $sql = "INSERT INTO user (password, email, firstname, lastname, address, phone) "
-                            . "VALUES ('$pwd', '$email', '$firstname', '$lastname', '$address', '$phone');";
+                    $sql = "INSERT INTO user (accountType, password, email, firstname, lastname, address, phone) "
+                            . "VALUES ('customer','$pwd', '$email', '$firstname', '$lastname', '$address', '$phone');";
                 } else {
                     $sql = "UPDATE user set firstname ='$firstname', lastname='$lastname', "
                             . "address='$address', password='$pwd', phone='$phone' where email='$email';";
@@ -84,6 +103,7 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 mysqli_query($link, $sql);
             }
         }
+        $_SESSION['loggedUserEmail'] = $email;
     } else {
         $email = $_SESSION['loggedUserEmail'];
     }

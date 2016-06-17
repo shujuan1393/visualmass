@@ -16,7 +16,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addHomeError']);
         unset($_SESSION['uploadHomeError']);
         $_SESSION['updateHomeSuccess'] = "Record deleted successfully";
-        header("Location: homeTry.php");
+        header("Location: homeTry.php#menu1");
     } 
 } else if (isset($_GET['banner'])) { 
     unset($_SESSION['addHomeBannerError']);
@@ -105,7 +105,7 @@ if (isset($_GET['delete'])) {
     $buttonno = $_POST['buttonno'];
     
     for ($i = 1; $i <= $buttonno; $i++) {
-        $linki = "link".$i;
+        $linki = "type".$i;
         $linkposi = "linkpos".$i;
         $buttoni = "buttontext".$i;
         if (!empty($_POST[$buttoni]) && (empty($_POST[$linkposi]) || empty($_POST[$linki]))) {
@@ -115,9 +115,9 @@ if (isset($_GET['delete'])) {
             unset($_SESSION['uploadHomeError']);
             $_SESSION['addHomeError'] = "Button text and Link position required";
             if (!empty($_POST['editid'])) {
-                header("Location: homeTry.php?id=".$_POST['editid']);
+                header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
             } else {
-                header('Location: homeTry.php');
+                header('Location: homeTry.php#menu1');
             }
         } 
     }
@@ -129,9 +129,9 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['uploadHomeError']);
         $_SESSION['addHomeError'] = "Empty field(s)";
         if (!empty($_POST['editid'])) {
-            header("Location: homeTry.php?id=".$_POST['editid']);
+            header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
         } else {
-            header('Location: homeTry.php');
+            header('Location: homeTry.php#menu1');
         }
     } else if (empty($_POST['oldImage']) && empty($_FILES['image']['name'])) { 
         unset($_SESSION['addHomeSuccess']);
@@ -140,9 +140,9 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['uploadHomeError']);
         $_SESSION['addHomeError'] = "No image selected";
         if (!empty($_POST['editid'])) {
-            header("Location: homeTry.php?id=".$_POST['editid']);
+            header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
         } else {
-            header('Location: homeTry.php');
+            header('Location: homeTry.php#menu1');
         }
     } else if (!empty($_POST['html']) && empty($_POST['htmlpos'])) { 
         unset($_SESSION['addHomeSuccess']);
@@ -151,9 +151,9 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['uploadHomeError']);
         $_SESSION['addHomeError'] = "Content position required";
         if (!empty($_POST['editid'])) {
-            header("Location: homeTry.php?id=".$_POST['editid']);
+            header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
         } else {
-            header('Location: homeTry.php');
+            header('Location: homeTry.php#menu1');
         }
     } else if (!empty($_FILES['image']['name']) && empty($_POST['imagepos'])) { 
         unset($_SESSION['addHomeSuccess']);
@@ -162,9 +162,9 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['uploadHomeError']);
         $_SESSION['addHomeError'] = "Image position required";
         if (!empty($_POST['editid'])) {
-            header("Location: homeTry.php?id=".$_POST['editid']);
+            header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
         } else {
-            header('Location: homeTry.php');
+            header('Location: homeTry.php#menu1');
         }
     } else if (!isset($_SESSION['addHomeError'])){
         unset($_SESSION['addHomeError']);
@@ -177,11 +177,23 @@ if (isset($_GET['delete'])) {
         $buttonlink = "";
         
         for ($i = 1; $i <= $buttonno; $i++) {
-            $linki = "link".$i;
+            $linki = "type".$i;
             $linkposi = "linkpos".$i;
             $buttoni = "buttontext".$i;
             
-            $pagelink .= $_POST[$linki];
+            $selLink = $_POST[$linki];
+            if (strcmp($selLink, "products") === 0)  {
+                $secondLink = "productstype".$i;
+                $pagelink .= $selLink.".php?".$_POST[$secondLink];
+            } else if (strcmp($selLink, "product") === 0) {
+                $secondLink = "productItem".$i;
+                $pagelink .= $selLink.".php?id=".$_POST[$secondLink];
+            } else if (strcmp($selLink, "ourstory") === 0) {
+                $secondLink = "ourstorytype".$i;
+                $pagelink .= $selLink.".php?type=".$_POST[$secondLink];
+            }
+            
+//            $pagelink .= $_POST[$linki];
             $linkpos .= $_POST[$linkposi];
             $buttonlink .= $_POST[$buttoni];
             
@@ -217,33 +229,53 @@ if (isset($_GET['delete'])) {
                 } else {
                     unset($_SESSION['addHomeSuccess']);
                     $_SESSION['uploadHomeError'] = "File is not an image.";
-                    header('Location: homeTry.php');
+                    if (!empty($_POST['editid'])) {
+                        header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
+                    } else {
+                        header('Location: homeTry.php#menu1');
+                    }
                 }
             }
             // Check if file already exists
             if (file_exists($target_file)) {
                 unset($_SESSION['addHomeSuccess']);
                 $_SESSION['uploadHomeError'] = "Sorry, file already exists.";
-                header('Location: homeTry.php');
+                if (!empty($_POST['editid'])) {
+                    header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
+                } else {
+                    header('Location: homeTry.php#menu1');
+                }
             }
             // Check file size
             if ($_FILES["image"]["size"] > 500000) {
                 unset($_SESSION['addHomeSuccess']);
                 $_SESSION['uploadHomeError'] = "Sorry, your file is too large.";
-                header('Location: homeTry.php');
+                if (!empty($_POST['editid'])) {
+                    header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
+                } else {
+                    header('Location: homeTry.php#menu1');
+                }
             }
             // Allow certain file formats
             if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
             && $imageFileType != "gif" ) {
                 unset($_SESSION['addHomeSuccess']);
                 $_SESSION['uploadHomeError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-                header('Location: homeTry.php');
+                if (!empty($_POST['editid'])) {
+                    header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
+                } else {
+                    header('Location: homeTry.php#menu1');
+                }
             }
             if ($uploadOk === 1) {
                 if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                     unset($_SESSION['addHomeSuccess']);
                     $_SESSION['uploadHomeError'] = "Sorry, there was an error uploading your file.";
-                    header('Location: homeTry.php');   
+                    if (!empty($_POST['editid'])) {
+                        header("Location: homeTry.php?id=".$_POST['editid']."#menu1");
+                    } else {
+                        header('Location: homeTry.php#menu1');
+                    }  
                 } else {
                     unset($_SESSION['uploadHomeError']);
                     $image .= $target_file;
@@ -270,7 +302,7 @@ if (isset($_GET['delete'])) {
                     unset($_SESSION['updateHomeError']);
                     unset($_SESSION['editUploadHomeError']);
                     $_SESSION['updateHomeSuccess'] = "Record updated successfully";
-                    header("Location: homeTry.php");
+                    header("Location: homeTry.php#menu1");
                 } else {
                     echo "Error updating record: " . mysqli_error($link);
                 }
@@ -284,7 +316,7 @@ if (isset($_GET['delete'])) {
                 mysqli_query($link, $advSql);
                 unset($_SESSION['uploadHomeError']);
                 $_SESSION['addHomeSuccess'] = "Advertisement successfully added";
-                header('Location: homeTry.php');
+                header('Location: homeTry.php#menu1');
             }
         }
     }

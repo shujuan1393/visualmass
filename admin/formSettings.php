@@ -92,6 +92,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         unset($_SESSION['addFormFieldSuccess']);
         unset($_SESSION['addFormFieldError']);
         $_SESSION['updateFormFieldSuccess'] = "Form field deleted successfully";
+        header("Location: formSettings.php#menu1");
     } 
 } else if (isset($_GET['update'])) {
     if(empty($_POST['name']) || 
@@ -105,6 +106,11 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         unset($_SESSION['addFormSuccess']);
         unset($_SESSION['addFormError']);
         $_SESSION['addFormFieldError'] = "Empty field(s)";
+        if (isset($_POST['editid'])) {
+            header("Location: formSettings.php?id=".$_POST['editid']."#menu1");
+        } else {
+            header("Location: formSettings.php#menu1");
+        }
     } else {
         unset($_SESSION['updateFormSuccess']);
         unset($_SESSION['updateFormError']);
@@ -136,6 +142,9 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
             unset($_SESSION['addFormFieldError']);
             $_SESSION['addFormFieldSuccess'] = "Form field added successfully";
         }
+        
+        header("Location: formSettings.php#menu1");
+
     }
 }
 ?>
@@ -354,7 +363,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                 echo "<td>".$row['name'] ."</td>";  
                                                 echo "<td>".$row['field'] ."</td>";  
                                                 echo "<td>".$row['status'] ."</td>";                       
-                                                echo '<td><button onClick="window.location.href=`formSettings.php?id='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="window.location.href=`formSettings.php?id='.$row['id'].'#menu1`">E</button>';
                                                 echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                 echo "</tr>";
                                             }
@@ -568,7 +577,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                 unset($_SESSION['updateFormFieldSuccess']);
                 $_SESSION['updateFormFieldError'] = "Nothing was deleted";
             ?>
-            window.location='formSettings.php';
+            window.location='formSettings.php#menu1';
         }
     }
 

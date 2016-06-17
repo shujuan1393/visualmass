@@ -33,6 +33,9 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         unset($_SESSION['addFaqBannerError']);
         unset($_SESSION['addFaqBannerSuccess']);
         $_SESSION['updateFaqSuccess'] = "Record deleted successfully";
+        
+        header("Location: faq.php#menu1");
+        
     } 
 } else if (isset($_GET['update'])) {
     if (empty($_POST['title']) || empty($_POST['html'])) {
@@ -41,7 +44,12 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         unset($_SESSION['updateFaqError']);
         unset($_SESSION['addFaqBannerError']);
         unset($_SESSION['addFaqBannerSuccess']);
-        $_SESSION['addFaqError'] = "Empty field(s)";        
+        $_SESSION['addFaqError'] = "Empty field(s)";   
+        if (isset($_POST['editid'])) {
+            header("Location: faq.php?id=".$_POST['editid']."#menu1");
+        } else {
+            header("Location: faq.php#menu1");
+        }
     } else {
         $title = $_POST['title'];
         $html = htmlentities($_POST['html']);
@@ -60,6 +68,8 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             unset($_SESSION['addFaqBannerSuccess']);
             mysqli_query($link, $faqSql);
             $_SESSION['addFaqSuccess'] = "FAQ section successfully added";
+            
+            header("Location: faq.php#menu1");
         } else {
             $faqSql = "UPDATE faq SET title='$title', html='$html', "
                 . "type='section', fieldorder='$order' where id = '$editid';";
@@ -70,6 +80,8 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 unset($_SESSION['addFaqBannerError']);
                 unset($_SESSION['addFaqBannerSuccess']);
                 $_SESSION['updateFaqSuccess'] = "Record updated successfully";
+                
+                header("Location: faq.php#menu1");
             } else {
                 echo "Error updating record: " . mysqli_error($link);
             }
@@ -296,7 +308,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                                 echo "<tr>";
                                                 echo "<td>".$row['fieldorder'] ."</td>";   
                                                 echo "<td>".$row['title'] ."</td>";                        
-                                                echo '<td><button onClick="window.location.href=`faq.php?id='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="window.location.href=`faq.php?id='.$row['id'].'#menu1`">E</button>';
                                                 echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                 echo "</tr>";
                                             }
@@ -409,7 +421,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 unset($_SESSION['addFaqBannerError']);
                 $_SESSION['updateFaqError'] = "Nothing was deleted";
             ?>
-            window.location='faq.php';
+            window.location='faq.php#menu1';
         }
     }
     

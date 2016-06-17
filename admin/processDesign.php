@@ -14,7 +14,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addDesSuccess']);
         unset($_SESSION['addDesError']);
         $_SESSION['updateDesSuccess'] = "Record deleted successfully";
-        header("Location: designstory.php");
+        header("Location: designstory.php#menu1");
     } 
 } else if (isset($_GET['banner'])) { 
     unset($_SESSION['addDesBannerError']);
@@ -105,7 +105,11 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateDesError']);
         unset($_SESSION['updateDesSuccess']);
         $_SESSION['addDesError'] = "Empty field(s)";
-        header('Location: designstory.php');
+        if (isset($_POST['editid'])) {
+            header("Location: designstory.php?id=".$_POST['editid']."#menu1");
+        } else {
+            header("Location: designstory.php#menu1");
+        }
     } else { 
         unset($_SESSION['addDesError']);
         unset($_SESSION['updateDesError']);
@@ -127,7 +131,7 @@ if (isset($_GET['delete'])) {
                 unset($_SESSION['addDesError']);
                 unset($_SESSION['updateDesError']);
                 $_SESSION['updateDesSuccess'] = "Record updated successfully";
-                header("Location: designstory.php");
+                header("Location: designstory.php#menu1");
             } else {
                 echo "Error updating record: " . mysqli_error($link);
             }
@@ -137,7 +141,7 @@ if (isset($_GET['delete'])) {
 
             mysqli_query($link, $blogSql);
             $_SESSION['addDesSuccess'] = "Section successfully added";
-            header('Location: designstory.php');
+            header('Location: designstory.php#menu1');
         }
     }
 }

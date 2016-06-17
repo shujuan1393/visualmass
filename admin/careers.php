@@ -33,6 +33,8 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         unset($_SESSION['addCareerBannerError']);
         unset($_SESSION['addCareerBannerSuccess']);
         $_SESSION['updateCareerSuccess'] = "Record deleted successfully";
+        
+        header("Location: careers.php#menu1");
     } 
 } else if (isset($_GET['update'])) {
     if (empty($_POST['title']) || empty($_POST['html'])) {
@@ -41,7 +43,12 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         unset($_SESSION['addCareerSuccess']);
         unset($_SESSION['addCareerBannerError']);
         unset($_SESSION['addCareerBannerSuccess']);
-        $_SESSION['addCareerError'] = "Empty field(s)";        
+        $_SESSION['addCareerError'] = "Empty field(s)"; 
+        if (isset($_POST['editid'])) {
+            header("Location: careers.php?id=".$_POST['editid']."#menu1");
+        } else {
+            header("Location: careers.php#menu1");
+        }
     } else {
         $title = $_POST['title'];
         $html = htmlentities($_POST['html']);
@@ -60,6 +67,8 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             unset($_SESSION['addCareerBannerSuccess']);
             mysqli_query($link, $faqSql);
             $_SESSION['addCareerSuccess'] = "Career section successfully added";
+            
+            header("Location: careers.php#menu1");
         } else {
             $faqSql = "UPDATE careers SET title='$title', html='$html', "
                 . "type='section', fieldorder ='$order', status='$status' where id = '$editid';";
@@ -70,6 +79,8 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 unset($_SESSION['addCareerBannerError']);
                 unset($_SESSION['addCareerBannerSuccess']);
                 $_SESSION['updateCareerSuccess'] = "Record updated successfully";
+                
+                header("Location: careers.php#menu1");
             } else {
                 echo "Error updating record: " . mysqli_error($link);
             }
@@ -297,7 +308,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                                 echo "<td>".$row['fieldorder'] ."</td>";
                                                 echo "<td>".$row['title'] ."</td>";   
                                                 echo "<td>".$row['status'] ."</td>";                      
-                                                echo '<td><button onClick="window.location.href=`careers.php?id='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="window.location.href=`careers.php?id='.$row['id'].'#menu1`">E</button>';
                                                 echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                 echo "</tr>";
                                             }
@@ -432,7 +443,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 unset($_SESSION['addCareerBannerError']);
                 $_SESSION['updateCareerError'] = "Nothing was deleted";
             ?>
-            window.location='careers.php';
+            window.location='careers.php#menu1';
         }
     }
     

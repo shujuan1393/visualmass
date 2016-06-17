@@ -585,7 +585,7 @@ if (isset($_GET['id'])) {
                 unset($_SESSION['updateProdDescSuccess']);
                 $_SESSION['updateProdDescError'] = "Nothing was deleted";
             ?>
-            window.location='productdesc.php';
+            window.location='productdesc.php#menu1';
         }
     }
 
