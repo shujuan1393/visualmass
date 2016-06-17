@@ -67,7 +67,7 @@ if (!mysqli_query($link,$selectSql)) {
                                     Set default email templates to be received by customers
                                 </span></p>
                             <?php 
-                                if(!empty($valArr[0]) && !empty($emailArr[1])){
+                                if(!empty($valArr[0])){
                                     $emailArr = explode("email=", $valArr[0]);
                                     $emailVal = explode(",", $emailArr[1]);
                                 }
@@ -76,63 +76,63 @@ if (!mysqli_query($link,$selectSql)) {
                             <table>
                                 <tr>
                                     <td>Welcome</td>
-                                    <td><textarea name="welcome"><?php if(!empty($emailVal[0])) echo $emailVal[0];?></textarea></td>
+                                    <td><textarea name="welcome"><?php if(!empty($emailVal[0])) { echo $emailVal[0]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('welcome');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Thank you for purchasing</td>
-                                    <td><textarea name="purchase"><?php if(!empty($emailVal[0])) echo $emailVal[1];?></textarea></td>
+                                    <td><textarea name="purchase"><?php if(!empty($emailVal[1])) { echo $emailVal[1]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('purchase');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Incomplete checkout reminders</td>
-                                    <td><textarea name="incomplete"><?php if(!empty($emailVal[0])) echo $emailVal[2];?></textarea></td>
+                                    <td><textarea name="incomplete"><?php if(!empty($emailVal[2])) { echo $emailVal[2]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('incomplete');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Password reset</td>
-                                    <td><textarea name="password"><?php if(!empty($emailVal[0])) echo $emailVal[3];?></textarea></td>
+                                    <td><textarea name="password"><?php if(!empty($emailVal[3])) { echo $emailVal[3]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('password');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Order cancellation</td>
-                                    <td><textarea name="cancel"><?php if(!empty($emailVal[0])) echo $emailVal[4];?></textarea></td>
+                                    <td><textarea name="cancel"><?php if(!empty($emailVal[4])) { echo $emailVal[4]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('cancel');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Order refunds</td>
-                                    <td><textarea name="refund"><?php if(!empty($emailVal[0])) echo $emailVal[5];?></textarea></td>
+                                    <td><textarea name="refund"><?php if(!empty($emailVal[5])) echo $emailVal[5];?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('refund');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Giftcard recipients</td>
-                                    <td><textarea name="gift"><?php if(!empty($emailVal[0])) echo $emailVal[6];?></textarea></td>
+                                    <td><textarea name="gift"><?php if(!empty($emailVal[6])) { echo $emailVal[6]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('gift');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Feedback</td>
-                                    <td><textarea name="feedback"><?php if(!empty($emailVal[0])) echo $emailVal[7];?></textarea></td>
+                                    <td><textarea name="feedback"><?php if(!empty($emailVal[7])) { echo $emailVal[7]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('feedback');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Eyecheck reminders</td>
-                                    <td><textarea name="eyecheck"><?php if(!empty($emailVal[0])) echo $emailVal[8];?></textarea></td>
+                                    <td><textarea name="eyecheck"><?php if(!empty($emailVal[8])) { echo $emailVal[8]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('eyecheck');
                                     </script>
@@ -144,7 +144,7 @@ if (!mysqli_query($link,$selectSql)) {
                                     Set default SMS templates to be received by customers
                                 </span></p>
                             <?php 
-                                if(!empty($valArr[1])&& !empty($smsArr[1])){
+                                if(!empty($valArr[1])){
                                     $smsArr = explode("sms=", $valArr[1]);
                                     $smsVal = explode(",", $smsArr[1]);
                                 }
@@ -153,14 +153,14 @@ if (!mysqli_query($link,$selectSql)) {
                             <table>
                                 <tr>
                                     <td>Order complete</td>
-                                    <td><textarea name="complete"><?php if(!empty($smsVal[0])) echo $smsVal[0];?></textarea></td>
+                                    <td><textarea name="complete"><?php if(!empty($smsVal[0])) { echo $smsVal[0]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('complete');
                                     </script>
                                 </tr>
                                 <tr>
                                     <td>Collection reminders</td>
-                                    <td><textarea name="collect"><?php if(!empty($smsVal[0])) echo $smsVal[1];?></textarea></td>
+                                    <td><textarea name="collect"><?php if(!empty($smsVal[1])) { echo $smsVal[1]; }?></textarea></td>
                                     <script type="text/javascript">
                                         CKEDITOR.replace('collect');
                                     </script>

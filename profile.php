@@ -1,6 +1,69 @@
 <?php 
     require_once 'config/db.php';
     
+    function getCountry($address) {
+        for ($i = 0; $i < count($address); $i++) {
+            if(in_array("country", $address[$i]['types'])) {
+                return $address[$i]['long_name'];
+            }  
+        }
+    }
+    function getZip($address) {
+        for ($i = 0; $i < count($address); $i++) {
+            if(in_array("postal_code", $address[$i]['types'])) {
+                return $address[$i]['long_name'];
+            }  
+        }
+    }
+    function geocode($add){
+
+        // url encode the address
+        $address = urlencode($add);
+        
+        // google map geocode api url
+        $url = "http://maps.google.com/maps/api/geocode/json?address={$address}";
+
+        // get the json response
+        $resp_json = file_get_contents($url);
+
+        // decode the json
+        $resp = json_decode($resp_json, true);
+
+        // response status will be 'OK', if able to geocode given address 
+        if($resp['status']=='OK'){
+            // get the important data
+            $count = count($resp['results']);
+            
+            $data_arr = array();  
+            
+            for ($i=0; $i < $count; $i++) {
+                $formatted_address = $resp['results'][$i]['formatted_address'];
+                $addrComp = $resp['results'][$i]['address_components'];
+                $countryi = getCountry($addrComp);
+                $zipi = getZip($addrComp);
+
+                // verify if data is complete
+                if($formatted_address && $countryi && $zipi){
+
+                    // put the data in the array 
+                    array_push(
+                        $data_arr, 
+                            $formatted_address,
+                            $countryi,
+                            $zipi
+                        );
+                }
+            }
+            if (!empty($data_arr)) {
+                return $data_arr;
+            } else {
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+    
     $userSql = "Select * from user where email='".$_SESSION['loggedUserEmail']."';";
     $ures = mysqli_query($link, $userSql);
     $row;
@@ -9,7 +72,6 @@
     } else {
         $row = mysqli_fetch_assoc($ures);
     } 
-    
 ?>
 <!DOCTYPE html>
 <!--
@@ -70,7 +132,7 @@ and open the template in the editor.
                                     <input type='text' name='apt' value='<?php echo $row['apt']; ?>'>
                                 </div>
                                 <div class='col-md-4'>Zip Code*: 
-                                    <input type='text' name='zip' value='<?php echo $row['zip']; ?>' 
+                                    <input type='text' name='zip' id='zip' value='<?php echo $row['zip']; ?>' 
                                            onkeypress="return isNumber(event)" >
                                 </div>
                             </div>
@@ -79,8 +141,11 @@ and open the template in the editor.
                                     <input type='text' name='city' value='<?php echo $row['city']; ?>'>
                                 </div>
                                 <div class='col-md-4'>Country*: 
-                                    <input type='text' name='country' value='<?php echo $row['country']; ?>'>
+                                    <input type='text' name='country' id='country' value='<?php echo $row['country']; ?>'>
                                 </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-8 col-md-offset-1' id='results'></div>
                             </div>
                             <div class='row'>
                                 <div class='col-md-8 col-md-offset-1'>Phone*: <input type='text' name='phone' 
@@ -150,6 +215,73 @@ and open the template in the editor.
         </div>
     </body>
     <script>
+        var count = 0;
+    </script>
+     <?php
+        if (isset($_GET['zip'])) {
+            $str = $_GET['zip'];
+            $data_arr = geocode($str);
+            // get latitude, longitude and formatted address
+//                                    $data_arr = geocode($row['country']. " ". $row['zip']);
+
+            // if able to geocode the address
+            if($data_arr){
+                $total = count($data_arr);
+                $c = count($data_arr)/3;
+            ?>
+            <script>
+                var str = "Total of <?php echo $c; ?> results found: <br>";
+            </script>
+            <?php
+                for ($i = 0; $i < $total; $i+= 3) {
+                    $formatted_address = $data_arr[$i];
+                    $country = $data_arr[$i+1];
+                    $zip = $data_arr[$i+2];
+            ?>
+            <script>
+                var id = "res"+count;
+                var val = "val" + count;
+                var zip = "zip" + count;
+                str += "<div class='addMore' id='"+id+"'><?php echo $formatted_address; ?></div>";
+                str += "<input type='hidden' id='"+val+"' value='<?php echo $country; ?>'>";
+                str += "<input type='hidden' id='"+zip+"' value='<?php echo $zip; ?>'>";
+                count++;
+            </script>
+            <?php
+                }
+            ?>
+            <script>
+                document.getElementById('results').innerHTML = str;
+            </script>
+            <?php
+            // if unable to geocode the address                                
+            }else{
+                echo "No map found.";
+            }
+        }
+    ?>
+    <script>
+        function handleElement(num) {
+            var str = "res" + num;
+            var value = "val" + num;
+            var zip = "zip" + num;
+            document.getElementById(str).onclick = function() {
+                var val = document.getElementById(value).value;
+                var zipVal = document.getElementById(zip).value;
+                document.getElementById('country').value = val;
+                document.getElementById('zip').value = zipVal;
+                document.getElementById('results').innerHTML = "";
+            };
+        };
+
+        for (var i =0; i < count; i++) {
+            handleElement(i);
+        }
+        
+        document.getElementById('zip').onchange = function() {
+            var zip = document.getElementById('zip').value;
+            window.location = "profile.php?zip=" + zip;
+        }; 
         function isNumber(evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -169,4 +301,5 @@ and open the template in the editor.
            document.getElementById('showPref').style.display = "block";
         };
     </script>
+   
 </html>

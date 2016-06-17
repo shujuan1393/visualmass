@@ -32,7 +32,7 @@ and open the template in the editor.
                         <h4>I'm new here</h4>
                         <p>Create a new account now!</p>
                         <p>OR</p>
-                        <p>Continue with guest checkout ></p>
+                        <p><a id='guestCheckout'>Continue with guest checkout ></a></p>
                     </div>
                     <div id='existingCust' class='col-md-6'>
                         <h4>SIGN IN</h4>
@@ -72,10 +72,15 @@ and open the template in the editor.
                         <div class='col-md-6 col-md-offset-3'>
                             <p id='nanError' style="display: none;">Please enter numbers only</p>
                             <form method='post' action='review.php'>
+                                <?php if (!isset($_SESSION['loggedUserEmail'])) { ?>
+                                    <input type='hidden' id='isGuest' name='isGuest' value='yes'>
+                                <?php } ?>
                                 <input type='text' name='firstname' id='firstname'  maxlength="50" placeholder="FIRST NAME" 
                                        value='<?php if (!empty($urow['firstname'])) { echo $urow['firstname']; } ?>'/><br/>
                                 <input type='text' name='lastname' id='lastname'  maxlength="50" placeholder="LAST NAME" 
                                        value='<?php if (!empty($urow['lastname'])) { echo $urow['lastname']; } ?>'/><br/>
+                                <input type='text' name='email' id='email'  maxlength="50" placeholder="EMAIL" 
+                                       value='<?php if (!empty($urow['email'])) { echo $urow['email']; } ?>'/><br/>
                                 <input type='text' name='address' id='address'  maxlength="50" placeholder="STREET ADDRESS" 
                                        value='<?php if (!empty($urow['address'])) { echo $urow['address']; } ?>'/><br/>
                                 <input type='text' name='phone' id='phone'  maxlength="50" placeholder="PHONE" 
@@ -109,6 +114,9 @@ and open the template in the editor.
         </div>
     </body>
     <script>
+        document.getElementById('guestCheckout').onclick = function() {
+            window.location = "checkout.php?signin=1";
+        };
        <?php 
             if (isset($_GET['signin']) || isset($_SESSION['loggedUserEmail'])) {
         ?>

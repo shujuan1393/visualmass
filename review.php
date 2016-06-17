@@ -41,7 +41,7 @@ and open the template in the editor.
                                         $cost += 1;
                                     }
                                 }
-                        
+                        if (isset($_SESSION['loggedUserEmail'])) {
                             $user = "Select * from user where email='".$_SESSION['loggedUserEmail']."';";
                             $ures = mysqli_query($link, $user);
                             
@@ -51,9 +51,24 @@ and open the template in the editor.
                                 $urow = mysqli_fetch_assoc($ures);
                         ?>
                         <strong>Ship To</strong><br>
+                        
                         <?php echo $urow['firstname'] ." ".$urow['lastname']; ?><br>
                         <?php echo $urow['address']; ?>
                         <br>
+                        <?php 
+                            }
+                        } else {
+                            $firstname = $_POST['firstname'];
+                            $lastname = $_POST['lastname'];
+                            $address = $_POST['address'];
+                            $email = $_POST['email'];
+                            $isGuest = $_POST['isGuest'];
+                            $phone = $_POST['phone'];
+                            
+                            echo $firstname . " ".$lastname."<br>";
+                            echo $email."<br>";
+                            echo $address."<br>";
+                        } ?>
                         <strong>Billing Details</strong> <br>
                         <?php 
                             $payment = $_POST['payment'];
@@ -80,7 +95,6 @@ and open the template in the editor.
                         <button class='button' onclick='makePayment()'>PLACE ORDER</button>
                     </div>
                     <?php 
-                            }
                         }
                     ?>
                     <hr>
@@ -175,7 +189,15 @@ and open the template in the editor.
             var str = <?php echo '"'.$nonceFromTheClient.'"'; ?>;
             var cost = <?php echo $cost; ?>;
             var payment = <?php echo '"'.$payment.'"'; ?>;
-            window.location = "processPayment.php?id=" + str + "&cost=" + cost + "&payment=" + payment;
+            var firstname = <?php echo '"'.$firstname.'"'; ?>;
+            var lastname = <?php echo '"'.$lastname.'"'; ?>;
+            var address = <?php echo '"'.$address.'"'; ?>;
+            var email = <?php echo '"'.$email.'"'; ?>;
+            var phone = <?php echo '"'.$phone.'"'; ?>;
+
+            window.location = "processPayment.php?id=" + str + "&cost=" + cost + "&payment=" + payment + 
+                    "&firstname=" + firstname + "&lastname="+lastname + 
+                    "&email="+email+"&phone="+phone+"&address=" + address;
         }
     </script>
 </html>
