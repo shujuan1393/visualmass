@@ -252,7 +252,7 @@
                         $webList = array("advertisements.php", "blog.php", "careers.php", 
                             "faq.php", "homepage.php", "homeTry.php", "mainstory.php", 
                             "culturestory.php", "designstory.php", "onestory.php", "terms.php", 
-                            "productdesc.php", "prodBanner.php" );
+                            "productdesc.php", "prodBanner.php", "pages.php" );
                         $countList = count(array_intersect($urlArr, $webList));
                     ?>
                 <ul id="web" <?php if ($countList > 0) echo "class='collapse in'"; else echo "class='collapse'"; ?>>
@@ -297,6 +297,9 @@
                     </li>
                     <li <?php if (in_array("terms.php", $urlArr)) echo "class='active'" ?> >
                         <a href='terms.php'>TERMS</a>
+                    </li>
+                    <li <?php if (in_array("pages.php", $urlArr)) echo "class='active'" ?> >
+                        <a href='pages.php'>PAGES</a>
                     </li>
                 </ul>
             </li>

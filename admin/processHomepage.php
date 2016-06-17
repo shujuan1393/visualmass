@@ -191,6 +191,9 @@ if (isset($_GET['delete'])) {
             } else if (strcmp($selLink, "ourstory") === 0) {
                 $secondLink = "ourstorytype".$i;
                 $pagelink .= $selLink.".php?type=".$_POST[$secondLink];
+            } else if (strcmp($selLink, "page") === 0) {
+                $secondLink = "pageItem".$i;
+                $pagelink .= $selLink.".php?id=".$_POST[$secondLink];
             }
             
 //            $pagelink .= $_POST[$linki];

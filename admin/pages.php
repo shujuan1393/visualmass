@@ -7,17 +7,147 @@
  */
 require_once '../config/db.php';
 
-if (isset($_GET['id'])) {
-    $selectSql = "Select * from homepage where id ='" .$_GET['id']."';";
-    $eresult = mysqli_query($link, $selectSql);
+if (!isset($_GET['delete']) && isset($_GET['pid'])) { 
+    $sql = "Select * from pages where id ='".$_GET['pid']."';";
+    $result = mysqli_query($link, $sql);
+    
+    $frow = mysqli_fetch_assoc($result);
+    
+} else if (!isset($_GET['delete']) && isset($_GET['id'])) { 
+    $sql = "Select * from pages where id ='".$_GET['id']."';";
+    $result = mysqli_query($link, $sql);
+    
+    $erow = mysqli_fetch_assoc($result);
+} else if (isset($_GET['add'])) {
+    if (empty($_POST['name'])) {
+        unset($_SESSION['updatePageError']);
+        unset($_SESSION['addPageSuccess']);
+        unset($_SESSION['addPageError']);
 
-    if (!mysqli_query($link,$selectSql))
-    {
-        echo("Error description: " . mysqli_error($link));
+        unset($_SESSION['updatePageSectionError']);
+        unset($_SESSION['updatePageSectionSuccess']);
+        unset($_SESSION['addPageSectionSuccess']);
+        unset($_SESSION['addPageSectionError']);
+        $_SESSION['addPageError'] = "Empty field(s)";
     } else {
-        $erow = mysqli_fetch_assoc($eresult);
+        unset($_SESSION['addPageError']);
+        if (empty($_POST['name'])) {
+            $_SESSION['addPageError'] = "Empty field(s)";
+        } else {
+            $image;
+            if (!empty($_FILES['image']['name'])) {
+                unset($_SESSION['updatePageSectionSuccess']);
+                unset($_SESSION['addPageSectionSuccess']);
+                unset($_SESSION['addPageSectionError']);
+                unset($_SESSION['updatePageSectionError']);
+
+                $target_dir = "../uploads/banner/";
+                $random_digit=md5(uniqid(rand(), true));
+                $new_file = 'page_'.$random_digit.basename($_FILES["image"]["name"]);
+                $target_file = $target_dir . $new_file;
+                $uploadOk = 1;
+
+                $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+                // Check if file already exists
+                if (file_exists($target_file)) {
+                    unset($_SESSION['addPageSuccess']);
+                    $_SESSION['addPageError'] = "Sorry, file already exists.";
+        //            header('Location: faq.php');
+                }
+
+                // Allow certain file formats
+                if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif" && $imageFileType != "mp3" && $imageFileType != "mp4" 
+                        && $imageFileType != "wma" ) {
+                    unset($_SESSION['addPageSuccess']);
+                    $_SESSION['addPageError'] = "Sorry, only JPG, JPEG, PNG, GIF, MP3, MP4 & WMA files are allowed.";
+        //            header('Location: faq.php');
+                }
+
+                // Check file size
+                if ($_FILES["image"]["size"] > 5000000) {
+                    unset($_SESSION['addPageSuccess']);
+                    $_SESSION['addPageError'] = "Sorry, uploads cannot be greater than 5MB.";
+                }
+
+                if (!isset($_SESSION['addPageError'])) {
+                    if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                        unset($_SESSION['addPageSuccess']);
+                        $_SESSION['addPageError'] = "Sorry, there was an error uploading your file.";
+        //                header('Location: faq.php');   
+                    } else {
+                        unset($_SESSION['addPageError']);
+                        $image = $target_file;
+                    }
+                }
+            } else {
+                $image = $_POST['oldBanner'];
+            }
+            
+            $name = $_POST['name'];
+            $status = $_POST['status'];
+
+            if (!empty($_POST['editid'])) {
+                //update all fields with edited form name;
+                $formName = "Select * from pages where id='".$_POST['editid']."';";
+                $res = mysqli_query($link, $formName);
+                $row = mysqli_fetch_assoc($res);
+
+                $sql = "UPDATE pages set title='$name', status='$status', image='$image', type='banner' where id='".$_POST['editid']."';";
+                mysqli_query($link, $sql);
+
+                unset($_SESSION['updatePageError']);
+                unset($_SESSION['addPageSuccess']);
+                unset($_SESSION['addPageError']);
+
+                unset($_SESSION['updatePageSectionError']);
+                unset($_SESSION['updatePageSectionSuccess']);
+                unset($_SESSION['addPageSectionSuccess']);
+                unset($_SESSION['addPageSectionError']);
+                $_SESSION['updatePageSuccess'] = "Page updated successfully";
+            } else {
+                $sql = "INSERT INTO pages (title, status, image, type) VALUES ('$name', '$status', '$image', 'banner');";
+                mysqli_query($link, $sql);
+
+                unset($_SESSION['updatePageError']);
+                unset($_SESSION['updatePageSuccess']);
+                unset($_SESSION['addPageError']);
+
+                unset($_SESSION['updatePageSectionError']);
+                unset($_SESSION['updatePageSectionSuccess']);
+                unset($_SESSION['addPageSectionSuccess']);
+                unset($_SESSION['addPageSectionError']);
+                $_SESSION['addPageSuccess'] = "Page added successfully";
+            }
+        }
     }
-}
+} else if (isset($_GET['delete']) && isset($_GET['pid'])) {
+    $deletesql = "DELETE FROM pages where id ='". $_GET['pid']."'";
+    if (mysqli_query($link, $deletesql)) {
+        unset($_SESSION['updatePageError']);
+        unset($_SESSION['addPageSuccess']);
+        unset($_SESSION['addPageError']);
+        unset($_SESSION['updatePageSectionError']);
+        unset($_SESSION['updatePageSectionSuccess']);
+        unset($_SESSION['addPageSectionSuccess']);
+        unset($_SESSION['addPageSectionError']);
+        $_SESSION['updatePageSuccess'] = "Page deleted successfully";
+    } 
+} else if (isset($_GET['delete']) && isset($_GET['id'])) {
+    $deletesql = "DELETE FROM pages where id ='". $_GET['id']."'";
+    if (mysqli_query($link, $deletesql)) {
+        unset($_SESSION['updatePageError']);
+        unset($_SESSION['addPageSuccess']);
+        unset($_SESSION['addPageError']);
+        unset($_SESSION['updatePageSectionError']);
+        unset($_SESSION['updatePageSuccess']);
+        unset($_SESSION['addPageSectionSuccess']);
+        unset($_SESSION['addPageSectionError']);
+        $_SESSION['updatePageSectionSuccess'] = "Page section deleted successfully";
+        header("Location: pages.php#menu1");
+    } 
+} 
 ?>
 
 <!DOCTYPE html>
@@ -43,164 +173,274 @@ if (isset($_GET['id'])) {
                                 Web
                             </li>
                             <li class="active">
-                                Homepage
+                                Pages
                             </li>
                         </ol>
                         
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#homep">Homepage Banner</a></li>
-                            <li><a data-toggle="tab" href="#menu1">Homepage Sections</a></li>
+                            <li class="active"><a data-toggle="tab" href="#forms">Pages</a></li>
+                            <li><a data-toggle="tab" href="#menu1">Page Sections</a></li>
                         </ul>
 
                         <div class="tab-content">
-                            <div id="homep" class="tab-pane fade in active">
-                                <h1 class="page-header">Update Homepage Banner</h1>
+                            <div id="forms" class="tab-pane fade in active">
+                                <h1 class="page-header">Manage Pages</h1>
+                                
+                                <div id="updatePageError" style="color:red">
+                                    <?php 
+                                        if (isset($_SESSION['updatePageError'])) {
+                                            echo $_SESSION['updatePageError'];
+                                        }
+                                    ?>
+                                </div>
+
+                                <div id="updatePageSuccess" style="color:green">
+                                    <?php 
+                                        if (isset($_SESSION['updatePageSuccess'])) {
+                                            echo $_SESSION['updatePageSuccess'];
+                                        }
+                                    ?>
+                                </div>
+                                
                                 <p>
                                     <?php 
-                                        $getBanner = "Select * from homepage where type='banner';";
-                                        $bresult = mysqli_query($link, $getBanner);
-
-                                        if (!mysqli_query($link, $getBanner)) {
+                                        $getDetails = "Select * from pages where type='banner';";
+                                        $dresult = mysqli_query($link, $getDetails);
+                                        $drow;
+                                        if (!mysqli_query($link, $getDetails)) {
                                             echo "Error description: ". mysqli_error($link);
                                         } else {
-                                            if ($bresult -> num_rows == 0 ) {
-                                                echo "You have not uploaded a banner image yet.<br><br>";
-                                            } else {
-                                                $brow = mysqli_fetch_assoc($bresult);
-                                                $browArr = explode(".", $brow['html']);
-                                                $ext = $browArr[count($browArr)-1];
-
-                                                $imgArr = array("jpg", "jpeg", "png", "gif");
-                                                $vidArr = array("mp3", "mp4", "wma");
-
-                                                if (in_array($ext, $imgArr)) {
-                                                    echo "<img src='".$brow['html']."' width=450>";
-                                                } else {
-                                                    echo '<video width="500" height="400" autoplay>
-                                                    <source src="'.$brow['html'].'" type="video/mp4">
-                                                    Your browser does not support the video tag.
-                                                    </video>';
-                                                }
-                                            }
-                                        }
-                                    ?>
-
-                                    <form id='addHomepageBanner' action='processHomepage.php?banner=1' method='post' enctype="multipart/form-data">
-
-                                        <div id="addHomepageBannerError" style="color:red">
-                                            <?php 
-                                                if (isset($_SESSION['addHomepageBannerError'])) {
-                                                    echo $_SESSION['addHomepageBannerError'];
-                                                }
-                                            ?>
-                                        </div>
-
-                                        <div id="addHomepageBannerSuccess" style="color:green">
-                                            <?php 
-                                                if (isset($_SESSION['addHomepageBannerSuccess'])) {
-                                                    echo $_SESSION['addHomepageBannerSuccess'];
-                                                }
-                                            ?>
-                                        </div>
-
-                                        <input type='hidden' name='submitted' id='submitted' value='1'/>
-                                        <input type='hidden' name='oldImage' id='oldImage' value='<?php if(!empty($brow['html'])) echo $brow['html']; ?>'/>
-
-                                        Image:
-                                        <input type="file" name="image" id='image'/>
-                                        <br>
-                                        <input type='submit' name='submit' value='Submit' />
-                                    </form>
-                                </p>
-                            </div>
-                            <div id="menu1" class="tab-pane fade">
-                                <h1 class="page-header">Manage Homepage Sections</h1>
-                                
-                                <div id="updateHomepageSuccess" style="color:green">
-                                    <?php 
-                                        if (isset($_SESSION['updateHomepageSuccess'])) {
-                                            echo $_SESSION['updateHomepageSuccess'];
-                                        }
-                                    ?>
-                                </div>
-                                <div id="updateHomepageError" style="color:red">
-                                    <?php 
-                                        if (isset($_SESSION['updateHomepageError'])) {
-                                            echo $_SESSION['updateHomepageError'];
-                                        }
-                                    ?>
-                                </div>
-                                
-                                <p>
-                                    <?php 
-                                        $qry = "Select * from homepage where type='section'";
-
-                                        $result = mysqli_query($link, $qry);
-
-                                        $rowCount = 0;
-
-                                        if (!mysqli_query($link,$qry))
-                                        {
-                                            echo("Error description: " . mysqli_error($link));
-                                        } else {
-                                            if ($result->num_rows === 0) {
-                                                echo "You have not created any sections yet.";
+                                            if ($dresult -> num_rows == 0 ) {
+                                                echo "You have not created any pages yet.<br><br>";
                                             } else {
                                     ?>
 
                                     <p class="text-right">
-                                        <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Section</a>
+                                        <a href="#addf"><i class="fa fa-fw fa-plus"></i> Add Page</a>
                                     </p>
 
                                     <table>
                                         <thead>
-                                            <th>Title</th> 
+                                            <th>Name</th>
                                             <th>Status</th>
                                             <th>Edit</th>
                                             <th>Delete</th>                        
                                         </thead>
                                         <?php
                                             // output data of each row
+                                            while ($row = mysqli_fetch_assoc($dresult)) {
+                                                echo "<tr>";
+                                                echo "<td>".$row['title'] ."</td>";    
+                                                echo "<td>".$row['status'] ."</td>";                       
+                                                echo '<td><button onClick="window.location.href=`pages.php?pid='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="deletePageFunction('.$row['id'].')">D</button></td>';
+                                                echo "</tr>";
+                                            }
+                                        ?>
+                                    </table>
+                                    <?php 
+                                            }
+                                        }
+                                    ?>
 
+                                    <form id='addPages' action='pages.php?add=1' method='post' enctype="multipart/form-data">
+
+                                        <div id="addPageError" style="color:red">
+                                            <?php 
+                                                if (isset($_SESSION['addPageError'])) {
+                                                    echo $_SESSION['addPageError'];
+                                                }
+                                            ?>
+                                        </div>
+
+                                        <div id="addPageSuccess" style="color:green">
+                                            <?php 
+                                                if (isset($_SESSION['addPageSuccess'])) {
+                                                    echo $_SESSION['addPageSuccess'];
+                                                }
+                                            ?>
+                                        </div>
+
+                                        <h1 id="addf" class="page-header">Add/Edit Pages</h1>
+
+                                        <input type='hidden' name='submitted' id='submitted' value='1'/>
+                                        <input type='hidden' name='editid' id='editid' value='<?php 
+                                            if (!isset($_GET['delete']) && isset($_GET['pid'])) {
+                                                echo $_GET['pid'];
+                                            }
+                                        ?>'/>
+
+                                        <table class="content">
+                                            <tr>
+                                                <td>
+                                                    Name*:
+                                                    <input type='text' name='name' id='name' 
+                                                           value="<?php if (isset($frow['title'])) { echo $frow['title']; } ?>"/>
+                                                </td>
+                                                <td>
+                                                    Status:
+                                                    <select name="status">
+                                                        <option value="active" <?php 
+                                                            if (!empty($frow['status'])) {
+                                                                if(strcmp("active", $frow['status']) === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            }
+                                                            ?>>Active</option>
+                                                        <option value="inactive" <?php 
+                                                            if (!empty($frow['status'])) {
+                                                                if(strcmp("inactive", $frow['status']) === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            }
+                                                            ?>>Inactive</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <?php 
+                                                    if (isset($frow['image'])) {
+                                                        $browArr = explode(".", $frow['image']);
+                                                        $ext = $browArr[count($browArr)-1];
+
+                                                        $imgArr = array("jpg", "jpeg", "png", "gif");
+                                                        $vidArr = array("mp3", "mp4", "wma");
+
+                                                        echo "<input type='hidden' name='oldBanner' value='".$frow['image']."'>";
+                                                        if (in_array($ext, $imgArr)) {
+                                                            echo "<img src='".$frow['image']."' width=450>";
+                                                        } else {
+                                                            echo '<video width="500" height="400" autoplay>
+                                                            <source src="'.$frow['image'].'" type="video/mp4">
+                                                            Your browser does not support the video tag.
+                                                            </video>';
+                                                        }
+                                                        echo "<br>";
+                                                    }      
+                                                    ?>
+                                                    Image:
+                                                    <input type="file" name="image" id='image' />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <input type='submit' name='submit' value='Submit' />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                </p>
+                            </div>
+                            <div id="menu1" class="tab-pane fade">
+                                <h1 class="page-header">Manage Page Sections</h3>
+                                <p>
+                                    <?php 
+                                        //get num of sections for each page
+                                        $page = "Select * from pages where type='banner';";
+                                        $pageres = mysqli_query($link, $page);
+                                        
+                                        if (!mysqli_query($link, $page)) {
+                                            die(mysqli_error($link));
+                                        } else {
+                                            while ($row = mysqli_fetch_assoc($pageres)) {
+                                                $getSections = "Select count(distinct id) as count from pages where pageid='".$row['id']."';";
+                                                $secres = mysqli_query($link, $getSections);
+                                                
+                                                if (!mysqli_query($link, $getSections)) {
+                                                    die(mysqli_error($link));
+                                                } else {
+                                                    if ($secres -> num_rows === 0) {
+                                                        echo "<input type='hidden' id='".$row['id']."Value' value='0'>";
+                                                    } else {
+                                                        $r1 = mysqli_fetch_assoc($secres); 
+                                                        echo "<input type='hidden' id='".$row['id']."Value' value='".$r1['count']."'>";
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
+                                        $qry = "Select * from pages where type='section' ORDER BY pageid asc";
+
+                                        $result = mysqli_query($link, $qry);
+
+                                        if (!mysqli_query($link,$qry))
+                                        {
+                                            echo("Error description: " . mysqli_error($link));
+                                        } else {
+                                            if ($result->num_rows === 0) {
+                                                echo "You have not created any page sections yet.";
+                                            } else {
+                                    ?>
+
+                                    <p class="text-right">
+                                        <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Page Section</a>
+                                    </p>
+
+                                    <table>
+                                        <thead>
+                                            <th>Order</th> 
+                                            <th>Title</th> 
+                                            <th>Page</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>                        
+                                        </thead>
+                                        <?php
+                                            $rowCount = 0;
+                                            // output data of each row
                                             while ($row = mysqli_fetch_assoc($result)) {
                                                 $rowCount++;
                                                 echo "<tr>";
+                                                echo "<td>".$row['fieldorder'] ."</td>";   
                                                 echo "<td>".$row['title'] ."</td>";   
-                                                echo "<td>".$row['status']."</td>";                        
-                                                echo '<td><button onClick="window.location.href=`homepage.php?id='.$row['id'].'#menu1`">E</button>';
+                                                echo "<td>";
+                                                
+                                                $getpage = "Select * from pages where id='".$row['pageid']."';";
+                                                $pager = mysqli_query($link, $getpage);
+                                                
+                                                if (!mysqli_query($link, $getpage)) {
+                                                    die(mysqli_error($link));
+                                                } else {
+                                                    $pagerow = mysqli_fetch_assoc($pager);
+                                                    echo $pagerow['title'];
+                                                }
+                                                
+                                                echo "</td>";                        
+                                                echo '<td><button onClick="window.location.href=`pages.php?id='.$row['id'].'#menu1`">E</button>';
                                                 echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                 echo "</tr>";
                                             }
                                         ?>
                                     </table>
                                     <?php
-                                        }
+                                        } 
                                     }
                                     ?>
 
-                                    <form id='addAdvertisement' action='processHomepage.php' method='post' enctype="multipart/form-data">
+                                    <form id='addPageSection' action='processPages.php?update=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addHomepageError" style="color:red">
+                                        <div id="addPageSectionError" style="color:red">
                                             <?php 
-                                                if (isset($_SESSION['addHomepageError'])) {
-                                                    echo $_SESSION['addHomepageError'];
+                                                if (isset($_SESSION['addPageSectionError'])) {
+                                                    echo $_SESSION['addPageSectionError'];
                                                 }
 
-                                                if (isset($_SESSION['uploadHomepageError'])) {
-                                                    echo $_SESSION['uploadHomepageError'];
+                                                if (isset($_SESSION['uploadPageSectionError'])) {
+                                                    echo $_SESSION['uploadPageSectionError'];
                                                 }
                                             ?>
                                         </div>
+
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addHomepageSuccess" style="color:green">
+                                        <div id="addPageSectionSuccess" style="color:green">
                                             <?php 
-                                                if (isset($_SESSION['addHomepageSuccess'])) {
-                                                    echo $_SESSION['addHomepageSuccess'];
+                                                if (isset($_SESSION['addPageSectionSuccess'])) {
+                                                    echo $_SESSION['addPageSectionSuccess'];
                                                 }
                                             ?>
                                         </div>
 
-                                        <h1 id="add" class="page-header">Add/Edit Homepage Section</h1>
+                                        <h1 id="add" class="page-header">Add/Edit Page Section</h1>
 
                                         <input type='hidden' name='submitted' id='submitted' value='1'/>
                                         <input type='hidden' name='editid' id='editid' 
@@ -208,10 +448,23 @@ if (isset($_GET['id'])) {
 
                                         <table class="content">
                                             <tr>
-                                                <td colspan="2">
+                                                <td>
                                                     Title*:
                                                     <input type='text' name='title' id='title' maxlength="50" 
                                                            value='<?php if (!empty($erow['title'])) { echo $erow['title']; } ?>'/>
+                                                </td>
+                                                <td>
+                                                    Order*:
+                                                    <input type='text' name='order' id='order'  
+                                                       onkeypress="return isNumber(event)" 
+                                                           value="<?php 
+                                                                if(!empty($erow['fieldorder'])){
+                                                                    if (isset($erow['fieldorder'])) { 
+                                                                        echo $erow['fieldorder']; 
+                                                                    } else { 
+                                                                        echo $rowCount+1;
+                                                                    } 
+                                                                } ?>"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -222,6 +475,7 @@ if (isset($_GET['id'])) {
                                                             echo "<input type='hidden' name='oldImage' id='oldImage' value='".$erow['image']."'>";
                                                         }
                                                     ?>
+
                                                     Image*:
                                                     <input type="file" name="image" id='image' accept="image/*" />
                                                 </td>
@@ -252,24 +506,42 @@ if (isset($_GET['id'])) {
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    Order*:
-                                                    <input type='text' name='order' id='order'  
-                                                       onkeypress="return isNumber(event)" 
-                                                           value="<?php if (isset($erow['fieldorder'])) { echo $erow['fieldorder']; } else { echo $rowCount+1; } ?>"/>
+                                                    Page*:
+                                                    <select name='pageid' id='pageid'>
+                                                        <?php 
+                                                            $pages = "Select * from pages where type='banner';";
+                                                            $res = mysqli_query($link, $pages);
+                                                            
+                                                            if (!mysqli_query($link, $pages)) {
+                                                                die(mysqli_error($link));
+                                                            } else {
+                                                                while ($row = mysqli_fetch_assoc($res)) {
+                                                                    echo "<option value='".$row['id']."' ";
+                                                                    if (isset($erow['pageid'])) {
+                                                                        if (strcmp($erow['pageid'], $row['id']) === 0) {
+                                                                            echo " selected";
+                                                                        }
+                                                                    }
+                                                                    echo ">".$row['title'];
+                                                                    echo "</option>";
+                                                                }
+                                                            }
+                                                        ?>
+                                                    </select>
                                                 </td>
                                                 <td>
                                                     Status*:
                                                     <select name='status'>
                                                         <option value='active' <?php 
-                                                            if (!empty($erow['status'])) {
-                                                                if (strcmp($erow['status'], "active") === 0) {
+                                                            if (isset($erow['status'])) {
+                                                                if(strcmp($erow['status'], "active") === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
                                                         ?>>Active</option>
                                                         <option value='inactive' <?php 
-                                                            if (!empty($erow['status'])) {
-                                                                if (strcmp($erow['status'], "inactive") === 0) {
+                                                            if (isset($erow['status'])) {
+                                                                if(strcmp($erow['status'], "inactive") === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
@@ -281,7 +553,7 @@ if (isset($_GET['id'])) {
                                                 <td colspan="2">
                                                     Content (optional): 
                                                     <textarea name="html"><?php 
-                                                    if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
+                                                        if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
                                                     <script type="text/javascript">
                                                         CKEDITOR.replace('html');
                                                     </script>
@@ -679,8 +951,8 @@ if (isset($_GET['id'])) {
                                                                             </select>
                                                                         </div>
                                                                         <!--sections-->
-                                                                        <div id='page<?php  echo $i+1; ?>' style='display:none;'>
-                                                                            <select name='pageItem<?php  echo $i+1; ?>'>
+                                                                        <div id='page1' style='display:none;'>
+                                                                            <select name='pageItem1'>
                                                                                 <?php 
                                                                                     $pagesql = "Select * from pages where type='banner';";
                                                                                     $pageres = mysqli_query($link, $pagesql);
@@ -714,7 +986,7 @@ if (isset($_GET['id'])) {
                                     </form>
                                 </p>
                             </div>
-                        </div>
+                        </div>  
                     </div>
                 </div>
                 <!-- /.row -->
@@ -727,10 +999,75 @@ if (isset($_GET['id'])) {
     </div>
 </html>
 
-<script> 
+<script>
     var count = document.getElementById('buttonno').value;
     attachClick(count);
     
+    function deletePageFunction(locId) {
+        var r = confirm("Are you sure you wish to delete this page?");
+        if (r === true) {
+            window.location="pages.php?delete=1&pid=" + locId;
+        } else if (r === false) {
+            <?php
+                unset($_SESSION['addPageError']);
+                unset($_SESSION['addPageSuccess']);
+                unset($_SESSION['updatePageSuccess']);
+                unset($_SESSION['addPageSectionError']);
+                unset($_SESSION['addPageSectionSuccess']);
+                unset($_SESSION['updatePageSectionSuccess']);
+                unset($_SESSION['updatePageSectionError']);
+                $_SESSION['updatePageError'] = "Nothing was deleted";
+            ?>
+            window.location='pages.php';
+        }
+    }
+    function deleteFunction(locId) {
+        var r = confirm("Are you sure you wish to delete this section?");
+        if (r === true) {
+            window.location="pages.php?delete=1&id=" + locId;
+        } else if (r === false) {
+            <?php
+                unset($_SESSION['addPageError']);
+                unset($_SESSION['updatePageError']);
+                unset($_SESSION['addPageSuccess']);
+                unset($_SESSION['updatePageSuccess']);
+                unset($_SESSION['addPageSectionError']);
+                unset($_SESSION['addPageSectionSuccess']);
+                unset($_SESSION['updatePageSectionSuccess']);
+                $_SESSION['updatePageSectionError'] = "Nothing was deleted";
+            ?>
+            window.location='pages.php#menu1';
+        }
+    }
+
+    document.getElementById('pageid').onchange = function() {
+        var index = this.selectedIndex;
+        var inputText = document.getElementById('pageid').children[index].value;
+        var str = inputText + "Value";
+        var count = document.getElementById(str).value;
+        <?php
+        if(!isset($_GET['id'])) {
+        ?>
+            document.getElementById('order').value = Number(count)+1;
+        <?php 
+        }
+        ?>
+    };
+
+    window.onload = function() {
+        var index = document.getElementById('pageid').selectedIndex;
+        var inputText = document.getElementById('pageid').children[index].value;
+        var str = inputText + "Value";
+        var count = document.getElementById(str).value;
+        <?php
+        if(!isset($_GET['id'])) {
+        ?>
+            document.getElementById('order').value = Number(count)+1;
+        <?php 
+        }
+        ?>
+    };
+
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -742,25 +1079,25 @@ if (isset($_GET['id'])) {
         document.getElementById('nanError').style.display='none';
         return true;
     }
-
-    function deleteFunction(locId) {
-        var r = confirm("Are you sure you wish to delete this section?");
-        if (r === true) {
-            window.location="processHomepage.php?delete=1&id=" + locId;
-        } else if (r === false) {
-            <?php
-                unset($_SESSION['addHomepageError']);
-                unset($_SESSION['addHomepageSuccess']);
-                unset($_SESSION['updateHomepageSuccess']);
-                $_SESSION['updateHomepageError'] = "Nothing was deleted";
-            ?>
-            window.location='homepage.php#menu1';
+    
+    $(document).ready(function() {
+        if(location.hash) {
+            $('a[href=' + location.hash + ']').tab('show');
         }
-    }
-
+        $(document.body).on("click", "a[data-toggle]", function(event) {
+            location.hash = this.getAttribute("href");
+        });
+    });
+    $(window).on('popstate', function() {
+        var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
+        $('a[href=' + anchor + ']').tab('show');
+    });
+    
+    var count=1;
+    
     function addButton() {
-        var count = document.getElementById('buttonno').value;
         count++;
+        document.getElementById('buttonno').value = count;
         var node = document.createElement('fieldset');  
         node.innerHTML = "<h5 class='page-header'>Button " + count + " (optional)</h5>" +
                 "<table class='content-sub'><tr>"+
@@ -832,12 +1169,11 @@ if (isset($_GET['id'])) {
                     ?>"
                 + "</select></div>"
                 + "</td></tr></table>";
-
+//            node.innerHTML = 'Button Text ' + count + ' : <input type="text" name="buttontext'+count+'">';
+        
         document.getElementById('buttonlinks').appendChild(node); 
-        document.getElementById('buttonno').value = count;
         attachClick(count);
     }
-    
     function checkSelect(num) {
         var products = "productsPage" + num;
         var product = "productPage" + num;
@@ -924,16 +1260,4 @@ if (isset($_GET['id'])) {
             checkSelect(i);
         }
     }
-    $(document).ready(function() {
-        if(location.hash) {
-            $('a[href=' + location.hash + ']').tab('show');
-        }
-        $(document.body).on("click", "a[data-toggle]", function(event) {
-            location.hash = this.getAttribute("href");
-        });
-    });
-    $(window).on('popstate', function() {
-        var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
-        $('a[href=' + anchor + ']').tab('show');
-    });
 </script>

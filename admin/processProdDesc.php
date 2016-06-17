@@ -106,7 +106,7 @@ if (isset($_GET['delete']) && isset($_GET['banner'])) {
     $buttonno = $_POST['buttonno'];
     
     for ($i = 1; $i <= $buttonno; $i++) {
-        $linki = "link".$i;
+        $linki = "type".$i;
         $linkposi = "linkpos".$i;
         $buttoni = "buttontext".$i;
         if (!empty($_POST[$buttoni]) && (empty($_POST[$linkposi]) || empty($_POST[$linki]))) { 
@@ -185,11 +185,26 @@ if (isset($_GET['delete']) && isset($_GET['banner'])) {
         $buttonlink = "";
         
         for ($i = 1; $i <= $buttonno; $i++) {
-            $linki = "link".$i;
+            $linki = "type".$i;
             $linkposi = "linkpos".$i;
             $buttoni = "buttontext".$i;
             
-            $pagelink .= $_POST[$linki];
+            $selLink = $_POST[$linki];
+            if (strcmp($selLink, "products") === 0)  {
+                $secondLink = "productstype".$i;
+                $pagelink .= $selLink.".php?".$_POST[$secondLink];
+            } else if (strcmp($selLink, "product") === 0) {
+                $secondLink = "productItem".$i;
+                $pagelink .= $selLink.".php?id=".$_POST[$secondLink];
+            } else if (strcmp($selLink, "ourstory") === 0) {
+                $secondLink = "ourstorytype".$i;
+                $pagelink .= $selLink.".php?type=".$_POST[$secondLink];
+            } else if (strcmp($selLink, "page") === 0) {
+                $secondLink = "pageItem".$i;
+                $pagelink .= $selLink.".php?id=".$_POST[$secondLink];
+            }
+            
+//            $pagelink .= $_POST[$linki];
             $linkpos .= $_POST[$linkposi];
             $buttonlink .= $_POST[$buttoni];
             
@@ -233,6 +248,7 @@ if (isset($_GET['delete']) && isset($_GET['banner'])) {
                     }
                 }
             }
+            
             // Check if file already exists
             if (file_exists($target_file)) {
                 unset($_SESSION['addProdDescSuccess']);
@@ -243,6 +259,7 @@ if (isset($_GET['delete']) && isset($_GET['banner'])) {
                     header('Location: productdesc.php#menu1');
                 }
             }
+            
             // Check file size
             if ($_FILES["image"]["size"] > 500000) {
                 unset($_SESSION['addProdDescSuccess']);
