@@ -156,7 +156,7 @@ if (isset($_GET['id'])) {
                                                     echo "<td>".$row['firstname'] . " " . $row['lastname']."</td>";
                                                     echo "<td>".$row['email']."</td>";                           
                                                     echo "<td>".$row['type']."</td>";                         
-                                                    echo '<td><button onClick="window.location.href=`users.php?id='.$row['id'].'`">E</button>';
+                                                    echo '<td><button onClick="window.location.href=`users.php?id='.$row['id'].'#menu1`">E</button>';
                                                     echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                     echo "</tr>";
                                                 }
@@ -285,7 +285,7 @@ if (isset($_GET['id'])) {
                 unset($_SESSION['addEmpError']);
                 $_SESSION['updateError'] = "Nothing was deleted";
             ?>
-            window.location='users.php';
+            window.location='users.php#menu1';
         }
     }
     

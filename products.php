@@ -279,13 +279,21 @@
                         $prevpos = $linkposArr[0];
 
 //                                    echo "<div class='section-link'>";
-                        $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
+                        if (strcmp($linkposArr[0], "center") === 0) {
+                            $toPrint .= "<div class='section-link col-md-3' style='left: 25%; right: 25%;'>";
+                        } else {
+                            $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
+                        }
                         for ($i = 0; $i < count($textArr); $i++) {
                             if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
                                 $toPrint .= "</div>";
                             }
                             if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
-                                $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
+                                if (strcmp($linkposArr[$i], "center") === 0) {
+                                    $toPrint .= "<div class='section-link col-md-3' style='left: 25%; right: 25%;'>";
+                                } else {
+                                    $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
+                                }
                             }
                             $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
                             $prevpos = $linkposArr[$i];

@@ -53,7 +53,8 @@ if (isset($_GET['add'])) {
         unset($_SESSION['updateAuthorError']);
         unset($_SESSION['updateAuthorSuccess']);
         $_SESSION['updateBlogCatSuccess'] = "Record deleted successfully";
-        echo "<script>window.history.back()</script>";
+        header("Location: blogSettings.php");
+//        echo "<script>window.history.back()</script>";
     } 
 } else if (isset($_GET['delete']) && isset($_GET['aid'])) { 
     $deletesql = "DELETE FROM authors where id ='". $_GET['aid']."'";
@@ -67,7 +68,8 @@ if (isset($_GET['add'])) {
         unset($_SESSION['addAuthorError']);
         unset($_SESSION['updateAuthorError']);
         $_SESSION['updateAuthorSuccess'] = "Record deleted successfully";
-        echo "<script>window.history.back()</script>";
+        header("Location: blogSettings.php#menu1");
+//        echo "<script>window.history.back()</script>";
     } 
 } else if (isset($_GET['update'])) {
     if(empty($_POST['firstname']) || empty($_POST['lastname'])
@@ -81,7 +83,13 @@ if (isset($_GET['add'])) {
         unset($_SESSION['addAuthorSuccess']);
         unset($_SESSION['updateAuthorError']);
         $_SESSION['addAuthorError'] = "Empty field(s)";
-        echo "<script>window.history.back()</script>";
+        
+        if (isset($_POST['editid'])) {
+            header("Location: blogSettings.php?id=".$_POST['editid']."#menu1");
+        } else {
+            header("Location: blogSettings.php#menu1");
+        }
+//        echo "<script>window.history.back()</script>";
     } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         unset($_SESSION['addBlogCatSuccess']);
         unset($_SESSION['addBlogCatError']);
@@ -92,7 +100,12 @@ if (isset($_GET['add'])) {
         unset($_SESSION['addAuthorSuccess']);
         unset($_SESSION['updateAuthorError']);
         $_SESSION['addAuthorError'] = "Invalid email";
-        echo "<script>window.history.back()</script>";
+        if (isset($_POST['editid'])) {
+            header("Location: blogSettings.php?id=".$_POST['editid']."#menu1");
+        } else {
+            header("Location: blogSettings.php#menu1");
+        }
+//        echo "<script>window.history.back()</script>";
     } else {
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
@@ -120,7 +133,10 @@ if (isset($_GET['add'])) {
         unset($_SESSION['updateAuthorSuccess']);
         unset($_SESSION['addAuthorError']);
         unset($_SESSION['updateAuthorError']);
-        echo "<script>window.history.back()</script>";
+        
+        header("Location: blogSettings.php#menu1");
+        
+//        echo "<script>window.history.back()</script>";
     }
 }
 

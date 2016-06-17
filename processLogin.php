@@ -76,7 +76,9 @@ if(isset($_GET['forget'])) {
             header("Location: checkout.php?error=1");
         } 
     } else {
-        $favId = $_POST['addToCart'];
+        if (isset($_POST['addToCart'])) {
+            $favId = $_POST['addToCart'];
+        }
 
         unset($_SESSION['loginFormError']);
         $username = trim($_POST['email']);
@@ -101,46 +103,45 @@ if(isset($_GET['forget'])) {
                 }
             } else {
                 // output data of each row
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $type = $row['accountType'];
-                    if (strcmp($type, "customer") === 0) {
-                        $_SESSION['user_time'] = time();
-    //                    setcookie("user", $row['email'], time() + (86400 * 30), "/"); // 86400 = 1 day
-                        $_SESSION['loggedUserEmail'] = $row['email'];
-                        $_SESSION['loggedUser'] = $row['firstname'];
-                        if (isset($favId)) {
-                            $query = "Select * from favourites where email='".$_SESSION['loggedUserEmail']."';";
-                            $result = mysqli_query($link, $query);
+                $row = mysqli_fetch_assoc($result);
+                $type = $row['accountType'];
+                if (strcmp($type, "customer") === 0) {
+                    $_SESSION['user_time'] = time();
+//                    setcookie("user", $row['email'], time() + (86400 * 30), "/"); // 86400 = 1 day
+                    $_SESSION['loggedUserEmail'] = $row['email'];
+                    $_SESSION['loggedUser'] = $row['firstname'];
+                    if (isset($favId)) {
+                        $query = "Select * from favourites where email='".$_SESSION['loggedUserEmail']."';";
+                        $result = mysqli_query($link, $query);
 
-                            if (!mysqli_query($link, $query)) {
-                                echo "Error: ". mysqli_error($link);
-                            } else {
-                                $sql;
-                                if ($result -> num_rows === 0) {
-                                    $sql = "INSERT into favourites (pid, email) "
-                                            . "VALUES ('$favId', '".$_SESSION['loggedUserEmail']."')";
-                                } else {
-                                    $row = mysqli_fetch_assoc($result);
-                                    if (strcmp($row['pid'], "")=== 0) {
-                                        $pids = $favId;
-                                    } else {
-                                        $pids = $row['pid'].",".$favId;
-                                    }
-                                    $sql = "UPDATE favourites set pid='$pids' where email='".$_SESSION['loggedUserEmail']."';";
-                                }
-
-                                mysqli_query($link, $sql);
-                            }
-                        }
-
-                        if (isset($_GET['checkout'])) {
-                            header("Location: checkout.php?signin=1");
+                        if (!mysqli_query($link, $query)) {
+                            echo "Error: ". mysqli_error($link);
                         } else {
-                            echo "<script>window.history.back();</script>";
+                            $sql;
+                            if ($result -> num_rows === 0) {
+                                $sql = "INSERT into favourites (pid, email) "
+                                        . "VALUES ('$favId', '".$_SESSION['loggedUserEmail']."')";
+                            } else {
+                                $row = mysqli_fetch_assoc($result);
+                                if (strcmp($row['pid'], "")=== 0) {
+                                    $pids = $favId;
+                                } else {
+                                    $pids = $row['pid'].",".$favId;
+                                }
+                                $sql = "UPDATE favourites set pid='$pids' where email='".$_SESSION['loggedUserEmail']."';";
+                            }
+
+                            mysqli_query($link, $sql);
                         }
-    //                    header('Location: index.php');
-                    } 
-                }
+                    }
+                    
+                    if (isset($_GET['checkout'])) {
+                        header("Location: checkout.php?signin=1");
+                    } else {
+                        echo "<script>window.history.back();</script>";
+                    }
+//                    header('Location: index.php');
+                } 
             } 
         }
     }

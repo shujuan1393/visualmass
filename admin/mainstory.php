@@ -169,7 +169,7 @@ if (isset($_GET['id'])) {
                                                 echo "<td>".$row['title'] ."</td>";
                                                 echo "<td>".$row['fieldorder']."</td>";  
                                                 echo "<td>".$row['status']."</td>";                          
-                                                echo '<td><button onClick="window.location.href=`mainstory.php?id='.$row['id'].'`">E</button>';
+                                                echo '<td><button onClick="window.location.href=`mainstory.php?id='.$row['id'].'`#menu1">E</button>';
                                                 echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                 echo "</tr>";
                                             }
@@ -283,7 +283,7 @@ if (isset($_GET['id'])) {
                 unset($_SESSION['updateMainSuccess']);
                 $_SESSION['updateMainError'] = "Nothing was deleted";
             ?>
-            window.location='mainstory.php';
+            window.location='mainstory.php#menu1';
         }
     }
     function isNumber(evt) {

@@ -31,7 +31,11 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
         unset($_SESSION['homeError']);        
         $pid = $_GET['id'];
         $cartid = GetCartId();
-        $lens = $_GET['lens'];
+        if (isset($_GET['lens'])) {
+            $lens = $_GET['lens'];
+        } else {
+            $lens = "";
+        }
         $getproduct = "Select * from products where pid='$pid'";
         $prodres = mysqli_query($link, $getproduct);
 

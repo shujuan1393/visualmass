@@ -14,7 +14,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addMainSuccess']);
         unset($_SESSION['addMainError']);
         $_SESSION['updateMainSuccess'] = "Record deleted successfully";
-        header("Location: mainstory.php");
+        header("Location: mainstory.php#menu1");
     } 
 } else if (isset($_GET['banner'])) { 
     unset($_SESSION['addMainBannerError']);
@@ -104,7 +104,11 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateMainError']);
         unset($_SESSION['updateMainSuccess']);
         $_SESSION['addMainError'] = "Empty field(s)";
-        header('Location: mainstory.php');
+        if (isset($_POST['editid'])) {
+            header("Location: mainstory.php?id=".$_POST['editid']."#menu1");
+        } else {
+            header("Location: mainstory.php#menu1");
+        }
     } else { 
         unset($_SESSION['addMainError']);
         unset($_SESSION['updateMainError']);
@@ -126,7 +130,7 @@ if (isset($_GET['delete'])) {
                 unset($_SESSION['addMainError']);
                 unset($_SESSION['updateMainError']);
                 $_SESSION['updateMainSuccess'] = "Record updated successfully";
-                header("Location: mainstory.php");
+                header("Location: mainstory.php#menu1");
             } else {
                 echo "Error updating record: " . mysqli_error($link);
             }
@@ -136,7 +140,7 @@ if (isset($_GET['delete'])) {
 
             mysqli_query($link, $blogSql);
             $_SESSION['addMainSuccess'] = "Section successfully added";
-            header('Location: mainstory.php');
+            header('Location: mainstory.php#menu1');
         }
     }
 }

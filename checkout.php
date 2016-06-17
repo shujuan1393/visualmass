@@ -1,5 +1,6 @@
 <?php
     require_once 'config/db.php';
+    require_once 'config/braintree.php';
 ?>
 <!DOCTYPE html>
 <!--
@@ -18,6 +19,7 @@ and open the template in the editor.
             
             <div id="content">
                 <h3>CHECKOUT</h3>
+                
                 <div id='guest' class='col-md-12'>
                 <?php
                     if (isset($_SESSION['order'])) {
@@ -56,10 +58,10 @@ and open the template in the editor.
                     }
                 ?>
                 </div>
-                
                 <div id='particulars' style="display:none;" class='col-md-12'>
                     <p>CIRCLE CIRCLE THING HERE (PART 2 - PARTICULARS)</p>
                     <?php
+                    if (isset($_SESSION['loggedUserEmail'])) {
                         $users = "Select * from user where email='".$_SESSION['loggedUserEmail']."';";
                         $ures = mysqli_query($link, $users);
                         
@@ -68,45 +70,46 @@ and open the template in the editor.
                         } else {
                             $urow = mysqli_fetch_assoc($ures);
                             
-                    ?>
-                        <div class='col-md-6 col-md-offset-3'>
-                            <p id='nanError' style="display: none;">Please enter numbers only</p>
-                            <form method='post' action='review.php'>
-                                <?php if (!isset($_SESSION['loggedUserEmail'])) { ?>
-                                    <input type='hidden' id='isGuest' name='isGuest' value='yes'>
-                                <?php } ?>
-                                <input type='text' name='firstname' id='firstname'  maxlength="50" placeholder="FIRST NAME" 
-                                       value='<?php if (!empty($urow['firstname'])) { echo $urow['firstname']; } ?>'/><br/>
-                                <input type='text' name='lastname' id='lastname'  maxlength="50" placeholder="LAST NAME" 
-                                       value='<?php if (!empty($urow['lastname'])) { echo $urow['lastname']; } ?>'/><br/>
-                                <input type='text' name='email' id='email'  maxlength="50" placeholder="EMAIL" 
-                                       value='<?php if (!empty($urow['email'])) { echo $urow['email']; } ?>'/><br/>
-                                <input type='text' name='address' id='address'  maxlength="50" placeholder="STREET ADDRESS" 
-                                       value='<?php if (!empty($urow['address'])) { echo $urow['address']; } ?>'/><br/>
-                                <input type='text' name='phone' id='phone'  maxlength="50" placeholder="PHONE" 
-                                       value='<?php if (!empty($urow['phone'])) { echo $urow['phone']; } ?>' onkeypress='return isNumber(event)'/><br/>
-                                
-                                <h5>Bill to</h5>
-                                <div id='payments'>
-                                <input type='radio' name='payment' id='credit' value='visa/mastercard'> Visa / Mastercard <br>
-                                <input type='radio' name='payment' id='braintree' value='braintree/paypal'> BrainTree / PayPal<br>
-                                <input type='radio' name='payment' id='apple' value='apple'> Apple Pay <br>
-                                <br>
-                                </div>
-                                <div id='card' style='display:none;'><input type='text' name='card' id='card'  maxlength="50" placeholder="CARD DETAILS" 
-                                                                            value='<?php if (!empty($urow['phone'])) { echo $urow['phone']; } ?>'/><br/></div>
-                                
-                                <!--<form id="checkout" method="post" action="/checkout">-->
-                                    <div id="braintree-pay" style='display:none;'></div>
-<!--                                    <input type="submit" value="Pay $10">
-                                </form>-->
-                                
-                                    <input type='submit' name='submit' value='PROCEED TO REVIEW'>
-                            </form>
-                        </div>
-                    <?php
                         }
+                    }
+                            
                     ?>
+                    <div class='col-md-6 col-md-offset-3'>
+                        <p id='nanError' style="display: none;">Please enter numbers only</p>
+                        <form method='post' action='review.php'>
+                            <?php if (!isset($_SESSION['loggedUserEmail'])) { ?>
+                                <input type='hidden' id='isGuest' name='isGuest' value='yes'>
+                            <?php } ?>
+                            <input type='text' name='firstname' id='firstname'  maxlength="50" placeholder="FIRST NAME" 
+                                   value='<?php if (!empty($urow['firstname'])) { echo $urow['firstname']; } ?>'/><br/>
+                            <input type='text' name='lastname' id='lastname'  maxlength="50" placeholder="LAST NAME" 
+                                   value='<?php if (!empty($urow['lastname'])) { echo $urow['lastname']; } ?>'/><br/>
+                            <input type='text' name='email' id='email'  maxlength="50" placeholder="EMAIL" 
+                                   value='<?php if (!empty($urow['email'])) { echo $urow['email']; } ?>'/><br/>
+                            <input type='text' name='address' id='address'  maxlength="50" placeholder="STREET ADDRESS" 
+                                   value='<?php if (!empty($urow['address'])) { echo $urow['address']; } ?>'/><br/>
+                            <input type='text' name='phone' id='phone'  maxlength="50" placeholder="PHONE" 
+                                   value='<?php if (!empty($urow['phone'])) { echo $urow['phone']; } ?>' onkeypress='return isNumber(event)'/><br/>
+
+                            <h5>Bill to</h5>
+                            <div id='payments'>
+                            <input type='radio' name='payment' id='credit' value='visa/mastercard'> Visa / Mastercard <br>
+                            <input type='radio' name='payment' id='braintree' value='braintree/paypal'> BrainTree / PayPal<br>
+                            <input type='radio' name='payment' id='apple' value='apple'> Apple Pay <br>
+                            <br>
+                            </div>
+                            <div id='card' style='display:none;'><input type='text' name='card' id='card'  maxlength="50" placeholder="CARD DETAILS" 
+                                                                        value='<?php if (!empty($urow['phone'])) { echo $urow['phone']; } ?>'/><br/></div>
+
+                            <!--<form id="checkout" method="post" action="/checkout">-->
+                                <div id="braintree-pay" style='display:none;'></div>
+<!--                                    <input type="submit" value="Pay $10">
+                            </form>-->
+
+                                <input type='submit' name='submit' value='PROCEED TO REVIEW'>
+                        </form>
+                    </div>
+
                 </div>
             </div>
             
@@ -114,9 +117,13 @@ and open the template in the editor.
         </div>
     </body>
     <script>
-        document.getElementById('guestCheckout').onclick = function() {
-            window.location = "checkout.php?signin=1";
-        };
+        var obj = document.getElementById('guestCheckout');
+        if (obj !== null) {
+            obj.onclick = function() {
+                window.location = "checkout.php?signin=1";
+            };
+        }
+        
        <?php 
             if (isset($_GET['signin']) || isset($_SESSION['loggedUserEmail'])) {
         ?>
