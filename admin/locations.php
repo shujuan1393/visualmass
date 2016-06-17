@@ -64,7 +64,13 @@ if (isset($_GET['id'])) {
                             <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Location</a>
                         </p>
                         
-                        <table>
+                        
+                        <div class="pull-left">Filter</div>
+                        <div style="overflow:hidden">
+                            <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                        </div>
+                        
+                        <table id ="example">
                             <thead>
                                 <th>Name</th>
                                 <th>Address</th>
@@ -74,6 +80,7 @@ if (isset($_GET['id'])) {
                                 <th>Edit</th>
                                 <th>Delete</th>                        
                             </thead>
+                            <tbody class="searchable">
                             <?php
                                 // output data of each row
                                 while ($row = mysqli_fetch_assoc($result)) {
@@ -88,6 +95,7 @@ if (isset($_GET['id'])) {
                                     echo "</tr>";
                                 }
                             ?>
+                            </tbody>
                         </table>
                         <?php
                             } 
@@ -147,13 +155,15 @@ if (isset($_GET['id'])) {
                                             echo $erow['name']; }?>"/>
                                     </td>
                                     <td>
-                                        Location Code*:
+                                        Location Code*: <br/>
+                                        <button type='button' onclick="randomString()" class="pull-right">Generate</button>
+                                        <div style="overflow: hidden;" >
                                         <input type='text' name='code' id='code' value ="<?php 
                                         if(isset($_SESSION['randomString'])) { 
                                             echo $_SESSION['randomString']; } 
                                         if (!empty($erow['code'])) { 
                                             echo $erow['code']; }?>" maxlength="50" />
-                                        <button type='button' onclick="randomString()">Generate</button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -161,7 +171,7 @@ if (isset($_GET['id'])) {
                                         Phone*:
                                         <input type='text' name='phone' id='phone'  maxlength="50"  
                                                onkeypress="return isNumber(event)" value ="<?php 
-                                               echo $erow['phone']; ?>"/>
+                                               if(!empty($erow['phone'])) echo $erow['phone']; ?>"/>
                                     </td>
                                     <td>
                                         Type*:
@@ -225,9 +235,6 @@ if (isset($_GET['id'])) {
                                         Opening Hours:
                                         <textarea name="opening" id='opening'><?php 
                                             if(!empty($erow['opening'])) { echo $erow['opening']; }?></textarea>
-                                        <script type="text/javascript">
-                                            CKEDITOR.replace('opening');
-                                        </script>
                                     </td>
                                 </tr>
                                 <tr>
@@ -242,7 +249,7 @@ if (isset($_GET['id'])) {
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label for='image' >Featured Image:</label>
+                                        Featured Image:
                                         <input type="file" name="image" id='image' accept="image/*" />
                                         <br>
                                         <?php 
@@ -361,6 +368,7 @@ if (isset($_GET['id'])) {
 </html>
 
 <script>
+    
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -395,5 +403,34 @@ if (isset($_GET['id'])) {
             window.location='locations.php';
         }
     }
+    
+//    $(document).ready(function() {
+//        var table = $('#example').DataTable({
+//            "dom":' <"filt.search"f><"top"l>rt<"bottom"ip><"clear">'
+//        });
+//        
+//    });
+
+    
+    
+    $("#filter").keyup(function () {
+        var search = $(this).val();
+        $(".searchable").children().show();
+        $('.noresults').remove();
+        if (search) {
+            $(".searchable").children().not(":containsNoCase(" + search + ")").hide();
+            $(".searchable").each(function () {
+                if ($(this).children(':visible').length === 0) 
+                    $(this).append('<tr class="noresults"><td colspan="100%">No matching results found</td></tr>');
+            });
+
+        }
+    });
+    
+    $.expr[":"].containsNoCase = function (el, i, m) {
+        var search = m[3];
+        if (!search) return false;
+           return new RegExp(search,"i").test($(el).text());
+    };
 </script>
 

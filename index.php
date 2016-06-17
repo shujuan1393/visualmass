@@ -1,4 +1,12 @@
 <?php 
+
+    // Define variables for SEO
+    $pageTitle = 'Visual Mass - Singapore\'s Online Eyeglass & Sunglasses';
+    $pageDescription = 'Provides quality prescription eyewear from $95. Free delivery and exchanges.';
+    $pageCanonical = 'http://www.visualmass.co/';
+    // We don't want the search engines to see our website just yet
+    $pageRobots = 'noindex,nofollow';
+    
     require_once 'config/db.php';
 ?>
 <html>
