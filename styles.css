@@ -263,6 +263,10 @@ table.dataTable thead .sorting_desc:after{
     top: 10px;
 }
 
+.close {
+    color: #000!important;
+}
+
 #frameheader{
     height: 50px;
     width: 100%;
@@ -566,7 +570,7 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
 }*/
 
 #ourstoryheader .button {
-    /*padding: 50px 110px 80px 110px;*/
+    padding: 50px 110px 80px 110px;
     /*padding: 50px;*/
     margin: 10px;
     width: 100%;
@@ -659,13 +663,21 @@ a:hover#heart {
     margin: 0 auto!important;
 }
 
+.catalogue {
+    height: 80%;
+}
+
+.catalogue img {
+    width: 100%;
+}
+
+.catalogue .swatch {
+    width: 100%;
+}
 .col-md-3 {
     width: 30%!important;
 }
 
-#product_table img {
-    width: 100%;
-}
 .product_title {
     margin: 10px;
 }

@@ -27,6 +27,7 @@ if (isset($_SESSION['mailSuccess'])) {
 
 $pageCanonical = "";
 $pageRobots = "";
+
 ?>
 
 <html>
@@ -50,6 +51,12 @@ $pageRobots = "";
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCR78jxaf-XgjrUTFxK-jfaj9J_anb-kRA"></script> 
+<!--=======
+        <title>Visual Mass</title>
+        <meta charset="UTF-8">  
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCR78jxaf-XgjrUTFxK-jfaj9J_anb-kRA"></script> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+>>>>>>> Stashed changes-->
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link href="styles.css" rel="stylesheet" type="text/css" />     
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -75,6 +82,15 @@ $pageRobots = "";
         <div id='whole_header'>
             <div class="left_nav">
                 <a id='logoheader' class="navbar-brand" href="index.html"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
+<!--=======
+        <script src="https://js.braintreegateway.com/js/braintree-2.24.1.min.js"></script>
+        <link rel="stylesheet" href="styles/font-awesome.min.css">
+    </head>
+    <body>
+        <div id='whole_header'>
+            <div class="left_nav">
+                <a id='logoheader' class="navbar-brand" href="index.php"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
+>>>>>>> Stashed changes-->
                 <!--<div id='logoheader' class="logo_sidebar"></div>-->
                 <ul>
                     <li><div id='showGlasses'><a>GLASSES</a></div></li>
@@ -92,11 +108,10 @@ $pageRobots = "";
                             <div id='userMenu' style='float: none;display:none;'>
                                 <p><a href='profile.php'>PROFILE</a></p>
                                 <p><a href='favourites.php'>FAVOURITES</a></p>
-                                <p>ORDERS</p>
+                                <p><a href='orders.php'>ORDERS</a></p>
                                 <p><a href='logout.php'>LOGOUT</a></p>
                             </div>
                         </li>
-
                         <?php 
                             } else {
                         ?>
@@ -114,25 +129,25 @@ $pageRobots = "";
                 </div>
             </div>
             <div id='glasses' style='display:none;'>
-                <ul>
-                    <li><button id='glassesmen' class='button'>SHOP MEN</button></li>
-                    <li><button id='glasseswomen' class='button'>SHOP WOMEN</button></li>
+                <ul class='col-md-12'>
+                    <li class='col-md-6'><button id='glassesmen' class='button'>SHOP MEN</button></li>
+                    <li class='col-md-6'><button id='glasseswomen' class='button'>SHOP WOMEN</button></li>
                 </ul>
             </div>
 
             <div id='sunglasses' style='display:none;'>
-                <ul>
-                    <li><button id='sunglassesmen' class='button'>SHOP MEN</button></li>
-                    <li><button id='sunglasseswomen' class='button'>SHOP WOMEN</button></li>
+                <ul class='col-md-12'>
+                    <li class='col-md-6'><button id='sunglassesmen' class='button'>SHOP MEN</button></li>
+                    <li class='col-md-6'><button id='sunglasseswomen' class='button'>SHOP WOMEN</button></li>
                 </ul>
             </div>
 
             <div id='ourstoryheader' style='display:none;'>
-                 <ul>
-                    <li><a href='ourstory.php'>HISTORY</a></li>
-                    <li><a href='giftInitiative.php'>ONE FOR YOU, <br> ONE FOR THEM</a></li>
-                    <li><a href='culture.php'>CULTURE</a></li>
-                    <li><a href='design.php'>DESIGN</a></li>
+                 <ul class='col-lg-12'>
+                    <li class='col-sm-3'><button class='button' onclick='ourstory("main")'>HISTORY</button></li>
+                    <li class='col-sm-3'><button id='gift' class='button' onclick='ourstory("one")'>ONE FOR YOU, <br> ONE FOR THEM</button></li>
+                    <li class='col-sm-3'><button id='culture' class='button' onclick='ourstory("culture")'>CULTURE</button></li>
+                    <li class='col-sm-3'><button id='design' class='button' onclick='ourstory("design")'>DESIGN</button></li>
                 </ul>
             </div>
         </div>
@@ -140,22 +155,26 @@ $pageRobots = "";
         <div class="modal fade modal-fullscreen force-fullscreen" id="myModal" tabindex="-1" 
              role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" id='closeModal' data-dismiss="modal" aria-hidden="true">&times;</button>
-                      <h4 class="modal-title">Modal title</h4>
-                  </div>
-                  <div class="modal-body">
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
-                </div><!-- /.modal-content -->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" id='closeModal' data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+          </div><!-- /.modal -->
           
-        <script>          
+        <script>  
+            function ourstory(type) {
+                window.location = "ourstory.php?type=" + type;
+            }
+            
             document.getElementById('showGlasses').onclick = function(){  
                 var e = document.getElementById('glasses');
                 if (e.style.display === 'block') {

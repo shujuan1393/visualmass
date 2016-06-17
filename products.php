@@ -97,21 +97,24 @@
                         <div class="col-md-12" id='row0'>
                         <?php 
                             //for each product
+                            $allId = array();
                             while ($row = mysqli_fetch_assoc($result)) {
                                 //get product id
                                 $pid = $row['pid'];
                                 $idpos = strpos($pid, "-");
-                                if (!is_numeric($idpos)) {
-                                    $pidArr = explode("-", $pid);
+                                $pidArr = explode("-", $pid);                                    
+                                
+                                if (!in_array($pidArr[0], $allId)) {
+                                    array_push($allId, $pidArr[0]);
                                     $imgArr = explode(",", $row['images']);
                                     $imgpos = strpos($imgArr[0], '/');
                                     $imgurl = substr($imgArr[0], $imgpos+1);
-                                    echo "<div class='products col-md-4' id='prod".$count."'>";
+                                    echo "<div class='products col-md-4 full-section' id='prod".$count."'>";
                                     echo "<input type='hidden' id='id$count' value='".$pidArr[0]."'>";
                                     echo "<input type='hidden' id='avail".$count."' value='".$row['availability']."'>";
                                     echo "<input type='hidden' id='image$count' value='$imgurl'>";
                                     echo "<input type='hidden' id='prodName$count' value='".$row['name']."'>";
-                                    echo "<div id='imgLink$count'><a href='product.php?id=".$pidArr[0]."'><img src='".$imgurl."'></a></div><br>";
+                                    echo "<div id='imgLink$count' class='catalogue'><a href='product.php?id=".$pidArr[0]."'><img src='".$imgurl."'></a></div><br>";
                                     echo "<div id='nameLink$count' class='product_name col-md-2'><a href='product.php?id=".$pidArr[0]."'>".$row['name']."</a></div>";
                                     echo '<div class="cart_icons col-md-3">'. '<ul>';
                                     echo '<li id="cartLink'.$count.'"><a class="addcart" href="addCart.php?type=purchase&id='.$pidArr[0].
@@ -126,15 +129,15 @@
                                         echo '<li id="heartLink'.$count.'"><a href="login.php?favourite=1&id='.$pidArr[0].'" data-toggle="modal" data-target="#favModal"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>'; 
                                     }
                                     echo '</ul></div>';
-                                    
-                                    $relProd = "Select * from products where pid like '".$pidArr[0]."%';";
+
+                                    $relProd = "Select * from products where pid like '".$pidArr[0]."%' and pid <> '$pid';";
                                     $relres = mysqli_query($link, $relProd);
-                                    
+
                                     if (!mysqli_query($link, $relProd)) {
                                         die(mysqli_error($link));
                                     } else {
                                         if ($relres -> num_rows > 0) {
-                                            echo "<div class='col-md-4 colours'>";
+                                            echo "<div class='col-md-6 colours'>";
                                             echo "<ul>";
                                             while ($relrow = mysqli_fetch_assoc($relres)) {
                                                 $idArr = explode("-", $relrow['pid']);
@@ -161,7 +164,6 @@
                                         $rowcount++;                            
                                     }
                                 }
-                                
                             }
                         ?>
                     </div>
