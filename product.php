@@ -27,6 +27,7 @@
                     $banner = "Select * from products where pid='".$_GET['id']."';";
                     $bresult = mysqli_query($link, $banner);
                     
+                    $count = 0;
                     if (!mysqli_query($link, $banner)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
@@ -86,12 +87,12 @@
                         $lens = "Select * from products where type='Lens';";
                         $lenres = mysqli_query($link, $lens);
 
+                        $lcount = 0;
                         if (!mysqli_query($link, $lens)) {
                             die(mysqli_error($link));
                         } else {
                             echo "<input type='hidden' id='selected_lens'>";
                             echo "<ul>";
-                            $lcount = 0;
                             while($row1 = mysqli_fetch_assoc($lenres)) {
                                 echo "<input type='hidden' id='lval$lcount' value='".$row1['pid']."'>";
                                 echo "<li id='lens$lcount'>".$row1['name']."</li>";
@@ -121,10 +122,10 @@
                                     $relProds = "Select * from products where pid like '".$idToCheck."%';";
                                     $relres = mysqli_query($link, $relProds);
                                     
+                                    $relcount = 0;
                                     if (!mysqli_query($link, $relProds)) {
                                         die(mysqli_error($link));
                                     } else {
-                                        $relcount = 0;
                                         while($row = mysqli_fetch_assoc($relres)) {
                                             $pid = $row['pid'];
                                             if (strcmp($pid, $selPid) !== 0) {
@@ -162,9 +163,11 @@
                                 } else {
                                     echo '<li id="heart"><a href="login.php?favourite=1&id='.$brow['pid'].'" data-toggle="modal" data-target="#favModal"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>'; 
                                 }
+                                
+                                $availArr = explode(",", $brow['availability']);
                             ?>
-                            <li><button id='hometry' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processHometry()'>Try at home for free</button></li>
-                            <li><button id='buy_now' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='toggleLens()'><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;BUY FROM $<?php echo $brow['price'];?></button></li>
+                            <?php if(in_array("tryon", $availArr)) { ?><li><button id='hometry' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processHometry()'>Try at home for free</button></li><?php } ?>
+                            <?php if(in_array("sale", $availArr)) { ?><li><button id='buy_now' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='toggleLens()'><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;BUY FROM $<?php echo $brow['price'];?></button></li><?php } ?>
                         </ul>
                     </div>
                         <?php
@@ -192,6 +195,22 @@
                                     <?php echo $brow['measurement']; ?>
                                 </div>
                             </div>
+                            
+                            <div class='col-md-12'>
+                                <h5 class='caps'>Product Tags</h5>
+                                <?php 
+                                    $tags = explode(",", $brow['tags']);
+
+                                    for ($i = 0; $i < count($tags); $i++) {
+                                        $t = $tags[$i];
+                                        echo "#".$t;
+                                        
+                                        if ($i + 1 !== count($tags)) {
+                                            echo ", ";
+                                        }
+                                    }
+                                ?>
+                            </div>
                             <div class='row'>
                                 <div class='col-md-12 col-md-offset-1'><hr></div>
                             </div>
@@ -201,7 +220,6 @@
                                     <div class="item active">
                                         <div class="col-md-12">
                                             <?php 
-                                                $count = 0;
                                                 for($i = 0; $i < count($browArr); $i++) {
                                                     $count++;
                                                     $pos = strpos($browArr[$i], '/');

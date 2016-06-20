@@ -61,16 +61,7 @@ if (isset($_GET['delete'])) {
             $author = $_POST['author'];
         }
         
-        $tagArr = $_POST['tags'];
-        $tags = "";
-
-//        for($i = 0; $i < count($tagArr); $i++) {
-//            $tags .= $tagArr[$i];
-//
-//            if ($i+1 !== count($tagArr)) {
-//                $tags.=",";
-//            }
-//        }
+        $tags = $_POST['tags'];
         
         $catArr = $_POST['categories'];
         $cats = "";
@@ -80,6 +71,25 @@ if (isset($_GET['delete'])) {
 
             if ($i+1 !== count($catArr)) {
                 $cats.=",";
+            }
+        }
+        
+        //process all tags
+        $tagArr = explode(",", $tags);
+        
+        for ($i = 0; $i < count($tagArr); $i++) {
+            $t = $tagArr[$i];
+            
+            $check = "Select * from tags where keyword = '$t' and type='blog';";
+            $cres = mysqli_query($link, $check);
+            
+            if (!mysqli_query($link, $check)) {
+                die(mysqli_error($link));
+            } else {
+                if ($cres -> num_rows === 0) {
+                    $sql = "INSERT INTO tags (type, keyword) VALUES ('blog', '$t');";
+                    mysqli_query($link, $sql);
+                }
             }
         }
         

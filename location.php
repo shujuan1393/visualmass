@@ -168,7 +168,9 @@ function geocode($address){
                                     $row = mysqli_fetch_assoc($res);
                                     echo "<div class='col-md-5'>";
                                     echo "<h5>".$row['servicename']."</h5>";
-                                    echo html_entity_decode($row['description']);
+                                    if (isset($row['description'])) {
+                                        echo html_entity_decode($row['description']);
+                                    }
                                     echo "</div>";
                                 }
                             }

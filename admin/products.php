@@ -67,7 +67,6 @@ if (isset($_GET['id'])) {
                                 <th>Name</th>
                                 <th>Type</th>
                                 <th>Price</th>
-                                <th>Quantity</th>
                                 <th>Visibility</th>
                                 <th>Availability</th>
                                 <th>Edit</th>
@@ -79,8 +78,7 @@ if (isset($_GET['id'])) {
                                     echo "<tr>";
                                     echo "<td>".$row['name']." (".$row['pid'].")</td>";
                                     echo "<td>".$row['type']."</td>";                            
-                                    echo "<td>".$row['price']."</td>";                           
-                                    echo "<td>".$row['quantity']."</td>";                           
+                                    echo "<td>".$row['price']."</td>";                             
                                     echo "<td>".$row['visibility']."</td>";                          
                                     echo "<td>".$row['availability']."</td>";                         
                                     echo '<td><button onClick="window.location.href=`products.php?id='.$row['pid'].'`">E</button>';
@@ -184,11 +182,13 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Colour*:
                                         <input type='text' name='colourcode' value='<?php 
+                                        if (!empty($erow['pid'])) {
                                             $pos = strpos($erow['pid'], "-");
                                             if (is_numeric($pos)) {
                                                 $pids = explode("-", $erow['pid']);
                                                 echo $pids[1];
                                             } 
+                                        }
                                         ?>'>
                                     </td>
                                 </tr>
@@ -358,11 +358,18 @@ if (isset($_GET['id'])) {
                                 <tr>
                                     <td colspan="2">
                                         Tags:
-                                        <input type='text' name="tags" id='tags' value ="<?php 
-                                        if (!empty($erow['tags'])) {
-                                            echo $erow['tags'];
-                                        }
-                                            ?>">
+<!--                                        <input type='text' name="tags" id='tags' value ="<?php 
+//                                        if (!empty($erow['tags'])) {
+//                                            echo $erow['tags'];
+//                                        }
+                                            ?>">-->
+                                        <div id='no-tags' stye='display:none;'>
+                                            No existing tags found
+                                        </div>
+                                        <input type='hidden' id='tags' name='tags'>
+                                        <div class="control-group">
+                                                <select id="select-to" class="contacts" placeholder="Add some tags..."></select>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -574,7 +581,23 @@ if (isset($_GET['id'])) {
         <!-- /#page-wrapper -->
     </div>
 </html>
-        
+           
+<?php 
+    $tagStr = "";
+
+    $tags = "Select * from tags where type='product';";
+    $tres = mysqli_query($link, $tags);
+
+    if (!mysqli_query($link, $tags)) {
+        die(mysqli_errno($link));
+    } else {
+        if ($tres -> num_rows !== 0) {
+            while ($row = mysqli_fetch_assoc($tres)) {
+                $tagStr.= "{tag: '".$row['keyword']."'},";
+            }
+        }
+    }
+?>
 <script>  
     
     function checkTrack(num) {
@@ -591,7 +614,6 @@ if (isset($_GET['id'])) {
     }
     
     function attachTrack(num) {
-        
         for (var i = 1; i <= num; i++) {
             checkTrack(i);
             var track = "track" + i;
@@ -606,6 +628,10 @@ if (isset($_GET['id'])) {
         var num = document.getElementById('locno').value;
         attachTrack(num);
     };
+    
+    <?php if (strcmp($tagStr, "") === 0) { ?>
+        document.getElementById('no-tags').style.display = "block";
+    <?php } ?>
     
     var locNames = document.getElementById('allLocNames').value;
     var locCodes = document.getElementById('allLocCodes').value;
@@ -724,5 +750,83 @@ if (isset($_GET['id'])) {
         }
     }
     
+    
+    $(function() {
+        $("#select-to").selectize({
+            create: true
+        });
+
+        var selectize_tags = $("#select-to")[0].selectize;
+        <?php 
+            $tagsql = "Select * from tags where type='product';";
+            $tresult = mysqli_query($link, $tagsql);
+
+            if (!mysqli_query($link, $tagsql)) {
+                die(mysqli_errno($link));
+            } else {
+                while ($row = mysqli_fetch_assoc($tresult)) {
+        ?>
+            selectize_tags.addOption({
+                
+        <?php
+                    echo "tag: '".$row['keyword']."'";
+        ?>
+            });
+            selectize_tags.addItem('<?php echo $row['keyword']; ?>');
+        <?php
+                }
+            }
+        ?>
+    });
+    
+    $('#select-to').selectize({
+            persist: false,
+            maxItems: null,
+            valueField: 'tag',
+            labelField: 'tag',
+            searchField: ['tag'],
+            sortField: [
+                    {field: 'tag', direction: 'asc'}
+            ],
+            options: [<?php echo $tagStr; ?>],
+//                    {tag: 'Nikola'},
+//                    {tag: 'someone@gmail.com'}
+//            ],
+            render: {
+                    item: function(item, escape) {
+                            return '<div>' +
+                                    (item.tag ? '<span>' + escape(item.tag) + '</span>' : '') +
+                            '</div>';
+                    },
+                    option: function(item, escape) {
+                            var name = item.tag;
+                            var label = name || item.tag;
+                            var caption = name ? item.tag : null;
+                            return '<div>' +
+                                    (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
+                            '</div>';
+                    }
+            },
+
+            create: function(input) {
+                return {tag: input};
+            }
+    });
+    
+    function checkValue() {
+        var value = document.getElementById('tags').value;
+        if (value === "") {
+            document.getElementById('no-tags').style.display = "block";
+        } else {
+            document.getElementById('no-tags').style.display = "none";
+        }
+    };    
+    
+    $('#select-to').change(function() {
+        var selectize = $('#select-to').selectize()[0].selectize;
+        var val = selectize.getValue();
+        document.getElementById('tags').value = val;
+        checkValue();
+    });
 </script>
 

@@ -111,6 +111,22 @@ and open the template in the editor.
                                         echo "<div id='content".$count."' style='display:none;'>";
                                     }
                                         echo html_entity_decode($row['html']);
+                                        
+                                        $tags = explode(",", $row['tags']);
+                                        
+                                        if (!empty($row['tags'])) {
+                                            echo "<div> TAGS: ";
+                                            for ($i = 0; $i < count($tags); $i++) {
+                                                $t = $tags[$i];
+
+                                                echo "#".$t;
+
+                                                if ($i + 1 !== count($tags)) {
+                                                    echo ", ";
+                                                }
+                                            }      
+                                            echo "</div>"; 
+                                        }
                                     if (!empty($row['excerpt'])) {
                                         echo "</div>";
                                     }

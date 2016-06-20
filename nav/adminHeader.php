@@ -13,10 +13,13 @@ require_once '../config/db.php';
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--styling for multi select dropdown-->    
+    <link rel="stylesheet" href="../selectize/css/normalize.css">
+    <link rel="stylesheet" href="../selectize/css/stylesheet.css">
+    <!--[if IE 8]><script src="js/es5.js"></script><![endif]-->
+    
     <link rel="stylesheet" type="text/css" href="../calendar/codebase/dhtmlxcalendar.css"/>
-    <script type="text/javascript" src="../calendar/codebase/dhtmlxcalendar.js"/>   
-
-
+    <script type="text/javascript" src="../calendar/codebase/dhtmlxcalendar.js"/>  
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <!-- jQuery -->
@@ -61,6 +64,12 @@ require_once '../config/db.php';
         $(".se-pre-con").fadeOut("slow");;
     });
 </script>
+
+<!--script for multi select dropdown-->
+<script src="../selectize/js/jquery.js"></script>
+<script src="../dist/js/standalone/selectize.js"></script>
+<script src="../selectize/js/index.js"></script>
+
 <body>	
     <div class="se-pre-con"></div>
 </body>

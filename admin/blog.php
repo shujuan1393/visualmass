@@ -22,6 +22,59 @@ if (isset($_GET['id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+    <style type="text/css">
+        .selectize-control.contacts .selectize-input > div {
+                padding: 1px 10px;
+                font-size: 13px;
+                font-weight: normal;
+                -webkit-font-smoothing: auto;
+                color: #f7fbff;
+                text-shadow: 0 1px 0 rgba(8,32,65,0.2);
+                background: #2183f5;
+                background: -moz-linear-gradient(top, #2183f5 0%, #1d77f3 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2183f5), color-stop(100%,#1d77f3));
+                background: -webkit-linear-gradient(top,  #2183f5 0%,#1d77f3 100%);
+                background: -o-linear-gradient(top,  #2183f5 0%,#1d77f3 100%);
+                background: -ms-linear-gradient(top,  #2183f5 0%,#1d77f3 100%);
+                background: linear-gradient(to bottom,  #2183f5 0%,#1d77f3 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2183f5', endColorstr='#1d77f3',GradientType=0 );
+                border: 1px solid #0f65d2;
+                -webkit-border-radius: 999px;
+                -moz-border-radius: 999px;
+                border-radius: 999px;
+                -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+                -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+                box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+        }
+        .selectize-control.contacts .selectize-input > div.active {
+                background: #0059c7;
+                background: -moz-linear-gradient(top, #0059c7 0%, #0051c1 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0059c7), color-stop(100%,#0051c1));
+                background: -webkit-linear-gradient(top,  #0059c7 0%,#0051c1 100%);
+                background: -o-linear-gradient(top,  #0059c7 0%,#0051c1 100%);
+                background: -ms-linear-gradient(top,  #0059c7 0%,#0051c1 100%);
+                background: linear-gradient(to bottom,  #0059c7 0%,#0051c1 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0059c7', endColorstr='#0051c1',GradientType=0 );
+                border-color: #0051c1;
+        }
+        .selectize-control.contacts .selectize-input > div .email {
+                opacity: 0.8;
+        }
+        .selectize-control.contacts .selectize-input > div .name + .email {
+                margin-left: 5px;
+        }
+        .selectize-control.contacts .selectize-input > div .email:before {
+                content: '<';
+        }
+        .selectize-control.contacts .selectize-input > div .email:after {
+                content: '>';
+        }
+        .selectize-control.contacts .selectize-dropdown .caption {
+                font-size: 12px;
+                display: block;
+                color: #a0a0a0;
+        }
+    </style>
     <?php require '../nav/adminHeader.php'; ?>
     <body>
         <div id="wrapper">
@@ -251,8 +304,16 @@ if (isset($_GET['id'])) {
                                     </td>
                                     <td>
                                         Tags:
-                                        <input type='text' name='tags' id='tags' 
-                                               value='<?php if (!empty($erow['tags'])) { echo $erow['tags']; } ?>'/>
+<!--                                        <input type='text' name='tags' id='tags' 
+                                               value='<?php // if (!empty($erow['tags'])) { echo $erow['tags']; } ?>'/>
+                                        -->                                        
+                                        <div id='no-tags' stye='display:none;'>
+                                            No existing tags found
+                                        </div>
+                                        <input type='hidden' id='tags' name='tags'>
+                                        <div class="control-group">
+                                                <select id="select-to" class="contacts" placeholder="Add some tags..."></select>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -324,8 +385,26 @@ if (isset($_GET['id'])) {
         <!-- /#page-wrapper -->
     </div>
 </html>
+     
+<?php 
+    $tagStr = "";
 
+    $tags = "Select * from tags where type='blog';";
+    $tres = mysqli_query($link, $tags);
+
+    if (!mysqli_query($link, $tags)) {
+        die(mysqli_errno($link));
+    } else {
+        while ($row = mysqli_fetch_assoc($tres)) {
+            $tagStr.= "{tag: '".$row['keyword']."'},";
+        }
+    }
+?>
 <script>
+    <?php if (strcmp($tagStr, "") === 0) { ?>
+        document.getElementById('no-tags').style.display = "block";
+    <?php } ?>
+        
     var myCalendar = new dhtmlXCalendarObject(["date3"]);
             myCalendar.hideTime();
 
@@ -375,4 +454,82 @@ if (isset($_GET['id'])) {
             window.location='blog.php';
         }
     }
+    
+    $(function() {
+        $("#select-to").selectize({
+            create: true
+        });
+
+        var selectize_tags = $("#select-to")[0].selectize;
+        <?php 
+            $tagsql = "Select * from tags where type='blog';";
+            $tresult = mysqli_query($link, $tagsql);
+
+            if (!mysqli_query($link, $tagsql)) {
+                die(mysqli_errno($link));
+            } else {
+                while ($row = mysqli_fetch_assoc($tresult)) {
+        ?>
+            selectize_tags.addOption({
+                
+        <?php
+                    echo "tag: '".$row['keyword']."'";
+        ?>
+            });
+            selectize_tags.addItem('<?php echo $row['keyword']; ?>');
+        <?php
+                }
+            }
+        ?>
+    });
+    
+    $('#select-to').selectize({
+            persist: false,
+            maxItems: null,
+            valueField: 'tag',
+            labelField: 'tag',
+            searchField: ['tag'],
+            sortField: [
+                    {field: 'tag', direction: 'asc'}
+            ],
+            options: [<?php echo $tagStr; ?>],
+//                    {tag: 'Nikola'},
+//                    {tag: 'someone@gmail.com'}
+//            ],
+            render: {
+                    item: function(item, escape) {
+                            return '<div>' +
+                                    (item.tag ? '<span>' + escape(item.tag) + '</span>' : '') +
+                            '</div>';
+                    },
+                    option: function(item, escape) {
+                            var name = item.tag;
+                            var label = name || item.tag;
+                            var caption = name ? item.tag : null;
+                            return '<div>' +
+                                    (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
+                            '</div>';
+                    }
+            },
+
+            create: function(input) {
+                return {tag: input};
+            }
+    });
+    
+    function checkValue() {
+        var value = document.getElementById('tags').value;
+        if (value === "") {
+            document.getElementById('no-tags').style.display = "block";
+        } else {
+            document.getElementById('no-tags').style.display = "none";
+        }
+    };    
+    
+    $('#select-to').change(function() {
+        var selectize = $('#select-to').selectize()[0].selectize;
+        var val = selectize.getValue();
+        document.getElementById('tags').value = val;
+        checkValue();
+    });
 </script>

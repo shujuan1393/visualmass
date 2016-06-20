@@ -106,27 +106,38 @@
                                 
                                 if (!in_array($pidArr[0], $allId)) {
                                     array_push($allId, $pidArr[0]);
-                                    $imgArr = explode(",", $row['images']);
-                                    $imgpos = strpos($imgArr[0], '/');
-                                    $imgurl = substr($imgArr[0], $imgpos+1);
+                                    
                                     echo "<div class='products col-md-4 full-section' id='prod".$count."'>";
-                                    echo "<input type='hidden' id='id$count' value='".$pidArr[0]."'>";
+                                    echo "<input type='hidden' id='id$count' value='".$pid."'>";
                                     echo "<input type='hidden' id='avail".$count."' value='".$row['availability']."'>";
-                                    echo "<input type='hidden' id='image$count' value='$imgurl'>";
                                     echo "<input type='hidden' id='prodName$count' value='".$row['name']."'>";
-                                    echo "<div id='imgLink$count' class='catalogue'><a href='product.php?id=".$pidArr[0]."'><img src='".$imgurl."'></a></div><br>";
-                                    echo "<div id='nameLink$count' class='product_name col-md-2'><a href='product.php?id=".$pidArr[0]."'>".$row['name']."</a></div>";
+                                    if (!empty($row['images'])) {
+                                        $imgArr = explode(",", $row['images']);
+                                        if (!empty($imgArr[0])) {
+                                            $imgpos = strpos($imgArr[0], '/');
+                                            $imgurl = substr($imgArr[0], $imgpos+1);
+                                        } else {
+                                            $imgpos = strpos($imgArr[1], '/');
+                                            $imgurl = substr($imgArr[1], $imgpos+1);                                        
+                                        }
+                                        echo "<input type='hidden' id='image$count' value='$imgurl'>";
+                                        echo "<div id='imgLink$count' class='catalogue'><a href='product.php?id=".$pid."'><img src='".$imgurl."'></a></div><br>";
+                                    } else {
+                                        echo "<input type='hidden' id='image$count' value=''>";         
+                                        echo "<div id='imgLink$count' class='catalogue'><a href='product.php?id=".$pid."'><img src=''></a></div><br>";                               
+                                    }
+                                    echo "<div id='nameLink$count' class='product_name col-md-2'><a href='product.php?id=".$pid."'>".$row['name']."</a></div>";
                                     echo '<div class="cart_icons col-md-3">'. '<ul>';
-                                    echo '<li id="cartLink'.$count.'"><a class="addcart" href="addCart.php?type=purchase&id='.$pidArr[0].
+                                    echo '<li id="cartLink'.$count.'"><a class="addcart" href="addCart.php?type=purchase&id='.$pid.
                                             '"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i></a></li>';
                                     if (isset($_SESSION['loggedUserEmail'])) {
                                         if (in_array($pidArr[0], $favArr)) {
-                                            echo '<li id="heartLink'.$count.'"><a id="heart" href="addFavourite.php?delete=1&id='.$pidArr[0].'"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>';
+                                            echo '<li id="heartLink'.$count.'"><a id="heart" href="addFavourite.php?delete=1&id='.$pid.'"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>';
                                         } else {
-                                            echo '<li id="heartLink'.$count.'"><a id="heart" href="addFavourite.php?id='.$pidArr[0].'"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>';
+                                            echo '<li id="heartLink'.$count.'"><a id="heart" href="addFavourite.php?id='.$pid.'"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>';
                                         }
                                     } else {
-                                        echo '<li id="heartLink'.$count.'"><a href="login.php?favourite=1&id='.$pidArr[0].'" data-toggle="modal" data-target="#favModal"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>'; 
+                                        echo '<li id="heartLink'.$count.'"><a href="login.php?favourite=1&id='.$pid.'" data-toggle="modal" data-target="#favModal"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>'; 
                                     }
                                     echo '</ul></div>';
 
@@ -145,7 +156,7 @@
                                                     $relimgArr = explode(",", $relrow['images']);
                                                     $relpos = strpos($relimgArr[0], '/');
                                                     $relimg = substr($relimgArr[0], $relpos+1);
-                                                    echo "<input type='hidden' id='parent$relcount' value='".$idArr[0]."'>";
+                                                    echo "<input type='hidden' id='parent$relcount' value='".$pid."'>";
                                                     echo "<input type='hidden' id='name$relcount' value='".$idArr[1]."'>";
                                                     echo "<input type='hidden' id='selectedId$relcount' value='".$relrow['pid']."'>";
                                                     echo "<input type='hidden' id='img$relcount' value='$relimg'>";
@@ -379,6 +390,17 @@
             checkAllProducts();
         };  
         
+        function changeParent(newPar, oldPar) {
+            for (var i = 0; i < <?php echo $relcount; ?>; i++) {
+                var par = "parent" + i;
+                var parObj = document.getElementById(par);
+                var val = parObj.value;
+                if (val.indexOf(oldPar) > -1) {
+                    parObj.value = newPar;
+                }
+            }
+        };
+        
         function switchValues(parentLoc, numToReplace, parentId) {
             var image = "img" + numToReplace;
             var imgObj = document.getElementById(image);
@@ -403,6 +425,10 @@
             var parentName = "prodName" + parentLoc;
             var parNameObj = document.getElementById(parentName);
             var parNameVal = parNameObj.value;
+//            
+//            var parId = "parent" + parentLoc;
+//            var parIdObj = document.getElementById(parId);
+//            var parIdVal = parIdObj.value;
             
             //switch parent values
             imgObj.value = parImgUrl;
@@ -411,6 +437,8 @@
             parNameObj.value = newNameVal;
             idObj.value = selIdVal;
             selIdObj.value = idVal;
+            changeParent(selIdVal, parentId);
+//            parIdObj.value = selIdVal;
             
             var color = "colour" + numToReplace;
             var colObj = document.getElementById(color);

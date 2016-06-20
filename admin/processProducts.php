@@ -294,6 +294,24 @@ if (isset($_GET['delete'])) {
                 }
             }
             
+                //process all tags
+                $tagArr = explode(",", $tags);
+
+                for ($i = 0; $i < count($tagArr); $i++) {
+                    $t = $tagArr[$i];
+
+                    $check = "Select * from tags where keyword = '$t' and type='product';";
+                    $cres = mysqli_query($link, $check);
+
+                    if (!mysqli_query($link, $check)) {
+                        die(mysqli_error($link));
+                    } else {
+                        if ($cres -> num_rows === 0) {
+                            $sql = "INSERT INTO tags (type, keyword) VALUES ('product', '$t');";
+                            mysqli_query($link, $sql);
+                        }
+                    }
+                }
             
             if (!empty($_POST['editid'])) {
                 $editcode = $_POST['editid'];

@@ -29,6 +29,10 @@ if (isset($_GET['frames'])) {
             $_SESSION['searchResult'] = $pid;
             $_SESSION['searchVal'] = $searchVal;
         }
+        
+        $searchsql = "INSERT INTO searchstatistics (type, keyword) VALUES ('product', '$searchVal')";
+        mysqli_query($link, $searchsql);
+        
         header("Location: searchFrames.php");
     }
 } else if (isset($_GET['blog'])) {
@@ -55,6 +59,9 @@ if (isset($_GET['frames'])) {
             $_SESSION['searchResult'] = $bid;
             $_SESSION['searchVal'] = $searchVal;
         }
+        $searchsql = "INSERT INTO searchstatistics (type, keyword) VALUES ('blog', '$searchVal')";
+        mysqli_query($link, $searchsql);
+        
         header("Location: searchBlog.php");
     }
 } else if (isset($_GET['locations'])) {
@@ -80,6 +87,9 @@ if (isset($_GET['frames'])) {
             $_SESSION['searchResult'] = $bid;
             $_SESSION['searchVal'] = $searchVal;
         }
+        $searchsql = "INSERT INTO searchstatistics (type, keyword) VALUES ('location', '$searchVal')";
+        mysqli_query($link, $searchsql);
+        
         header("Location: searchLocations.php");
     }
 } else if (isset($_GET['general'])) {
@@ -103,5 +113,9 @@ if (isset($_GET['frames'])) {
     
     $_SESSION['searchVal'] = $searchVal;
     $_SESSION['searchResult'] = $sql;
+    
+    $searchsql = "INSERT INTO searchstatistics (type, keyword) VALUES ('general', '$searchVal')";
+    mysqli_query($link, $searchsql);
+        
     header("Location: search.php");
 }
