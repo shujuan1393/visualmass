@@ -25,25 +25,49 @@ if (isset($_SESSION['mailSuccess'])) {
     unset($_SESSION['mailSuccess']);
 }
 
-$pageCanonical = "";
-$pageRobots = "";
+//$pageCanonical = "";
+//$pageRobots = "";
+    
+    //get from settings
+    $web = "Select * from settings where type='web';";
+    $wres = mysqli_query($link, $web);
+    
+    if (!mysqli_query($link, $web)) {
+        die(mysqli_error($link));
+    } else {
+        $row = mysqli_fetch_assoc($wres);
+        $valArr = explode("#", $row['value']);
+        $title = explode("web=", $valArr[0]);
+        $meta = explode("meta=", $valArr[1]);
+    }
+    
+    // Define variables for SEO
+    $pageTitle = $title[1]; //'Visual Mass - Singapore\'s Online Eyeglass & Sunglasses';
+    $pageDescription = $meta[1]; // 'Provides quality prescription eyewear from $95. Free delivery and exchanges.';
+    $pageCanonical = 'http://www.visualmass.co/';
+    // We don't want the search engines to see our website just yet
+    $pageRobots = 'noindex,nofollow';
 
 ?>
 
 <html>
     <head>
-        <title><?php if(!empty($pageTitle)) echo $pageTitle; ?></title>
-        <meta name="description" content="<?php if(!empty($pageDescription)) echo $pageDescription; ?>">
+        <title>
+            <?php if(!empty($pageTitle)) { 
+            echo $pageTitle; 
+            } ?>
+        </title>
+        <meta name="description" content="<?php if(!empty($pageDescription)) { echo $pageDescription; } ?>">
         <meta name="author" content="Visual Mass">
         
         <?php
             // If canonical URL is specified, include canonical link element
             if($pageCanonical) {
-                 if(!empty($pageCanonical)) echo '<link rel="canonical" href="' . $pageCanonical . '">';
+                 if(!empty($pageCanonical)) { echo '<link rel="canonical" href="' . $pageCanonical . '">'; }
             }
             // If meta robots content is specified, include robots meta tag
             if($pageRobots) {
-                 if(!empty($pageRobots)) echo '<meta name="robots" content="' . $pageRobots . '">';
+                 if(!empty($pageRobots)) { echo '<meta name="robots" content="' . $pageRobots . '">'; }
             }
         ?>
         

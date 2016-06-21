@@ -331,6 +331,19 @@ if (isset($_GET['id'])) {
                                             ?>><label>Women</label>
                                     </td>
                                 </tr>
+                                <?php 
+                                    //get home try on settings
+                                    $hometry = "Select * from settings where type='homeTryon';";
+                                    $hres = mysqli_query($link, $hometry);
+                                    
+                                    if (!mysqli_query($link, $hometry)) {
+                                        die(mysqli_error($link));
+                                    } else {
+                                        $row = mysqli_fetch_assoc($hres);
+                                        $valArr = explode("&", $row['value']);
+                                        $permission = explode("visibility=", $valArr[0]);
+                                    }
+                                ?>
                                 <tr>
                                     <td colspan='2'>
                                         <?php 
@@ -344,15 +357,19 @@ if (isset($_GET['id'])) {
                                                 if (in_array("sale", $avai)) {
                                                     echo " checked";
                                                 }
+                                            } else if (strcmp($permission[1], "off") === 0) {
+                                                echo " checked";
                                             }
                                             ?>><label>For Sale</label>
-                                        <input name='availability[]' type='checkbox' value='tryon' <?php 
-                                            if (!empty($erow['availability'])) {
-                                                if (in_array("tryon", $avai)) {
-                                                    echo " checked";
+                                        <?php if (strcmp($permission[1], "on") === 0) { ?>
+                                            <input name='availability[]' type='checkbox' value='tryon' <?php 
+                                                if (!empty($erow['availability'])) {
+                                                    if (in_array("tryon", $avai)) {
+                                                        echo " checked";
+                                                    }
                                                 }
-                                            }
-                                            ?>><label>Home Try-on</label>
+                                                ?>><label>Home Try-on</label>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                                 <tr>

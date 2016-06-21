@@ -23,7 +23,7 @@ if (isset($_POST['submit'])) {
         if ($cresult -> num_rows == 0) {
             $webSql = "INSERT INTO settings (type, value) VALUES ('web', '$val');";
         } else {
-            $webSql = "UPDATE settings SET value='$val' where type='web';";
+            $webSql = 'UPDATE settings SET value="'.$val.'" where type="web";';
         }
         
         mysqli_query($link, $webSql);
@@ -92,7 +92,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 $web = explode("web=", $valArr[0]);
                             ?>
                             <input type='text' name='title' 
-                                   value='<?php if (!empty($web[1])) { echo $web[1]; } ?>'><br>
+                                   value="<?php if (!empty($web[1])) { echo $web[1]; } ?>"><br>
                             Metadata Description:
                             <?php 
                                 if(!empty($valArr[1])){

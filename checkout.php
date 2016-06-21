@@ -27,15 +27,37 @@ and open the template in the editor.
                     }
                 ?>
                 <?php 
+                    //get guest checkout settings
+                    $guest = "Select * from settings where type='checkout';";
+                    $gres = mysqli_query($link, $guest);
+                    
+                    if (!mysqli_query($link, $guest)) {
+                        die(mysqli_error($link));
+                    } else {
+                        $row = mysqli_fetch_assoc($gres);
+                        $valArr = explode("&", $row['value']);
+                        
+                        $guestPerm = explode("guest=", $valArr[2]);
+                        $permission = $guestPerm[1];
+                    }
+                
                     if (!isset($_SESSION['loggedUserEmail']) || isset($_GET['error'])) {
                 ?>
                     <p>CIRCLE CIRCLE THING HERE (PART 1 - ACCOUNT)</p>
                     <div id='newCust' class='col-md-6'>
                         <h4>I'm new here</h4>
-                        <p>Create a new account now!</p>
-                        <p>OR</p>
-                        <p><a id='guestCheckout'>Continue with guest checkout ></a></p>
+                        <?php if(strcmp($permission, "no") === 0) { ?>
+                        <h5>What are you waiting for?</h5>
+                        <p id='signup' class='addMore'>Create a new account now!</p>
+                        <p id='backButton' class='addMore' style='display:none;'> < Back </p>
+                        <?php } else if (strcmp($permission, "yes") === 0) { ?>
+                        <p><a id='guestCheckout' class='addMore'>Continue with guest checkout ></a></p>
+                        <?php } ?>
                     </div>
+                    <div id='signupNow' class='col-md-6' style='display: none;'>
+                        <h2>HELLO</h2>
+                    </div>
+                    
                     <div id='existingCust' class='col-md-6'>
                         <h4>SIGN IN</h4>
                         <div id="loginFormError" class="error">
@@ -133,6 +155,20 @@ and open the template in the editor.
             }
        ?>
            
+        document.getElementById('signup').onclick = function() {
+            document.getElementById('existingCust').style.display = "none";
+            document.getElementById('signupNow').style.display = "block";
+            document.getElementById('signup').style.display = "none";
+            document.getElementById('backButton').style.display = "block";
+        };
+        
+        document.getElementById('backButton').onclick = function() {
+            document.getElementById('existingCust').style.display = "block";
+            document.getElementById('signupNow').style.display = "none";
+            document.getElementById('backButton').style.display = "none";
+            document.getElementById('signup').style.display = "block";
+        };
+        
         document.getElementById('credit').onclick = function() {
             document.getElementById('braintree-pay').style.display = "none";
             document.getElementById('card').style.display = "block";

@@ -165,8 +165,29 @@
                                 }
                                 
                                 $availArr = explode(",", $brow['availability']);
+                                
+                                //get home try on settings
+                                $hometry = "Select * from settings where type='homeTryon';";
+                                $hres = mysqli_query($link, $hometry);
+
+                                if (!mysqli_query($link, $hometry)) {
+                                    die(mysqli_error($link));
+                                } else {
+                                    $row = mysqli_fetch_assoc($hres);
+                                    $valArr = explode("&", $row['value']);
+                                    $permission = explode("visibility=", $valArr[0]);
+                                }
                             ?>
-                            <?php if(in_array("tryon", $availArr)) { ?><li><button id='hometry' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processHometry()'>Try at home for free</button></li><?php } ?>
+                            <?php 
+                            if (strcmp($permission[1], "on") === 0) {
+                                if(in_array("tryon", $availArr)) { 
+                            ?>
+                                <li><button id='hometry' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='processHometry()'>Try at home for free</button></li>
+                            <?php 
+                                } 
+                            }
+                            ?>
+                                
                             <?php if(in_array("sale", $availArr)) { ?><li><button id='buy_now' class='product-button' value='<?php echo $brow['pid']; ?>' onclick='toggleLens()'><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;BUY FROM $<?php echo $brow['price'];?></button></li><?php } ?>
                         </ul>
                     </div>
