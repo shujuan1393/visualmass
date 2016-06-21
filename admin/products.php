@@ -591,14 +591,55 @@ if (isset($_GET['id'])) {
     if (!mysqli_query($link, $tags)) {
         die(mysqli_errno($link));
     } else {
+        $i = 0;
+        $count = $tres -> num_rows;
         if ($tres -> num_rows !== 0) {
             while ($row = mysqli_fetch_assoc($tres)) {
-                $tagStr.= "{tag: '".$row['keyword']."'},";
+                $tagStr.= "{tag: '".$row['keyword']."'}";
+                if ($i + 1 !== $count) {
+                    $tagStr .= ",";
+                }
+                $i++;
             }
         }
     }
 ?>
 <script>  
+    
+    
+    
+    $(function() {
+        $("#select-to").selectize({
+            create: true
+        });
+
+        var selectize_tags = $("#select-to")[0].selectize;
+        <?php 
+            $tagsql = "Select * from products where pid='".$_GET['id']."';";
+            $tresult = mysqli_query($link, $tagsql);
+
+            if (!mysqli_query($link, $tagsql)) {
+                die(mysqli_errno($link));
+            } else {
+//                while ($row = mysqli_fetch_assoc($tresult)) {
+                $row = mysqli_fetch_assoc($tresult);
+                $tagsAr = explode(",", $row['tags']);
+                
+                for ($i = 0; $i < count($tagsAr); $i++) {
+        ?>
+            selectize_tags.addOption({
+                
+        <?php
+                    echo "tag: '".$tagsAr[$i]."'";
+        ?>
+            });
+            selectize_tags.addItem('<?php echo $tagsAr[$i]; ?>');
+        <?php
+                }
+//                }
+            }
+        ?>
+    });
     
     function checkTrack(num) {
         var track = "track" + num;
@@ -631,6 +672,8 @@ if (isset($_GET['id'])) {
     
     <?php if (strcmp($tagStr, "") === 0) { ?>
         document.getElementById('no-tags').style.display = "block";
+    <?php } else { ?>
+        document.getElementById('no-tags').style.display = "none";        
     <?php } ?>
     
     var locNames = document.getElementById('allLocNames').value;
@@ -750,35 +793,6 @@ if (isset($_GET['id'])) {
         }
     }
     
-    
-    $(function() {
-        $("#select-to").selectize({
-            create: true
-        });
-
-        var selectize_tags = $("#select-to")[0].selectize;
-        <?php 
-            $tagsql = "Select * from tags where type='product';";
-            $tresult = mysqli_query($link, $tagsql);
-
-            if (!mysqli_query($link, $tagsql)) {
-                die(mysqli_errno($link));
-            } else {
-                while ($row = mysqli_fetch_assoc($tresult)) {
-        ?>
-            selectize_tags.addOption({
-                
-        <?php
-                    echo "tag: '".$row['keyword']."'";
-        ?>
-            });
-            selectize_tags.addItem('<?php echo $row['keyword']; ?>');
-        <?php
-                }
-            }
-        ?>
-    });
-    
     $('#select-to').selectize({
             persist: false,
             maxItems: null,
@@ -815,7 +829,11 @@ if (isset($_GET['id'])) {
     
     function checkValue() {
         var value = document.getElementById('tags').value;
-        if (value === "") {
+        var isEmpty = false;
+        <?php if (strcmp($tagStr, "") === 0) { ?>
+                isEmpty = true;
+        <?php } ?>
+        if (value === "" && isEmpty) {
             document.getElementById('no-tags').style.display = "block";
         } else {
             document.getElementById('no-tags').style.display = "none";

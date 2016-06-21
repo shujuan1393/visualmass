@@ -68,6 +68,7 @@ require_once '../config/db.php';
 <!--script for multi select dropdown-->
 <script src="../selectize/js/jquery.js"></script>
 <script src="../dist/js/standalone/selectize.js"></script>
+<!--devil causing the js code to appear-->
 <script src="../selectize/js/index.js"></script>
 
 <body>	

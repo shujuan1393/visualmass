@@ -519,7 +519,7 @@ if (isset($_GET['id'])) {
     
     function checkValue() {
         var value = document.getElementById('tags').value;
-        if (value === "") {
+        if (value === "" && <?php echo $tagStr; ?> === "") {
             document.getElementById('no-tags').style.display = "block";
         } else {
             document.getElementById('no-tags').style.display = "none";

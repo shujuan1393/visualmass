@@ -517,7 +517,7 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
     text-decoration: underline;
 }
 
-#glasses ul, #sunglasses ul, #ourstoryheader ul, .colours ul {
+#glasses ul, #sunglasses ul, #ourstoryheader ul, .colours ul, #lens_select ul {
     width: 100%;
     list-style-type: none;
     /*display: inline-block;*/
@@ -717,8 +717,8 @@ a:hover#heart {
     width: 15%;
     float: right;
     position: absolute;
-    padding: 4px 0px;
-    bottom: -27px;
+    padding: 8px 0px;
+    bottom: -50px;
     right: 40px;
     z-index: 15;
     background-color: #ccc;

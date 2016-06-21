@@ -68,6 +68,10 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
                 $sql = "UPDATE favourites set pid='$pids' where email='$user';";
             }
             
+            $stats = "INSERT INTO productstatistics (type, pid, customer) VALUES".
+                    "('favourite', '$pid', '$user');";
+            mysqli_query($link, $stats);
+            
             mysqli_query($link, $sql);
             echo "<script>window.location.replace(document.referrer);</script>";
 //            header("Location: product.php?id=".$pid);

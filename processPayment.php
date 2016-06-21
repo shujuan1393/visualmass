@@ -151,6 +151,11 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 mysqli_query($link, $order);
                 $remove = "DELETE FROM cart where id ='".$row['id']."';";
                 mysqli_query($link, $remove);      
+                
+                //add to statistics
+                $stats = "INSERT INTO productstatistics (type, customer, orderid) VALUES ('$type', '$email', '$orderid');";
+                mysqli_query($stats);
+                
                 $_SESSION['order'] = "Order successfully completed!";   
                 header("Location: cart.php");         
             }

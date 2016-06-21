@@ -24,7 +24,7 @@ require_once 'config/db.php';
                 <div id="loginFormError" style="color: green;">
                 <?php 
                     if (isset($_GET['favourite'])) {
-                        echo "<p>Create an account with us so you can store your favourites</p>";
+                        echo "<p>Login to your Visual Mass account so you can store your favourites</p>";
                     }
                     if (isset($_GET['reset'])) {
                         echo "<p>A new password has been sent to your email</p>";

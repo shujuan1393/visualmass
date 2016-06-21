@@ -36,6 +36,9 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
         } else {
             $lens = "";
         }
+        
+        $pStats;
+        
         $getproduct = "Select * from products where pid='$pid'";
         $prodres = mysqli_query($link, $getproduct);
 
@@ -46,8 +49,10 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
             $price = $prod['price'];
 
             if (strcmp($type, "purchase") === 0) {
+                $pStats = "cartpurchase";
                 $query = "Select * from cart where pid='$pid' and cartid='$cartid' and type='$type' and lens='$lens';";
             } else {
+                $pStats = "carttry";
                 $query = "Select * from cart where pid='$pid' and cartid='$cartid' and type='$type';";
             }
     //        $query = "Select * from cart where pid='$pid' and cartid='$cartid' and type='$type';";
@@ -74,7 +79,19 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
                         $sql = "UPDATE cart set quantity='$newQty' where pid='$pid' and cartid='$cartid' and type='$type';";
                     }
                 }
-
+                
+                $user;
+                if (isset($_SESSION['loggedUserEmail'])) {
+                    $user = $_SESSION['loggedUserEmail'];
+                } else {
+                    $user = $cartid;
+                }
+                
+                //add to statistics
+                $stats = "INSERT INTO productstatistics (type, pid, customer) VALUES "
+                    . "('$pStats', '$pid', '$user');";
+                mysqli_query($link, $stats);   
+                
                 mysqli_query($link, $sql);
                 echo "<script>window.history.back();</script>";
     //            header("Location: product.php?id=".$pid);
@@ -103,6 +120,27 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
             } else {
                 $sql = "UPDATE cart set quantity='$qty', pid ='$colour' where pid='$pid' and cartid='".GetCartId()."' and type='$type' and id='$id';";
             }
+            
+            $pStats;
+            if (strcmp($type, "purchase") === 0) {
+                $pStats = "cartpurchase";
+            } else if (strcmp($type, "hometry") === 0){
+                $pStats = "carttry";
+            } else {
+                $pStats = "giftcard";
+            }
+            
+            $user;
+            if (isset($_SESSION['loggedUserEmail'])) {
+                $user = $_SESSION['loggedUserEmail'];
+            } else {
+                $user = $cartid;
+            }
+            
+            //add to statistics
+            $stats = "INSERT INTO productstatistics (type, pid, customer) VALUES "
+                . "('$pStats', '$pid', '$user');";
+            mysqli_query($link, $stats);   
             
             mysqli_query($link, $sql);
         }
@@ -154,6 +192,18 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
                     $sql = "UPDATE cart set quantity='$newQty', details = '$details' where pid='$code' and "
                             . "cartid='$cartid' and type='$gifttype' and datetime='$date';";
                 }
+                
+                $user;
+                if (isset($_SESSION['loggedUserEmail'])) {
+                    $user = $_SESSION['loggedUserEmail'];
+                } else {
+                    $user = $cartid;
+                }
+
+                //add to statistics
+                $stats = "INSERT INTO productstatistics (type, pid, customer) VALUES "
+                    . "('giftcard', '$code', '$user');";
+                mysqli_query($link, $stats);   
                 
                 mysqli_query($link, $sql);
                 header("Location: giftcard.php");
