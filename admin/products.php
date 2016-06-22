@@ -375,11 +375,6 @@ if (isset($_GET['id'])) {
                                 <tr>
                                     <td colspan="2">
                                         Tags:
-<!--                                        <input type='text' name="tags" id='tags' value ="<?php 
-//                                        if (!empty($erow['tags'])) {
-//                                            echo $erow['tags'];
-//                                        }
-                                            ?>">-->
                                         <div id='no-tags' stye='display:none;'>
                                             No existing tags found
                                         </div>
@@ -632,6 +627,7 @@ if (isset($_GET['id'])) {
 
         var selectize_tags = $("#select-to")[0].selectize;
         <?php 
+        if (isset($_GET['id'])) {
             $tagsql = "Select * from products where pid='".$_GET['id']."';";
             $tresult = mysqli_query($link, $tagsql);
 
@@ -655,6 +651,7 @@ if (isset($_GET['id'])) {
                 }
 //                }
             }
+        }
         ?>
     });
     

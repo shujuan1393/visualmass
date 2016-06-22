@@ -78,10 +78,12 @@ p, .control-group {
 #wrapper {
 	margin: 0;
 }
+/* 
 #wrapper > * {
 	padding-left: 100px;
 	padding-right: 100px;
 }
+ */
 pre {
 	background: #f8f8f8;
 	border: 1px solid #f2f2f2;
