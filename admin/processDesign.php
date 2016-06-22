@@ -105,7 +105,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateDesError']);
         unset($_SESSION['updateDesSuccess']);
         $_SESSION['addDesError'] = "Empty field(s)";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: designstory.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: designstory.php#menu1");

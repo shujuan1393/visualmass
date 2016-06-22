@@ -84,7 +84,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['updateAuthorError']);
         $_SESSION['addAuthorError'] = "Empty field(s)";
         
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: blogSettings.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: blogSettings.php#menu1");
@@ -100,7 +100,7 @@ if (isset($_GET['add'])) {
         unset($_SESSION['addAuthorSuccess']);
         unset($_SESSION['updateAuthorError']);
         $_SESSION['addAuthorError'] = "Invalid email";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: blogSettings.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: blogSettings.php#menu1");

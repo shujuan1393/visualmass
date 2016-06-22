@@ -104,7 +104,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateCultError']);
         unset($_SESSION['updateCultSuccess']);
         $_SESSION['addCultError'] = "Empty field(s)";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: culturestory.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: culturestory.php#menu1");

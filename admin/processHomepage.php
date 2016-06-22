@@ -114,7 +114,7 @@ if (isset($_GET['delete'])) {
             unset($_SESSION['updateHomepageSuccess']);
             unset($_SESSION['uploadHomepageError']);
             $_SESSION['addHomepageError'] = "Button text and Link position required";
-            if (isset($_POST['editid'])) {
+            if (!empty($_POST['editid'])) {
                 header("Location: homepage.php?id=".$_POST['editid']."#menu1");
             } else {
                 header("Location: homepage.php#menu1");
@@ -128,7 +128,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateHomepageSuccess']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['addHomepageError'] = "Empty field(s)";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: homepage.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: homepage.php#menu1");
@@ -139,7 +139,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateHomepageSuccess']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['addHomepageError'] = "No image selected";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: homepage.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: homepage.php#menu1");
@@ -150,7 +150,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateHomepageSuccess']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['addHomepageError'] = "Content position required";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: homepage.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: homepage.php#menu1");
@@ -161,7 +161,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateHomepageSuccess']);
         unset($_SESSION['uploadHomepageError']);
         $_SESSION['addHomepageError'] = "Image position required";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: homepage.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: homepage.php#menu1");

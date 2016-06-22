@@ -44,7 +44,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         unset($_SESSION['addCareerBannerError']);
         unset($_SESSION['addCareerBannerSuccess']);
         $_SESSION['addCareerError'] = "Empty field(s)"; 
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: careers.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: careers.php#menu1");

@@ -178,7 +178,7 @@
                             "checkoutSettings.php", "exportSettings.php", "formSettings.php", "giftcardSettings.php", 
                             "homeTrySettings.php", "notificationSettings.php", "paymentsSettings.php", 
                             "productSettings.php", "receiptsSettings.php", "serviceSettings.php", 
-                            "storeCreditSettings.php", "virtualTrySettings.php", "webSettings.php");
+                            "storeCreditSettings.php", "virtualTrySettings.php", "webSettings.php", "tagSettings.php");
                         $countList = count(array_intersect($urlArr, $settingsList));
                     ?>
                 <ul id="settings" <?php if ($countList > 0) echo "class='collapse in'"; else echo "class='collapse'"; ?> >
@@ -223,6 +223,9 @@
                     </li>
                     <li <?php if (in_array("storeCreditSettings.php", $urlArr)) echo "class='active'" ?> >
                         <a href='#'>STORE CREDIT</a>
+                    </li>
+                    <li <?php if (in_array("tagSettings.php", $urlArr)) echo "class='active'" ?> >
+                        <a href='tagSettings.php'>TAGS</a>
                     </li>
                     <li <?php if (in_array("virtualTrySettings.php", $urlArr)) echo "class='active'" ?> >
                         <a href='#'>VIRTUAL TRY-ON</a>

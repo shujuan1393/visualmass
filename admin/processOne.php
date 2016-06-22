@@ -104,7 +104,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateOneError']);
         unset($_SESSION['updateOneSuccess']);
         $_SESSION['addOneError'] = "Empty field(s)";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: onestory.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: onestory.php#menu1");

@@ -106,7 +106,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         unset($_SESSION['addFormSuccess']);
         unset($_SESSION['addFormError']);
         $_SESSION['addFormFieldError'] = "Empty field(s)";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: formSettings.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: formSettings.php#menu1");

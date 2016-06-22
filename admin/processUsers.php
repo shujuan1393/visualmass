@@ -28,7 +28,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateSuccess']);
         
         $_SESSION['addEmpError'] = "Empty field(s)";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: users.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: users.php#menu1");
@@ -38,7 +38,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateError']);
         unset($_SESSION['updateSuccess']);
         $_SESSION['addEmpError'] = "Invalid email";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: users.php?id=".$_POST['editid']."#menu1");
         } else {
             header("Location: users.php#menu1");
@@ -80,7 +80,7 @@ if (isset($_GET['delete'])) {
                     unset($_SESSION['updateSuccess']);
                     unset($_SESSION['updateError']);
                     $_SESSION['addEmpError'] = "Account already exists";
-                    if (isset($_POST['editid'])) {
+                    if (!empty($_POST['editid'])) {
                         header("Location: users.php?id=".$_POST['editid']."#menu1");
                     } else {
                         header("Location: users.php#menu1");
@@ -124,7 +124,7 @@ if (isset($_GET['delete'])) {
                         unset($_SESSION['updateSuccess']);
                         unset($_SESSION['updateError']);
                         $_SESSION['addEmpError'] = 'Invalid email address';
-                        if (isset($_POST['editid'])) {
+                        if (!empty($_POST['editid'])) {
                             header("Location: users.php?id=".$_POST['editid']."#menu1");
                         } else {
                             header("Location: users.php#menu1");

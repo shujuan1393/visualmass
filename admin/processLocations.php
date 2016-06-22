@@ -151,7 +151,7 @@ if (isset($_GET['delete'])) {
                     unset($_SESSION['updateLocError']);
                     unset($_SESSION['addLocSuccess']);
                     $_SESSION['uploadLocError'] = "Sorry, uploads cannot be greater than 5MB.";
-                    if (isset($_POST['editid'])) {
+                    if (!empty($_POST['editid'])) {
                         header('Location: locations.php?id='.$_POST['editid']);
                     } else {
                         header('Location: locations.php');
@@ -162,7 +162,7 @@ if (isset($_GET['delete'])) {
                         unset($_SESSION['updateLocError']);
                         unset($_SESSION['addLocSuccess']);
                         $_SESSION['uploadLocError'] = "Could not upload your image. Please try again!";
-                        if (isset($_POST['editid'])) {
+                        if (!empty($_POST['editid'])) {
                             header('Location: locations.php?id='.$_POST['editid']);
                         } else {
                             header('Location: locations.php');

@@ -38,7 +38,7 @@ if (isset($_GET['edit'])) {
         unset($_SESSION['addEmpTypeSuccess']);
         unset($_SESSION['updateEmpTypeError']);
         $_SESSION['addEmpTypeError'] = "Empty field(s)";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header("Location: accountSettings.php?id=".$_POST['editid']."#menu1");
         } else {
            header("Location: accountSettings.php#menu1");

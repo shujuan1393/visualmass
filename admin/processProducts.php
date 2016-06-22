@@ -34,7 +34,7 @@ if (isset($_GET['delete'])) {
             unset($_SESSION['updateProdError']);
             unset($_SESSION['updateProdSuccess']);
             $_SESSION['addProdError'] = "Quantity required";
-            if (isset($_POST['editid'])) {
+            if (!empty($_POST['editid'])) {
                 header('Location: products.php?id='.$_POST['editid']);
             } else {
                 header('Location: products.php#add');
@@ -59,18 +59,18 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateProdSuccess']);
         $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addProdError'] = "Empty field(s)";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header('Location: products.php?id='.$_POST['editid']);
         } else {
             header('Location: products.php#add');
         }
-    } else if(!isset($_POST['editid']) && (empty($_FILES['featured']['name'][0]) || empty($_FILES['images']['name'][0]))) {
+    } else if(empty($_POST['editid']) && (empty($_FILES['featured']['name'][0]) || empty($_FILES['images']['name'][0]))) {
         unset($_SESSION['addProdSuccess']);
         unset($_SESSION['updateProdError']);
         unset($_SESSION['updateProdSuccess']);
         $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addProdError'] = "No image selected";
-        if (isset($_POST['editid'])) {
+        if (!empty($_POST['editid'])) {
             header('Location: products.php?id='.$_POST['editid']);
         } else {
             header('Location: products.php#add');
@@ -114,7 +114,7 @@ if (isset($_GET['delete'])) {
                         unset($_SESSION['updateProdError']);
                         unset($_SESSION['addProdSuccess']);
                         $_SESSION['addProdError'] = "Could not upload your image. Please try again!";
-                        if (isset($_POST['editid'])) {
+                        if (!empty($_POST['editid'])) {
                             header('Location: products.php?id='.$_POST['editid']);
                         } else {
                             header('Location: products.php#add');
@@ -160,7 +160,7 @@ if (isset($_GET['delete'])) {
                         unset($_SESSION['updateProdError']);
                         unset($_SESSION['addProdSuccess']);
                         $_SESSION['addProdError'] = "Could not upload your image. Please try again!";
-                        if (isset($_POST['editid'])) {
+                        if (!empty($_POST['editid'])) {
                             header('Location: products.php?id='.$_POST['editid']);
                         } else {
                             header('Location: products.php#add');
@@ -268,7 +268,7 @@ if (isset($_GET['delete'])) {
                 $locs .= $_POST[$loci];
                 if (strcmp($_POST[$tracki], "yes") === 0) {
                     $locqty .= $_POST[$qtyi];
-                    if (isset($_POST['editid'])) {
+                    if (!empty($_POST['editid'])) {
                         $editcode = $_POST['editid'];
                     } 
                     $getinv = "Select * from inventory where pid='$editcode' and location='".$_POST[$loci]."';";
