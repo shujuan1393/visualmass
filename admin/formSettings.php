@@ -185,7 +185,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                             <div id="forms" class="tab-pane fade in active">
                                 <h1 class="page-header">Manage Forms</h1>
                                 
-                                <div id="updateFormError" style="color:red">
+                                <div id="updateFormError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateFormError'])) {
                                             echo $_SESSION['updateFormError'];
@@ -193,7 +193,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                     ?>
                                 </div>
 
-                                <div id="updateFormSuccess" style="color:green">
+                                <div id="updateFormSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateFormSuccess'])) {
                                             echo $_SESSION['updateFormSuccess'];
@@ -244,7 +244,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
 
                                     <form id='addForms' action='formSettings.php?add=1' method='post'>
 
-                                        <div id="addFormError" style="color:red">
+                                        <div id="addFormError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addFormError'])) {
                                                     echo $_SESSION['addFormError'];
@@ -252,7 +252,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addFormSuccess" style="color:green">
+                                        <div id="addFormSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addFormSuccess'])) {
                                                     echo $_SESSION['addFormSuccess'];
@@ -308,7 +308,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Form Fields</h1>
                                 
-                                <div id="updateFormFieldSuccess" style="color:green">
+                                <div id="updateFormFieldSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateFormFieldSuccess'])) {
                                             echo $_SESSION['updateFormFieldSuccess'];
@@ -316,7 +316,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                     ?>
                                 </div>
 
-                                <div id="updateFormFieldError" style="color:red">
+                                <div id="updateFormFieldError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateFormFieldError'])) {
                                             echo $_SESSION['updateFormFieldError'];
@@ -393,7 +393,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
 
                                     <form id='addFormField' action='formSettings.php?update=1' method='post'>
 
-                                        <div id="addFormFieldError" style="color:red">
+                                        <div id="addFormFieldError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addFormFieldError'])) {
                                                     echo $_SESSION['addFormFieldError'];
@@ -401,7 +401,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addFormFieldSuccess" style="color:green">
+                                        <div id="addFormFieldSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addFormFieldSuccess'])) {
                                                     echo $_SESSION['addFormFieldSuccess'];

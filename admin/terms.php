@@ -92,14 +92,14 @@ if (isset($_GET['id'])) {
                         }
                         ?>
                         
-                        <div id="updateTermSuccess" style="color:green">
+                        <div id="updateTermSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateTermSuccess'])) {
                                     echo $_SESSION['updateTermSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateTermError" style="color:red">
+                        <div id="updateTermError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateTermError'])) {
                                     echo $_SESSION['updateTermError'];
@@ -108,7 +108,7 @@ if (isset($_GET['id'])) {
                         </div>
         
                         <form id='addTermSection' action='processTerms.php' method='post'>
-                            <div id="addTermError" style="color:red">
+                            <div id="addTermError" class="error">
                                 <?php 
                                     if (isset($_SESSION['addTermError'])) {
                                         echo $_SESSION['addTermError'];
@@ -117,7 +117,7 @@ if (isset($_GET['id'])) {
                             </div>
 
                             <p id='nanError' style="display: none;">Please enter numbers only</p>
-                            <div id="addTermSuccess" style="color:green">
+                            <div id="addTermSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['addTermSuccess'])) {
                                         echo $_SESSION['addTermSuccess'];

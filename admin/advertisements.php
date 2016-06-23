@@ -48,14 +48,14 @@ if (isset($_GET['id'])) {
                         </ol>
                         <h1 class="page-header">Manage Advertisements</h1>
 
-                        <div id="updateAdvSuccess" style="color:green">
+                        <div id="updateAdvSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateAdvSuccess'])) {
                                     echo $_SESSION['updateAdvSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateAdvError" style="color:red">
+                        <div id="updateAdvError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateAdvError'])) {
                                     echo $_SESSION['updateAdvError'];
@@ -123,7 +123,7 @@ if (isset($_GET['id'])) {
         
                             <form id='addAdvertisement' action='processAdvertisements.php' method='post' enctype="multipart/form-data">
 
-                                <div id="addAdvError" style="color:red">
+                                <div id="addAdvError" class="error">
                                     <?php 
                                         if (isset($_SESSION['addAdvError'])) {
                                             echo $_SESSION['addAdvError'];
@@ -134,7 +134,7 @@ if (isset($_GET['id'])) {
                                         }
                                     ?>
                                 </div>
-                                <div id="addAdvSuccess" style="color:green">
+                                <div id="addAdvSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['addAdvSuccess'])) {
                                             echo $_SESSION['addAdvSuccess'];

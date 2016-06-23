@@ -87,7 +87,7 @@ if (isset($_GET['id'])) {
                                     ?>
                                     
                                     <form id='addOneBanner' action='processOne.php?banner=1' method='post' enctype="multipart/form-data">
-                                        <div id="addOneBannerError" style="color:red">
+                                        <div id="addOneBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addOneBannerError'])) {
                                                     echo $_SESSION['addOneBannerError'];
@@ -95,7 +95,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addOneBannerSuccess" style="color:green">
+                                        <div id="addOneBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addOneBannerSuccess'])) {
                                                     echo $_SESSION['addOneBannerSuccess'];
@@ -116,14 +116,14 @@ if (isset($_GET['id'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Gift Initiative Sections</h1>
                                 
-                                <div id="updateOneSuccess" style="color:green">
+                                <div id="updateOneSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateOneSuccess'])) {
                                             echo $_SESSION['updateOneSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateOneError" style="color:red">
+                                <div id="updateOneError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateOneError'])) {
                                             echo $_SESSION['updateOneError'];
@@ -181,7 +181,7 @@ if (isset($_GET['id'])) {
                                     
                                     <form id='addOne' action='processOne.php' method='post'>
 
-                                        <div id="addOneError" style="color:red">
+                                        <div id="addOneError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addOneError'])) {
                                                     echo $_SESSION['addOneError'];
@@ -189,7 +189,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addOneSuccess" style="color:green">
+                                        <div id="addOneSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addOneSuccess'])) {
                                                     echo $_SESSION['addOneSuccess'];

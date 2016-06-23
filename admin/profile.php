@@ -47,14 +47,14 @@ require_once '../config/db.php';
                                     $row = mysqli_fetch_assoc($empresult);
                         ?>
 
-                        <div id="profileError" style='color:red'>
+                        <div id="profileError" class="error">
                             <?php
                                 if (isset($_SESSION['profileError'])) {
                                     echo $_SESSION['profileError'];
                                 }
                             ?>
                         </div>
-                        <div id="profileSuccess" style='color:green'>
+                        <div id="profileSuccess" class="success">
                             <?php
                                 if (isset($_SESSION['profileSuccess'])) {
                                     echo $_SESSION['profileSuccess'];

@@ -102,14 +102,14 @@ if (isset($_GET['id'])) {
                         }
                         ?>
                         
-                        <div id="updateLocSuccess" style="color:green">
+                        <div id="updateLocSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateLocSuccess'])) {
                                     echo $_SESSION['updateLocSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateLocError" style="color:red">
+                        <div id="updateLocError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateLocError'])) {
                                     echo $_SESSION['updateLocError'];
@@ -119,7 +119,7 @@ if (isset($_GET['id'])) {
                         
                         <form id='addLocation' action='processLocations.php' method='post' accept-charset='UTF-8' enctype="multipart/form-data">
                             
-                            <div id="addLocError" style="color:red">
+                            <div id="addLocError" class="error">
                                 <?php 
                                     if (isset($_SESSION['addLocError'])) {
                                         echo $_SESSION['addLocError'];
@@ -132,7 +132,7 @@ if (isset($_GET['id'])) {
                             </div>
                             <p id='nanError' style="display: none;">Please enter numbers only</p>
 
-                            <div id="addLocSuccess" style="color:green">
+                            <div id="addLocSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['addLocSuccess'])) {
                                         echo $_SESSION['addLocSuccess'];

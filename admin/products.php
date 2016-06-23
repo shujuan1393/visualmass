@@ -92,14 +92,14 @@ if (isset($_GET['id'])) {
                         }
                         ?> 
                         
-                        <div id="updateProdSuccess" style="color:green">
+                        <div id="updateProdSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateProdSuccess'])) {
                                     echo $_SESSION['updateProdSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateProdError" style="color:red">
+                        <div id="updateProdError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateProdError'])) {
                                     echo $_SESSION['updateProdError'];
@@ -108,7 +108,7 @@ if (isset($_GET['id'])) {
                         </div>
         
                         <form id='addProduct' action='processProducts.php' method='post' accept-charset='UTF-8' enctype="multipart/form-data">
-                            <div id="addProdError" style="color:red">
+                            <div id="addProdError" class="error">
                                 <?php 
                                     if (isset($_SESSION['addProdError'])) {
                                         echo $_SESSION['addProdError'];
@@ -117,7 +117,7 @@ if (isset($_GET['id'])) {
                             </div>
 
                             <p id='nanError' style="display: none;">Please enter numbers only</p>
-                            <div id="addProdSuccess" style="color:green">
+                            <div id="addProdSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['addProdSuccess'])) {
                                         echo $_SESSION['addProdSuccess'];

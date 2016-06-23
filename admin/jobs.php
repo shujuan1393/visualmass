@@ -46,14 +46,14 @@ if (isset($_GET['id'])) {
                         
                         <h1 class="page-header">Manage Jobs</h1>
                         
-                        <div id="updateJobSuccess" style="color:green">
+                        <div id="updateJobSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateJobSuccess'])) {
                                     echo $_SESSION['updateJobSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateJobError" style="color:red">
+                        <div id="updateJobError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateJobError'])) {
                                     echo $_SESSION['updateJobError'];
@@ -110,14 +110,14 @@ if (isset($_GET['id'])) {
                         <h1 id="add" class="page-header">Add/Edit Job</h1>
                         
                         <form id='addJob' action='processJobs.php' method='post' accept-charset='UTF-8' enctype="multipart/form-data">
-                        <div id="addJobError" style="color:red">
+                        <div id="addJobError" class="error">
                             <?php 
                                 if (isset($_SESSION['addJobError'])) {
                                     echo $_SESSION['addJobError'];
                                 }
                             ?>
                         </div>
-                        <div id="addJobSuccess" style="color:green">
+                        <div id="addJobSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['addJobSuccess'])) {
                                     echo $_SESSION['addJobSuccess'];

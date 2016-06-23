@@ -49,14 +49,14 @@ if (isset($_GET['id'])) {
                         
                         <h1 class="page-header">Manage Blog</h1>
                         
-                        <div id="updateBlogSuccess" style="color:green">
+                        <div id="updateBlogSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateBlogSuccess'])) {
                                     echo $_SESSION['updateBlogSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateBlogError" style="color:red">
+                        <div id="updateBlogError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateBlogError'])) {
                                     echo $_SESSION['updateBlogError'];
@@ -112,7 +112,7 @@ if (isset($_GET['id'])) {
         
                         <form id='addBlogPost' action='processBlogPosts.php' method='post' enctype="multipart/form-data">
 
-                            <div id="addBlogError" style="color:red">
+                            <div id="addBlogError" class="error">
                                 <?php 
                                     if (isset($_SESSION['addBlogError'])) {
                                         echo $_SESSION['addBlogError'];
@@ -125,7 +125,7 @@ if (isset($_GET['id'])) {
                             </div>
             
                             <p id='nanError' style="display: none;">Please enter numbers only</p>
-                            <div id="addBlogSuccess" style="color:green">
+                            <div id="addBlogSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['addBlogSuccess'])) {
                                         echo $_SESSION['addBlogSuccess'];

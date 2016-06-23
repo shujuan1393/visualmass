@@ -32,7 +32,7 @@
                             </li>
                         </ol>
         
-                        <div id="updateMediaError" style="color:red">
+                        <div id="updateMediaError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateMediaError'])) {
                                     echo $_SESSION['updateMediaError'];
@@ -40,7 +40,7 @@
                             ?>
                         </div>
 
-                        <div id="updateMediaSuccess" style="color:green">
+                        <div id="updateMediaSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateMediaSuccess'])) {
                                     echo $_SESSION['updateMediaSuccess'];

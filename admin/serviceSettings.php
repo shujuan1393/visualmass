@@ -49,14 +49,14 @@ if (isset($_GET['id'])) {
             
                         <h1 class="page-header">Manage Services</h1>
                         
-                        <div id="updateServSuccess" style="color:green">
+                        <div id="updateServSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateServSuccess'])) {
                                     echo $_SESSION['updateServSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateServError" style="color:red">
+                        <div id="updateServError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateServError'])) {
                                     echo $_SESSION['updateServError'];
@@ -108,7 +108,7 @@ if (isset($_GET['id'])) {
         
                         <form id='addService' action='processServices.php' method='post' accept-charset='UTF-8'>
                 
-                            <div id="addServError" style="color:red">
+                            <div id="addServError" class="error">
                                 <?php 
                                     if (isset($_SESSION['addServError'])) {
                                         echo $_SESSION['addServError'];
@@ -116,7 +116,7 @@ if (isset($_GET['id'])) {
                                 ?>
                             </div>
 
-                            <div id="addServSuccess" style="color:green">
+                            <div id="addServSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['addServSuccess'])) {
                                         echo $_SESSION['addServSuccess'];

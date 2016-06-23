@@ -100,14 +100,14 @@ if (isset($_GET['id']) && !isset($_GET['delete'])) {
             
                         <h1 class="page-header">Manage Tags</h1>
                         
-                        <div id="updateTagSuccess" style="color:green">
+                        <div id="updateTagSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateTagSuccess'])) {
                                     echo $_SESSION['updateTagSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateTagError" style="color:red">
+                        <div id="updateTagError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateTagError'])) {
                                     echo $_SESSION['updateTagError'];
@@ -161,7 +161,7 @@ if (isset($_GET['id']) && !isset($_GET['delete'])) {
         
                         <form id='addTag' action='tagSettings.php' method='post' accept-charset='UTF-8'>
                 
-                            <div id="addTagError" style="color:red">
+                            <div id="addTagError" class="error">
                                 <?php 
                                     if (isset($_SESSION['addTagError'])) {
                                         echo $_SESSION['addTagError'];
@@ -169,7 +169,7 @@ if (isset($_GET['id']) && !isset($_GET['delete'])) {
                                 ?>
                             </div>
 
-                            <div id="addTagSuccess" style="color:green">
+                            <div id="addTagSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['addTagSuccess'])) {
                                         echo $_SESSION['addTagSuccess'];

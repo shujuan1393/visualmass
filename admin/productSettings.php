@@ -66,14 +66,14 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
                             <div id="prodcat" class="tab-pane fade in active">
                             <h1 class="page-header">Manage Product Categories</h1>
 
-                            <div id="updateProdCatSuccess" style="color:green">
+                            <div id="updateProdCatSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['updateProdCatSuccess'])) {
                                         echo $_SESSION['updateProdCatSuccess'];
                                     }
                                 ?>
                             </div>
-                            <div id="updateProdCatError" style="color:red">
+                            <div id="updateProdCatError" class="error">
                                 <?php 
                                     if (isset($_SESSION['updateProdCatError'])) {
                                         echo $_SESSION['updateProdCatError'];
@@ -123,7 +123,7 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
 
                             <form id='addProdCat' action='processProdCat.php' method='post' accept-charset='UTF-8'>
 
-                                <div id="addProdCatError" style="color:red">
+                                <div id="addProdCatError" class="error">
                                     <?php 
                                         if (isset($_SESSION['addProdCatError'])) {
                                             echo $_SESSION['addProdCatError'];
@@ -131,7 +131,7 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
                                     ?>
                                 </div>
 
-                                <div id="addProdCatSuccess" style="color:green">
+                                <div id="addProdCatSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['addProdCatSuccess'])) {
                                             echo $_SESSION['addProdCatSuccess'];
@@ -156,14 +156,14 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
                             <div id="prodMat" class="tab-pane fade">
                             <h1 class="page-header">Manage Product Materials</h1>
                             
-                                <div id="updateProdMatSuccess" style="color:green">
+                                <div id="updateProdMatSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateProdMatSuccess'])) {
                                             echo $_SESSION['updateProdMatSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateProdMatError" style="color:red">
+                                <div id="updateProdMatError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateProdMatError'])) {
                                             echo $_SESSION['updateProdMatError'];
@@ -213,7 +213,7 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
 
                                 <form id='addProdMat' action='processProdMat.php' method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 
-                                    <div id="addProdMatError" style="color:red">
+                                    <div id="addProdMatError" class="error">
                                         <?php 
                                             if (isset($_SESSION['addProdMatError'])) {
                                                 echo $_SESSION['addProdMatError'];
@@ -221,7 +221,7 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
                                         ?>
                                     </div>
 
-                                    <div id="addProdMatSuccess" style="color:green">
+                                    <div id="addProdMatSuccess" class="success">
                                         <?php 
                                             if (isset($_SESSION['addProdMatSuccess'])) {
                                                 echo $_SESSION['addProdMatSuccess'];

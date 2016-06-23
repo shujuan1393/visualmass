@@ -44,14 +44,14 @@ if (!mysqli_query($link,$selectSql)) {
                             </li>
                         </ol>
                         
-                        <div id="genSetError" style='color:red'>
+                        <div id="genSetError" class="error">
                             <?php
                                 if (isset($_SESSION['gensetError'])) {
                                     echo $_SESSION['gensetError'];
                                 }
                             ?>
                         </div>
-                        <div id="genSetSuccess" style='color:green'>
+                        <div id="genSetSuccess" class="success">
                             <?php
                                 if (isset($_SESSION['updateGenSetSuccess'])) {
                                     echo $_SESSION['updateGenSetSuccess'];

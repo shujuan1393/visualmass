@@ -90,7 +90,7 @@ if (isset($_GET['id'])) {
 
                                     <form id='addProdDescBanner' action='processProdDesc.php?banner=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addProdDescBannerError" style="color:red">
+                                        <div id="addProdDescBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addProdDescBannerError'])) {
                                                     echo $_SESSION['addProdDescBannerError'];
@@ -98,7 +98,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addProdDescBannerSuccess" style="color:green">
+                                        <div id="addProdDescBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addProdDescBannerSuccess'])) {
                                                     echo $_SESSION['addProdDescBannerSuccess'];
@@ -122,14 +122,14 @@ if (isset($_GET['id'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Product Description Sections</h1>
                                 
-                                <div id="updateProdDescSuccess" style="color:green">
+                                <div id="updateProdDescSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateProdDescSuccess'])) {
                                             echo $_SESSION['updateProdDescSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateProdDescError" style="color:red">
+                                <div id="updateProdDescError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateProdDescError'])) {
                                             echo $_SESSION['updateProdDescError'];
@@ -197,7 +197,7 @@ if (isset($_GET['id'])) {
                                     
                                     <form id='addProdDescSection' action='processProdDesc.php' method='post' enctype="multipart/form-data">
 
-                                        <div id="addProdDescError" style="color:red">
+                                        <div id="addProdDescError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addProdDescError'])) {
                                                     echo $_SESSION['addProdDescError'];
@@ -209,7 +209,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addProdDescSuccess" style="color:green">
+                                        <div id="addProdDescSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addProdDescSuccess'])) {
                                                     echo $_SESSION['addProdDescSuccess'];

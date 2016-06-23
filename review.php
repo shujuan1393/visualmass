@@ -1,6 +1,6 @@
 <?php
     require_once 'config/db.php';
-    $nonceFromTheClient = $_POST["payment_method_nonce"];
+    $nonceFromTheClient = $_POST["payment_method_nonce"];    
 ?>
 <!DOCTYPE html>
 <!--
@@ -82,13 +82,51 @@ and open the template in the editor.
                             Tax: <br>
                             Shipping: <br>
                             Total: <br>
+                            <span>Discount:</span>
                         </div>
                         <div class='col-md-3' id='reviewCosts'>
                             $<?php echo $cost; ?><br>
                             $0.00<br>
                             <strong>Free</strong><br>
                             <h6>$<?php echo $cost; ?></h6>
+                            <span id='showDiscount'> - </span><br>
                             <input type='hidden' name='cost' value='<?php echo $cost; ?>'>
+                            
+                            <?php 
+                                //get all discount codes
+                                $disc = "Select * from discounts;";
+                                $dres = mysqli_query($link, $disc);
+
+                                if (!mysqli_query($link, $disc)) {
+                                    die(mysqli_error($link));
+                                } else {
+                                    while ($row = mysqli_fetch_assoc($dres)) {
+                                        $date = date('Y-m-d');
+                                        $today = date('Y-m-d', strtotime($date));
+                                        //echo $paymentDate; // echos today! 
+                                        $start = date('Y-m-d', strtotime($row['start']));
+                                        $end = date('Y-m-d', strtotime($row['end']));
+
+                                        if ($today >= $start && $today <= $end) {
+                                            echo "<input type='hidden' id='".$row['code']."Amount' value='".$row['amount']."'>";
+                                            echo "<input type='hidden' class='allcodes' value='".$row['code']."'>";
+                                        } 
+                                    }
+                                }
+                            ?>
+                            <a id='addCode'> + Add Discount Code</a>
+                            <input type="hidden" name="discount" id='discount'>
+                            <input type="hidden" name="discountAmount" id='discountAmount'>
+                        </div>
+                        <div id='discounts' class='col-md-6' style='display:none;'>
+                            <span class='col-md-8'><input type='text' name='discountCode' id='discountCode' placeholder="Discount Code"></span>
+                            <span class='col-md-3'><button class='btn' id='apply'>Apply Code</button></span>
+                        <div id='validCode' class='col-md-8 success' style='display:none;'>
+                            Valid Discount Code
+                        </div>
+                        <div id='invalidCode' class='col-md-8 error' style='display:none;'>
+                            Invalid Discount Code
+                        </div>
                         </div>
                     </div>
                     <div id='summary' class='col-md-3 col-md-offset-6'>
@@ -194,10 +232,66 @@ and open the template in the editor.
             var address = <?php echo '"'.$address.'"'; ?>;
             var email = <?php echo '"'.$email.'"'; ?>;
             var phone = <?php echo '"'.$phone.'"'; ?>;
-
+            var discount = document.getElementById('discount').value;
+            var discountAmt = document.getElementById('discountAmount').value;
+            
             window.location = "processPayment.php?id=" + str + "&cost=" + cost + "&payment=" + payment + 
                     "&firstname=" + firstname + "&lastname="+lastname + 
-                    "&email="+email+"&phone="+phone+"&address=" + address;
+                    "&email="+email+"&phone="+phone+"&address=" + address + 
+                    "&discount=" + discount + "&discAmt=" + discountAmt;
+        }
+        
+        document.getElementById('addCode').onclick = function() {
+            var obj = document.getElementById('discounts');
+            
+            if (obj.style.display === "none") {
+                obj.style.display = "block";
+            } else {
+                obj.style.display = "none";
+            }
+        };
+        
+        function checkDiscountCode(code) {
+            var classes = document.getElementsByClassName('allcodes');
+            for (var i = 0; i < classes.length; i++) {
+                var val = classes[i].value;
+                
+                if (val === code) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        var code = document.getElementById('apply');
+        
+        if (code !== null) {
+            code.onclick = function() {
+                var val = document.getElementById('discountCode').value;
+                var isFound = checkDiscountCode(val);
+                
+                if (isFound) {
+                    document.getElementById('validCode').style.display = "block";
+                    document.getElementById('discount').value = val;
+                    //get amount
+                    var str = val + "Amount";
+                    var amt = document.getElementById(str).value;
+                    if (amt !== "") {
+                        document.getElementById('discountAmount').value = amt;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+amt+"</strong>";
+                    }
+//                    document.getElementById('addCode').style.display = "none";
+//                    document.getElementById('discounts').style.display = "none";
+                    document.getElementById('invalidCode').style.display = "none";
+                } else {
+                    document.getElementById('validCode').style.display = "none";
+                    document.getElementById('discount').value = "";
+                    document.getElementById('discountCode').value = "";
+                    document.getElementById('invalidCode').style.display = "block";
+                    document.getElementById('showDiscount').innerHTML = "-";
+                }
+            };
         }
     </script>
 </html>

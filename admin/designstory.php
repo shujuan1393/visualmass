@@ -87,7 +87,7 @@ if (isset($_GET['id'])) {
                                     ?>
                                     
                                     <form id='addDesBanner' action='processDesign.php?banner=1' method='post' enctype="multipart/form-data">
-                                        <div id="addDesBannerError" style="color:red">
+                                        <div id="addDesBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addDesBannerError'])) {
                                                     echo $_SESSION['addDesBannerError'];
@@ -95,7 +95,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addDesBannerSuccess" style="color:green">
+                                        <div id="addDesBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addDesBannerSuccess'])) {
                                                     echo $_SESSION['addDesBannerSuccess'];
@@ -116,14 +116,14 @@ if (isset($_GET['id'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Design Sections</h1>
                                 
-                                <div id="updateDesSuccess" style="color:green">
+                                <div id="updateDesSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateDesSuccess'])) {
                                             echo $_SESSION['updateDesSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateDesError" style="color:red">
+                                <div id="updateDesError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateDesError'])) {
                                             echo $_SESSION['updateDesError'];
@@ -181,7 +181,7 @@ if (isset($_GET['id'])) {
                                     
                                     <form id='addDes' action='processDesign.php' method='post'>
 
-                                        <div id="addDesError" style="color:red">
+                                        <div id="addDesError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addDesError'])) {
                                                     echo $_SESSION['addDesError'];
@@ -189,7 +189,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addDesSuccess" style="color:green">
+                                        <div id="addDesSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addDesSuccess'])) {
                                                     echo $_SESSION['addDesSuccess'];

@@ -46,14 +46,14 @@ if (isset($_GET['id'])) {
                         
                         <h1 class="page-header">Manage Discounts</h1>
                         
-                        <div id="updateDiscSuccess" style="color:green">
+                        <div id="updateDiscSuccess" class='success'>
                             <?php 
                                 if (isset($_SESSION['updateDiscSuccess'])) {
                                     echo $_SESSION['updateDiscSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateDiscError" style="color:red">
+                        <div id="updateDiscError" class='error'>
                             <?php 
                                 if (isset($_SESSION['updateDiscError'])) {
                                     echo $_SESSION['updateDiscError'];
@@ -115,16 +115,16 @@ if (isset($_GET['id'])) {
                         <h1 id="add" class="page-header">Add/Edit Discount</h1>
                         
                         <form id='addDiscount' action='processDiscounts.php' method='post'>
-                            <div id="addDiscError" style="color:red">
+                            <div id="addDiscError" class='error'>
                                 <?php 
                                     if (isset($_SESSION['addDiscError'])) {
                                         echo $_SESSION['addDiscError'];
                                     }
                                 ?>
                             </div>
-                            <p id='nanError' style="display: none;">Please enter numbers only</p>
+                            <p id='nanError' class='error' style="display: none;">Please enter numbers only</p>
 
-                            <div id="addDiscSuccess" style="color:green">
+                            <div id="addDiscSuccess"  class='success'>
                                 <?php 
                                     if (isset($_SESSION['addDiscSuccess'])) {
                                         echo $_SESSION['addDiscSuccess'];
@@ -161,6 +161,15 @@ if (isset($_GET['id'])) {
                             </tr>
                             <tr>
                                 <td>
+                                    Amount*:
+                                    <input type='text' name='amount' id='amount'  maxlength="50"  
+                                           onkeypress="return isNumberKey(event)" value ="<?php 
+                                            if (!empty($erow['amount'])) {
+                                                echo $erow['amount'];
+                                            }
+                                        ?>"/>
+                                </td>
+                                <td>
                                     Limit*:
                                     <input type='text' name='limit' id='limit'  maxlength="50"  
                                            onkeypress="return isNumber(event)" value ="<?php 
@@ -168,8 +177,11 @@ if (isset($_GET['id'])) {
                                                 echo $erow['disclimit'];
                                             }
                                         ?>"/>
-                                </td>
-                                <td>
+                                </td>                                
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="2">
                                     <?php
                                         if (!empty($erow['discusage'])) { 
                                             $usageArr = explode(",", $erow['discusage']);
@@ -249,11 +261,17 @@ if (isset($_GET['id'])) {
                             <tr>
                                 <td>
                                     Start date:
-                                    <input type="text" id="date3" name="date3">
+                                    <input type="text" id="date3" name="date3" 
+                                           value='<?php if (!empty($erow['start'])) { 
+                                               echo $erow['start'];
+                                            }?>'>
                                 </td>
                                 <td>
                                     End date:
-                                    <input type="text" id="date4" name="date4">
+                                    <input type="text" id="date4" name="date4"
+                                           value='<?php if (!empty($erow['end'])) { 
+                                               echo $erow['end'];
+                                            }?>'>
                                 </td>
                             </tr>
                                 <td colspan='2'><input type='submit' name='submit' value='Submit' /></td>
@@ -278,6 +296,18 @@ if (isset($_GET['id'])) {
     var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
             myCalendar2.hideTime();
 
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+            document.getElementById('nanError').style.display='block';
+            document.getElementById('nanError').style.color='red';
+            return false;
+       }
+
+        document.getElementById('nanError').style.display='none';
+        return true;
+    }
+    
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;

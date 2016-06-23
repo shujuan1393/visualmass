@@ -266,7 +266,7 @@ and open the template in the editor.
                         </div>
                     </div>
                         
-                    <p id='nanError' style="display: none;">Please enter numbers only</p>
+                    <p id='nanError' class='error' style="display: none;">Please enter numbers only</p>
                 </form>
             </div>
             

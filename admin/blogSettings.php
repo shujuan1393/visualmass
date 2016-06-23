@@ -73,7 +73,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 <h1 class="page-header">Manage Blog Categories</h1>
                                 
                                         
-                                <div id="updateBlogCatError" style="color:red">
+                                <div id="updateBlogCatError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateBlogCatError'])) {
                                             echo $_SESSION['updateBlogCatError'];
@@ -81,7 +81,7 @@ if (!mysqli_query($link,$selectSql)) {
                                     ?>
                                 </div>
 
-                                <div id="updateBlogCatSuccess" style="color:green">
+                                <div id="updateBlogCatSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateBlogCatSuccess'])) {
                                             echo $_SESSION['updateBlogCatSuccess'];
@@ -128,7 +128,7 @@ if (!mysqli_query($link,$selectSql)) {
                                         
                                     <form id='addBlogCat' method='post' action='saveBlogSettings.php?add=1'>
 
-                                        <div id="addBlogCatError" style="color:red">
+                                        <div id="addBlogCatError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addBlogCatError'])) {
                                                     echo $_SESSION['addBlogCatError'];
@@ -136,7 +136,7 @@ if (!mysqli_query($link,$selectSql)) {
                                             ?>
                                         </div>
 
-                                        <div id="addBlogCatSuccess" style="color:green">
+                                        <div id="addBlogCatSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addBlogCatSuccess'])) {
                                                     echo $_SESSION['addBlogCatSuccess'];
@@ -168,7 +168,7 @@ if (!mysqli_query($link,$selectSql)) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Blog Authors</h1>
                                 
-                                <div id="updateAuthorError" style="color:red">
+                                <div id="updateAuthorError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateAuthorError'])) {
                                             echo $_SESSION['updateAuthorError'];
@@ -176,7 +176,7 @@ if (!mysqli_query($link,$selectSql)) {
                                     ?>
                                 </div>
                                 <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                <div id="updateAuthorSuccess" style="color:green">
+                                <div id="updateAuthorSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateAuthorSuccess'])) {
                                             echo $_SESSION['updateAuthorSuccess'];
@@ -230,7 +230,7 @@ if (!mysqli_query($link,$selectSql)) {
         
                                     <form id='addAuthor' method='post' action='saveBlogSettings.php?update=1'>
                                         
-                                        <div id="addAuthorError" style="color:red">
+                                        <div id="addAuthorError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addAuthorError'])) {
                                                     echo $_SESSION['addAuthorError'];
@@ -238,7 +238,7 @@ if (!mysqli_query($link,$selectSql)) {
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addAuthorSuccess" style="color:green">
+                                        <div id="addAuthorSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addAuthorSuccess'])) {
                                                     echo $_SESSION['addAuthorSuccess'];

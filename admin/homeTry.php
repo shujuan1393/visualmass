@@ -56,14 +56,14 @@ if (isset($_GET['id'])) {
                             <div id="homeb" class="tab-pane fade in active">
                                 <h1 class="page-header">Update Home Try-on Banner</h1>
                                 
-                                <div id="updateHomeSuccess" style="color:green">
+                                <div id="updateHomeSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateHomeSuccess'])) {
                                             echo $_SESSION['updateHomeSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateHomeError" style="color:red">
+                                <div id="updateHomeError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateHomeError'])) {
                                             echo $_SESSION['updateHomeError'];
@@ -103,7 +103,7 @@ if (isset($_GET['id'])) {
 
                                     <form id='addHomeBanner' action='processHomeTry.php?banner=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addHomeBannerError" style="color:red">
+                                        <div id="addHomeBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addHomeBannerError'])) {
                                                     echo $_SESSION['addHomeBannerError'];
@@ -111,7 +111,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addHomeBannerSuccess" style="color:green">
+                                        <div id="addHomeBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addHomeBannerSuccess'])) {
                                                     echo $_SESSION['addHomeBannerSuccess'];
@@ -180,7 +180,7 @@ if (isset($_GET['id'])) {
 
                                     <form id='addAdvertisement' action='processHomeTry.php' method='post' enctype="multipart/form-data">
 
-                                        <div id="addHomeError" style="color:red">
+                                        <div id="addHomeError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addHomeError'])) {
                                                     echo $_SESSION['addHomeError'];
@@ -193,7 +193,7 @@ if (isset($_GET['id'])) {
                                         </div>
 
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addHomeSuccess" style="color:green">
+                                        <div id="addHomeSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addHomeSuccess'])) {
                                                     echo $_SESSION['addHomeSuccess'];

@@ -75,12 +75,7 @@ if (isset($_SESSION['mailSuccess'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCR78jxaf-XgjrUTFxK-jfaj9J_anb-kRA"></script> 
-<!--=======
-        <title>Visual Mass</title>
-        <meta charset="UTF-8">  
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCR78jxaf-XgjrUTFxK-jfaj9J_anb-kRA"></script> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
->>>>>>> Stashed changes-->
+
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link href="styles.css" rel="stylesheet" type="text/css" />     
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -88,7 +83,7 @@ if (isset($_SESSION['mailSuccess'])) {
         <link rel="stylesheet" type="text/css" href="calendar/codebase/dhtmlxcalendar.css"/>
         <script type="text/javascript" src="calendar/codebase/dhtmlxcalendar.js"></script>  
         <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-        
+        <script src="https://js.braintreegateway.com/js/braintree-2.24.1.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
         <link rel="stylesheet" href="styles/font-awesome.min.css">
     

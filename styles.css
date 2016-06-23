@@ -67,6 +67,11 @@ ul {
     padding-right: 30px;
 }
 
+.success {
+    color: green!important;
+    padding: 5px;
+}
+
 .error {
    color: red!important; 
    padding: 5px;

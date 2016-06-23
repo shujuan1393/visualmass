@@ -87,7 +87,7 @@ if (isset($_GET['id'])) {
 
                                     <form id='addHomepageBanner' action='processHomepage.php?banner=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addHomepageBannerError" style="color:red">
+                                        <div id="addHomepageBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addHomepageBannerError'])) {
                                                     echo $_SESSION['addHomepageBannerError'];
@@ -95,7 +95,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addHomepageBannerSuccess" style="color:green">
+                                        <div id="addHomepageBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addHomepageBannerSuccess'])) {
                                                     echo $_SESSION['addHomepageBannerSuccess'];
@@ -116,14 +116,14 @@ if (isset($_GET['id'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Homepage Sections</h1>
                                 
-                                <div id="updateHomepageSuccess" style="color:green">
+                                <div id="updateHomepageSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateHomepageSuccess'])) {
                                             echo $_SESSION['updateHomepageSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateHomepageError" style="color:red">
+                                <div id="updateHomepageError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateHomepageError'])) {
                                             echo $_SESSION['updateHomepageError'];
@@ -180,7 +180,7 @@ if (isset($_GET['id'])) {
 
                                     <form id='addAdvertisement' action='processHomepage.php' method='post' enctype="multipart/form-data">
 
-                                        <div id="addHomepageError" style="color:red">
+                                        <div id="addHomepageError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addHomepageError'])) {
                                                     echo $_SESSION['addHomepageError'];
@@ -192,7 +192,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addHomepageSuccess" style="color:green">
+                                        <div id="addHomepageSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addHomepageSuccess'])) {
                                                     echo $_SESSION['addHomepageSuccess'];

@@ -48,7 +48,7 @@ if (!mysqli_query($link,$selectSql)) {
         
                         <form id='homeTrySettings' action='saveHomeTrySettings.php' method='post'>
 
-                            <div id="htSetError" style='color:red'>
+                            <div id="htSetError" class="error">
                                 <?php
                                     if (isset($_SESSION['updateHTSetError'])) {
                                         echo $_SESSION['updateHTSetError'];
@@ -56,7 +56,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 ?>
                             </div>
 
-                            <div id="htSetSuccess" style='color:green'>
+                            <div id="htSetSuccess" class="success">
                                 <?php
                                     if (isset($_SESSION['updateHTSetSuccess'])) {
                                         echo $_SESSION['updateHTSetSuccess'];

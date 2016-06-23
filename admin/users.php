@@ -56,14 +56,14 @@ if (isset($_GET['id'])) {
                             <div id="allemp" class="tab-pane fade in active">
                                 <h1 class="page-header">All Employees</h1>
                         
-                                <div id="updateEmpSuccess" style="color:green">
+                                <div id="updateEmpSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateSuccess'])) {
                                             echo $_SESSION['updateSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateEmpError" style="color:red">
+                                <div id="updateEmpError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateError'])) {
                                             echo $_SESSION['updateError'];
@@ -172,7 +172,7 @@ if (isset($_GET['id'])) {
                                         
                                         <h1 id="add" class="page-header">Add/Edit Employee Account</h1>
                                         
-                                        <div id="addUserError" style="color:red">
+                                        <div id="addUserError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addEmpError'])) {
                                                     echo $_SESSION['addEmpError'];
@@ -180,7 +180,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addEmpSuccess" style="color:green">
+                                        <div id="addEmpSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addEmpSuccess'])) {
                                                     echo $_SESSION['addEmpSuccess'];

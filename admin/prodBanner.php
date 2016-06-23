@@ -139,7 +139,7 @@ if (isset($_POST['submit'])) {
                         ?>
         
                         <form id='addProdBanner' action='prodBanner.php' method='post' enctype="multipart/form-data">
-                            <div id="addProdBannerError" style="color:red">
+                            <div id="addProdBannerError" class="error">
                                 <?php 
                                     if (isset($_SESSION['addProdBannerError'])) {
                                         echo $_SESSION['addProdBannerError'];
@@ -147,7 +147,7 @@ if (isset($_POST['submit'])) {
                                 ?>
                             </div>
 
-                            <div id="addProdBannerSuccess" style="color:green">
+                            <div id="addProdBannerSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['addProdBannerSuccess'])) {
                                         echo $_SESSION['addProdBannerSuccess'];

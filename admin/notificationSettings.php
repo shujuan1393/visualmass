@@ -47,14 +47,14 @@ if (!mysqli_query($link,$selectSql)) {
         
                         <form id='notificationSettings' action='saveNotiSettings.php' method='post'>
 
-                            <div id="notiSetError" style='color:red'>
+                            <div id="notiSetError" class="error">
                                 <?php
                                     if (isset($_SESSION['notisetError'])) {
                                         echo $_SESSION['notisetError'];
                                     }
                                 ?>
                             </div>
-                            <div id="notiSetSuccess" style='color:green'>
+                            <div id="notiSetSuccess" class="success">
                                 <?php
                                     if (isset($_SESSION['updateNotiSetSuccess'])) {
                                         echo $_SESSION['updateNotiSetSuccess'];

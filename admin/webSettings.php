@@ -72,14 +72,14 @@ if (!mysqli_query($link,$selectSql)) {
         
                         <form id='generalSettings' action='webSettings.php' method='post'>
 
-                            <div id="updateWebSetError" style='color:red'>
+                            <div id="updateWebSetError" class="error">
                                 <?php
                                     if (isset($_SESSION['updateWebSetError'])) {
                                         echo $_SESSION['updateWebSetError'];
                                     }
                                 ?>
                             </div>
-                            <div id="updateWebSetSuccess" style='color:green'>
+                            <div id="updateWebSetSuccess" class="success">
                                 <?php
                                     if (isset($_SESSION['updateWebSetSuccess'])) {
                                         echo $_SESSION['updateWebSetSuccess'];

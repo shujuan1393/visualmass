@@ -186,7 +186,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                             <div id="forms" class="tab-pane fade in active">
                                 <h1 class="page-header">Manage Pages</h1>
                                 
-                                <div id="updatePageError" style="color:red">
+                                <div id="updatePageError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updatePageError'])) {
                                             echo $_SESSION['updatePageError'];
@@ -194,7 +194,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                     ?>
                                 </div>
 
-                                <div id="updatePageSuccess" style="color:green">
+                                <div id="updatePageSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updatePageSuccess'])) {
                                             echo $_SESSION['updatePageSuccess'];
@@ -245,7 +245,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
 
                                     <form id='addPages' action='pages.php?add=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addPageError" style="color:red">
+                                        <div id="addPageError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addPageError'])) {
                                                     echo $_SESSION['addPageError'];
@@ -253,7 +253,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addPageSuccess" style="color:green">
+                                        <div id="addPageSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addPageSuccess'])) {
                                                     echo $_SESSION['addPageSuccess'];
@@ -419,7 +419,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
 
                                     <form id='addPageSection' action='processPages.php?update=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addPageSectionError" style="color:red">
+                                        <div id="addPageSectionError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addPageSectionError'])) {
                                                     echo $_SESSION['addPageSectionError'];
@@ -432,7 +432,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                         </div>
 
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addPageSectionSuccess" style="color:green">
+                                        <div id="addPageSectionSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addPageSectionSuccess'])) {
                                                     echo $_SESSION['addPageSectionSuccess'];

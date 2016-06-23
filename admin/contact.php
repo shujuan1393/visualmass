@@ -218,7 +218,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         ?>
         <form id='setContactDetails' action='contact.php' method='post' enctype="multipart/form-data">
             <fieldset >
-            <div id="setContactDetailsError" style="color:red">
+            <div id="setContactDetailsError" class="error">
                 <?php 
                     if (isset($_SESSION['setContactDetailsError'])) {
                         echo $_SESSION['setContactDetailsError'];
@@ -226,7 +226,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 ?>
             </div>
             
-            <div id="setContactDetailsSuccess" style="color:green">
+            <div id="setContactDetailsSuccess" class="success">
                 <?php 
                     if (isset($_SESSION['setContactDetailsSuccess'])) {
                         echo $_SESSION['setContactDetailsSuccess'];
@@ -294,14 +294,14 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 } 
             }
             ?>
-            <div id="updateContactSuccess" style="color:green">
+            <div id="updateContactSuccess" class="success">
                 <?php 
                     if (isset($_SESSION['updateContactSuccess'])) {
                         echo $_SESSION['updateContactSuccess'];
                     }
                 ?>
             </div>
-            <div id="updateContactError" style="color:red">
+            <div id="updateContactError" class="error">
                 <?php 
                     if (isset($_SESSION['updateContactError'])) {
                         echo $_SESSION['updateContactError'];
@@ -311,7 +311,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         <hr><br>
         <form id='addContactFormField' action='contact.php?update=1' method='post'>
             <fieldset >
-            <div id="addContactError" style="color:red">
+            <div id="addContactError" class="error">
                 <?php 
                     if (isset($_SESSION['addContactError'])) {
                         echo $_SESSION['addContactError'];
@@ -319,7 +319,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                 ?>
             </div>
             
-            <div id="addContactSuccess" style="color:green">
+            <div id="addContactSuccess" class="success">
                 <?php 
                     if (isset($_SESSION['addContactSuccess'])) {
                         echo $_SESSION['addContactSuccess'];

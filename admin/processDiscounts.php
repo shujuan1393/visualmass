@@ -19,7 +19,7 @@ if (isset($_GET['delete'])) {
 } else if (isset($_POST['submit'])) {
     if(strcmp($_POST['limit'], "") === 0 
             || empty($_POST['recurrence']) || empty($_POST['status']) 
-            || empty($_POST['usage']) || empty($_POST['code']) ) {
+            || empty($_POST['usage']) || empty($_POST['code']) || empty($_POST['amount']) ) {
         unset($_SESSION['addDiscSuccess']);
         unset($_SESSION['updateDiscError']);
         unset($_SESSION['updateDiscSuccess']);
@@ -42,6 +42,7 @@ if (isset($_GET['delete'])) {
         $status = $_POST['status'];
         $start = $_POST['date3'];
         $end = $_POST['date4'];
+        $amount = $_POST['amount'];
         $usageArr = $_POST['usage'];
         $usage = "";
 
@@ -58,7 +59,7 @@ if (isset($_GET['delete'])) {
             
             $updateDiscSql = "UPDATE discounts SET code='$code', name='$name', "
                     . "disclimit='$limit', recurrence='$recurrence', "
-                    . "discusage='$usage', status='$status', start='$start', "
+                    . "discusage='$usage', status='$status', start='$start', amount='$amount', "
                     . "end='$end' where id = '$editid';";
 
             if (mysqli_query($link, $updateDiscSql)) {
@@ -73,8 +74,8 @@ if (isset($_GET['delete'])) {
 
         } else {
             $discSql = "INSERT INTO discounts (code, name, disclimit, recurrence, discusage, "
-                    . "status, start, end) VALUES ('$code','$name', '$limit', '$recurrence', "
-                    . "'$usage', '$status', '$start', '$end');";
+                    . "status, start, end, amount) VALUES ('$code','$name', '$limit', '$recurrence', "
+                    . "'$usage', '$status', '$start', '$end', '$amount');";
 
             mysqli_query($link, $discSql);
             $_SESSION['addDiscSuccess'] = "Discount successfully added";

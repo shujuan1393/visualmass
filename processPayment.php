@@ -76,7 +76,6 @@ function sendNewUserEmail($pwd, $link, $email, $firstname, $lastname, $address, 
 
 
 if (isset($_GET['id']) && isset($_GET['cost'])) {
-    echo "paying";
     if (!isset($_SESSION['loggedUserEmail'])) {
         $email = $_GET['email'];
         $firstname = $_GET['firstname'];
@@ -107,10 +106,42 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
     } else {
         $email = $_SESSION['loggedUserEmail'];
     }
+    
+    $discount = $_GET['discount'];
+    $amt = $_GET['discAmt'];
+    
+    //update discount code usage
+    if (!empty($discount)) {
+        $sql = "Select * from discounts where code='$discount';";
+        $dres = mysqli_query($link, $sql);
+        
+        if (!mysqli_query($link, $sql)) {
+            die(mysqli_error($link));
+        } else {
+            if ($dres -> num_rows !== 0) {
+                $row = mysqli_fetch_assoc($dres);
+                $limit = $row['disclimit'];
+                
+                if (strcmp($limit, "unlimited") !== 0) {
+                    $qty = intval($limit) - 1;
+                    
+                    $update = "UPDATE discounts set disclimit='$qty' where code ='$discount';";
+                    mysqli_query($link, $update);
+                }
+            }
+        }
+    }
+    
     $nonce = $_GET['id'];
     $cost = $_GET['cost'];
+    if (!empty($amt)) {
+        $finalcost = $cost - $amt;
+    } else {
+        $finalcost = $cost;
+    }
+    
     $result = Braintree_Transaction::sale([
-        'amount' => $cost,
+        'amount' => $finalcost,
         'paymentMethodNonce' => 'fake-valid-nonce',
         'options' => [
           'submitForSettlement' => True
@@ -145,9 +176,10 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                     $details = $row['lens'];
                 }
                 $orderid = "ON-".rand();
-                $order = "INSERT INTO orders (orderid, pid, price, quantity, type, payment, details, status, orderedby, totalcost, dateordered)"
+                $order = "INSERT INTO orders (orderid, pid, price, quantity, type, payment, details, status, orderedby, "
+                        . "totalcost, dateordered, discountcode)"
                         . " VALUES ('$orderid','$pid', '$price', '$quantity', '$type', '$payment','$details', 'paid', "
-                        . "'$email', '$unitcost', '".$row['datetime']."');";
+                        . "'$email', '$unitcost', '".$row['datetime']."', '$discount');";
                 mysqli_query($link, $order);
                 $remove = "DELETE FROM cart where id ='".$row['id']."';";
                 mysqli_query($link, $remove);      

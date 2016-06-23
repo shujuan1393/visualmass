@@ -81,14 +81,14 @@ if (!mysqli_query($link,$selectSql)) {
         
                         <form id='giftcardSettings' action='giftcardSettings.php' method='post'>
 
-                            <div id="updateGcSetError" style='color:red'>
+                            <div id="updateGcSetError" class="error">
                                 <?php
                                     if (isset($_SESSION['updateGcSetError'])) {
                                         echo $_SESSION['updateGcSetError'];
                                     }
                                 ?>
                             </div>
-                            <div id="updateGcSetSuccess" style='color:green'>
+                            <div id="updateGcSetSuccess" class="success">
                                 <?php
                                     if (isset($_SESSION['updateGcSetSuccess'])) {
                                         echo $_SESSION['updateGcSetSuccess'];

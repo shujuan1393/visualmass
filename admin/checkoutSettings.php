@@ -82,14 +82,14 @@ if (!mysqli_query($link,$selectSql)) {
         
                         <form id='checkoutSettings' action='checkoutSettings.php' method='post'>
 
-                            <div id="updateCheckSetError" style='color:red'>
+                            <div id="updateCheckSetError" class="error">
                                 <?php
                                     if (isset($_SESSION['updateCheckSetError'])) {
                                         echo $_SESSION['updateCheckSetError'];
                                     }
                                 ?>
                             </div>
-                            <div id="updateCheckSetSuccess" style='color:green'>
+                            <div id="updateCheckSetSuccess" class="success">
                                 <?php
                                     if (isset($_SESSION['updateCheckSetSuccess'])) {
                                         echo $_SESSION['updateCheckSetSuccess'];

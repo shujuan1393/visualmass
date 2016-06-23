@@ -230,7 +230,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                             }
                                         ?>
                                     
-                                        <div id="addCareerBannerError" style="color:red">
+                                        <div id="addCareerBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addCareerBannerError'])) {
                                                     echo $_SESSION['addCareerBannerError'];
@@ -238,7 +238,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addCareerBannerSuccess" style="color:green">
+                                        <div id="addCareerBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addCareerBannerSuccess'])) {
                                                     echo $_SESSION['addCareerBannerSuccess'];
@@ -257,14 +257,14 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Career Sections</h1>
                                 
-                                <div id="updateCareerSuccess" style="color:green">
+                                <div id="updateCareerSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateCareerSuccess'])) {
                                             echo $_SESSION['updateCareerSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateCareerError" style="color:red">
+                                <div id="updateCareerError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateCareerError'])) {
                                             echo $_SESSION['updateCareerError'];
@@ -321,7 +321,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                 
                                     <form id='addCareerSection' action='careers.php?update=1' method='post'>
 
-                                        <div id="addCareerError" style="color:red">
+                                        <div id="addCareerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addCareerError'])) {
                                                     echo $_SESSION['addCareerError'];
@@ -330,7 +330,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
 
-                                        <div id="addCareerSuccess" style="color:green">
+                                        <div id="addCareerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addCareerSuccess'])) {
                                                     echo $_SESSION['addCareerSuccess'];

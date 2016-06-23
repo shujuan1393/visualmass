@@ -88,7 +88,7 @@ if (isset($_GET['id'])) {
                                     ?>
                                     <form id='addMainBanner' action='processMain.php?banner=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addMainBannerError" style="color:red">
+                                        <div id="addMainBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addMainBannerError'])) {
                                                     echo $_SESSION['addMainBannerError'];
@@ -96,7 +96,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addMainBannerSuccess" style="color:green">
+                                        <div id="addMainBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addMainBannerSuccess'])) {
                                                     echo $_SESSION['addMainBannerSuccess'];
@@ -117,14 +117,14 @@ if (isset($_GET['id'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Our Story Sections</h3>
                                 
-                                <div id="updateMainSuccess" style="color:green">
+                                <div id="updateMainSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateMainSuccess'])) {
                                             echo $_SESSION['updateMainSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateMainError" style="color:red">
+                                <div id="updateMainError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateMainError'])) {
                                             echo $_SESSION['updateMainError'];
@@ -182,7 +182,7 @@ if (isset($_GET['id'])) {
         
                                     <form id='addMain' action='processMain.php' method='post'>
 
-                                        <div id="addMainError" style="color:red">
+                                        <div id="addMainError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addMainError'])) {
                                                     echo $_SESSION['addMainError'];
@@ -190,7 +190,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addMainSuccess" style="color:green">
+                                        <div id="addMainSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addMainSuccess'])) {
                                                     echo $_SESSION['addMainSuccess'];

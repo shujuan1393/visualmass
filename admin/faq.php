@@ -231,7 +231,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                     
                                     <form id='addFaqBanner' action='faq.php' method='post' enctype="multipart/form-data">
                             
-                                        <div id="addFaqBannerError" style="color:red">
+                                        <div id="addFaqBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addFaqBannerError'])) {
                                                     echo $_SESSION['addFaqBannerError'];
@@ -239,7 +239,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addFaqBannerSuccess" style="color:green">
+                                        <div id="addFaqBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addFaqBannerSuccess'])) {
                                                     echo $_SESSION['addFaqBannerSuccess'];
@@ -259,14 +259,14 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage FAQ Sections</h1>
                                 
-                                <div id="updateFaqSuccess" style="color:green">
+                                <div id="updateFaqSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateFaqSuccess'])) {
                                             echo $_SESSION['updateFaqSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateFaqError" style="color:red">
+                                <div id="updateFaqError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateFaqError'])) {
                                             echo $_SESSION['updateFaqError'];
@@ -320,7 +320,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                     ?>
 
                                     <form id='addFaqSection' action='faq.php?update=1' method='post'>
-                                        <div id="addFaqError" style="color:red">
+                                        <div id="addFaqError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addFaqError'])) {
                                                     echo $_SESSION['addFaqError'];
@@ -329,7 +329,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
 
-                                        <div id="addFaqSuccess" style="color:green">
+                                        <div id="addFaqSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addFaqSuccess'])) {
                                                     echo $_SESSION['addFaqSuccess'];

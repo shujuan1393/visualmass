@@ -118,7 +118,7 @@ if (isset($_POST['submit'])) {
         ?>
         <form id='addLocBanner' action='locBanner.php' method='post' enctype="multipart/form-data">
             <fieldset >
-            <div id="addLocBannerError" style="color:red">
+            <div id="addLocBannerError" class="error">
                 <?php 
                     if (isset($_SESSION['addLocBannerError'])) {
                         echo $_SESSION['addLocBannerError'];
@@ -126,7 +126,7 @@ if (isset($_POST['submit'])) {
                 ?>
             </div>
             
-            <div id="addLocBannerSuccess" style="color:green">
+            <div id="addLocBannerSuccess" class="success">
                 <?php 
                     if (isset($_SESSION['addLocBannerSuccess'])) {
                         echo $_SESSION['addLocBannerSuccess'];

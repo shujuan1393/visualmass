@@ -87,7 +87,7 @@ if (isset($_GET['id'])) {
                                     ?>
                                     <form id='addCultBanner' action='processCulture.php?banner=1' method='post' enctype="multipart/form-data">
 
-                                        <div id="addCultBannerError" style="color:red">
+                                        <div id="addCultBannerError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addCultBannerError'])) {
                                                     echo $_SESSION['addCultBannerError'];
@@ -95,7 +95,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
 
-                                        <div id="addCultBannerSuccess" style="color:green">
+                                        <div id="addCultBannerSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addCultBannerSuccess'])) {
                                                     echo $_SESSION['addCultBannerSuccess'];
@@ -116,14 +116,14 @@ if (isset($_GET['id'])) {
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Culture Sections</h1>
                                 
-                                <div id="updateCultSuccess" style="color:green">
+                                <div id="updateCultSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateCultSuccess'])) {
                                             echo $_SESSION['updateCultSuccess'];
                                         }
                                     ?>
                                 </div>
-                                <div id="updateCultError" style="color:red">
+                                <div id="updateCultError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateCultError'])) {
                                             echo $_SESSION['updateCultError'];
@@ -181,7 +181,7 @@ if (isset($_GET['id'])) {
                                     
                                     <form id='addCult' action='processCulture.php' method='post'>
 
-                                        <div id="addCultError" style="color:red">
+                                        <div id="addCultError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addCultError'])) {
                                                     echo $_SESSION['addCultError'];
@@ -189,7 +189,7 @@ if (isset($_GET['id'])) {
                                             ?>
                                         </div>
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
-                                        <div id="addCultSuccess" style="color:green">
+                                        <div id="addCultSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addCultSuccess'])) {
                                                     echo $_SESSION['addCultSuccess'];

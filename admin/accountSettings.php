@@ -223,7 +223,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 
                                 <h1 class="page-header">Manage Employee Types</h1>
                                 
-                                <div id="updateEmpTypeError" style="color:red">
+                                <div id="updateEmpTypeError" class="error">
                                     <?php 
                                         if (isset($_SESSION['updateEmpTypeError'])) {
                                             echo $_SESSION['updateEmpTypeError'];
@@ -231,7 +231,7 @@ if (!mysqli_query($link,$selectSql)) {
                                     ?>
                                 </div>
 
-                                <div id="updateEmpTypeSuccess" style="color:green">
+                                <div id="updateEmpTypeSuccess" class="success">
                                     <?php 
                                         if (isset($_SESSION['updateEmpTypeSuccess'])) {
                                             echo $_SESSION['updateEmpTypeSuccess'];
@@ -281,7 +281,7 @@ if (!mysqli_query($link,$selectSql)) {
                                         
                                         <h1 id="add" class="page-header">Add/Edit Employee Type</h1>
                                         
-                                        <div id="addEmpTypeError" style="color:red">
+                                        <div id="addEmpTypeError" class="error">
                                             <?php 
                                                 if (isset($_SESSION['addEmpTypeError'])) {
                                                     echo $_SESSION['addEmpTypeError'];
@@ -289,7 +289,7 @@ if (!mysqli_query($link,$selectSql)) {
                                             ?>
                                         </div>
 
-                                        <div id="addEmpTypeSuccess" style="color:green">
+                                        <div id="addEmpTypeSuccess" class="success">
                                             <?php 
                                                 if (isset($_SESSION['addEmpTypeSuccess'])) {
                                                     echo $_SESSION['addEmpTypeSuccess'];

@@ -124,14 +124,14 @@ if (isset($_GET['id'])) {
                         
                         <form id='addInventory' action='processInventory.php' method='post' accept-charset='UTF-8'>
                             
-                            <div id="updateInvSuccess" style="color:green">
+                            <div id="updateInvSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['updateInvSuccess'])) {
                                         echo $_SESSION['updateInvSuccess'];
                                     }
                                 ?>
                             </div>
-                            <div id="updateInvError" style="color:red">
+                            <div id="updateInvError" class="error">
                                 <?php 
                                     if (isset($_SESSION['updateInvError'])) {
                                         echo $_SESSION['updateInvError'];

@@ -46,14 +46,14 @@ if (isset($_GET['id'])) {
                         
                         <h1 class="page-header">Manage Gift Cards</h1>
                         
-                        <div id="updateGiftSuccess" style="color:green">
+                        <div id="updateGiftSuccess" class="success">
                             <?php 
                                 if (isset($_SESSION['updateGiftSuccess'])) {
                                     echo $_SESSION['updateGiftSuccess'];
                                 }
                             ?>
                         </div>
-                        <div id="updateGiftError" style="color:red">
+                        <div id="updateGiftError" class="error">
                             <?php 
                                 if (isset($_SESSION['updateGiftError'])) {
                                     echo $_SESSION['updateGiftError'];
@@ -118,7 +118,7 @@ if (isset($_GET['id'])) {
                         ?>
                         
                         <form id='addGift' action='processGiftcards.php' method='post'>
-                            <div id="addGiftError" style="color:red">
+                            <div id="addGiftError" class="error">
                                 <?php 
                                     if (isset($_SESSION['addGiftError'])) {
                                         echo $_SESSION['addGiftError'];
@@ -127,7 +127,7 @@ if (isset($_GET['id'])) {
                             </div>
                             <p id='nanError' style="display: none;">Please enter numbers only</p>
 
-                            <div id="addGiftSuccess" style="color:green">
+                            <div id="addGiftSuccess" class="success">
                                 <?php 
                                     if (isset($_SESSION['addGiftSuccess'])) {
                                         echo $_SESSION['addGiftSuccess'];

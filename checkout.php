@@ -154,20 +154,27 @@ and open the template in the editor.
         <?php
             }
        ?>
-           
-        document.getElementById('signup').onclick = function() {
-            document.getElementById('existingCust').style.display = "none";
-            document.getElementById('signupNow').style.display = "block";
-            document.getElementById('signup').style.display = "none";
-            document.getElementById('backButton').style.display = "block";
-        };
+        var obj = document.getElementById('signup');
         
-        document.getElementById('backButton').onclick = function() {
-            document.getElementById('existingCust').style.display = "block";
-            document.getElementById('signupNow').style.display = "none";
-            document.getElementById('backButton').style.display = "none";
-            document.getElementById('signup').style.display = "block";
-        };
+        if (obj !== null) {
+            obj.onclick = function() {
+                document.getElementById('existingCust').style.display = "none";
+                document.getElementById('signupNow').style.display = "block";
+                obj.style.display = "none";
+                document.getElementById('backButton').style.display = "block";
+            };
+        }
+        
+        var back = document.getElementById('backButton');
+        
+        if (back !== null) {
+            back.onclick = function() {
+                document.getElementById('existingCust').style.display = "block";
+                document.getElementById('signupNow').style.display = "none";
+                back.style.display = "none";
+                document.getElementById('signup').style.display = "block";
+            };
+        }
         
         document.getElementById('credit').onclick = function() {
             document.getElementById('braintree-pay').style.display = "none";
