@@ -93,6 +93,51 @@ and open the template in the editor.
                             <input type='hidden' name='cost' value='<?php echo $cost; ?>'>
                             
                             <?php 
+                                //get all referral codes
+                                $check = "Select * from referrals where email ='".$_SESSION['loggedUserEmail']."';";
+                                $cres = mysqli_query($link, $check);
+
+                                if (!mysqli_query($link, $check)) {
+                                    die(mysqli_error($link));
+                                } else {
+                                    if ($cres -> num_rows === 0) {
+                                        $_SESSION['canRefer'] = "yes";
+                                        //get all users' codes except current user
+                                        $getcodes = "Select * from user where email <> '".$_SESSION['loggedUserEmail']."';";
+                                        $gres = mysqli_query($link, $getcodes);
+
+                                        if (!mysqli_query($link, $getcodes)) {
+                                            die(mysqli_error($link));
+                                        } else {
+                                            if ($gres -> num_rows !== 0) {
+                                                //redeem credit amount
+                                                $getamt = "Select * from settings where type='storecredit';";
+                                                $sres = mysqli_query($link, $getamt);
+                                                
+                                                if (!mysqli_query($link, $getamt)) {
+                                                    die(mysqli_error($link));
+                                                } else {
+                                                    $srow = mysqli_fetch_assoc($sres);
+                                                    $valArr = explode("&", $srow['value']);
+                                                    if(!empty($valArr[0])){
+                                                        $amount = explode("redeemamount=", $valArr[0]);
+                                                        echo "<input type='hidden' id='referralAmount' name='referralAmount' value='".$amount[1]."'>";
+                                                    }
+                                                }
+                                                
+                                                while ($grow = mysqli_fetch_assoc($gres)) {
+                                                    $code = $grow['code'];
+                                                    if (!empty($code)) {
+                                                        echo "<input type='hidden' class='allrefers' value='".$code."'>";
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        unset($_SESSION['canRefer']);
+                                    }
+                                }
+                            
                                 //get all discount codes
                                 $disc = "Select * from discounts;";
                                 $dres = mysqli_query($link, $disc);
@@ -114,10 +159,31 @@ and open the template in the editor.
                                     }
                                 }
                             ?>
-                            <a id='addCode'> + Add Discount Code</a>
+                            <?php if (isset($_SESSION['canRefer'])) { ?>
+                            <a id='useRefer' class='addMore'> Use Referral Code</a><br>
+                            <input type="hidden" name="redeem" id='redeem'>
+                            <input type="hidden" name="redeemAmount" id='redeemAmount'>
+                            <?php } ?>
+                            <a id='addCode' class='addMore'> + Add Discount Code</a>
                             <input type="hidden" name="discount" id='discount'>
                             <input type="hidden" name="discountAmount" id='discountAmount'>
                         </div>
+                            <?php if (isset($_SESSION['canRefer'])) { ?>
+                        <div id='refer' class='col-md-6' style='display:none;'>
+                            <span class='col-md-8'><input type='text' name='refercode' id='refercode' placeholder="Referral Code"></span>
+                            <span class='col-md-3'><button class='btn' id='applyRefer'>Redeem Credit</button></span>
+                        <div id='validRefer' class='col-md-8 success' style='display:none;'>
+                            Valid Referral Code
+                        </div>
+                        <div id='invalidRefer' class='col-md-8 error' style='display:none;'>
+                            Invalid Referral Code
+                        </div>
+                        </div>
+                        
+                        <div id='emptyCode' class='col-md-8 error' style='display:none;'>
+                            Empty Field
+                        </div>
+                            <?php } ?>
                         <div id='discounts' class='col-md-6' style='display:none;'>
                             <span class='col-md-8'><input type='text' name='discountCode' id='discountCode' placeholder="Discount Code"></span>
                             <span class='col-md-3'><button class='btn' id='apply'>Apply Code</button></span>
@@ -232,13 +298,18 @@ and open the template in the editor.
             var address = <?php echo '"'.$address.'"'; ?>;
             var email = <?php echo '"'.$email.'"'; ?>;
             var phone = <?php echo '"'.$phone.'"'; ?>;
-            var discount = document.getElementById('discount').value;
-            var discountAmt = document.getElementById('discountAmount').value;
+            var code = document.getElementById('discount').value;
+            var amount = document.getElementById('discountAmount').value;
+            
+            if (code === "" || amount === "") {
+                code = document.getElementById('redeem').value;
+                amount = document.getElementById('redeemAmount').value;
+            }
             
             window.location = "processPayment.php?id=" + str + "&cost=" + cost + "&payment=" + payment + 
                     "&firstname=" + firstname + "&lastname="+lastname + 
                     "&email="+email+"&phone="+phone+"&address=" + address + 
-                    "&discount=" + discount + "&discAmt=" + discountAmt;
+                    "&code=" + code + "&amount=" + amount;
         }
         
         document.getElementById('addCode').onclick = function() {
@@ -249,7 +320,26 @@ and open the template in the editor.
             } else {
                 obj.style.display = "none";
             }
+            
+            var obj = document.getElementById('refer');
+
+            if (obj.style.display === "block") {
+                obj.style.display = "none";
+            }
         };
+        
+        function checkReferrals(code) {
+            var classes = document.getElementsByClassName('allrefers');
+            for (var i = 0; i < classes.length; i++) {
+                var val = classes[i].value;
+                
+                if (val === code) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
         
         function checkDiscountCode(code) {
             var classes = document.getElementsByClassName('allcodes');
@@ -269,27 +359,88 @@ and open the template in the editor.
         if (code !== null) {
             code.onclick = function() {
                 var val = document.getElementById('discountCode').value;
-                var isFound = checkDiscountCode(val);
-                
-                if (isFound) {
-                    document.getElementById('validCode').style.display = "block";
-                    document.getElementById('discount').value = val;
-                    //get amount
-                    var str = val + "Amount";
-                    var amt = document.getElementById(str).value;
-                    if (amt !== "") {
-                        document.getElementById('discountAmount').value = amt;
-                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+amt+"</strong>";
-                    }
-//                    document.getElementById('addCode').style.display = "none";
-//                    document.getElementById('discounts').style.display = "none";
-                    document.getElementById('invalidCode').style.display = "none";
+                if (val === "") {
+                    document.getElementById('emptyCode').style.display = "block";
                 } else {
-                    document.getElementById('validCode').style.display = "none";
-                    document.getElementById('discount').value = "";
-                    document.getElementById('discountCode').value = "";
-                    document.getElementById('invalidCode').style.display = "block";
-                    document.getElementById('showDiscount').innerHTML = "-";
+                    document.getElementById('emptyCode').style.display = "none";
+                    var isFound = checkDiscountCode(val);
+
+                    if (isFound) {
+                        document.getElementById('validCode').style.display = "block";
+                        document.getElementById('discount').value = val;
+                        //get amount
+                        var str = val + "Amount";
+                        var amt = document.getElementById(str).value;
+                        if (amt !== "") {
+                            document.getElementById('discountAmount').value = amt;
+                            document.getElementById('showDiscount').innerHTML = "<strong> -$"+amt+"</strong>";
+                        }
+    //                    document.getElementById('addCode').style.display = "none";
+    //                    document.getElementById('discounts').style.display = "none";
+                        document.getElementById('invalidCode').style.display = "none";
+                    } else {
+                        document.getElementById('validCode').style.display = "none";
+                        document.getElementById('discount').value = "";
+                        document.getElementById('discountCode').value = "";
+                        document.getElementById('invalidCode').style.display = "block";
+                        document.getElementById('showDiscount').innerHTML = "-";
+                    }
+                }
+            };
+        }
+        
+        var refercode = document.getElementById('applyRefer');
+        
+        if (refercode !== null) {
+            refercode.onclick = function() {
+                var val = document.getElementById('refercode').value;
+                if (val === "") {
+                    document.getElementById('emptyCode').style.display = "block";
+                } else {
+                    document.getElementById('emptyCode').style.display = "none";
+                    var isFound = checkReferrals(val);
+
+                    if (isFound) {
+                        document.getElementById('redeem').value = val;
+                        //get redeem amount
+                        var amt = document.getElementById('referralAmount').value;
+                        if (amt !== "") {
+                            document.getElementById('redeemAmount').value = amt;
+    //                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+amt+"</strong>";
+                        }
+    //                    document.getElementById('addCode').style.display = "none";
+    //                    document.getElementById('discounts').style.display = "none";
+                        document.getElementById('validRefer').style.display = "block";
+                        document.getElementById('invalidRefer').style.display = "none";
+                    } else {
+                        document.getElementById('validRefer').style.display = "none";
+                        document.getElementById('redeem').value = "";
+                        document.getElementById('refercode').value = "";
+                        document.getElementById('invalidRefer').style.display = "block";
+    //                    document.getElementById('showDiscount').innerHTML = "-";
+                    }
+                }
+            };
+        }
+        
+        var refer = document.getElementById('useRefer');
+        
+        if (refer !== null) {
+            refer.onclick = function() {
+                var show = document.getElementById('refer');
+                
+                if (show !== null) {
+                    if (show.style.display === "block") {
+                        show.style.display = "none";
+                    } else {
+                        show.style.display = "block";
+                    }
+                }
+                
+                var obj = document.getElementById('discounts');
+            
+                if (obj.style.display === "block") {
+                    obj.style.display = "none";
                 }
             };
         }

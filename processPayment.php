@@ -107,30 +107,8 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
         $email = $_SESSION['loggedUserEmail'];
     }
     
-    $discount = $_GET['discount'];
-    $amt = $_GET['discAmt'];
-    
-    //update discount code usage
-    if (!empty($discount)) {
-        $sql = "Select * from discounts where code='$discount';";
-        $dres = mysqli_query($link, $sql);
-        
-        if (!mysqli_query($link, $sql)) {
-            die(mysqli_error($link));
-        } else {
-            if ($dres -> num_rows !== 0) {
-                $row = mysqli_fetch_assoc($dres);
-                $limit = $row['disclimit'];
-                
-                if (strcmp($limit, "unlimited") !== 0) {
-                    $qty = intval($limit) - 1;
-                    
-                    $update = "UPDATE discounts set disclimit='$qty' where code ='$discount';";
-                    mysqli_query($link, $update);
-                }
-            }
-        }
-    }
+    $discount = $_GET['code'];
+    $amt = $_GET['amount'];
     
     $nonce = $_GET['id'];
     $cost = $_GET['cost'];
@@ -187,6 +165,41 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 //add to statistics
                 $stats = "INSERT INTO productstatistics (type, customer, orderid) VALUES ('$type', '$email', '$orderid');";
                 mysqli_query($stats);
+                
+                //update discount code usage
+                if (!empty($discount)) {
+                    $sql = "Select * from discounts where code='$discount';";
+                    $dres = mysqli_query($link, $sql);
+
+                    if (!mysqli_query($link, $sql)) {
+                        die(mysqli_error($link));
+                    } else {
+                        if ($dres -> num_rows !== 0) {
+                            $row = mysqli_fetch_assoc($dres);
+                            $limit = $row['disclimit'];
+
+                            if (strcmp($limit, "unlimited") !== 0) {
+                                $qty = intval($limit) - 1;
+
+                                $update = "UPDATE discounts set disclimit='$qty' where code ='$discount';";
+                                mysqli_query($link, $update);
+                            }
+                        } else {
+                            $refer = "Select * from referrals where email ='$email';";
+                            $result = mysqli_query($link, $refer);
+
+                            if (!mysqli_query($link, $refer)) {
+                                die(mysqli_error($link));
+                            } else {
+                                if ($result -> num_rows === 0) {
+                                    $insert = "INSERT INTO referrals (orderid, email, code) "
+                                            . "VALUES ('$orderid', '$email', '$discount');";
+                                    mysqli_query($link, $insert);
+                                }
+                            }
+                        }
+                    }
+                }
                 
                 $_SESSION['order'] = "Order successfully completed!";   
                 header("Location: cart.php");         

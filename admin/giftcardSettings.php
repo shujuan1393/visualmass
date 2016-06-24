@@ -88,6 +88,8 @@ if (!mysqli_query($link,$selectSql)) {
                                     }
                                 ?>
                             </div>
+                            <p id='nanError' class='error' style="display: none;">Please enter numbers only</p>
+                            
                             <div id="updateGcSetSuccess" class="success">
                                 <?php
                                     if (isset($_SESSION['updateGcSetSuccess'])) {

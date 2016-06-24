@@ -7,6 +7,27 @@
  */
 
 require_once 'config/db.php';
+require_once 'mailer/PHPMailerAutoload.php';
+
+function gen_uuid($name, $len=8) {
+
+    $hex = $name . uniqid("", true);   
+    
+    echo $hex;
+    exit();
+    $pack = pack('H*', $hex);
+    $tmp =  base64_encode($pack);
+
+    $uid = preg_replace("#(*UTF8)[^A-Za-z0-9]#", "", $tmp);
+
+    $length = max(4, min(128, $len));
+
+    while (strlen($uid) < $length) {
+        $uid .= gen_uuid(22);
+    }
+    return substr($uid, 0, $length);
+}
+
 if(empty($_POST['email']) || empty($_POST['password']) ||
         empty($_POST['firstName']) || empty($_POST['lastName']) ) {
     $_SESSION['signUpError'] = "Empty field(s)";
@@ -21,7 +42,12 @@ if(empty($_POST['email']) || empty($_POST['password']) ||
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $pwdmd5 = md5($password);
-        
+    $name = $firstName . " " . $lastName;
+    
+    $uniquecode = gen_uuid($name);
+//    echo $uniquecode;
+//    exit();
+    
     $qry = "Select * from user ".
         " where email='$username' and password='$pwdmd5' ";
     
@@ -31,18 +57,54 @@ if(empty($_POST['email']) || empty($_POST['password']) ||
         echo("Error description: " . mysqli_error($link));
     } else {
         if ($result->num_rows != 0) {
-            echo "Account already exists. <br>";
-            echo "Login <a href='login.php'>here</a>";
+            $_SESSION['signUpError'] = "Account already exists";
+            header("Location: signUp.php");
         } else {
-            // output data of each row
-            $sql = "INSERT INTO user (firstname, lastname, email, password,
-            datejoined, accountType) VALUES ('$firstName',
-            '$lastName', '$username', '$pwdmd5',
-            CURRENT_TIMESTAMP, 'customer');";
-            
-            mysqli_query($link, $sql);
+            $mail = new PHPMailer;
 
-            echo "<h2>Thank you for signing up with us!</h2>";
+//            $mail->SMTPDebug = 3;                               // Enable verbose debug output
+
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+            $mail->SMTPAuth = true;                               // Enable SMTP authentication
+            $mail->Username = 'shujuan1393@gmail.com';                 // SMTP username
+            $mail->Password = 'Milkyway2309SJ';                           // SMTP password
+            $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+            $mail->Port = 587;                                    // TCP port to connect to
+
+            $mail->setFrom('admin@visualmass.com', 'Admin');
+            $mail->addAddress($username);     
+            // Add a recipient, Name is optional
+
+//                $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+//                $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+            $mail->isHTML(true);                                  // Set email format to HTML
+
+            $mail->Subject = 'Welcome to Visual Mass';
+            $mail->Body    = 'Hi '.$name.',<br><br>'
+                    . 'Your new login details are: <br><br>'
+                    . 'Email: '.$username.'<br>'
+                    . 'Password: '.$password.'<br><br>'
+                    . 'It is recommended you change your password after logging in.<br>'
+                    . '<br>'
+                    . 'Cheers,<br>'
+                    . 'Visual Mass Team';
+//                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+            if($mail->send()) {
+                // output data of each row
+                $sql = "INSERT INTO user (firstname, lastname, email, password,
+                datejoined, accountType, code) VALUES ('$firstName',
+                '$lastName', '$username', '$pwdmd5',
+                CURRENT_TIMESTAMP, 'customer', '$uniquecode');";
+                
+                $_SESSION['loggedUserEmail'] = $username;
+                $_SESSION['loggedUser'] = $firstName;
+
+                mysqli_query($link, $sql);
+                header("Location: index.php");
+            }
+//            echo "<h2>Thank you for signing up with us!</h2>";
         } 
     }
 }

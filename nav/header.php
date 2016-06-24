@@ -35,8 +35,8 @@ if (isset($_SESSION['mailSuccess'])) {
     if (!mysqli_query($link, $web)) {
         die(mysqli_error($link));
     } else {
-        $row = mysqli_fetch_assoc($wres);
-        $valArr = explode("#", $row['value']);
+        $hrow = mysqli_fetch_assoc($wres);
+        $valArr = explode("#", $hrow['value']);
         $title = explode("web=", $valArr[0]);
         $meta = explode("meta=", $valArr[1]);
     }

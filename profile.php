@@ -92,6 +92,16 @@ and open the template in the editor.
                 <div class='row'>
                     <div class='col-md-8 col-md-offset-2'>
                         <h3>PROFILE</h3>
+                        <a href='refer.php' data-toggle="modal" data-target="#referModal">CLICK HERE TO USE A REFERRAL CODE</a><br>
+                        <div id='credit'>
+                            <h5 class='caps'>Remaining Credit: 
+                            <?php 
+                                if (isset($row['credit'])) {
+                                    echo $row['credit'];
+                                }
+                            ?>
+                            </h5>
+                        </div>
                         <div class='updateProfile' style='color: red'>
                             <p><?php 
                                 if (isset($_SESSION['updateProfileError'])) {
@@ -108,13 +118,18 @@ and open the template in the editor.
                         </div>
                         <form id='updateProfile' method="post" action='saveProfile.php' class='col-md-offset-2'>
                             <div class='row'>
-                                <div class='col-md-4 col-md-offset-1'>First Name*: <input type='text' name='firstname' 
-                                                                                          value='<?php echo $row['firstname'];?>'></div>
-                                <div class='col-md-4'>Last Name*: <input type='text' name='lastname' value='<?php echo $row['lastname'];?>'></div>
+                                <div class='col-md-4 col-md-offset-1'>First Name*: 
+                                    <input type='text' name='firstname' 
+                                           value='<?php if (isset($row['firstname'])) { echo $row['firstname']; }?>'></div>
+                                <div class='col-md-4'>Last Name*: 
+                                    <input type='text' name='lastname' 
+                                           value='<?php if (isset($row['lastname'])) { echo $row['lastname']; }?>'></div>
                             </div>
                             <br>
                             <div class='row'>
-                                <div class='col-md-8 col-md-offset-1'>Email*: <input type='text' name='email' value='<?php echo $row['email'];?>'></div>
+                                <div class='col-md-8 col-md-offset-1'>Email*: 
+                                    <input type='text' name='email' 
+                                           value='<?php if (isset($row['email'])) {echo $row['email']; }?>'></div>
                             </div>
                             <br>
                             <div class='row'>
@@ -124,24 +139,24 @@ and open the template in the editor.
                             <br>
                             <div class='row'>
                                 <div class='col-md-8 col-md-offset-1'>Address*: 
-                                    <textarea name='address'><?php echo $row['address']; ?></textarea>
+                                    <textarea name='address'><?php if (isset($row['address'])) { echo $row['address']; }?></textarea>
                                 </div>
                             </div>
                             <div class='row'>
                                 <div class='col-md-4 col-md-offset-1'>Apt, suite*: 
-                                    <input type='text' name='apt' value='<?php echo $row['apt']; ?>'>
+                                    <input type='text' name='apt' value='<?php if (isset($row['apt'])) { echo $row['apt']; } ?>'>
                                 </div>
                                 <div class='col-md-4'>Zip Code*: 
-                                    <input type='text' name='zip' id='zip' value='<?php echo $row['zip']; ?>' 
+                                    <input type='text' name='zip' id='zip' value='<?php if (isset($row['zip'])) { echo $row['zip']; } ?>' 
                                            onkeypress="return isNumber(event)" >
                                 </div>
                             </div>
                             <div class='row'>
                                 <div class='col-md-4 col-md-offset-1'>City*: 
-                                    <input type='text' name='city' value='<?php echo $row['city']; ?>'>
+                                    <input type='text' name='city' value='<?php if (isset($row['city'])) { echo $row['city']; } ?>'>
                                 </div>
                                 <div class='col-md-4'>Country*: 
-                                    <input type='text' name='country' id='country' value='<?php echo $row['country']; ?>'>
+                                    <input type='text' name='country' id='country' value='<?php if (isset($row['country'])) { echo $row['country']; } ?>'>
                                 </div>
                             </div>
                             <div class='row'>
@@ -149,9 +164,24 @@ and open the template in the editor.
                             </div>
                             <div class='row'>
                                 <div class='col-md-8 col-md-offset-1'>Phone*: <input type='text' name='phone' 
-                                                onkeypress="return isNumber(event)" value='<?php echo $row['phone'];?>'></div>
+                                                onkeypress="return isNumber(event)" value='<?php if (isset($row['phone'])) { echo $row['phone']; }?>'></div>
                             </div>
                             <p id='nanError' class='col-md-8 col-md-offset-1' style="display: none;">Please enter numbers only</p>
+                            
+                            <div class='row'>
+                                <div class='col-md-8 col-md-offset-1'>
+                                    <a id='showReferral' class='caps addMore'>Show My Referral Code</a>
+                                </div>
+                            </div>
+                            <div class='row' id='showCode' style='display:none;'>
+                                <div class='col-md-8 col-md-offset-1'>
+                                    <?php 
+                                        if (isset($row['code'])) {
+                                            echo "<h5><strong>".$row['code']."</strong></h5>";
+                                        }
+                                    ?>
+                                </div>
+                            </div>
                             <div class='row'>
                                 <div class='col-md-8 col-md-offset-1'>
                                     <input type='checkbox' name='marketing' id='marketing' value='yes'
@@ -212,6 +242,24 @@ and open the template in the editor.
             </div>
             
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
+            
+          <div class="modal fade" id="referModal" tabindex="-1" 
+             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
         </div>
     </body>
     <script>
@@ -299,6 +347,16 @@ and open the template in the editor.
         }
         document.getElementById('marketing').onclick = function(){ 
            document.getElementById('showPref').style.display = "block";
+        };
+        
+        document.getElementById('showReferral').onclick = function() {
+            var obj = document.getElementById('showCode');
+                    
+            if (obj.style.display === "block") {
+                obj.style.display = "none";
+            } else {
+                obj.style.display = "block";
+            }
         };
     </script>
    
