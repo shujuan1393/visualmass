@@ -82,14 +82,21 @@ and open the template in the editor.
                             Tax: <br>
                             Shipping: <br>
                             Total: <br>
-                            <span>Discount:</span>
+                            <span>Discount:</span> <br>
+                            <?php if (!empty($urow['credit'])) { ?>
+                            <span>Existing Credit:</span>
+                            <?php } ?>
                         </div>
                         <div class='col-md-3' id='reviewCosts'>
                             $<?php echo $cost; ?><br>
                             $0.00<br>
                             <strong>Free</strong><br>
-                            <h6>$<?php echo $cost; ?></h6>
+                            <span>$<?php echo $cost; ?></span><br>
                             <span id='showDiscount'> - </span><br>
+                            
+                            <?php if (!empty($urow['credit'])) { ?>
+                            <span id='existingCredit'>$<?php echo $urow['credit']; ?></span><br>
+                            <?php } ?>
                             <input type='hidden' name='cost' value='<?php echo $cost; ?>'>
                             
                             <?php 
@@ -159,17 +166,54 @@ and open the template in the editor.
                                     }
                                 }
                             ?>
-                            <?php if (isset($_SESSION['canRefer'])) { ?>
-                            <a id='useRefer' class='addMore'> Use Referral Code</a><br>
+                            <?php if (!empty($urow['credit'])) { ?>
+                            <a id='useCredit' class='addMore'> Use Existing Credit</a><br>
+                            <?php } ?>
                             <input type="hidden" name="redeem" id='redeem'>
                             <input type="hidden" name="redeemAmount" id='redeemAmount'>
+                            <a id='useCode' class='addMore'> Use Code</a><br>
+                            <?php if (isset($_SESSION['canRefer'])) { ?>
+                            <!--<a id='useRefer' class='addMore'> Use Referral Code</a><br>-->
                             <?php } ?>
-                            <a id='addCode' class='addMore'> + Add Discount Code</a>
+                            <!--<a id='addCode' class='addMore'> + Add Discount Code</a>-->
+                            
                             <input type="hidden" name="discount" id='discount'>
                             <input type="hidden" name="discountAmount" id='discountAmount'>
                         </div>
+                        <div id='emptyCode' class='col-md-8 error' style='display:none;'>
+                            Empty Field
+                        </div>
+                        <div id='tabs' class='col-md-6' style='display:none;'>
+                            <ul class="nav nav-tabs" id="myTabs">
+                                <li id='addDisc' class="active"><a data-toggle="tab" href="#discounts">Discount Code</a></li>
+                                <?php if (isset($_SESSION['canRefer'])) { ?><li id="addRefer"><a data-toggle="tab" href="#refer">Referral Code</a></li><?php } ?>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="discounts" class="col-md-12 tab-pane fade in active">
+                                    <span class='col-md-8'><input type='text' name='discountCode' id='discountCode' placeholder="Discount Code"></span>
+                                    <span class='col-md-3'><button class='btn' id='apply'>Apply</button></span>
+                                    <div id='validCode' class='col-md-8 success' style='display:none;'>
+                                        Valid Discount Code
+                                    </div>
+                                    <div id='invalidCode' class='col-md-8 error' style='display:none;'>
+                                        Invalid Discount Code
+                                    </div>
+                                </div>
+                                <div id="refer" class="col-md-12 tab-pane fade">
+                                    <span class='col-md-8'><input type='text' name='refercode' id='refercode' placeholder="Referral Code"></span>
+                                    <span class='col-md-3'><button class='btn' id='applyRefer'>Redeem</button></span>
+                                    <div id='validRefer' class='col-md-8 success' style='display:none;'>
+                                        Valid Referral Code
+                                    </div>
+                                    <div id='invalidRefer' class='col-md-8 error' style='display:none;'>
+                                        Invalid Referral Code
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                             <?php if (isset($_SESSION['canRefer'])) { ?>
-                        <div id='refer' class='col-md-6' style='display:none;'>
+<!--                        <div id='refer' class='col-md-6' style='display:none;'>
                             <span class='col-md-8'><input type='text' name='refercode' id='refercode' placeholder="Referral Code"></span>
                             <span class='col-md-3'><button class='btn' id='applyRefer'>Redeem Credit</button></span>
                         <div id='validRefer' class='col-md-8 success' style='display:none;'>
@@ -178,13 +222,13 @@ and open the template in the editor.
                         <div id='invalidRefer' class='col-md-8 error' style='display:none;'>
                             Invalid Referral Code
                         </div>
-                        </div>
+                        </div>-->
                         
-                        <div id='emptyCode' class='col-md-8 error' style='display:none;'>
+<!--                        <div id='emptyCode' class='col-md-8 error' style='display:none;'>
                             Empty Field
-                        </div>
+                        </div>-->
                             <?php } ?>
-                        <div id='discounts' class='col-md-6' style='display:none;'>
+<!--                        <div id='discounts' class='col-md-6' style='display:none;'>
                             <span class='col-md-8'><input type='text' name='discountCode' id='discountCode' placeholder="Discount Code"></span>
                             <span class='col-md-3'><button class='btn' id='apply'>Apply Code</button></span>
                         <div id='validCode' class='col-md-8 success' style='display:none;'>
@@ -193,7 +237,7 @@ and open the template in the editor.
                         <div id='invalidCode' class='col-md-8 error' style='display:none;'>
                             Invalid Discount Code
                         </div>
-                        </div>
+                        </div>-->
                     </div>
                     <div id='summary' class='col-md-3 col-md-offset-6'>
                         <button class='button' onclick='makePayment()'>PLACE ORDER</button>
@@ -312,21 +356,21 @@ and open the template in the editor.
                     "&code=" + code + "&amount=" + amount;
         }
         
-        document.getElementById('addCode').onclick = function() {
-            var obj = document.getElementById('discounts');
-            
-            if (obj.style.display === "none") {
-                obj.style.display = "block";
-            } else {
-                obj.style.display = "none";
-            }
-            
-            var obj = document.getElementById('refer');
-
-            if (obj.style.display === "block") {
-                obj.style.display = "none";
-            }
-        };
+//        document.getElementById('addCode').onclick = function() {
+//            var obj = document.getElementById('discounts');
+//            
+//            if (obj.style.display === "none") {
+//                obj.style.display = "block";
+//            } else {
+//                obj.style.display = "none";
+//            }
+//            
+//            var obj = document.getElementById('refer');
+//
+//            if (obj.style.display === "block") {
+//                obj.style.display = "none";
+//            }
+//        };
         
         function checkReferrals(code) {
             var classes = document.getElementsByClassName('allrefers');
@@ -406,7 +450,7 @@ and open the template in the editor.
                         var amt = document.getElementById('referralAmount').value;
                         if (amt !== "") {
                             document.getElementById('redeemAmount').value = amt;
-    //                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+amt+"</strong>";
+                            document.getElementById('showDiscount').innerHTML = "<strong> -$"+amt+"</strong>";
                         }
     //                    document.getElementById('addCode').style.display = "none";
     //                    document.getElementById('discounts').style.display = "none";
@@ -423,11 +467,45 @@ and open the template in the editor.
             };
         }
         
-        var refer = document.getElementById('useRefer');
+//        var refer = document.getElementById('useRefer');
+//        
+//        if (refer !== null) {
+//            refer.onclick = function() {
+//                var show = document.getElementById('refer');
+//                
+//                if (show !== null) {
+//                    if (show.style.display === "block") {
+//                        show.style.display = "none";
+//                    } else {
+//                        show.style.display = "block";
+//                    }
+//                }
+//                
+//                var obj = document.getElementById('discounts');
+//            
+//                if (obj.style.display === "block") {
+//                    obj.style.display = "none";
+//                }
+//            };
+//        }
         
-        if (refer !== null) {
-            refer.onclick = function() {
-                var show = document.getElementById('refer');
+        var credit = document.getElementById('useCredit');
+        
+        if (credit !== null) {
+            credit.onclick = function() {
+                var val = <?php echo $urow['credit']; ?>;
+                document.getElementById('redeem').value = "existing";
+                //get redeem amount
+                document.getElementById('redeemAmount').value = val;
+                document.getElementById('existingCredit').style.fontWeight = "bold";
+            };
+        }
+        
+        var usecode = document.getElementById('useCode');
+        
+        if (usecode !== null) {
+            usecode.onclick = function() {
+                var show = document.getElementById('tabs');
                 
                 if (show !== null) {
                     if (show.style.display === "block") {
@@ -435,12 +513,6 @@ and open the template in the editor.
                     } else {
                         show.style.display = "block";
                     }
-                }
-                
-                var obj = document.getElementById('discounts');
-            
-                if (obj.style.display === "block") {
-                    obj.style.display = "none";
                 }
             };
         }

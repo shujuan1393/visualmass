@@ -74,6 +74,19 @@ function sendNewUserEmail($pwd, $link, $email, $firstname, $lastname, $address, 
     }
 }
 
+//get how much to add
+$set = "Select * from settings where type='storecredit';";
+$sres = mysqli_query($link, $set);
+
+if (!mysqli_query($link, $set)) {
+    die(mysqli_error($link));
+} else {
+    $srow = mysqli_fetch_assoc($sres);
+    $valArr = explode("&", $srow['value']);
+    if(!empty($valArr[0])){
+        $amount = explode("redeemamount=", $valArr[0]);
+    }
+}
 
 if (isset($_GET['id']) && isset($_GET['cost'])) {
     if (!isset($_SESSION['loggedUserEmail'])) {
@@ -166,41 +179,95 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 $stats = "INSERT INTO productstatistics (type, customer, orderid) VALUES ('$type', '$email', '$orderid');";
                 mysqli_query($stats);
                 
-                //update discount code usage
                 if (!empty($discount)) {
-                    $sql = "Select * from discounts where code='$discount';";
-                    $dres = mysqli_query($link, $sql);
-
-                    if (!mysqli_query($link, $sql)) {
-                        die(mysqli_error($link));
-                    } else {
-                        if ($dres -> num_rows !== 0) {
-                            $row = mysqli_fetch_assoc($dres);
-                            $limit = $row['disclimit'];
-
-                            if (strcmp($limit, "unlimited") !== 0) {
-                                $qty = intval($limit) - 1;
-
-                                $update = "UPDATE discounts set disclimit='$qty' where code ='$discount';";
-                                mysqli_query($link, $update);
-                            }
+                    //use existing credit
+                    if (strcmp($discount, "existing") === 0) {
+                        $sql = "Select * from user where email='$email';";
+                        $user = mysqli_query($link, $sql);
+                        
+                        if (!mysqli_query($link, $sql)) {
+                            die(mysqli_error($link));
                         } else {
-                            $refer = "Select * from referrals where email ='$email';";
-                            $result = mysqli_query($link, $refer);
-
-                            if (!mysqli_query($link, $refer)) {
+                            $row = mysqli_fetch_assoc($user);
+                            $credit = $row['credit'];
+                            $newCred = intval($credit) - intval($amt);
+                            
+                            $minusCredit = "UPDATE user set credit='$newCred' where email='$email';";
+                            mysqli_query($link, $minusCredit);
+                        }
+                        
+                        //add credit to person whose code was used
+                        $refer = "Select * from referrals where email='$email';";
+                        $refers = mysqli_query($link, $refer);
+                        
+                        if (!mysqli_query($link, $refer)) {
+                            die(mysqli_error($link));
+                        } else {
+                            $r1 = mysqli_fetch_assoc($refers);
+                            //credit user 
+                            $sql = "Select * from user where code ='".$r1['code']."';";
+                            $userSql = mysqli_query($link, $sql);
+                            
+                            if (!mysqli_query($link, $sql)) {
                                 die(mysqli_error($link));
                             } else {
-                                if ($result -> num_rows === 0) {
-                                    $insert = "INSERT INTO referrals (orderid, email, code) "
-                                            . "VALUES ('$orderid', '$email', '$discount');";
-                                    mysqli_query($link, $insert);
+                                $userrow = mysqli_fetch_assoc($userSql);
+                                $newCredit = intval($userrow['credit']) + intval($amount[1]);
+
+                                $addCredit = "UPDATE user set credit='$newCredit' where code='".$r1['code']."' and email='".$userrow['email']."';";
+                                mysqli_query($link, $addCredit);
+                            }
+                        }                        
+                    } else {
+                    //update discount code usage
+                        $sql = "Select * from discounts where code='$discount';";
+                        $dres = mysqli_query($link, $sql);
+
+                        if (!mysqli_query($link, $sql)) {
+                            die(mysqli_error($link));
+                        } else {
+                            if ($dres -> num_rows !== 0) {
+                                $row = mysqli_fetch_assoc($dres);
+                                $limit = $row['disclimit'];
+
+                                if (strcmp($limit, "unlimited") !== 0) {
+                                    $qty = intval($limit) - 1;
+
+                                    $update = "UPDATE discounts set disclimit='$qty' where code ='$discount';";
+                                    mysqli_query($link, $update);
+                                }
+                            } else {
+                                $refer = "Select * from referrals where email ='$email';";
+                                $result = mysqli_query($link, $refer);
+
+                                if (!mysqli_query($link, $refer)) {
+                                    die(mysqli_error($link));
+                                } else {
+                                    if ($result -> num_rows === 0) {
+                                        //record referral transaction made by user
+                                        $insert = "INSERT INTO referrals (orderid, email, code) "
+                                                . "VALUES ('$orderid', '$email', '$discount');";
+                                        mysqli_query($link, $insert);
+
+                                        //credit person whose code was used
+                                        $credit = "Select * from user where code='$discount';";
+                                        $res = mysqli_query($link, $credit);
+
+                                        if (!mysqli_query($link, $credit)) {
+                                            die(mysqli_error($link));
+                                        } else {
+                                            $crow = mysqli_fetch_assoc($res);
+                                            $newCredit = intval($crow['credit']) + intval($amount[1]);
+
+                                            $addCredit = "UPDATE user set credit='$newCredit' where code='$discount' and email='".$crow['email']."';";
+                                            mysqli_query($link, $addCredit);
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                
                 $_SESSION['order'] = "Order successfully completed!";   
                 header("Location: cart.php");         
             }

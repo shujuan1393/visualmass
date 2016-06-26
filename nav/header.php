@@ -28,6 +28,26 @@ if (isset($_SESSION['mailSuccess'])) {
 //$pageCanonical = "";
 //$pageRobots = "";
     
+//check user profile
+if (isset($_SESSION['loggedUserEmail'])) {
+    $user = "Select * from user where email ='".$_SESSION['loggedUserEmail']."';";
+    $ures = mysqli_query($link, $user);
+    
+    if (!mysqli_query($link, $user)) {
+        die(mysqli_error($link));
+    } else {
+        $urow = mysqli_fetch_assoc($ures);
+        
+        if (empty($urow['firstname']) || empty($urow['lastname']) || empty($urow['address'])
+                || empty($urow['zip']) || empty($urow['city']) || empty($urow['apt'])
+                || empty($urow['country'])) {
+            $_SESSION['profile'] = "incomplete";
+        } else {
+            unset($_SESSION['profile']);
+        }
+    }
+}
+
     //get from settings
     $web = "Select * from settings where type='web';";
     $wres = mysqli_query($link, $web);
@@ -170,6 +190,26 @@ if (isset($_SESSION['mailSuccess'])) {
                 </ul>
             </div>
         </div>
+        
+        <?php 
+            //get amount from settings
+        $set = "Select * from settings where type='storecredit';";
+        $sres = mysqli_query($link, $set);
+        if (!mysqli_query($link, $set)) {
+            die(mysqli_error($link));
+        } else {
+            $srow = mysqli_fetch_assoc($sres);
+            $valArr = explode("&", $srow['value']);
+            if(!empty($valArr[1])){
+                $profile = explode("profile=", $valArr[1]);
+            }
+        }
+        
+        if (isset($_SESSION['profile'])) { ?>
+            <div id='completeProfile' class='row text-center'>
+                <h5>Complete your profile now and get store credit worth $<?php if(!empty($profile[1])) { echo $profile[1]; } ?></h5>
+            </div>
+        <?php } ?>
         
         <div class="modal fade modal-fullscreen force-fullscreen" id="myModal" tabindex="-1" 
              role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

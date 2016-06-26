@@ -14,11 +14,13 @@ if (isset($_POST['submit'])) {
     } else {
         unset($_SESSION['updateScSetError']);
         $redeem = $_POST['redeem'];
+        $profile = $_POST['profile'];
         
         $checkSql = "SELECT * from settings WHERE type='storecredit'";
         $checkresult = mysqli_query($link, $checkSql);
         
         $val = "redeemamount=".$redeem;
+        $val .= "&profile=".$profile;
         
         if ($checkresult -> num_rows === 0) {
             $sql = "INSERT INTO settings (type, value) VALUES ('storecredit',"
@@ -103,6 +105,21 @@ if (!mysqli_query($link,$selectSql)) {
                             <!--<span id='days'>days</span>-->
                             
                             <p class='setting-tooltips'>*Set the default store credit amount redeemed from using referral codes</p>
+                            <br>
+                            <?php 
+                                if(!empty($valArr[1])){
+                                    $profile = explode("profile=", $valArr[1]);
+                                }
+                            ?>
+                            Profile: <input type='text' name='profile' id='profile' 
+                                             value='<?php 
+                                                if (!empty($profile[1])) {
+                                                    echo $profile[1];
+                                                }
+                                             ?>' onkeypress="return isNumberKey(event)">
+                            <!--<span id='days'>days</span>-->
+                            
+                            <p class='setting-tooltips'>*Set the default store credit amount awarded for completing profile</p>
                             <input type='submit' name='submit' value='Save Changes' />
                         </form>
                     </div>

@@ -1412,3 +1412,8 @@ if it's not present, don't show loader */
 .addMore {
     cursor: pointer;
 }
+
+#completeProfile {
+/*    float: left;
+    text-align: center!important;*/
+}
