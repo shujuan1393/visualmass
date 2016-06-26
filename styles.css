@@ -267,15 +267,6 @@ table.dataTable thead .sorting_desc:after{
     margin: 0;
 }
 
-.close_modal {
-    right: 20px;
-    top: 10px;
-}
-
-.close {
-    color: #000!important;
-}
-
 #frameheader{
     height: 50px;
     width: 100%;
@@ -414,7 +405,7 @@ table.dataTable thead .sorting_desc:after{
 
 #header {
     height: 50px;
-    padding: 15px 10px;
+    /*padding: 15px 10px;*/
     margin-bottom: 30px;
 }
 
@@ -514,7 +505,6 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
     background-color: #fff;
     z-index: 15;
 }
-
 
 #userMenu {
     right: 55px;
@@ -683,8 +673,13 @@ a:hover#heart {
 .catalogue .swatch {
     width: 100%;
 }
+
 .col-md-3 {
     width: 30%!important;
+}
+
+#product_table img {
+    width: 100%;
 }
 
 .product_title {
@@ -704,7 +699,7 @@ a:hover#heart {
     padding: 5px 20px;
     background-color: #808080;
     color: #fff;
-    
+
 }
 .product_name {
     /*position: absolute;*/
@@ -788,12 +783,6 @@ a:hover#heart {
     width: 60%;
     margin: 0 30px;
 }
-
-/*.section-link {
-    width: 50%;
-    margin: 0 30px;
-    display: inline;
-}*/
 
 .section-link {
     width: 98%;
@@ -938,11 +927,6 @@ div.panel.show {
 
 .thumbnail {
     height: 100%;
-}
-
-.img-responsive {
-    width: 100%!important;
-    margin: 0 auto!important;
 }
 
 .carousel-inner {
@@ -1187,36 +1171,6 @@ div#calendar {
     padding: 20px;
 }
 
-#searchModal .modal-dialog, #myModal .modal-dialog{
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-#searchModal .modal-content, #myModal .modal-content  {
-  height: auto;
-  min-height: 100%;
-  border-radius: 0;
-}
-
-#searchModal .modal, #myModal .modal {
-    overflow-y: hidden!important;
-}
-
-.modal.modal-fullscreen .modal-content {
-    /*background: rgba(192,192,192, 0.2);*/
-}
-
-.modal.modal-fullscreen .modal-header {
-  border: 0;
-  color: #fff;
-}
-
-.modal.modal-fullscreen .modal-footer {
-  /*border-color: rgba(192,192,192, 0.2);*/
-}
-
 .cart_button {
     background-color: #808080;
     height: 50px;
@@ -1374,13 +1328,13 @@ if it's not present, don't show loader */
 .no-js #loader { display: none;  }
 .js #loader { display: block; position: absolute; left: 100px; top: 0; }
 .se-pre-con {
-	position: fixed;
-	left: 0px;
-	top: 0px;
-	width: 100%;
-	height: 100%;
-	z-index: 9999;
-	background: url(icons/Preloader_8.gif) center no-repeat #fff;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(icons/Preloader_8.gif) center no-repeat #fff;
 }
 
 #existingCust {
@@ -1407,6 +1361,106 @@ if it's not present, don't show loader */
 
 .prodbanners {
     z-index: 0;
+}
+
+/* MODAL LAYOUT */
+
+@media (min-width: 768px){    
+    #imagemodal .modal-content {
+        border-radius: 0;
+        border: 0;
+        background-color: initial!important;
+    }
+
+    #myModal .modal-dialog {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #myModal .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+        border: 0;
+    }
+
+    #myModal .modal {
+        overflow-y: hidden!important;
+    }
+}
+
+#searchModal .modal-dialog, #myModal .modal-dialog{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#searchModal .modal-content, #myModal .modal-content  {
+    height: auto;
+    min-height: 100%;
+    border-radius: 0;
+    border: 0;
+}
+
+#searchModal .modal, #myModal .modal {
+    overflow-y: hidden!important;
+}
+
+.modal.modal-fullscreen .modal-content {
+    /*background: rgba(192,192,192, 0.2);*/
+}
+
+.modal.modal-fullscreen .modal-header {
+  border: 0;
+  color: #fff;
+}
+
+.modal.modal-fullscreen .modal-footer {
+  /*border-color: rgba(192,192,192, 0.2);*/
+}
+
+.close {
+    height: initial!important;
+    color: initial!important;
+    /*padding-bottom: 10px!important;*/
+}
+
+.close_modal {
+    right: 20px;
+    top: 10px;
+}
+
+.img-responsive {
+    width: 100%!important;
+    margin: 0 auto!important;
+}
+
+.img-grid{
+  object-fit: cover;
+  height: 200px;
+  width: 100%;
+}
+
+.img-modal {
+    width: 100%;
+    z-index:0;
+}
+
+.btn-overlay {
+    background-color: initial!important;
+    margin: 0!important;
+    padding: 0!important;
+    float: right!important;
+    position: absolute!important;
+    z-index:1;
+}
+
+.img-col {
+    padding-top: 15px!important;
+    padding-bottom: 15px!important;
 }
 
 .addMore {
