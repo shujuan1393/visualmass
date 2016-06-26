@@ -91,17 +91,19 @@ if (isset($_GET['id'])) {
                                     
                                     
                                     echo "<td>";
-                                    $getloc = "select * from locations where code='".$row['location']."';";
-                                    $locres = mysqli_query($link, $getloc);
+                                    if (!empty($row['location'])){
+                                        $getloc = "select * from locations where code='".$row['location']."';";
+                                        $locres = mysqli_query($link, $getloc);
                                     
-                                    if (!mysqli_query($link, $getloc)) {
-                                        die(mysqli_error($link));
-                                    } else {
-                                        if ($locres -> num_rows === 0) {
-                                            echo "-";
+                                        if (!mysqli_query($link, $getloc)) {
+                                            die(mysqli_error($link));
                                         } else {
-                                            $lrow = mysqli_fetch_assoc($locres);
-                                            echo $lrow['name']." (".$lrow['code'].")";
+                                            if ($locres -> num_rows === 0) {
+                                                echo "-";
+                                            } else {
+                                                $lrow = mysqli_fetch_assoc($locres);
+                                                echo $lrow['name']." (".$lrow['code'].")";
+                                            }
                                         }
                                     }
                                     echo "</td>"; 
