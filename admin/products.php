@@ -390,7 +390,10 @@ if (isset($_GET['id'])) {
                                             if (!empty($erow['featured'])) {
                                                 $featArr = explode(",", $erow['featured']);
                                                 for($i =0; $i < count($featArr); $i++) {
-                                                    echo "<img src='".$featArr[$i]."' width=200>";
+                                                    if (!empty($featArr[$i])) {
+                                                        echo '<div class="button addMore" onClick="unlinkFeatImg(\''.$featArr[$i].'\')"><img src="'.$featArr[$i].'" width=200></div><br>';
+                                                    }
+//                                                    echo "<img src='".$featArr[$i]."' width=200>";
                                                 }
                                                 echo "<br><input type='hidden' name='oldFeaturedImages' value='".$erow['featured']."'>";
                                             }
@@ -404,7 +407,9 @@ if (isset($_GET['id'])) {
                                             if (!empty($erow['images'])) {
                                                 $imgArr = explode(",", $erow['images']);
                                                 for($i =0; $i < count($imgArr); $i++) {
-                                                    echo "<img src='".$imgArr[$i]."' width=200>";
+                                                    if (!empty($imgArr[$i])) {
+                                                        echo '<div class="button addMore" onClick="unlinkImg(\''.$imgArr[$i].'\')"><img src="'.$imgArr[$i].'" width=200></div><br>';
+                                                    }
                                                 }
                                                 echo "<br><input type='hidden' name='oldImage' value='".$erow['images']."'>";
                                             }
@@ -618,7 +623,15 @@ if (isset($_GET['id'])) {
 ?>
 <script>  
     
+    function unlinkImg(img) {
+        var id = <?php if (isset($_GET['id'])) { echo '"'.$_GET['id'].'"'; } ?>;
+        window.location="processMedia.php?type=products&feat=no&id="+id+"&file=" + img;
+    }    
     
+    function unlinkFeatImg(img) {
+        var id = <?php if (isset($_GET['id'])) { echo '"'.$_GET['id'].'"'; } ?>;
+        window.location="processMedia.php?type=products&feat=yes&id="+id+"&file=" + img;
+    }    
     
     $(function() {
         $("#select-to").selectize({
