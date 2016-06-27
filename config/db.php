@@ -18,12 +18,14 @@ if (in_array("admin", $urlArr)) {
 }
 
 $link = mysqli_connect('localhost', 'visualmass', 'ilovevisualmass');
+//$link = mysqli_connect('localhost', 'visualma_admin', 'P@ssw0rd!23');
 if (!$link) {
     die('Could not connect: ' . mysql_error());
 }
 //echo 'Connected successfully';
 
 mysqli_select_db($link, "visual_mass");
+//mysqli_select_db($link, "visualma_visualmass");
 
 function GetCartId() {
 // This function will generate an encrypted string and
