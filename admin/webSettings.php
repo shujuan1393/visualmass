@@ -104,7 +104,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 CKEDITOR.replace('metadata');
                             </script>
 
-                            <input type='submit' name='submit' value='Save Changes' />
+                            <input type='submit' name='submit' value='Save' />
                         </form>
                     </div>
                 </div>

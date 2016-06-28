@@ -12,6 +12,8 @@ require_once 'config/db.php';
 </head>
 <html>
     <body>
+        <div id="fb-root"></div>
+        
         <div id="loginWrapper">
             <!--<div id="header"><?php // require_once 'nav/header.php';?></div>-->
             <div class="rightheader close_modal">
@@ -39,6 +41,8 @@ require_once 'config/db.php';
                     ?>
                 </div>
                 <!--action='processLogin.php' method='post' accept-charset='UTF-8'-->
+                <a href='#' onclick='login();'>Facebook Login</a>
+                
                 <form id='loginForm'>
                     <?php 
                         if (isset($_GET['favourite'])) {
@@ -52,6 +56,8 @@ require_once 'config/db.php';
                     <input type='submit' name='Submit' value='Sign in' />
                 </form>
                 <a data-toggle="modal" href="forgetPassword.php" data-target="#forgetModal">FORGOT PASSWORD?</a>
+                
+                <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
                 </div>
             </div>
             <!--<div id="footer"><?php // require_once 'nav/footer.php';?></div>-->
@@ -100,4 +106,41 @@ require_once 'config/db.php';
             }
         });
     </script>
+<script type="text/javascript">
+//<![CDATA[
+window.fbAsyncInit = function() {
+   FB.init({
+     appId      : '666771283478329', // App ID
+     channelURL : '', // Channel File, not required so leave empty
+     status     : true, // check login status
+     cookie     : true, // enable cookies to allow the server to access the session
+     oauth      : true, // enable OAuth 2.0
+     xfbml      : false  // parse XFBML
+   });
+};
+// logs the user in the application and facebook
+function login(){
+FB.getLoginStatus(function(r){
+     if(r.status === 'connected'){
+            window.location.href = 'fbconnect.php';
+     }else{
+        FB.login(function(response) {
+                if(response.authResponse) {
+              //if (response.perms)
+                    window.location.href = 'fbconnect.php';
+            } else {
+              // user is not logged in
+            }
+     },{scope:'email'}); // which data to access from user profile
+ }
+});
+}
+// Load the SDK Asynchronously
+(function() {
+   var e = document.createElement('script'); e.async = true;
+   e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';                
+   document.getElementById('fb-root').appendChild(e);
+}());
+//]]>
+</script>
 </html>

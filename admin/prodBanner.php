@@ -156,7 +156,7 @@ if (isset($_POST['submit'])) {
                             </div>
                             
                             <h1 id="add" class="page-header">Add/Edit Product Banner</h1>
-                            <table>
+                            <table class="content">
                                 <tr>
                                     <td>
                                         <select id='gender' name='gender'>
@@ -177,8 +177,12 @@ if (isset($_POST['submit'])) {
                                             &nbsp;<input type="file" name="image" id='image' />
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan='2'>
+                                        <input type='submit' name='submit' value='Save' />
+                                    </td>
+                                </tr>
                             </table>
-                            <input type='submit' name='submit' value='Submit' />
                         </form>
                     </div>
                 </div>

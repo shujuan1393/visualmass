@@ -105,17 +105,31 @@ if (isset($_GET['id'])) {
                                                 }
                                             ?>
                                         </div>
-                                        <select id='categories' name='categories'>
-                                            <option value='glasses'>Glasses</option>
-                                            <option value='sunglasses'>Sunglasses</option>
-                                        </select>
-                                        <input type='hidden' name='submitted' id='submitted' value='1'/>
-                                        <input type='hidden' name='oldImage' id='oldImage' value='<?php if(!empty($brow['html'])) echo $brow['html']; ?>'/>
+                                        
+                                        <table class="content">
+                                            <tr>
+                                                <td>
+                                                    <select id='categories' name='categories'>
+                                                        <option value='glasses'>Glasses</option>
+                                                        <option value='sunglasses'>Sunglasses</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type='hidden' name='submitted' id='submitted' value='1'/>
+                                                    <input type='hidden' name='oldImage' id='oldImage' value='<?php if(!empty($brow['html'])) echo $brow['html']; ?>'/>
 
-                                        Image:
-                                        <input type="file" name="image" id='image'/>
-                                        <br>
-                                        <input type='submit' name='submit' value='Submit' />
+                                                    Image:
+                                                    <input type="file" name="image" id='image'/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type='submit' name='submit' value='Save' />
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </form>
                                 </p>
                             </div>
@@ -190,8 +204,10 @@ if (isset($_GET['id'])) {
                                     $rowsQry = "Select count(id) as count, type from productdescription group by type;";
                                     $rowResult = mysqli_query($link, $rowsQry);
 
-                                    while($r1 = mysqli_fetch_assoc($rowResult)) {
-                                        echo "<input type='hidden' id='".$r1['type']."Value' value='".$r1['count']."'>";
+                                    if (!empty($rowResult)){
+                                        while($r1 = mysqli_fetch_assoc($rowResult)) {
+                                            echo "<input type='hidden' id='".$r1['type']."Value' value='".$r1['count']."'>";
+                                        }
                                     }
                                     ?>
                                     
@@ -457,7 +473,7 @@ if (isset($_GET['id'])) {
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    <input type='submit' name='submit' value='Submit' />
+                                                    <input type='submit' name='submit' value='Save' />
                                                 </td>
                                             </tr>
                                         </table>

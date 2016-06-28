@@ -86,6 +86,7 @@
                                                 <div class="modal-body">
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                                     <img src='' id='imagepreview' class='img-modal'/>
+                                                    <button class="btn-overlay" onClick="deleteImg(\''.$img.'\')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                                 </div>
 <!--                                                <div class="modal-footer">
                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -95,7 +96,7 @@
                                         </div><!-- /.modal-dialog -->
                                     </div><!-- /.modal -->
                             <?php
-                                echo '<button class="btn-overlay" onClick="deleteImg(\''.$img.'\')"><i class="fa fa-trash-o" aria-hidden="true"></i></button></div>';
+                                echo '</div>';
                                 $count++;
                                 
                                 if ($count % 4 === 0) {

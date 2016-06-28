@@ -45,10 +45,11 @@ if(empty($_POST['email']) || empty($_POST['firstName'])
             unset($_SESSION['blogError']);
             $authortype = "author";
             $pwd = md5('P@ssw0rd!23');
+            $status = "pending";
 
-            $sql = "INSERT INTO staff (firstname, lastname, email, password, phone, type, datejoined) "
+            $sql = "INSERT INTO staff (firstname, lastname, email, password, phone, type, datejoined, status) "
                         . "VALUES ('$authorfirst', '$authorlast', '$authoremail', 
-                        '$pwd', '$authorphone', '$authortype', CURRENT_TIMESTAMP);";
+                        '$pwd', '$authorphone', '$authortype', CURRENT_TIMESTAMP, '$status');";
 
                     mysqli_query($link, $sql);
                     $_SESSION['addAuthorSuccess'] = "Thank you for joining us!";

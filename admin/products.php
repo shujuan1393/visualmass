@@ -62,7 +62,12 @@ if (isset($_GET['id'])) {
                             <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Product</a>
                         </p>
                         
-                        <table>
+                        <div class="pull-left filter-align">Filter: </div>
+                        <div style="overflow:hidden">
+                            <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                        </div>
+                        
+                        <table id ="example">
                             <thead>
                                 <th>Name</th>
                                 <th>Type</th>
@@ -73,6 +78,7 @@ if (isset($_GET['id'])) {
                                 <th>Edit</th>
                                 <th>Delete</th>                        
                             </thead>
+                            <tbody class="searchable">
                              <?php
                                 // output data of each row
                                 while ($row = mysqli_fetch_assoc($result)) {
@@ -88,6 +94,7 @@ if (isset($_GET['id'])) {
                                     echo "</tr>";
                                 }
                             ?>
+                            </tbody>
                         </table>
                         <?php
                             } 
@@ -139,7 +146,9 @@ if (isset($_GET['id'])) {
                                     <td>
                                         <div id='newProduct'>
                                             Product Code*:
-                                            <span id='selectExisting'>+ Select from existing products</span>
+                                            <span id='selectExisting'>+ Select from existing products</span><br/>
+                                            <button type='button' onclick="randomString()" class="pull-right">Generate</button>
+                                            <div style="overflow: hidden;" >
                                             <input type='text' name='code' id='code' value ="<?php 
                                                 if(isset($_SESSION['randomString'])) { 
                                                     echo $_SESSION['randomString']; } 
@@ -153,8 +162,7 @@ if (isset($_GET['id'])) {
                                                     }
                                                 }
                                                 ?>" maxlength="50" />
-                                            <button type='button' onclick="randomString()">Generate</button>
-                                            <br>
+                                            </div>
                                         </div>
 
                                         <div id='existingProd' style='display:none;'>
@@ -184,11 +192,13 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Colour*:
                                         <input type='text' name='colourcode' value='<?php 
-                                            $pos = strpos($erow['pid'], "-");
-                                            if (is_numeric($pos)) {
-                                                $pids = explode("-", $erow['pid']);
-                                                echo $pids[1];
-                                            } 
+                                            if (!empty($erow['pid'])){
+                                                $pos = strpos($erow['pid'], "-");
+                                                if (is_numeric($pos)) {
+                                                    $pids = explode("-", $erow['pid']);
+                                                    echo $pids[1];
+                                                } 
+                                            }
                                         ?>'>
                                     </td>
                                 </tr>
@@ -267,7 +277,9 @@ if (isset($_GET['id'])) {
                                         ?>
 
                                         Measurements*: <br/>
-                                        <input type='text' name='measurement1' id='measurement1' 
+                                        <input type='text' name='measurement' id ='mment'
+                                               onkeypress='return isNumber(event)' pattern = "[0-9]{3}-[0-9]{3}-[0-9]{3}"/>
+<!--                                        <input type='text' name='measurement1' id='measurement1' 
                                                onkeypress="return isNumber(event)" value ="<?php 
                                         if (!empty($measureArr[0])) {
                                             echo $measureArr[0];
@@ -286,7 +298,7 @@ if (isset($_GET['id'])) {
                                         if (!empty($measureArr[2])) {
                                             echo $measureArr[2];
                                         }
-                                        ?>"/>
+                                        ?>"/>-->
                                     </td>
                                 </tr>
                                 <tr>
@@ -559,7 +571,7 @@ if (isset($_GET['id'])) {
 <!--                                <tr>
                                     <td>-->
                                         <input type='hidden' name='submitted' value='1' />
-                                        <input type='submit' name='submit' value='Submit' />
+                                        <input type='submit' name='submit' value='Save' />
 <!--                                    </td>
                                 </tr>-->
                         </form>
@@ -723,6 +735,33 @@ if (isset($_GET['id'])) {
             window.location='products.php';
         }
     }
+    
+    $("#filter").keyup(function () {
+        var search = $(this).val();
+        $(".searchable").children().show();
+        $('.noresults').remove();
+        if (search) {
+            $(".searchable").children().not(":containsNoCase(" + search + ")").hide();
+            $(".searchable").each(function () {
+                if ($(this).children(':visible').length === 0) 
+                    $(this).append('<tr class="noresults"><td colspan="100%">No matching results found</td></tr>');
+            });
+
+        }
+    });
+    
+    $.expr[":"].containsNoCase = function (el, i, m) {
+        var search = m[3];
+        if (!search) return false;
+           return new RegExp(search,"i").test($(el).text());
+    };
+    
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: "<'row'tr>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        });
+    });
     
 </script>
 

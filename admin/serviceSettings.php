@@ -130,24 +130,37 @@ if (isset($_GET['id'])) {
                             <input type='hidden' name='editid' id='editid' 
                                    value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
             
-                            Service Code*:
-                            <input type='text' name='code' id='code'  maxlength="50" 
-                                   value='<?php if (!empty($erow['servicecode'])) 
-                                       { echo $erow['servicecode']; }?>'/>
-            
-                            Name*:
-                            <input type='text' name='name' id='name'  maxlength="50" 
-                                   value='<?php if (!empty($erow['servicename'])) 
-                                       { echo $erow['servicename']; }?>'/>
-                            
-                            Description:
-                            <textarea name="desc" id='desc'><?php 
-                                if(!empty($erow['description'])) { echo $erow['description']; }?></textarea>
-                            <script type="text/javascript">
-                                CKEDITOR.replace('desc');
-                            </script>
-                            
-                            <input type='submit' name='submit' value='Submit' />
+                            <table class="content">
+                                <tr>
+                                    <td>
+                                    Name*:
+                                    <input type='text' name='name' id='name'  maxlength="50" 
+                                           value='<?php if (!empty($erow['servicename'])) 
+                                               { echo $erow['servicename']; }?>'/>
+                                    </td>
+                                    <td>
+                                    Service Code*:
+                                    <input type='text' name='code' id='code'  maxlength="50" 
+                                           value='<?php if (!empty($erow['servicecode'])) 
+                                               { echo $erow['servicecode']; }?>'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        Description:
+                                        <textarea name="desc" id='desc'><?php 
+                                            if(!empty($erow['description'])) { echo $erow['description']; }?></textarea>
+                                        <script type="text/javascript">
+                                            CKEDITOR.replace('desc');
+                                        </script>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <input type='submit' name='submit' value='Save' />
+                                    </td>
+                                </tr>
+                            </table>
                         </form>
                     </div>
                 </div>

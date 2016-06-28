@@ -239,7 +239,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                         Image:
                                         <input type="file" name="image" id='image'/>
                                         <br>
-                                        <input type='submit' name='submit' value='Submit' />
+                                        <input type='submit' name='submit' value='Save' />
                                     </form>
                                 </p>
                             </div>
@@ -386,7 +386,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    <input type='submit' name='submit' value='Submit' />
+                                                    <input type='submit' name='submit' value='Save' />
                                                 </td>
                                             </tr>
                                         </table>

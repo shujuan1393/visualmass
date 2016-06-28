@@ -24,7 +24,7 @@ if (isset($_GET['id'])) {
     unset($_SESSION['addBlogCatSuccess']);
     unset($_SESSION['updateBlogCatError']);
     unset($_SESSION['updateBlogCatSuccess']);
-    $getAuthor = "Select * from authors where id='".$_GET['aid']."';";
+    $getAuthor = "Select * from staff where id='".$_GET['aid']."' and type='author';";
     $result = mysqli_query($link, $getAuthor);
     $erow = mysqli_fetch_assoc($result);
 }
@@ -160,7 +160,7 @@ if (!mysqli_query($link,$selectSql)) {
                                                 }
                                                ?>'/>
 
-                                        <input type='submit' name='submit' value='Submit' />
+                                        <input type='submit' name='submit' value='Save' />
 
                                     </form>
                                 </p>
@@ -186,7 +186,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 
                                 <p>
                                     <?php
-                                        $authorSql = "Select * from authors;";
+                                        $authorSql = "Select * from staff where type='author';";
 
                                         $result = mysqli_query($link, $authorSql);
 
@@ -201,8 +201,13 @@ if (!mysqli_query($link,$selectSql)) {
                                     <p class="text-right">
                                         <a href="#adda"><i class="fa fa-fw fa-plus"></i> Add Author</a>
                                     </p>
-                                    
-                                    <table>
+
+                                    <div class="pull-left filter-align">Filter: </div>
+                                    <div style="overflow:hidden">
+                                        <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                                    </div>
+
+                                    <table id ="example">
                                         <thead>
                                         <th>Name</th>
                                         <th>Email</th>
@@ -210,6 +215,7 @@ if (!mysqli_query($link,$selectSql)) {
                                         <th>Edit</th>
                                         <th>Delete</th>
                                         </thead>
+                                        <tbody class="searchable">
                                         <?php
                                             while ($row = mysqli_fetch_assoc($result)) {
                                                 echo "<tr>";
@@ -222,6 +228,7 @@ if (!mysqli_query($link,$selectSql)) {
                                                 echo "</tr>";
                                            } 
                                         ?>
+                                        </tbody>
                                     </table>
                                     <?php
                                             }
@@ -296,12 +303,16 @@ if (!mysqli_query($link,$selectSql)) {
                                             <tr>
                                                 <td colspan="2">
                                                     Date Joined:
-                                                    <input type="text" id="date3" name="date3">
+                                                    <input type="text" id="date3" name="date3" value='<?php 
+                                                            if (isset($erow['datejoined'])) {
+                                                                echo $erow['datejoined'];
+                                                            }
+                                                           ?>'>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    <input type='submit' name='submit' value='Submit' />
+                                                    <input type='submit' name='submit' value='Save' />
                                                 </td>
                                             </tr>
                                         </table>
@@ -376,8 +387,36 @@ if (!mysqli_query($link,$selectSql)) {
             location.hash = this.getAttribute("href");
         });
     });
+    
     $(window).on('popstate', function() {
         var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
         $('a[href=' + anchor + ']').tab('show');
+    });
+    
+    $("#filter").keyup(function () {
+        var search = $(this).val();
+        $(".searchable").children().show();
+        $('.noresults').remove();
+        if (search) {
+            $(".searchable").children().not(":containsNoCase(" + search + ")").hide();
+            $(".searchable").each(function () {
+                if ($(this).children(':visible').length === 0) 
+                    $(this).append('<tr class="noresults"><td colspan="100%">No matching results found</td></tr>');
+            });
+
+        }
+    });
+    
+    $.expr[":"].containsNoCase = function (el, i, m) {
+        var search = m[3];
+        if (!search) return false;
+           return new RegExp(search,"i").test($(el).text());
+    };
+    
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: "<'row'tr>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        });
     });
 </script>

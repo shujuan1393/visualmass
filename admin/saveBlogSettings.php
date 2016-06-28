@@ -56,7 +56,7 @@ if (isset($_GET['add'])) {
         echo "<script>window.history.back()</script>";
     } 
 } else if (isset($_GET['delete']) && isset($_GET['aid'])) { 
-    $deletesql = "DELETE FROM authors where id ='". $_GET['aid']."'";
+    $deletesql = "DELETE FROM staff where id ='". $_GET['aid']."'";
     if (mysqli_query($link, $deletesql)) {
         unset($_SESSION['addBlogCatSuccess']);
         unset($_SESSION['addBlogCatError']);
@@ -99,16 +99,19 @@ if (isset($_GET['add'])) {
         $email = $_POST['email'];
         $phone = $_POST['phone'];
         $date = $_POST['date3'];
+        $authortype = "author";
+        $pwd = md5('P@ssw0rd!23');
         
         if (empty($_POST['editid'])) {
-            $authSql = "INSERT INTO authors (firstname, lastname, email, phone, datejoined) "
-                    . "VALUES ('$firstname', '$lastname', '$email', '$phone', '$date');";
+            $authSql = "INSERT INTO staff (firstname, lastname, email, phone, type, password, datejoined) "
+                    . "VALUES ('$firstname', '$lastname', '$email', '$phone', 
+                            '$authortype', '$pwd', '$date');";
             mysqli_query($link, $authSql);
             $_SESSION['addAuthorSuccess'] = "Author successfully added";
         } else {
-            $authSql = "UPDATE authors set firstname='$firstname', lastname='$lastname', "
-                    . "email='$email', phone ='$phone'"
-                    . ", datejoined='$date' where id ='".$_POST['editid']."';";
+            $authSql = "UPDATE staff set firstname='$firstname', lastname='$lastname', "
+                    . "email='$email', phone='$phone'"
+                    . ", datejoined='$date', status='$status' where id ='".$_POST['editid']."';";
             mysqli_query($link, $authSql);
             $_SESSION['addAuthorSuccess'] = "Author successfully updated";
         }

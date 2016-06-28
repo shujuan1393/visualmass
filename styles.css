@@ -367,10 +367,12 @@ table.dataTable thead .sorting_desc:after{
 }
 
 .webbanner {
-    display: block;
+    /*display: block;*/
+    display: initial;
     margin: auto;
     height: 100%;
     text-align: center;
+    
 }
 
 .row {
@@ -740,7 +742,7 @@ a:hover#heart {
 }
 
 .home-section {
-    width: inherit;
+    width: auto;
     height: 100%;
     position: relative;
     margin: 10px 0;
@@ -1443,7 +1445,18 @@ if it's not present, don't show loader */
     z-index:1;
 }
 
+.btn-overlay  fa {
+    color: red;
+}
+
 .img-col {
     padding-top: 15px!important;
     padding-bottom: 15px!important;
+}
+
+.filter-align {
+    line-height: 50px!important;
+    height: 50px!important;
+    width: auto;
+    margin-right: 15px;
 }

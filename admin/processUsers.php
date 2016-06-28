@@ -114,9 +114,10 @@ if (isset($_GET['delete'])) {
                         unset($_SESSION['updateSuccess']);
                         unset($_SESSION['updateError']);
                         $pwd = md5('P@ssw0rd!23');
-                         $sql = "INSERT INTO staff (firstname, lastname, email, type, password) "
-                            . "VALUES ('$empfirst',
-                        '$emplast', '$empemail', '$emptype', '$pwd');";
+                        $status = "pending";
+                         $sql = "INSERT INTO staff (firstname, lastname, email, type, password, datejoined, status) "
+                            . "VALUES ('$empfirst', '$emplast', '$empemail', 
+                                '$emptype', '$pwd', CURRENT_TIMESTAMP, '$status');";
 
                         mysqli_query($link, $sql);
                         $_SESSION['addEmpSuccess'] = "Account successfully added";

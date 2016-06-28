@@ -85,33 +85,41 @@ if (isset($_GET['id'])) {
                                                 echo "Create an account <a href='users.php'>here</a>";
                                             } else {
                                             ?>
-                                            <table>
-                                                <thead>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Last Login</th>
-                                                <th>Last Logout</th>
-                                                </thead>
-                                            <?php
-                                                while ($row = mysqli_fetch_assoc($result)) {
-                                                    echo "<tr>";
-                                                    echo "<td>".$row['firstname']." ".$row['lastname']."</td>";
-                                                    echo "<td>".$row['email']."</td>";
-                                                    if (empty($row['lastlogin'])) {
-                                                        echo "<td>-</td>"; 
-                                                    } else {
-                                                        echo "<td>".$row['lastlogin']."</td>";
-                                                    }
 
-                                                    if (empty($row['lastlogout'])) {
-                                                        echo "<td>-</td>";
-                                                    } else {
-                                                        echo "<td>".$row['lastlogout']."</td>";
-                                                    }
-                                                    echo "</tr>";
-                                               } 
-                                            ?>
-                                                </table><br>
+                                            <div class="pull-left filter-align">Filter: </div>
+                                            <div style="overflow:hidden">
+                                                <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                                            </div>
+
+                                            <table id ="example">
+                                                <thead>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Last Login</th>
+                                                    <th>Last Logout</th>
+                                                </thead>
+                                                <tbody class="searchable">
+                                                    <?php
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            echo "<tr>";
+                                                            echo "<td>".$row['firstname']." ".$row['lastname']."</td>";
+                                                            echo "<td>".$row['email']."</td>";
+                                                            if (empty($row['lastlogin'])) {
+                                                                echo "<td>-</td>"; 
+                                                            } else {
+                                                                echo "<td>".$row['lastlogin']."</td>";
+                                                            }
+
+                                                            if (empty($row['lastlogout'])) {
+                                                                echo "<td>-</td>";
+                                                            } else {
+                                                                echo "<td>".$row['lastlogout']."</td>";
+                                                            }
+                                                            echo "</tr>";
+                                                       } 
+                                                    ?>
+                                                </tbody>
+                                            </table>
                                     <?php
                                             }
                                         }
@@ -140,8 +148,13 @@ if (isset($_GET['id'])) {
                                         <p class="text-right">
                                             <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Employee</a>
                                         </p>
-                                    
-                                        <table>
+                                        
+                                        <div class="pull-left filter-align">Filter: </div>
+                                        <div style="overflow:hidden">
+                                            <input type="text" id="filter2" class="pull-right" placeholder="Type here to search">
+                                        </div>
+
+                                        <table id ="example2">
                                             <thead>
                                                 <th>Name</th>
                                                 <th>Email</th>
@@ -149,6 +162,7 @@ if (isset($_GET['id'])) {
                                                 <th>Edit</th>
                                                 <th>Delete</th>                        
                                             </thead>
+                                            <tbody class="searchable">
                                             <?php
                                                 // output data of each row
                                                 while ($row = mysqli_fetch_assoc($result)) {
@@ -162,6 +176,7 @@ if (isset($_GET['id'])) {
                                                 }
 
                                             ?>
+                                            </tbody>
                                         </table>
                                     <?php
                                         } 
@@ -253,7 +268,7 @@ if (isset($_GET['id'])) {
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    <input type='submit' name='submit' value='Submit' />
+                                                    <input type='submit' name='submit' value='Save' />
                                                 </td>
                                             </tr>
                                         </table>
@@ -297,9 +312,37 @@ if (isset($_GET['id'])) {
             location.hash = this.getAttribute("href");
         });
     });
+    
     $(window).on('popstate', function() {
         var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
         $('a[href=' + anchor + ']').tab('show');
+    });
+    
+    $("#filter").keyup(function () {
+        var search = $(this).val();
+        $(".searchable").children().show();
+        $('.noresults').remove();
+        if (search) {
+            $(".searchable").children().not(":containsNoCase(" + search + ")").hide();
+            $(".searchable").each(function () {
+                if ($(this).children(':visible').length === 0) 
+                    $(this).append('<tr class="noresults"><td colspan="100%">No matching results found</td></tr>');
+            });
+
+        }
+    });
+    
+    $.expr[":"].containsNoCase = function (el, i, m) {
+        var search = m[3];
+        if (!search) return false;
+           return new RegExp(search,"i").test($(el).text());
+    };
+    
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: "<'row'tr>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        });
     });
 </script>
 
