@@ -65,7 +65,7 @@ if (isset($_GET['id'])) {
                         </p>
                         
                         
-                        <div class="pull-left">Filter</div>
+                        <div class="pull-left filter-align">Filter: </div>
                         <div style="overflow:hidden">
                             <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
                         </div>
@@ -404,15 +404,6 @@ if (isset($_GET['id'])) {
         }
     }
     
-//    $(document).ready(function() {
-//        var table = $('#example').DataTable({
-//            "dom":' <"filt.search"f><"top"l>rt<"bottom"ip><"clear">'
-//        });
-//        
-//    });
-
-    
-    
     $("#filter").keyup(function () {
         var search = $(this).val();
         $(".searchable").children().show();
@@ -432,5 +423,12 @@ if (isset($_GET['id'])) {
         if (!search) return false;
            return new RegExp(search,"i").test($(el).text());
     };
+    
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: "<'row'tr>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        });
+    });
 </script>
 

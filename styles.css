@@ -699,7 +699,7 @@ a:hover#heart {
     padding: 5px 20px;
     background-color: #808080;
     color: #fff;
-
+    
 }
 .product_name {
     /*position: absolute;*/
@@ -1328,13 +1328,13 @@ if it's not present, don't show loader */
 .no-js #loader { display: none;  }
 .js #loader { display: block; position: absolute; left: 100px; top: 0; }
 .se-pre-con {
-        position: fixed;
-        left: 0px;
-        top: 0px;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;
-        background: url(icons/Preloader_8.gif) center no-repeat #fff;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(icons/Preloader_8.gif) center no-repeat #fff;
 }
 
 #existingCust {
@@ -1371,21 +1371,21 @@ if it's not present, don't show loader */
         border: 0;
         background-color: initial!important;
     }
-
+    
     #myModal .modal-dialog {
         height: 100%;
         width: 100%;
         margin: 0;
         padding: 0;
     }
-
+    
     #myModal .modal-content {
         height: auto;
         min-height: 100%;
         border-radius: 0;
         border: 0;
     }
-
+    
     #myModal .modal {
         overflow-y: hidden!important;
     }
@@ -1455,12 +1455,18 @@ if it's not present, don't show loader */
     padding: 0!important;
     float: right!important;
     position: absolute!important;
-    z-index:1;
 }
 
-.img-col {
+#img-col {
     padding-top: 15px!important;
     padding-bottom: 15px!important;
+}
+
+.filter-align {
+    line-height: 50px!important;
+    height: 50px!important;
+    width: auto;
+    margin-right: 15px;
 }
 
 .addMore {

@@ -207,7 +207,7 @@ if (!mysqli_query($link,$selectSql)) {
                                             ?>
                                             <tr>
                                                 <td colspan="2">
-                                                    <input type='submit' name='submit' value='Save Changes' />
+                                                    <input type='submit' name='submit' value='Save' />
                                                 </td>
                                             </tr>
                                         </table>
@@ -253,14 +253,20 @@ if (!mysqli_query($link,$selectSql)) {
                                     <p class="text-right">
                                         <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Types</a>
                                     </p>
-                                    
-                                    <table>
+
+                                    <div class="pull-left filter-align">Filter: </div>
+                                    <div style="overflow:hidden">
+                                        <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                                    </div>
+
+                                    <table id ="example">
                                         <thead>
                                             <th>Code</th>
                                             <th>Name</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </thead>
+                                        <tbody class="searchable">
                                         <?php 
                                             while($row=  mysqli_fetch_assoc($empresult)) {
                                                 echo "<tr>";
@@ -270,8 +276,9 @@ if (!mysqli_query($link,$selectSql)) {
                                                 echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
                                                 echo "</tr>";
                                             }
-                                            echo "</table>";
                                         ?>
+                                        </tbody>
+                                    </table>
                                     <?php
                                             }
                                         }
@@ -323,7 +330,7 @@ if (!mysqli_query($link,$selectSql)) {
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2"><input type='submit' name='submit' value='Submit' /></td>
+                                                <td colspan="2"><input type='submit' name='submit' value='Save' /></td>
                                             </tr>
                                         </table>
                                     </form> 
@@ -369,8 +376,36 @@ if (!mysqli_query($link,$selectSql)) {
             location.hash = this.getAttribute("href");
         });
     });
+    
     $(window).on('popstate', function() {
         var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
         $('a[href=' + anchor + ']').tab('show');
+    });
+    
+    $("#filter").keyup(function () {
+        var search = $(this).val();
+        $(".searchable").children().show();
+        $('.noresults').remove();
+        if (search) {
+            $(".searchable").children().not(":containsNoCase(" + search + ")").hide();
+            $(".searchable").each(function () {
+                if ($(this).children(':visible').length === 0) 
+                    $(this).append('<tr class="noresults"><td colspan="100%">No matching results found</td></tr>');
+            });
+
+        }
+    });
+    
+    $.expr[":"].containsNoCase = function (el, i, m) {
+        var search = m[3];
+        if (!search) return false;
+           return new RegExp(search,"i").test($(el).text());
+    };
+    
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: "<'row'tr>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        });
     });
 </script>

@@ -236,8 +236,13 @@ require_once '../config/db.php';
                              </div>
                         <?php } else { ?>
                             <h1 class="page-header">View Customers</h1>
-                            
-                            <table>
+                        
+                            <div class="pull-left filter-align">Filter: </div>
+                            <div style="overflow:hidden">
+                                <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                            </div>
+
+                            <table id ="example">
                                 <thead>
                                     <th>Name</th>
                                     <th>Location</th>
@@ -245,6 +250,7 @@ require_once '../config/db.php';
                                     <th>Last Order</th>
                                     <th>Total Spent</th>
                                 </thead>
+                                <tbody class="searchable">
                                 <?php 
                                     $users = "select * from user";
                                     $ures = mysqli_query($link, $users);
@@ -279,6 +285,7 @@ require_once '../config/db.php';
                                         }
                                     }
                                 ?>
+                                </tbody>
                             </table>
                              
                         <?php } ?>
@@ -294,26 +301,53 @@ require_once '../config/db.php';
     </div>
 </html>
 <script>
-        var acc = document.getElementsByClassName("accordion");
-        var panel = document.getElementsByClassName('panel');
-     
-        for (var i = 0; i < acc.length; i++) {
-            acc[i].onclick = function() {
-                var setClasses = !this.classList.contains('active');
-                setClass(acc, 'active', 'remove');
-                setClass(panel, 'show', 'remove');
+    var acc = document.getElementsByClassName("accordion");
+    var panel = document.getElementsByClassName('panel');
 
-                if (setClasses) {
-                    this.classList.toggle("active");
-                    this.nextElementSibling.classList.toggle("show");
-                }
-            };
-        }
+    for (var i = 0; i < acc.length; i++) {
+        acc[i].onclick = function() {
+            var setClasses = !this.classList.contains('active');
+            setClass(acc, 'active', 'remove');
+            setClass(panel, 'show', 'remove');
 
-        function setClass(els, className, fnName) {
-            for (var i = 0; i < els.length; i++) {
-                els[i].classList[fnName](className);
+            if (setClasses) {
+                this.classList.toggle("active");
+                this.nextElementSibling.classList.toggle("show");
             }
+        };
+    }
+
+    function setClass(els, className, fnName) {
+        for (var i = 0; i < els.length; i++) {
+            els[i].classList[fnName](className);
         }
-    </script>
+    }
+    
+    $("#filter").keyup(function () {
+        var search = $(this).val();
+        $(".searchable").children().show();
+        $('.noresults').remove();
+        if (search) {
+            $(".searchable").children().not(":containsNoCase(" + search + ")").hide();
+            $(".searchable").each(function () {
+                if ($(this).children(':visible').length === 0) 
+                    $(this).append('<tr class="noresults"><td colspan="100%">No matching results found</td></tr>');
+            });
+
+        }
+    });
+    
+    $.expr[":"].containsNoCase = function (el, i, m) {
+        var search = m[3];
+        if (!search) return false;
+           return new RegExp(search,"i").test($(el).text());
+    };
+    
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: "<'row'tr>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        });
+    });
+</script>
 

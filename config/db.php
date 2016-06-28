@@ -17,12 +17,15 @@ if (in_array("admin", $urlArr)) {
     }
 }
 
+//$link = mysqli_connect('localhost', 'visualma_admin', 'P@ssw0rd!23');
 $link = mysqli_connect('localhost', 'visualmass', 'ilovevisualmass');
+
 if (!$link) {
     die('Could not connect: ' . mysql_error());
 }
 //echo 'Connected successfully';
 
+//mysqli_select_db($link, "visualma_visualmass");
 mysqli_select_db($link, "visual_mass");
 
 function GetCartId() {
@@ -37,4 +40,4 @@ function GetCartId() {
         setcookie("cartId", session_id(), time() + ((3600 * 24) * 30));
         return session_id();
     }
-} 
+}

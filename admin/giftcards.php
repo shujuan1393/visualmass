@@ -79,7 +79,12 @@ if (isset($_GET['id'])) {
                             <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Gift Card</a>
                         </p>
                         
-                        <table>
+                        <div class="pull-left filter-align">Filter: </div>
+                        <div style="overflow:hidden">
+                            <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                        </div>
+                        
+                        <table id ="example">
                             <thead>
                                 <th>Name</th>
                                 <th>Type</th>
@@ -89,6 +94,7 @@ if (isset($_GET['id'])) {
                                 <th>Edit</th>
                                 <th>Delete</th>                        
                             </thead>
+                            <tbody class="searchable">
                             <?php
                                 // output data of each row
                                 while ($row = mysqli_fetch_assoc($result)) {
@@ -110,6 +116,7 @@ if (isset($_GET['id'])) {
                                     echo "</tr>";
                                 }
                             ?>
+                            </tbody>
                         </table>
                         
                         <?php
@@ -325,6 +332,33 @@ if (isset($_GET['id'])) {
             toggleTextbox(false);                    
         <?php } ?>
     };
+    
+    $("#filter").keyup(function () {
+        var search = $(this).val();
+        $(".searchable").children().show();
+        $('.noresults').remove();
+        if (search) {
+            $(".searchable").children().not(":containsNoCase(" + search + ")").hide();
+            $(".searchable").each(function () {
+                if ($(this).children(':visible').length === 0) 
+                    $(this).append('<tr class="noresults"><td colspan="100%">No matching results found</td></tr>');
+            });
+
+        }
+    });
+    
+    $.expr[":"].containsNoCase = function (el, i, m) {
+        var search = m[3];
+        if (!search) return false;
+           return new RegExp(search,"i").test($(el).text());
+    };
+    
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: "<'row'tr>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        });
+    });
 </script>
 
 

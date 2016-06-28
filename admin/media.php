@@ -70,6 +70,7 @@
                                 ?>
                         
                                 <div id='img-col' class='col-lg-3 col-md-4 col-sm-5'>
+                                    <button class="btn-overlay" onClick="deleteImg(\''.$img.'\')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                     <a href='#' class='pop' onclick='setImg(this); return false;'>
                                         <img src='<?php echo $img; ?>' class='img-grid'/>
                                     </a>
@@ -95,7 +96,7 @@
                                         </div><!-- /.modal-dialog -->
                                     </div><!-- /.modal -->
                             <?php
-                                echo '<button class="btn-overlay" onClick="deleteImg(\''.$img.'\')"><i class="fa fa-trash-o" aria-hidden="true"></i></button></div>';
+                                echo '</div>';
                                 $count++;
                                 
                                 if ($count % 4 === 0) {
