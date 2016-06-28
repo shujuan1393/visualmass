@@ -257,7 +257,7 @@ if (isset($_GET['id'])) {
                                                 $imgArr = explode(",", $erow['images']);
                                                 for($i =0; $i < count($imgArr); $i++) {
                                                     if (!empty($imgArr[$i])) {
-                                                        echo "<img src='".$imgArr[$i]."' width=200>";
+                                                        echo '<div class="button addMore" onClick="unlinkImg(\''.$imgArr[$i].'\')"><img src="'.$imgArr[$i].'" width=200></div><br>';
                                                     }
                                                 }
                                                 echo "<br><input type='hidden' name='oldImages' value='".$erow['images']."'>";
@@ -368,6 +368,10 @@ if (isset($_GET['id'])) {
 </html>
 
 <script>
+    function unlinkImg(img) {
+        var id = <?php if (isset($_GET['id'])) { echo $_GET['id']; } ?>;
+        window.location="processMedia.php?type=locations&id="+id+"&file=" + img;
+    }
     
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;

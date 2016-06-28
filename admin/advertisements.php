@@ -737,8 +737,8 @@ if (isset($_GET['id'])) {
                                                                     </select>
                                                                 </div>
                                                                 <!--sections-->
-                                                                <div id='page<?php  echo $i+1; ?>' style='display:none;'>
-                                                                    <select name='pageItem<?php  echo $i+1; ?>'>
+                                                                <div id='page1' style='display:none;'>
+                                                                    <select name='pageItem1'>
                                                                         <?php 
                                                                             $pagesql = "Select * from pages where type='banner';";
                                                                             $pageres = mysqli_query($link, $pagesql);

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 07, 2016 at 10:43 AM
+-- Generation Time: Jun 27, 2016 at 09:20 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `advertisements`
 --
 
-CREATE TABLE `advertisements` (
+CREATE TABLE IF NOT EXISTS `advertisements` (
   `id` int(11) NOT NULL,
   `title` varchar(150) NOT NULL,
   `image` varchar(300) NOT NULL,
@@ -34,29 +34,14 @@ CREATE TABLE `advertisements` (
   `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `status` varchar(30) NOT NULL,
-  `buttontext` varchar(300) NOT NULL,
-  `link` varchar(200) DEFAULT NULL,
-  `linkpos` varchar(15) NOT NULL,
+  `buttontext` longtext NOT NULL,
+  `link` longtext,
+  `linkpos` longtext NOT NULL,
   `html` longtext,
   `htmlpos` varchar(15) NOT NULL,
   `expiry` varchar(10) NOT NULL,
-  `visibility` varchar(150) NOT NULL,
+  `visibility` varchar(500) NOT NULL,
   `minheight` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `authors`
---
-
-CREATE TABLE `authors` (
-  `id` int(11) NOT NULL,
-  `firstname` varchar(300) NOT NULL,
-  `lastname` varchar(300) NOT NULL,
-  `email` varchar(300) NOT NULL,
-  `phone` varchar(30) NOT NULL,
-  `datejoined` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -65,7 +50,7 @@ CREATE TABLE `authors` (
 -- Table structure for table `blog`
 --
 
-CREATE TABLE `blog` (
+CREATE TABLE IF NOT EXISTS `blog` (
   `id` int(11) NOT NULL,
   `title` varchar(200) NOT NULL,
   `html` longtext NOT NULL,
@@ -84,7 +69,7 @@ CREATE TABLE `blog` (
 -- Table structure for table `careers`
 --
 
-CREATE TABLE `careers` (
+CREATE TABLE IF NOT EXISTS `careers` (
   `id` int(11) NOT NULL,
   `title` varchar(150) NOT NULL,
   `html` longtext NOT NULL,
@@ -99,7 +84,7 @@ CREATE TABLE `careers` (
 -- Table structure for table `cart`
 --
 
-CREATE TABLE `cart` (
+CREATE TABLE IF NOT EXISTS `cart` (
   `id` int(11) NOT NULL,
   `cartid` varchar(300) NOT NULL,
   `pid` varchar(300) NOT NULL,
@@ -117,7 +102,7 @@ CREATE TABLE `cart` (
 -- Table structure for table `categories`
 --
 
-CREATE TABLE `categories` (
+CREATE TABLE IF NOT EXISTS `categories` (
   `id` int(11) NOT NULL,
   `type` varchar(100) NOT NULL,
   `name` varchar(150) NOT NULL
@@ -129,7 +114,7 @@ CREATE TABLE `categories` (
 -- Table structure for table `contact`
 --
 
-CREATE TABLE `contact` (
+CREATE TABLE IF NOT EXISTS `contact` (
   `id` int(11) NOT NULL,
   `type` varchar(30) NOT NULL,
   `title` varchar(50) NOT NULL,
@@ -144,10 +129,11 @@ CREATE TABLE `contact` (
 -- Table structure for table `discounts`
 --
 
-CREATE TABLE `discounts` (
+CREATE TABLE IF NOT EXISTS `discounts` (
   `id` int(11) NOT NULL,
   `code` varchar(30) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
+  `amount` varchar(300) NOT NULL,
   `disclimit` varchar(150) NOT NULL,
   `recurrence` varchar(40) NOT NULL,
   `discusage` varchar(30) NOT NULL,
@@ -162,7 +148,7 @@ CREATE TABLE `discounts` (
 -- Table structure for table `employeeTypes`
 --
 
-CREATE TABLE `employeeTypes` (
+CREATE TABLE IF NOT EXISTS `employeeTypes` (
   `id` int(11) NOT NULL,
   `code` varchar(100) NOT NULL,
   `name` varchar(300) NOT NULL
@@ -174,7 +160,7 @@ CREATE TABLE `employeeTypes` (
 -- Table structure for table `faq`
 --
 
-CREATE TABLE `faq` (
+CREATE TABLE IF NOT EXISTS `faq` (
   `id` int(11) NOT NULL,
   `title` varchar(200) NOT NULL,
   `html` longtext NOT NULL,
@@ -188,7 +174,7 @@ CREATE TABLE `faq` (
 -- Table structure for table `favourites`
 --
 
-CREATE TABLE `favourites` (
+CREATE TABLE IF NOT EXISTS `favourites` (
   `pid` varchar(50) NOT NULL,
   `email` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -199,7 +185,7 @@ CREATE TABLE `favourites` (
 -- Table structure for table `forms`
 --
 
-CREATE TABLE `forms` (
+CREATE TABLE IF NOT EXISTS `forms` (
   `id` int(11) NOT NULL,
   `type` varchar(40) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -216,7 +202,7 @@ CREATE TABLE `forms` (
 -- Table structure for table `giftcards`
 --
 
-CREATE TABLE `giftcards` (
+CREATE TABLE IF NOT EXISTS `giftcards` (
   `id` int(11) NOT NULL,
   `code` varchar(20) NOT NULL,
   `name` varchar(400) NOT NULL,
@@ -233,17 +219,17 @@ CREATE TABLE `giftcards` (
 -- Table structure for table `homepage`
 --
 
-CREATE TABLE `homepage` (
+CREATE TABLE IF NOT EXISTS `homepage` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
-  `html` longtext NOT NULL,
   `image` varchar(500) NOT NULL,
   `imagepos` varchar(50) NOT NULL,
+  `html` longtext NOT NULL,
   `htmlpos` varchar(50) NOT NULL,
   `status` varchar(100) NOT NULL,
-  `link` varchar(500) NOT NULL,
-  `linkpos` varchar(500) NOT NULL,
-  `buttontext` varchar(500) NOT NULL,
+  `link` longtext NOT NULL,
+  `linkpos` longtext NOT NULL,
+  `buttontext` longtext NOT NULL,
   `fieldorder` int(11) NOT NULL,
   `type` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -254,7 +240,7 @@ CREATE TABLE `homepage` (
 -- Table structure for table `hometry`
 --
 
-CREATE TABLE `hometry` (
+CREATE TABLE IF NOT EXISTS `hometry` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `html` longtext NOT NULL,
@@ -262,9 +248,9 @@ CREATE TABLE `hometry` (
   `imagepos` varchar(50) NOT NULL,
   `htmlpos` varchar(50) NOT NULL,
   `status` varchar(50) NOT NULL,
-  `buttontext` varchar(500) NOT NULL,
-  `link` varchar(500) NOT NULL,
-  `linkpos` varchar(500) NOT NULL,
+  `buttontext` longtext NOT NULL,
+  `link` longtext NOT NULL,
+  `linkpos` longtext NOT NULL,
   `fieldorder` int(11) NOT NULL,
   `type` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -275,12 +261,13 @@ CREATE TABLE `hometry` (
 -- Table structure for table `inventory`
 --
 
-CREATE TABLE `inventory` (
+CREATE TABLE IF NOT EXISTS `inventory` (
   `id` int(11) NOT NULL,
-  `pid` varchar(10) NOT NULL,
+  `pid` varchar(200) NOT NULL,
   `quantity` int(100) NOT NULL,
   `price` double NOT NULL,
-  `type` varchar(100) NOT NULL
+  `type` varchar(100) NOT NULL,
+  `location` varchar(400) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -289,7 +276,7 @@ CREATE TABLE `inventory` (
 -- Table structure for table `jobs`
 --
 
-CREATE TABLE `jobs` (
+CREATE TABLE IF NOT EXISTS `jobs` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `html` longtext NOT NULL,
@@ -304,7 +291,7 @@ CREATE TABLE `jobs` (
 -- Table structure for table `locations`
 --
 
-CREATE TABLE `locations` (
+CREATE TABLE IF NOT EXISTS `locations` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `code` varchar(5) NOT NULL,
@@ -328,9 +315,45 @@ CREATE TABLE `locations` (
 -- Table structure for table `mailinglist`
 --
 
-CREATE TABLE `mailinglist` (
+CREATE TABLE IF NOT EXISTS `mailinglist` (
   `email` varchar(300) NOT NULL,
   `preference` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `materials`
+--
+
+CREATE TABLE IF NOT EXISTS `materials` (
+  `id` int(11) NOT NULL,
+  `name` varchar(300) NOT NULL,
+  `details` longtext NOT NULL,
+  `image` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` int(11) NOT NULL,
+  `orderid` varchar(100) NOT NULL,
+  `pid` varchar(100) NOT NULL,
+  `price` varchar(100) NOT NULL,
+  `quantity` bigint(20) NOT NULL,
+  `details` longtext NOT NULL,
+  `type` varchar(100) NOT NULL,
+  `payment` varchar(100) NOT NULL,
+  `discountcode` varchar(100) NOT NULL,
+  `status` varchar(200) NOT NULL,
+  `orderedby` varchar(200) NOT NULL,
+  `totalcost` double NOT NULL,
+  `dateordered` timestamp NULL DEFAULT NULL,
+  `datepaid` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -339,7 +362,7 @@ CREATE TABLE `mailinglist` (
 -- Table structure for table `ourstory`
 --
 
-CREATE TABLE `ourstory` (
+CREATE TABLE IF NOT EXISTS `ourstory` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `html` longtext NOT NULL,
@@ -353,10 +376,32 @@ CREATE TABLE `ourstory` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pages`
+--
+
+CREATE TABLE IF NOT EXISTS `pages` (
+  `id` int(11) NOT NULL,
+  `title` varchar(500) NOT NULL,
+  `image` varchar(800) NOT NULL,
+  `imagepos` varchar(500) NOT NULL,
+  `html` longtext NOT NULL,
+  `htmlpos` varchar(500) NOT NULL,
+  `status` varchar(100) NOT NULL,
+  `link` longtext NOT NULL,
+  `linkpos` longtext NOT NULL,
+  `buttontext` longtext NOT NULL,
+  `fieldorder` bigint(20) NOT NULL,
+  `type` varchar(200) NOT NULL,
+  `pageid` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `productbanner`
 --
 
-CREATE TABLE `productbanner` (
+CREATE TABLE IF NOT EXISTS `productbanner` (
   `id` int(11) NOT NULL,
   `gender` varchar(150) NOT NULL,
   `categories` varchar(150) NOT NULL,
@@ -366,10 +411,31 @@ CREATE TABLE `productbanner` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `productdescription`
+--
+
+CREATE TABLE IF NOT EXISTS `productdescription` (
+  `id` int(11) NOT NULL,
+  `title` varchar(300) NOT NULL,
+  `image` varchar(500) NOT NULL,
+  `imagepos` varchar(300) NOT NULL,
+  `html` longtext NOT NULL,
+  `htmlpos` varchar(300) NOT NULL,
+  `status` varchar(500) NOT NULL,
+  `link` longtext NOT NULL,
+  `linkpos` longtext NOT NULL,
+  `buttontext` longtext NOT NULL,
+  `fieldorder` bigint(20) NOT NULL,
+  `type` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `products`
 --
 
-CREATE TABLE `products` (
+CREATE TABLE IF NOT EXISTS `products` (
   `id` int(11) NOT NULL,
   `pid` varchar(500) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -384,9 +450,51 @@ CREATE TABLE `products` (
   `tags` longtext,
   `visibility` varchar(30) NOT NULL,
   `availability` varchar(40) NOT NULL,
-  `locations` varchar(100) NOT NULL,
-  `track` varchar(100) NOT NULL,
+  `locations` longtext NOT NULL,
+  `locationqty` longtext NOT NULL,
   `gender` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `productstatistics`
+--
+
+CREATE TABLE IF NOT EXISTS `productstatistics` (
+  `id` int(11) NOT NULL,
+  `type` varchar(300) NOT NULL,
+  `pid` varchar(300) NOT NULL,
+  `customer` varchar(500) NOT NULL,
+  `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `orderid` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `referrals`
+--
+
+CREATE TABLE IF NOT EXISTS `referrals` (
+  `id` int(11) NOT NULL,
+  `orderid` varchar(300) NOT NULL,
+  `email` varchar(300) NOT NULL,
+  `code` varchar(300) NOT NULL,
+  `dateused` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `searchstatistics`
+--
+
+CREATE TABLE IF NOT EXISTS `searchstatistics` (
+  `id` int(11) NOT NULL,
+  `type` varchar(200) NOT NULL,
+  `keyword` varchar(300) NOT NULL,
+  `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -395,7 +503,7 @@ CREATE TABLE `products` (
 -- Table structure for table `services`
 --
 
-CREATE TABLE `services` (
+CREATE TABLE IF NOT EXISTS `services` (
   `id` int(11) NOT NULL,
   `servicecode` varchar(10) NOT NULL,
   `servicename` varchar(50) NOT NULL
@@ -407,7 +515,7 @@ CREATE TABLE `services` (
 -- Table structure for table `settings`
 --
 
-CREATE TABLE `settings` (
+CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL,
   `type` varchar(40) NOT NULL,
   `value` longtext NOT NULL
@@ -419,7 +527,7 @@ CREATE TABLE `settings` (
 -- Table structure for table `staff`
 --
 
-CREATE TABLE `staff` (
+CREATE TABLE IF NOT EXISTS `staff` (
   `id` int(11) NOT NULL,
   `firstname` varchar(40) NOT NULL,
   `lastname` varchar(40) NOT NULL,
@@ -429,8 +537,23 @@ CREATE TABLE `staff` (
   `biography` longtext,
   `website` varchar(100) DEFAULT NULL,
   `type` varchar(40) NOT NULL,
+  `status` varchar(100) NOT NULL,
+  `datejoined` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `lastlogin` timestamp NULL DEFAULT NULL,
   `lastlogout` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tags`
+--
+
+CREATE TABLE IF NOT EXISTS `tags` (
+  `id` int(11) NOT NULL,
+  `type` varchar(100) NOT NULL,
+  `keyword` varchar(300) NOT NULL,
+  `dateadded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -439,7 +562,7 @@ CREATE TABLE `staff` (
 -- Table structure for table `terms`
 --
 
-CREATE TABLE `terms` (
+CREATE TABLE IF NOT EXISTS `terms` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `html` longtext NOT NULL,
@@ -452,16 +575,24 @@ CREATE TABLE `terms` (
 -- Table structure for table `user`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL,
   `firstname` varchar(40) NOT NULL,
   `lastname` varchar(40) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   `address` longtext,
+  `zip` varchar(100) NOT NULL,
+  `apt` varchar(150) NOT NULL,
+  `city` varchar(200) NOT NULL,
+  `country` varchar(300) NOT NULL,
+  `phone` int(11) NOT NULL,
   `datejoined` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `prescription` longtext NOT NULL,
   `accountType` varchar(10) NOT NULL,
-  `marketing` varchar(50) NOT NULL
+  `marketing` varchar(50) NOT NULL,
+  `code` varchar(100) NOT NULL,
+  `credit` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -472,12 +603,6 @@ CREATE TABLE `user` (
 -- Indexes for table `advertisements`
 --
 ALTER TABLE `advertisements`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `authors`
---
-ALTER TABLE `authors`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -585,9 +710,28 @@ ALTER TABLE `mailinglist`
   ADD PRIMARY KEY (`email`);
 
 --
+-- Indexes for table `materials`
+--
+ALTER TABLE `materials`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pid` (`pid`);
+
+--
 -- Indexes for table `ourstory`
 --
 ALTER TABLE `ourstory`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pages`
+--
+ALTER TABLE `pages`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -597,11 +741,35 @@ ALTER TABLE `productbanner`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `productdescription`
+--
+ALTER TABLE `productdescription`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `pid` (`pid`);
+
+--
+-- Indexes for table `productstatistics`
+--
+ALTER TABLE `productstatistics`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `referrals`
+--
+ALTER TABLE `referrals`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `searchstatistics`
+--
+ALTER TABLE `searchstatistics`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `services`
@@ -624,6 +792,12 @@ ALTER TABLE `staff`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `tags`
+--
+ALTER TABLE `tags`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `terms`
 --
 ALTER TABLE `terms`
@@ -633,6 +807,7 @@ ALTER TABLE `terms`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `Email` (`email`);
 
 --
@@ -643,11 +818,6 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `advertisements`
 --
 ALTER TABLE `advertisements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `authors`
---
-ALTER TABLE `authors`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `blog`
@@ -725,9 +895,24 @@ ALTER TABLE `jobs`
 ALTER TABLE `locations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `materials`
+--
+ALTER TABLE `materials`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `ourstory`
 --
 ALTER TABLE `ourstory`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `pages`
+--
+ALTER TABLE `pages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `productbanner`
@@ -735,9 +920,29 @@ ALTER TABLE `ourstory`
 ALTER TABLE `productbanner`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `productdescription`
+--
+ALTER TABLE `productdescription`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `productstatistics`
+--
+ALTER TABLE `productstatistics`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `referrals`
+--
+ALTER TABLE `referrals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `searchstatistics`
+--
+ALTER TABLE `searchstatistics`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `services`
@@ -753,6 +958,16 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `tags`
+--
+ALTER TABLE `tags`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

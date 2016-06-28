@@ -7,20 +7,20 @@
  */
 ?>
 
-  <link rel="stylesheet" href="chosen/style.css">
+<!--  <link rel="stylesheet" href="chosen/style.css">
   <link rel="stylesheet" href="chosen/prism.css">
   <link rel="stylesheet" href="chosen/chosen.css">
   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap-theme.min.css">
       <link rel="stylesheet" href="tags-input/bootstrap-tagsinput.css">
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/themes/github.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/themes/github.css">
     <link rel="stylesheet" href="tags-input/app.css">
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCR78jxaf-XgjrUTFxK-jfaj9J_anb-kRA"></script> 
 
 <link rel="stylesheet" href="selectize/css/normalize.css">
 <link rel="stylesheet" href="selectize/css/stylesheet.css">
-		<!--[if IE 8]><script src="js/es5.js"></script><![endif]-->
+		[if IE 8]><script src="js/es5.js"></script><![endif]
 <script src="selectize/js/jquery.js"></script>
 <script src="selectize/js/standalone/selectize.js"></script>
 <script src="selectize/js/index.js"></script>
@@ -175,7 +175,7 @@
     /******* GEOCODE ******/
 ?>
 
-<!--Country: <input type='text' id='country'> <br>
+Country: <input type='text' id='country'> <br>
 Zip: <input type='text' id='zip' name='zip'><br>
 <input type='button' id='submit' value='submit'>
 <div id='results'></div>
@@ -185,7 +185,7 @@ Zip: <input type='text' id='zip' name='zip'><br>
         window.location = "test.php?zip=" + zip;
     }; 
                                             var count = 0;
-</script>-->
+</script>
                                 <?php 
                                     if (isset($_GET['zip'])) {
                                         $str = $_GET['zip'];
@@ -296,7 +296,7 @@ Zip: <input type='text' id='zip' name='zip'><br>
 $(function() {
     $('#select-to').selectize(options);
 });
-</script>
+</script>-->
 <!--<script>
 $('#select-to').selectize({
     persist: false,
