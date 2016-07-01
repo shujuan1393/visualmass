@@ -43,7 +43,8 @@ if (isset($_GET['delete'])) {
         } else {
             header('Location: discounts.php');
         }
-    } else if ( (strcmp($disctype, "bundle") === 0 && (empty($_POST['bundleqty']) || empty($_POST['bundleamt']))) ||
+    } else if ( (strcmp($disctype, "bundlediscount") === 0 && (empty($_POST['bundlediscqty']) || empty($_POST['bundlediscprice']))) || 
+            (strcmp($disctype, "bundleamount") === 0 && (empty($_POST['bundleamtqty']) || empty($_POST['bundleamtprice']))) ||
             (strcmp($disctype, "nextfree") === 0 && (empty($_POST['nextfreeqty']) || empty($_POST['nextfreeamt']))) || 
             (strcmp($disctype, "nextdiscount") === 0 && (empty($_POST['nextdiscqty']) || empty($_POST['nextdiscamt']))) ||
             (strcmp($disctype, "fixedpercent") === 0 && empty($_POST['fixedperc'])) ||
@@ -91,16 +92,20 @@ if (isset($_GET['delete'])) {
     } else {
         $discount;
         
-        if (strcmp($disctype, "bundle") === 0) {
-            $discount = "Buy ".$_POST['bundleqty']." For $".$_POST['bundleamt'];
+        if (strcmp($disctype, "bundlediscount") === 0) { 
+            $discount = "But ".$_POST['bundlediscqty']." Get ".$_POST['bundlediscprice']."% Discount";
+        } else if (strcmp($disctype, "bundleamount") === 0) {
+            $discount = "Buy ".$_POST['bundleamtqty']." For $".$_POST['bundleamtprice'];
         } else if (strcmp($disctype, "nextfree") === 0) {
             $discount = "Buy " .$_POST['nextfreeqty']." Get ".$_POST['nextfreeamt']." Free";
         } else if (strcmp($disctype, "nextdiscount") === 0) {
-            $discount = "Buy ".$_POST['nextdiscqty']." Get ".$_POST['nextdiscamt']."% Discount";
+            $discount = "Buy ".$_POST['nextdiscqty']." Next Pair ".$_POST['nextdiscamt']."% Discount";
         } else if (strcmp($disctype, "fixedpercent") === 0) {
             $discount = "Get ".$_POST['fixedperc']."% Off";
         } else if (strcmp($disctype, "fixedamount") === 0) {
             $discount = "Get $".$_POST['fixedamt']." Off";
+        } else if (strcmp($disctype. "upgrade") === 0) {
+            $discount = "Get One Free Upgrade";
         }
         $condition;
         if (strcmp($discterm, "allorders") === 0) {

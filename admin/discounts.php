@@ -230,9 +230,18 @@ if (isset($_GET['id'])) {
                                 <td width='40%'>
                                     <div id='conditiontype'>
                                         <?php 
+                                        if (isset($erow['disctype'])) {
                                             $disctype = $erow['disctype'];
+                                        } else {
+                                            $disctype = "";
+                                        }
+                                        
+                                        if (isset($erow['disccondition'])) {
                                             $condition = $erow['disccondition'];
-                                            
+                                        } else {
+                                            $condition = "";
+                                        }
+                                        
                                             $typeArr = explode(" ", $disctype);
                                         ?>
                                         <select name='condition' id='condition'>
@@ -246,28 +255,48 @@ if (isset($_GET['id'])) {
                                                 echo " selected";
                                             }
                                             ?>>Select Discount Type</option>
-                                            <option value='bundle' <?php 
+                                            <option value='upgrade' <?php 
                                             if (isset($_SESSION['condition'])) {
-                                                if (strcmp($_SESSION['condition'], "bundle") === 0) {
+                                                if (strcmp($_SESSION['condition'], "upgrade") === 0) {
+                                                    echo " selected";
+                                                }
+                                            } else if (in_array("Upgrade", $typeArr)) {
+                                                $_SESSION['editcondition'] = "upgrade";
+                                                echo " selected";
+                                            }
+                                            ?>>Free Upgrade</option>
+                                            <option value='bundleamount' <?php 
+                                            if (isset($_SESSION['condition'])) {
+                                                if (strcmp($_SESSION['condition'], "bundleamount") === 0) {
                                                     echo " selected";
                                                 }
                                             } else if (in_array("For", $typeArr)) {
-                                                $_SESSION['editcondition'] = "bundle";
+                                                $_SESSION['editcondition'] = "bundleamount";
                                                 echo " selected";
                                             }
-                                            ?>>Bundle</option>
+                                            ?>>Bundle Amount</option>
+                                            <option value='bundlediscount' <?php 
+                                            if (isset($_SESSION['condition'])) {
+                                                if (strcmp($_SESSION['condition'], "bundlediscount") === 0) {
+                                                    echo " selected";
+                                                }
+                                            } else if (in_array("Discount", $typeArr)) {
+                                                $_SESSION['editcondition'] = "bundlediscount";
+                                                echo " selected";
+                                            }
+                                            ?>>Bundle Discount</option>
                                             <option value='nextfree' <?php 
                                             if (isset($_SESSION['condition'])) {
                                                 if (strcmp($_SESSION['condition'], "nextfree") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("Free", $typeArr)) {
+                                            } else if (in_array("Next", $typeArr)) {
                                                 $_SESSION['editcondition'] = "nextfree";
                                                 echo " selected";
                                             }
                                             ?>>Next Pair Free</option>
                                             <option value='nextdiscount' <?php 
-                                            $nextdiscArr = array("Buy", "Get", "Discount");
+                                            $nextdiscArr = array("Buy", "Next");
                                             $resArr = array_intersect($nextdiscArr, $typeArr);
                                             if (isset($_SESSION['condition'])) {
                                                 if (strcmp($_SESSION['condition'], "nextdiscount") === 0) {
@@ -309,13 +338,13 @@ if (isset($_GET['id'])) {
                                             }
                                             ?>>Free Shipping</option>
                                         </select>
-                                        <div id='bundle' style='display:none;'>
+                                        <div id='bundleamount' style='display:none;'>
                                             <div class='pull-left' style='width: 45%!important;'>
                                                 <span class='pull-left padded-input'>Buy&nbsp; </span> 
                                                 <span class='pull-right' style='width: 80%!important;'>
-                                                    <input type='text' name='bundleqty' 
+                                                    <input type='text' name='bundleamtqty' 
                                                            value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
-                                                            if (strcmp($_SESSION['editcondition'], "bundle") === 0) { 
+                                                            if (strcmp($_SESSION['editcondition'], "bundleamount") === 0) { 
                                                                 echo $typeArr[1];
                                                             } 
                                                         } ?>'
@@ -325,14 +354,40 @@ if (isset($_GET['id'])) {
                                             <div class='pull-right' style='width: 48%!important;'>
                                                 <span class='pull-left padded-input'>For $</span>
                                                 <span class='pull-right' style='width: 80%!important;'>
-                                                    <input type='text' name='bundleprice' 
+                                                    <input type='text' name='bundleamtprice' 
                                                            value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
-                                                            if (strcmp($_SESSION['editcondition'], "bundle") === 0) { 
+                                                            if (strcmp($_SESSION['editcondition'], "bundleamount") === 0) { 
                                                                 echo substr($typeArr[3], 1);
                                                             } 
                                                         } ?>'
                                                            onkeypress="return isNumberKey(event)">
                                                 </span>
+                                            </div>
+                                        </div>
+                                        <div id='bundlediscount' style='display:none;'>
+                                            <div class='pull-left' style='width: 45%!important;'>
+                                                <span class='pull-left padded-input'>Buy&nbsp; </span> 
+                                                <span class='pull-right' style='width: 80%!important;'>
+                                                    <input type='text' name='bundlediscqty' 
+                                                           value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                            if (strcmp($_SESSION['editcondition'], "bundlediscount") === 0) { 
+                                                                echo $typeArr[1];
+                                                            } 
+                                                        } ?>'
+                                                           onkeypress="return isNumber(event)">
+                                                </span>
+                                            </div>
+                                            <div class='pull-right' style='width: 48%!important;'>
+                                                <span class='pull-left' style='width: 80%!important;'>
+                                                    <input type='text' name='bundlediscprice' 
+                                                           value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                            if (strcmp($_SESSION['editcondition'], "bundlediscount") === 0) { 
+                                                                echo substr($typeArr[3], 0, -1); 
+                                                            } 
+                                                        } ?>'
+                                                           onkeypress="return isNumberKey(event)">
+                                                </span>
+                                                <span class='pull-right padded-input'>% Off</span>
                                             </div>
                                         </div>
                                         <div id='nextfree' style='display:none;'>
@@ -837,45 +892,59 @@ if (isset($_GET['id'])) {
     });
     
     function checkCondition(str) {
-        if (str === "bundle") {
-            document.getElementById('bundle').style.display = "block";
+        if (str === "bundleamount") {
+            document.getElementById('bundleamount').style.display = "block";
+            document.getElementById('bundlediscount').style.display = "none";
             document.getElementById('nextfree').style.display = "none"; 
             document.getElementById('nextdiscount').style.display = "none";   
             document.getElementById('fixedpercent').style.display = "none"; 
             document.getElementById('fixedamount').style.display = "none";  
+        } else if (str === "bundlediscount") { 
+            document.getElementById('bundleamount').style.display = "none";
+            document.getElementById('bundlediscount').style.display = "block";
+            document.getElementById('nextfree').style.display = "none"; 
+            document.getElementById('nextdiscount').style.display = "none";   
+            document.getElementById('fixedpercent').style.display = "none"; 
+            document.getElementById('fixedamount').style.display = "none";              
         } else if (str === "nextfree") {
-            document.getElementById('bundle').style.display = "none";
+            document.getElementById('bundleamount').style.display = "none";
+            document.getElementById('bundlediscount').style.display = "none";
             document.getElementById('nextfree').style.display = "block";   
             document.getElementById('nextdiscount').style.display = "none";  
             document.getElementById('fixedpercent').style.display = "none"; 
             document.getElementById('fixedamount').style.display = "none";                 
         } else if (str === "nextdiscount") {
-            document.getElementById('bundle').style.display = "none";
+            document.getElementById('bundleamount').style.display = "none";
+            document.getElementById('bundlediscount').style.display = "none";
             document.getElementById('nextfree').style.display = "none";  
             document.getElementById('nextdiscount').style.display = "block";   
             document.getElementById('fixedpercent').style.display = "none"; 
             document.getElementById('fixedamount').style.display = "none";  
         } else if (str === "fixedpercent") {
-            document.getElementById('bundle').style.display = "none";
+            document.getElementById('bundleamount').style.display = "none";
+            document.getElementById('bundlediscount').style.display = "none";
             document.getElementById('nextfree').style.display = "none";  
             document.getElementById('nextdiscount').style.display = "none";  
             document.getElementById('fixedpercent').style.display = "block"; 
             document.getElementById('fixedamount').style.display = "none";                   
         } else if (str === "fixedamount") {
-            document.getElementById('bundle').style.display = "none";
+            document.getElementById('bundleamount').style.display = "none";
+            document.getElementById('bundlediscount').style.display = "none";
             document.getElementById('nextfree').style.display = "none";  
             document.getElementById('nextdiscount').style.display = "none";  
             document.getElementById('fixedpercent').style.display = "none";  
             document.getElementById('fixedamount').style.display = "block";                 
         } else if (str === "shipping") {
-            document.getElementById('bundle').style.display = "none";
+            document.getElementById('bundleamount').style.display = "none";
+            document.getElementById('bundlediscount').style.display = "none";
             document.getElementById('nextfree').style.display = "none";  
             document.getElementById('nextdiscount').style.display = "none";  
             document.getElementById('fixedpercent').style.display = "none";  
             document.getElementById('fixedamount').style.display = "none";  
             document.getElementById('shipping').style.display = "block";                  
         } else {
-            document.getElementById('bundle').style.display = "none";
+            document.getElementById('bundleamount').style.display = "none";
+            document.getElementById('bundlediscount').style.display = "none";
             document.getElementById('nextfree').style.display = "none";  
             document.getElementById('nextdiscount').style.display = "none";  
             document.getElementById('fixedpercent').style.display = "none";  
