@@ -728,6 +728,20 @@ if (isset($_GET['id'])) {
 </html>
 
 <script> 
+    $(document).ready(function() {
+        if(location.hash) {
+            $('a[href=' + location.hash + ']').tab('show');
+        }
+        $(document.body).on("click", "a[data-toggle]", function(event) {
+            location.hash = this.getAttribute("href");
+        });
+    });
+    
+    $(window).on('popstate', function() {
+        var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
+        $('a[href=' + anchor + ']').tab('show');
+    });
+    
     var count = document.getElementById('buttonno').value;
     attachClick(count);
     
@@ -924,16 +938,4 @@ if (isset($_GET['id'])) {
             checkSelect(i);
         }
     }
-    $(document).ready(function() {
-        if(location.hash) {
-            $('a[href=' + location.hash + ']').tab('show');
-        }
-        $(document.body).on("click", "a[data-toggle]", function(event) {
-            location.hash = this.getAttribute("href");
-        });
-    });
-    $(window).on('popstate', function() {
-        var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
-        $('a[href=' + anchor + ']').tab('show');
-    });
 </script>
