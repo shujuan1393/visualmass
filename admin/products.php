@@ -634,12 +634,20 @@ if (isset($_GET['id'])) {
 <script>  
     
     function unlinkImg(img) {
-        var id = <?php if (isset($_GET['id'])) { echo '"'.$_GET['id'].'"'; } ?>;
+        var id;
+        <?php if (isset($_GET['id'])) { ?> 
+                id = <?php echo $_GET['id']; } else { ?>;
+                id = "";
+        <?php } ?>
         window.location="processMedia.php?type=products&feat=no&id="+id+"&file=" + img;
     }    
     
     function unlinkFeatImg(img) {
-        var id = <?php if (isset($_GET['id'])) { echo '"'.$_GET['id'].'"'; } ?>;
+        var id;
+        <?php if (isset($_GET['id'])) { ?> 
+                id = <?php echo $_GET['id']; } else { ?>;
+                id = "";
+        <?php } ?>
         window.location="processMedia.php?type=products&feat=yes&id="+id+"&file=" + img;
     }    
     
