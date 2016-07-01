@@ -744,6 +744,18 @@ a:hover#heart {
     float: left;
 }
 
+#prodTable tr {
+    border: none;
+}
+
+#prodTable {
+    padding-left: 10px;
+}
+
+.image_display {
+    width: 100%;
+}
+
 .product_desc {
     margin: 20px 20px;
     float: left;
@@ -921,8 +933,7 @@ div.panel.show {
 #myCarousel {
     width:100%;
     text-align: center;
-    margin: 15px 20px;
-    height: 50%;
+    margin: 10px;
 }
 
 .thumbnail {
@@ -947,9 +958,14 @@ div.product_display img {
     height: 100%;
 }
 
+#myCarousel .carousel-inner {
+    bottom: 0;
+    height: 40%!important;
+}
+
 div.product_display.col-md-6 {
     background-color: #000;
-    width: 50%;
+    width: 100%;
     height: 100%;
     color: #fff;
 }
@@ -1473,7 +1489,6 @@ if it's not present, don't show loader */
     cursor: pointer;
 }
 
-#completeProfile {
-/*    float: left;
-    text-align: center!important;*/
+.padded-input {
+    margin: 10px 0;
 }

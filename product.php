@@ -199,8 +199,89 @@
                 </div>
                 
                 <div class="details row">
-                    <div class='product_details col-md-6'>
-                        <div class='row'>
+                    <table id='prodTable' class='full_section'> 
+                        <tr width='40%'>
+                            <td colspan="2" class='product_desc' width='40%'>
+                                <h3>ABOUT THE FRAME</h3>
+                                <?php echo html_entity_decode($brow['description']); ?>                                
+                            </td>
+                            <td rowspan="4" width='45%'>
+                                <div id='image_display' class='product_display col-md-6'>
+                                    <h3>Move your cursor over to view different angles</h3>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr width='10%'>
+                            <td>
+                                <h5>WIDTH</h5><br>
+                                <?php echo $brow['width']; ?>                                
+                            </td>
+                            <td>
+                                <h5>MEASUREMENTS</h5><br>
+                                <?php echo $brow['measurement']; ?>                             
+                            </td>
+                        </tr>
+                        <tr width='10%'>
+                            <td colspan="2">
+                                <h5 class='caps'>Tags</h5>
+                                <?php 
+                                    if (!empty($brow['tags'])) {
+                                        $tags = explode(",", $brow['tags']);
+
+                                        for ($i = 0; $i < count($tags); $i++) {
+                                            $t = $tags[$i];
+                                            echo "#".$t;
+
+                                            if ($i + 1 !== count($tags)) {
+                                                echo ", ";
+                                            }
+                                        }
+                                    } else {
+                                        echo " - ";
+                                    }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr width='40%' id='carouselrow'>
+                            <td colspan="2">
+                                <div id="myCarousel" class="carousel slide">
+                                    <!-- Carousel items -->
+                                    <div class="carousel-inner">
+                                        <div class="item active">
+                                                <?php 
+                                                    for($i = 0; $i < count($browArr); $i++) {
+                                                        $count++;
+                                                        $pos = strpos($browArr[$i], '/');
+                                                        $url = substr($browArr[$i], $pos+1);
+
+                                                        echo "<div class='col-md-4'><a href='#x' id='thumb$count' class='thumbnail'>"
+                                                        . "<img class='img-responsive' src='".$url."'>";
+                                                        echo "</a><input type='hidden' id='url".$count."' value='$url'></div>";
+                                                        if ($count % 3 === 0 && $i !== (count($browArr)-1)) {
+                                                            echo "</div></div>";
+                                                            echo "<div class='item'>";
+                                                            echo "<div class='col-md-12'>";
+                                                        }
+                                                        if ($i === (count($browArr)-1)) {
+                                                            echo "</div></div>";
+                                                        }
+                                                    }
+                                                ?>
+                                            <!--/carousel-inner--> 
+                                            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                            </a>
+
+                                            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+<!--                    <div class='product_details col-md-6 full_section'>
                             <div class='product_desc col-md-12'>
                                 <h3>ABOUT THE FRAME</h3>
                                 <?php echo html_entity_decode($brow['description']); ?>
@@ -215,52 +296,52 @@
                                     <h5>MEASUREMENTS</h5><br>
                                     <?php echo $brow['measurement']; ?>
                                 </div>
-                            </div>
-                            
-                            <div class='col-md-12'>
-                                <h5 class='caps'>Product Tags</h5>
-                                <?php 
-                                    $tags = explode(",", $brow['tags']);
+                                <div class='col-md-10 col-md-offset-1'><hr></div>
+                                <div class='col-md-12'>
+                                    <h5 class='caps'>Tags</h5>
+                                    <?php 
+                                        if (!empty($brow['tags'])) {
+                                            $tags = explode(",", $brow['tags']);
 
-                                    for ($i = 0; $i < count($tags); $i++) {
-                                        $t = $tags[$i];
-                                        echo "#".$t;
-                                        
-                                        if ($i + 1 !== count($tags)) {
-                                            echo ", ";
+                                            for ($i = 0; $i < count($tags); $i++) {
+                                                $t = $tags[$i];
+                                                echo "#".$t;
+
+                                                if ($i + 1 !== count($tags)) {
+                                                    echo ", ";
+                                                }
+                                            }
+                                        } else {
+                                            echo " - ";
                                         }
-                                    }
-                                ?>
-                            </div>
-                            <div class='row'>
-                                <div class='col-md-12 col-md-offset-1'><hr></div>
+                                    ?>
+                                    <div class='col-md-10 col-md-offset-1'><hr></div>
+                                </div>
                             </div>
                             <div id="myCarousel" class="carousel slide">
-                                <!-- Carousel items -->
+                                 Carousel items 
                                 <div class="carousel-inner">
                                     <div class="item active">
-                                        <div class="col-md-12">
                                             <?php 
-                                                for($i = 0; $i < count($browArr); $i++) {
-                                                    $count++;
-                                                    $pos = strpos($browArr[$i], '/');
-                                                    $url = substr($browArr[$i], $pos+1);
-                                                    
-                                                    echo "<div class='col-md-4'><a href='#x' id='thumb$count' class='thumbnail'>"
-                                                    . "<img class='img-responsive' src='".$url."'>";
-                                                    echo "</a><input type='hidden' id='url".$count."' value='$url'></div>";
-                                                    if ($count % 3 === 0 && $i !== (count($browArr)-1)) {
-                                                        echo "</div></div>";
-                                                        echo "<div class='item'>";
-                                                        echo "<div class='col-md-12'>";
-                                                    }
-                                                    if ($i === (count($browArr)-1)) {
-                                                        echo "</div></div>";
-                                                    }
-                                                }
+//                                                for($i = 0; $i < count($browArr); $i++) {
+//                                                    $count++;
+//                                                    $pos = strpos($browArr[$i], '/');
+//                                                    $url = substr($browArr[$i], $pos+1);
+//                                                    
+//                                                    echo "<div class='col-md-4'><a href='#x' id='thumb$count' class='thumbnail'>"
+//                                                    . "<img class='img-responsive' src='".$url."'>";
+//                                                    echo "</a><input type='hidden' id='url".$count."' value='$url'></div>";
+//                                                    if ($count % 3 === 0 && $i !== (count($browArr)-1)) {
+//                                                        echo "</div></div>";
+//                                                        echo "<div class='item'>";
+//                                                        echo "<div class='col-md-12'>";
+//                                                    }
+//                                                    if ($i === (count($browArr)-1)) {
+//                                                        echo "</div></div>";
+//                                                    }
+//                                                }
                                             ?>
-                                        </div>
-                                        <!--/carousel-inner--> 
+                                        /carousel-inner 
                                         <a class="left carousel-control" href="#myCarousel" data-slide="prev">
                                             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                         </a>
@@ -274,8 +355,7 @@
                     <div id='image_display' class='product_display col-md-6'>
                         <h3>Move your cursor over to view different angles</h3>
                     </div>
-                        </div>
-                </div>
+                </div>-->
             </div>
             <div id='shipping_terms' class='row'>
                 <h3>SHIPPING TERMS</h3>
@@ -346,8 +426,6 @@
                    <div class="modal-body">
                    </div>
                    <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                     <button type="button" class="btn btn-primary">Save changes</button>
                    </div>
                  </div><!-- /.modal-content -->
                </div><!-- /.modal-dialog -->
@@ -424,6 +502,7 @@
                     someElement.innerHTML = "<h3>Move your cursor over to view different angles</h3>";
                     someElement.style.backgroundColor = "#000";
                 });
+                
                 var clientHeight = document.getElementById('header').clientHeight;
                 var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 //                alert(clientHeight + " " + height);
@@ -431,8 +510,11 @@
                 
                 var $item = $('.carousel .item');
                 var $wHeight = $(window).height();
-
-                $item.height($wHeight); 
+                var taboffset = document.getElementById('prodTable').offsetTop;
+                var troffset = document.getElementById('carouselrow').offsetTop;
+                var tableheight = taboffset-troffset;
+//                alert($wHeight-tableheight);
+                $item.height(tableheight); 
 
                 $('.carousel img').each(function() {
                   var $src = $(this).attr('src');
@@ -445,8 +527,11 @@
                 });
 
                 $(window).on('resize', function (){
-                  $wHeight = $(window).height();
-                  $item.height($wHeight);
+                    $wHeight = $(window).height();
+                    var taboffset = document.getElementById('prodTable').offsetTop;
+                    var troffset = document.getElementById('carouselrow').offsetTop;
+                    var tableheight = taboffset-troffset;
+                    $item.height(tableheight);
                 });
                 $item.eq(0).addClass('active');
             </script>

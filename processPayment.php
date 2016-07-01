@@ -166,18 +166,6 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 } else {
                     $details = $row['lens'];
                 }
-                $orderid = "ON-".rand();
-                $order = "INSERT INTO orders (orderid, pid, price, quantity, type, payment, details, status, orderedby, "
-                        . "totalcost, dateordered, discountcode)"
-                        . " VALUES ('$orderid','$pid', '$price', '$quantity', '$type', '$payment','$details', 'paid', "
-                        . "'$email', '$unitcost', '".$row['datetime']."', '$discount');";
-                mysqli_query($link, $order);
-                $remove = "DELETE FROM cart where id ='".$row['id']."';";
-                mysqli_query($link, $remove);      
-                
-                //add to statistics
-                $stats = "INSERT INTO productstatistics (type, customer, orderid) VALUES ('$type', '$email', '$orderid');";
-                mysqli_query($stats);
                 
                 if (!empty($discount)) {
                     //use existing credit
@@ -188,8 +176,8 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                         if (!mysqli_query($link, $sql)) {
                             die(mysqli_error($link));
                         } else {
-                            $row = mysqli_fetch_assoc($user);
-                            $credit = $row['credit'];
+                            $creditrow = mysqli_fetch_assoc($user);
+                            $credit = $creditrow['credit'];
                             $newCred = intval($credit) - intval($amt);
                             
                             $minusCredit = "UPDATE user set credit='$newCred' where email='$email';";
@@ -219,8 +207,16 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                             }
                         }                        
                     } else {
-                    //update discount code usage
-                        $sql = "Select * from discounts where code='$discount';";
+                        //split code and digits (if any)
+                        preg_match_all('/([\d]+)/', $discount, $match);
+                        
+                        if (count($match[0]) === 0) {
+                            $sql = "Select * from discounts where code='$discount';";
+                        } else {
+                            $arr = explode($match[0][0], $discount);
+                            $sql = "Select * from discounts where code LIKE '".$arr[0]."%';";
+                        }
+                        //update discount code usage
                         $dres = mysqli_query($link, $sql);
 
                         if (!mysqli_query($link, $sql)) {
@@ -229,12 +225,53 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                             if ($dres -> num_rows !== 0) {
                                 $row = mysqli_fetch_assoc($dres);
                                 $limit = $row['disclimit'];
+                                $trackserial = $row['serial'];
+                                
+                                $canuse = false;
+                                
+                                //if need to track serial, check if number entered is within range
+                                if (strcmp($trackserial, "yes") === 0 && $match[0][0] <= $limit) {
+                                    //check if used before in transactions
+                                    $checkdisc = "Select * from orders where discountcode='$discount' group by orderid;";
+                                    $checkres = mysqli_query($link, $checkdisc);
 
-                                if (strcmp($limit, "unlimited") !== 0) {
-                                    $qty = intval($limit) - 1;
+                                    if (!mysqli_query($link, $checkdisc)) {
+                                        die(mysqli_error($link));
+                                    } else {
+                                        if ($checkres -> num_rows === 0) {
+                                            //this particular discount code has never been used before
+                                            $canuse = true;
+                                        }
+                                    }
+                                } else {
+                                    //check # times used in orders
+                                    $check = "Select * from orders where discountcode ='$discount' group by orderid;";
+                                    $cres = mysqli_query($link, $check);
+                                    
+                                    if (!mysqli_query($link, $check)) {
+                                        die(mysqli_error($link));
+                                    } else {
+                                        $numused = $cres -> num_rows;
+                                        if ($numused < $limit) {
+                                            //this particular discount code still can be used
+                                            $canuse = true;
+                                        }
+                                    }
+                                }
+                                
+                                if ($canuse === true) {
+                                    $orderid = "ON-".rand();
+                                    $order = "INSERT INTO orders (orderid, pid, price, quantity, type, payment, details, status, orderedby, "
+                                            . "totalcost, dateordered, discountcode)"
+                                            . " VALUES ('$orderid','$pid', '$price', '$quantity', '$type', '$payment','$details', 'paid', "
+                                            . "'$email', '$unitcost', '".$row['datetime']."', '$discount');";
+                                    mysqli_query($link, $order);
+                                    $remove = "DELETE FROM cart where id ='".$row['id']."';";
+                                    mysqli_query($link, $remove);      
 
-                                    $update = "UPDATE discounts set disclimit='$qty' where code ='$discount';";
-                                    mysqli_query($link, $update);
+                                    //add to statistics
+                                    $stats = "INSERT INTO productstatistics (type, customer, orderid) VALUES ('$type', '$email', '$orderid');";
+                                    mysqli_query($stats);
                                 }
                             } else {
                                 $refer = "Select * from referrals where email ='$email';";
