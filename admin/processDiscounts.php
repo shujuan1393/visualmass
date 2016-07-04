@@ -93,7 +93,7 @@ if (isset($_GET['delete'])) {
         $discount;
         
         if (strcmp($disctype, "bundlediscount") === 0) { 
-            $discount = "But ".$_POST['bundlediscqty']." Get ".$_POST['bundlediscprice']."% Discount";
+            $discount = "Buy ".$_POST['bundlediscqty']." Get ".$_POST['bundlediscprice']."% Discount";
         } else if (strcmp($disctype, "bundleamount") === 0) {
             $discount = "Buy ".$_POST['bundleamtqty']." For $".$_POST['bundleamtprice'];
         } else if (strcmp($disctype, "nextfree") === 0) {

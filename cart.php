@@ -30,7 +30,7 @@ and open the template in the editor.
                         <input type='hidden' name='numrows' id='numrows'>
                     <div id='cart' class='row'>
                     <?php
-                        $cartSql = "Select * from cart where cartid='".GetCartId()."' and type LIKE '%giftcard' OR type = 'purchase';";
+                        $cartSql = "Select * from cart where cartid='".GetCartId()."' and type <> 'hometry';";
                         $res = mysqli_query($link, $cartSql);
                         
                         if(!mysqli_query($link, $cartSql)) {
