@@ -230,10 +230,13 @@ if (isset($_GET['id'])) {
                                 <td width='40%'>
                                     <div id='conditiontype'>
                                         <?php 
-                                            $disctype = $erow['disctype'];
+                                        if(!empty($erow['disccondition'])){
                                             $condition = $erow['disccondition'];
-                                            
+                                        }
+                                        if(!empty($erow['disctype'])){
+                                            $disctype = $erow['disctype'];
                                             $typeArr = explode(" ", $disctype);
+                                        }
                                         ?>
                                         <select name='condition' id='condition'>
                                             <option value='null' <?php 
@@ -241,7 +244,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['condition'], "null") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("", $typeArr)) {
+                                            } else if ((!empty($typeArr)) && (in_array("", $typeArr))) {
                                                 $_SESSION['editcondition'] = "";
                                                 echo " selected";
                                             }
@@ -251,7 +254,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['condition'], "bundle") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("For", $typeArr)) {
+                                            } else if ((!empty($typeArr)) && (in_array("For", $typeArr))) {
                                                 $_SESSION['editcondition'] = "bundle";
                                                 echo " selected";
                                             }
@@ -261,42 +264,48 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['condition'], "nextfree") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("Free", $typeArr)) {
+                                            } else if ((!empty($typeArr)) && (in_array("Free", $typeArr))) {
                                                 $_SESSION['editcondition'] = "nextfree";
                                                 echo " selected";
                                             }
                                             ?>>Next Pair Free</option>
                                             <option value='nextdiscount' <?php 
                                             $nextdiscArr = array("Buy", "Get", "Discount");
-                                            $resArr = array_intersect($nextdiscArr, $typeArr);
+                                            if (!empty($typeArr)) { 
+                                                $resArr = array_intersect($nextdiscArr, $typeArr);
+                                            }
                                             if (isset($_SESSION['condition'])) {
                                                 if (strcmp($_SESSION['condition'], "nextdiscount") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (count($resArr) === count($nextdiscArr) && is_numeric(strpos($disctype, "%"))) {
+                                            } else if ((!empty($resArr)) && (!empty($disctype)) && unt($resArr) === count($nextdiscArr) && is_numeric(strpos($disctype, "%"))) {
                                                 $_SESSION['editcondition'] = "nextdiscount";
                                                 echo " selected";
                                             }
                                             ?>>Next Pair Discounted</option>
                                             <option value='fixedpercent' <?php 
                                             $fixedArr = array("Get", "Off");
-                                            $percArr = array_intersect($fixedArr, $typeArr);
+                                            if ((!empty($fixedArr)) && (!empty($typeArr))) {
+                                                $percArr = array_intersect($fixedArr, $typeArr);
+                                            }
                                             if (isset($_SESSION['condition'])) {
                                                 if (strcmp($_SESSION['condition'], "fixedpercent") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (count($percArr) ===  count($fixedArr) && is_numeric(strpos($disctype, "%"))) {
+                                            } else if ((!empty($percArr)) && (!empty($disctype)) && count($percArr) ===  count($fixedArr) && is_numeric(strpos($disctype, "%"))) {
                                                 $_SESSION['editcondition'] = "fixedpercent";
                                                 echo " selected";
                                             }
                                             ?>>Fixed Percentage Discount</option>
                                             <option value='fixedamount' <?php 
-                                            $amtArr = array_intersect($fixedArr, $typeArr);
+                                            if ((!empty($fixedArr)) && (!empty($typeArr))) {
+                                                $amtArr = array_intersect($fixedArr, $typeArr);
+                                            }
                                             if (isset($_SESSION['condition'])) {
                                                 if (strcmp($_SESSION['condition'], "fixedamount") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (count($amtArr) === count($amtArr) && is_numeric(strpos($disctype, "$"))) {
+                                            } else if ((!empty($amtArr)) && (!empty($disctype)) && count($amtArr) === count($amtArr) && is_numeric(strpos($disctype, "$"))) {
                                                 $_SESSION['editcondition'] = "fixedamount";
                                                 echo " selected";
                                             }
@@ -421,7 +430,9 @@ if (isset($_GET['id'])) {
                                 <td>
                                     <div id='conditions'>
                                         <?php 
+                                        if(!empty($condition)) {
                                             $condArr = explode(" ", $condition);
+                                        }
                                         ?>
                                         <select name='conditionfor' id='conditionfor'>
                                             <option value='null' <?php 
@@ -429,7 +440,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['discterms'], "null") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("", $condArr)) {
+                                            } else if ((!empty($condArr)) && (in_array("", $condArr))) {
                                                 $_SESSION['editterms'] = "";
                                                 echo " selected";
                                             }
@@ -439,7 +450,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['discterms'], "allorders") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("All", $condArr)) {
+                                            } else if ((!empty($condArr)) && (in_array("All", $condArr))) {
                                                 $_SESSION['editterms'] = "allorders";
                                                 echo " selected";
                                             }
@@ -449,7 +460,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['discterms'], "ordersabove") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("above", $condArr)) {
+                                            } else if ((!empty($condArr)) && (in_array("above", $condArr))) {
                                                 $_SESSION['editterms'] = "ordersabove";
                                                 echo " selected";
                                             }
@@ -459,7 +470,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['discterms'], "productcat") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("categories:", $condArr)) {
+                                            } else if ((!empty($condArr)) && (in_array("categories:", $condArr))) {
                                                 $_SESSION['editterms'] = "productcat";
                                                 echo " selected";
                                             }
@@ -469,7 +480,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['discterms'], "specificprod") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("For", $condArr)) {
+                                            } else if ((!empty($condArr)) && (in_array("For", $condArr))) {
                                                 $_SESSION['editterms'] = "specificprod";
                                                 echo " selected";
                                             }
@@ -479,7 +490,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['discterms'], "customergroup") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("customer", $condArr)) {
+                                            } else if ((!empty($condArr)) && (in_array("customer", $condArr))) {
                                                 $_SESSION['editterms'] = "customergroup";
                                                 echo " selected";
                                             }
