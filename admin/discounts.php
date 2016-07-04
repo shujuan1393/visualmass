@@ -270,7 +270,7 @@ if (isset($_GET['id'])) {
                                                 if (strcmp($_SESSION['condition'], "bundleamount") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (in_array("For", $typeArr)) {
+                                            } else if (strcmp($typeArr[2], "For") === 0) {
                                                 $_SESSION['editcondition'] = "bundleamount";
                                                 echo " selected";
                                             }
@@ -320,12 +320,11 @@ if (isset($_GET['id'])) {
                                             }
                                             ?>>Fixed Percentage Discount</option>
                                             <option value='fixedamount' <?php 
-                                            $amtArr = array_intersect($fixedArr, $typeArr);
                                             if (isset($_SESSION['condition'])) {
                                                 if (strcmp($_SESSION['condition'], "fixedamount") === 0) {
                                                     echo " selected";
                                                 }
-                                            } else if (count($amtArr) === count($amtArr) && is_numeric(strpos($disctype, "$"))) {
+                                            } else if (count($percArr) === count($fixedArr) && is_numeric(strpos($disctype, "$"))) {
                                                 $_SESSION['editcondition'] = "fixedamount";
                                                 echo " selected";
                                             }

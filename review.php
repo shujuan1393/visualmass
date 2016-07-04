@@ -426,35 +426,45 @@ and open the template in the editor.
             //get total amount discounted 
             var totaldisc = 0;
             
-            //processing for bundle offer
+            var pcount = <?php echo $prodCount; ?>; 
+            
+            //processing for bundle amount offer (Buy A For $B)
             if (valArr.indexOf("For") > -1) {
-                var qty = parseInt(valArr[1]);
-                var price = parseInt(valArr[3].substring(1));
+                var qty = parseFloat(valArr[1]);
+                //drop the $ sign
+                var price = parseFloat(valArr[3].substring(1));
                 
                 //product cats
                 if (type === "category") {
                     var totalqty = 0;
+                    //get total qty of products purchased from this arr
                     for (var j = 0; j < result.length; j++) {
                         var s = "prodqty" + result[j];
-                        totalqty += parseInt(document.getElementById(s).value);
+                        totalqty += parseFloat(document.getElementById(s).value);
                     }
                     
-                    if (limit === "unlimited") {
+                    if (limit === "0") {
                         limit = Math.ceil(totalqty/qty);
                     } 
                     
-                    if (totalqty >= qty) {
+                    //get # of times can run
+                    var times = Math.floor(totalqty/qty);
+                    
+                    //check if there are enough sets
+                    if (totalqty > 0 && (totalqty % qty === 0 || times > 0)) {
+                        //keep track of how many items have been considered
                         var qtychanged = qty;
                         
                         //loop through all elements in the array unless otherwise stated
-                        for (var i = 0; i < result.length; i++) {
+                        var i = 0;
+                        do {
                             //price of one pid
                             var pricestr = "prodprice" + result[i];
-                            var priceval = parseInt(document.getElementById(pricestr).value);
+                            var priceval = parseFloat(document.getElementById(pricestr).value);
                             
                             //quantity of one pid
                             var qtystr = "prodqty" + result[i];
-                            var qtyval = parseInt(document.getElementById(qtystr).value);
+                            var qtyval = parseFloat(document.getElementById(qtystr).value);
                             
                             if (qtyval === qtychanged) {
                                 var disc = priceval * qtyval;
@@ -462,7 +472,7 @@ and open the template in the editor.
                                 qtychanged -= qtyval;
                                 totalqty -= qtyval;
                             } else if (qtyval > qtychanged) {
-                                disc = qtyval * priceval;
+                                disc = qtychanged * priceval;
                                 totaldisc += disc - price;
                                 qtychanged -= qtychanged;
                                 totalqty -= qtychanged;
@@ -473,48 +483,67 @@ and open the template in the editor.
                                 totalqty -= qtyval;
                             }
                             
-                            if (qtychanged === 0 && limit !== 0 && totalqty > 0) {
+                            //increment i
+                            i++;
+                            
+                            //finished one full set but still can continue
+                            if (qtychanged === 0 && times > 0 && totalqty > 0) {
+                                //reset counter
                                 qtychanged = qty;
                                 limit--;
-                            } else if (qtychanged === 0 && totalqty === 0) {
-                                document.getElementById('discountAmount').value = totaldisc;
-                                document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                        return false;
+                                times--;
+                            } 
+                        } while (i < pcount && times > 0 && times < limit)
+                            
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
                     } else {
                         return false;
                     }
                 } else if (type === "product") {
+                    //reset total discount
                     totaldisc = 0;
+                    
+                    //get total quantity of specified product
                     var pqty = "prodqty" + result;
-                    var qtyval = parseInt(document.getElementById(pqty).value);
+                    var qtyval = parseFloat(document.getElementById(pqty).value);
+                    
                     var prodp = "prodprice" + result;
-                    var orip = document.getElementById(prodp).value;
+                    var orip = parseFloat(document.getElementById(prodp).value);
                     totalqty = qtyval;
                     
-                    if (limit === "unlimited") {
+                    if (limit === "0") {
                         limit = Math.ceil(qtyval/qty);
                     } 
                     
-                    do {
-                        if (totalqty > qty) {
-                            disc = qty * orip;
-                            totaldisc += disc - price; 
-                            totalqty -= qty;
-                            limit--;
-                        } else if (totalqty === qty) {
-                            disc = qty * orip;
-                            totaldisc += disc - price; 
-                            totalqty -= qty;
-                            limit--;
-                        } 
-                    } while (totalqty > 0);
+                    //get # times to run
+                    times = Math.floor(qtyval/qty);
                     
-                    if (totalqty === 0) {
+                    if (qtyval > 0 && (times > 0 || qtyval % qty === 0)) {
+                        
+                        //set counter
+                        qtyused = qty;
+                        
+                        do {
+                            if (totalqty > qtyused) {
+                                disc = qtyused * orip;
+                                totaldisc += disc - price; 
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            } else if (totalqty === qtyused) {
+                                disc = qty * orip;
+                                totaldisc += disc - price; 
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            } 
+                            if (qtyused === 0 && times > 0 && totalqty > 0) { 
+                                //reset counter
+                                qtyused = qty;
+                                times--;
+                                limit--;
+                            } 
+                        } while (times > 0 && times < limit);
                         document.getElementById('discountAmount').value = totaldisc;
                         document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
                         return true;
@@ -522,250 +551,768 @@ and open the template in the editor.
                         return false;
                     }
                 } else {
-                    //for both all orders and orders above a certain amt
-                    var pcount = <?php echo $prodCount; ?>;                    
+                    //reset total discount
+                    totaldisc = 0;
+                    
+                    //for both all orders and orders above a certain amt            
                     var totalqty = 0;
                     //get total qty of each pid in cart
                     for (var q = 0; q < pcount; q++) {
                         var pqty = "prodqty" + q;
-                        totalqty += document.getElementById(pqty).value;
+                        totalqty += parseFloat(document.getElementById(pqty).value);
                     }
                     
-                    if (limit === "unlimited") {
+                    if (limit === "0") {
                         limit = Math.ceil(totalqty/qty);
                     } 
                     
-                    if (totalqty >= qty) {     
-                        //get last index of cart items
-                        var count = pcount -1;             
+                    //get # times to run
+                    times = Math.floor(totalqty / qty);  
+                    
+                    if (totalqty > 0 && (times > 0 || totalqty % qty === 0)) {  
+                        //set counter
                         var qtyused = qty;
+                        var i = 0;
                         
                         //loop that runs the same num of times as the qty specified
-                        for (var i = 0; i < pcount; i++) {
+                        do {
                             //qty and price of this object
-                            var objqty = "prodqty"+ count;
-                            var qtyobj = document.getElementById(objqty).value;
-                            var obj = "prodprice"+ count;
-                            var priceobj = document.getElementById(obj).value;
+                            var objqty = "prodqty"+ i;
+                            var obj = document.getElementById(objqty);
+                            if (obj !== null) {
+                                var qtyobj = parseFloat(document.getElementById(objqty).value);
+                            }
+                            var obj = "prodprice"+ i;
+                            var priceobj = parseFloat(document.getElementById(obj).value);
                             
                             if (qtyobj > qtyused) {
                                 disc = qtyused * priceobj;
                                 totaldisc += disc - price; 
                                 totalqty -= qtyused;
                                 qtyused -= qtyused;
-                                limit--;
                             } else if (qtyobj === qtyused) {
                                 disc = qtyused * priceobj;
                                 totaldisc += disc - price; 
                                 qtyused -= qtyobj;
                                 totalqty -= qtyused;
-                                limit--;
                             } else if (qtyobj < qtyused) {
                                 disc = qtyobj * priceobj;
                                 totaldisc += disc - price; 
                                 qtyused -= qtyobj;
                                 totalqty -= qtyobj;
+                            }
+                            
+                            //increment counter
+                            i++;
+                            
+                            if (qtyused === 0 && times > 0 && totalqty > 0) {
+                                qtyused = qty;
+                                times--;
                                 limit--;
                             }
-                            //decrease count
-                            count--;
-                            if (qtyused === 0 && limit !== 0 && totalqty > 0) {
-                                qtychanged = qty;
-                                limit--;
-                            } else if (qtyused === 0 && totalqty === 0) {
-                                document.getElementById('discountAmount').value = totaldisc;
-                                document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
+                        } while (i < pcount && times > 0 && times < limit);
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
                     }
                 } 
             } else if (valArr.indexOf("Free") > -1) {
                 //next free
-                var qtybuy = valArr[1];
-                var qtyfree = valArr[3];
+                var qtybuy = parseFloat(valArr[1]);
+                var qtyfree = parseFloat(valArr[3]);
                 qty = qtybuy + qtyfree;
-                qtyused = 0;
                 
-                //get quantity of cart
-                count = <?php echo $prodCount; ?>;
+                qtyused = qtyfree;
+                
+                //get total quantity of cart
                 totalqty = 0;
-                for (var j = 0; j < count; j++) {
+                for (var j = 0; j < pcount; j++) {
                     var s = "prodqty" + j;
-                    totalqty += parseInt(document.getElementById(s).value);
+                    totalqty += parseFloat(document.getElementById(s).value);
                 }
                 
                 //get number of times maximum to run
-                if (limit === "unlimited") {
+                if (limit === "0") {
                     limit = Math.ceil(totalqty/qty);
                 } 
                 
                 //product categories
                 if (type === "category") {
-                    totaldisc = 0;                    
+                    //reset total discount
+                    totaldisc = 0;       
+
+                    var totprod = 0;
+
+                    //check if qty of prods in array is a multiple
+                    for (var m = 0; m < result.length; m++) {
+                        pstr = "prodqty" + result[m];
+                        totprod += parseFloat(document.getElementById(pstr).value);
+                    }
+
+                    //get number of times to iterate
+                    times = Math.floor(totprod / qty);
                     
-                    //check if cartqty is more than zero and a multiple of the 'set'
-                    if (totalqty > 0 && totalqty % qty === 0) {
-                        var totprod = 0;
+                    //check if total qty of products in array are enough for the set
+                    if (totprod > 0 && (times > 0 || totprod % qty === 0)) {
+                        qtyused = qtyfree;
+                        var i = 0;
                         
-                        //check if qty of prods in array is a multiple
-                        for (var m = 0; m < result.length; m++) {
-                            pstr = "prodqty" + result[m];
-                            totprod += parseInt(document.getElementById(pstr).value);
-                        }
-                        
-                        //bought enough of products to meet condition
-                        if (totprod > 0 && totprod % qtybuy === 0) {
-                            if ((totalqty - totprod) % qtyfree === 0) {
-                                //get number of times to iterate for free items
-                                var times = (totalqty - totprod) / qtyfree;
+                        do {
+                            //get price & quantity of products in the array
+                            var pstr = "prodprice" + result[i];
+                            var pval = parseFloat(document.getElementById(pstr).value);
+                            var qstr = "prodqty" + result[i];
+                            var qval = parseFloat(document.getElementById(qstr).value);
 
-                                //get last index of cart
-                                count = <?php echo $prodCount; ?>;
-                                var qtyredeem = qtyfree;
-                                do {
-                                    for (var i = 0; i < count; i++) {
-                                        //get the position thats not those in the array
-                                        if (result.indexOf(i) === -1) {
-                                            var pstr = "prodprice" + i;
-                                            var pval = document.getElementById(pstr).value;
-                                            var qstr = "prodqty" + i;
-                                            var qval = document.getElementById(qstr).value;
+                            if (qval > qtyused) {
+                                disc = pval * qtyused;
+                                totaldisc += disc;
+                                qtyused -= qtyused;
+                                totprod -= qtyused;
+                            } else if (qval === qtyused) {
+                                disc = pval * qtyused;
+                                totaldisc += disc;
+                                qtyused -= qtyused; 
+                                totprod -= qtyused;                                
+                            } else if (qval < qtyused) {
+                                disc = pval * qval;
+                                totaldisc += disc;
+                                qtyused -= qval;
+                                totprod -= qval;
+                            }
 
-                                            if (qval > qtyfree) {
-                                                disc = pval * qtyfree;
-                                                totaldisc += disc;
-                                                qtyredeem -= qtyfree;
-                                            } else if (qval === qtyfree) {
-                                                disc = pval * qtyfree;
-                                                totaldisc += disc;
-                                                qtyredeem -= qtyfree;                                 
-                                            } else if (qval < qtyfree) {
-                                                disc = pval * qval;
-                                                totaldisc += disc;
-                                                qtyredeem -= qval;
-                                            }
-                                            times--;
-                                            if (qtyredeem === 0 && times > 0) { 
-                                                qtyredeem = qtyfree;
-                                            } else if (times === 0 && qtyredeem === 0) {
-                                                document.getElementById('discountAmount').value = totaldisc;
-                                                document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
-                                                return true;
-                                            } 
-                                        }
-                                    }
-                                } while (times > 0 && times <= limit);
+                            //increment i 
+                            i++;
+                            
+                            if (qtyused === 0 && times > 0 && totprod > 0) { 
+                                qtyused = qtyfree;
+                                times--;
+                                limit--;
                             } 
-                        }
-                    } 
-                    return false;
+                        } while (i < pcount && times > 0 && times < limit);
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
                 } else if (type === "product") {
+                    //reset total discount 
                     totaldisc = 0;
-                    count = <?php echo $prodCount; ?>;
+                    
+                    //get qty of this prod
+                    qtystr = "prodqty" + result;
+                    qtyval = parseFloat(document.getElementById(qtystr).value);
+                    prodp = "prodprice" + result;
+                    priceval = parseFloat(document.getElementById(prodp).value);
+                    
+                    totalqty = qtyval;
                     //get number of times maximum to run
-                    if (limit === "unlimited") {
+                    if (limit === "0") {
                         limit = Math.ceil(totalqty/qty);
                     } 
-                    if (totalqty > 0 && totalqty % qty === 0) {
-                        //get qty of pid
-                        pstr = "prodqty" + result;
-                        pval = parseInt(document.getElementById(pstr).value);
-                        
-                        if (pval > 0 && pval % qtybuy === 0) {
-                            if ((totalqty - pval) % qtyfree === 0) {
-                                //get times to iterate
-                                times = (totalqty - pval) / qtyfree;
+                    
+                    //get # times to run
+                    times = Math.floor(totalqty/qty);
+                    
+                    if (totalqty > 0 && (times > 0 || qtyval % qty === 0)) {
+                        qtyused = qtyfree;
+                        do {
+                            if (qtyval > qtyused) {
+                                disc = qtyused * priceval;
+                                totaldisc += disc;
+                                qtyused -= qtyused;
+                                qtyval -= qtyused;
+                            } else if (qtyval === qtyused) {
+                                disc = qtyused * priceval;
+                                totaldisc += disc;
+                                qtyfree -= qtyval;
+                                qtyval -= qtyval;
+                            } else if (qtyval < qtyused) {
+                                disc = qtyval * priceval;
+                                totaldisc += disc;
+                                qtyused -= qtyval;
+                                qtyval -= qtyval;
+                            }
+                            
+                            if (qtyused === 0 && times > 0 && qtyval > 0) {
+                                //reset counter
+                                qtyused = qtyfree;
                                 
-                                //loop through all cart items
-                                for (var i = 0; i < count; i++) {
-                                    if (i !== result) {
-                                        qtyused = qtyfree;
-                                        do {
-                                            //get qty of this prod
-                                            qtystr = "prodqty" + i;
-                                            qtyval = document.getElementById(qtystr).value;
-                                            prodp = "prodprice" + i;
-                                            priceval = document.getElementById(prodp).value;
-
-                                            if (qtyval > qtyused) {
-                                                disc = qtyused * priceval;
-                                                totaldisc += disc;
-                                                qtyused -= qtyused;
-                                            } else if (qtyval === qtyused) {
-                                                disc = qtyused * priceval;
-                                                totaldisc += disc;
-                                                qtyfree -= qtyval;
-                                            } else if (qtyval < qtyused) {
-                                                disc = qtyval * priceval;
-                                                totaldisc += disc;
-                                                qtyused -= qtyval;
-                                            }
-                                            times--;                                            
-                                            if (qtyused === 0 && times > 0) {
-                                                qtyused = qtyfree;
-                                            } else if (qtyused === 0 && times === 0) {
-                                                document.getElementById('discountAmount').value = totaldisc;
-                                                document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
-                                                return true;
-                                            }
-                                        } while(times > 0 && times <= limit);
-                                    }
-                                }
+                                //decrease # times 
+                                times--;  
+                                limit--;
                             } 
-                        }
+                        } while(times > 0 && times < limit);
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
                     }
-                    return false;
                 } else {
                     //reset total discount
                     totaldisc = 0;
                     
+                    //get number of times maximum to run
+                    if (limit === "0") {
+                        limit = Math.ceil(totalqty/qty);
+                    } 
+
+                    //get number of 'sets'
+                    times = Math.floor(totalqty / qty);
+                    
                     //check totalqty of cart if enough for sets
-                    if (totalqty > 0 && totalqty % qty === 0) {
+                    if (totalqty > 0 && (times > 0 || totalqty % qty === 0)) {
                         //get last instance of id in cart
-                        count = <?php echo $prodCount-1; ?>;
+                        var count = <?php echo $prodCount-1; ?>;
                         qtyused = qtyfree;
                         
-                        //get number of 'sets'
-                        times = totalqty / qty;
-                        //get number of times maximum to run
-                        if (limit === "unlimited") {
-                            limit = Math.ceil(totalqty/qty);
-                        } 
                         
                         do {
                             qtystr = "prodqty" + count;
-                            qtyval = parseInt(document.getElementById(qtystr).value);
+                            qtyval = parseFloat(document.getElementById(qtystr).value);
                             pstr = "prodprice" + count;
-                            pval = document.getElementById(pstr).value;
+                            pval = parseFloat(document.getElementById(pstr).value);
                             
                             if (qtyval > qtyused) {
                                 disc = pval * qtyfree;
                                 totaldisc += disc;
                                 qtyused -= qtyused;
+                                totalqty -= qtyused;
                             } else if (qtyval === qtyused) {
                                 disc = pval * qtyval;
                                 totaldisc += disc;
                                 qtyused -= qtyval;
+                                totalqty -= qtyval;
                             } else if (qtyval < qtyfree) {
                                 disc = pval * qtyval;
                                 totaldisc += disc;
                                 qtyused -= qtyval;
+                                totalqty -= qtyval;
                             }
                             
+                            //decrement count
                             count--;
-                            times--;
-                            if (times > 0 && qtyused === 0) { 
+                            if (times > 0 && qtyused === 0 && totalqty > 0) { 
                                 qtyused = qtyfree;
-                            } else if (times === 0 && qtyused === 0) {
-                                document.getElementById('discountAmount').value = totaldisc;
-                                document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
-                                return true;
-                            }
-                        } while (times > 0 && times <= limit);
+                                times--;
+                                limit--;
+                            } 
+                        } while (count >= 0 || (times > 0 && times < limit));
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
                     }
+                }
+            } else if (valArr.indexOf('Discount') > -1 && valArr.indexOf('Next') === -1) {
+                //bundle discount
+                qty = parseFloat(valArr[1]);
+                
+                //get length to find position of % & drop it
+                var length = valArr[3].length;
+                price = parseFloat(valArr[3].substring(0, length));
+                
+                if (type === "category") {
+                    //get total quantity of products in array
+                    
+                    totalqty = 0;
+                    for (var i = 0; i < result.length; i++) {
+                        var s = "prodqty" + result[i];
+                        totalqty += parseFloat(document.getElementById(s).value);
+                    }
+                    
+                    //get number of times maximum to run
+                    if (limit === "0") {
+                        limit = Math.ceil(totalqty/qty);
+                    } 
+
+                    //get number of 'sets'
+                    times = Math.floor(totalqty / qty);
+                    
+                    if (totalqty > 0 && (times > 0 || totalqty % qty === 0)) {
+                        //set counter 
+                        qtyused = qty;
+                        
+                        var i = 0;
+                        var beforeDisc = 0;
+                        totaldisc = 0;
+                        qtystr = "prodqty" + result[i];
+                        qtyval = parseFloat(document.getElementById(qtystr).value);
+                        pstr = "prodprice" + result[i];
+                        pval = parseFloat(document.getElementById(pstr).value);
+
+                        do { 
+                            if (qtyval === qtyused) {
+                                disc = qtyval * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyval;
+                                totalqty -= qtyval;
+                            } else if (qtyval > qtyused) {
+                                disc = qtyused * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            } else if (qtyval < qtyused) {
+                                disc = qtyval * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyval;
+                                totalqty -= qtyval;
+                            }
+                            
+                            //increment i 
+                            if (qtyval === 0) {
+                                i++;
+                                qtystr = "prodqty" + result[i];
+                                qtyval = parseFloat(document.getElementById(qtystr).value);
+                                pstr = "prodprice" + result[i];
+                                pval = parseFloat(document.getElementById(pstr).value);
+                            }
+                            
+                            if (qtyused === 0) {
+                                totaldisc += beforeDisc * (price/100);
+                            }
+                            
+                            if (qtyused === 0 && times > 0 && totalqty > 0) {
+                                beforeDisc = 0;
+                                qtyused = qty;
+                                times--;
+                                limit--;
+                            }                
+                        } while (i < pcount && times > 0 && times < limit)   
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true; 
+                    } else {
+                        return false;
+                    }
+                } else if (type === "product") {
+                    //get total qty of this product
+                    qtystr = "prodqty" + result;
+                    qtyval = parseFloat(document.getElementById(qtystr).value);
+                    pstr = "prodprice" + result;
+                    pval = parseFloat(document.getElementById(pstr).value);
+                    
+                    totalqty = qtyval;
+                    
+                    //get number of times maximum to run
+                    if (limit === "0") {
+                        limit = Math.ceil(totalqty/qty);
+                    } 
+                    times = Math.floor(totalqty/qty);
+                    
+                    if (totalqty > 0 && (times > 0 || totalqty % qty === 0)) {
+                        
+                        qtyused = qty;
+                        beforeDisc = 0;
+                        totaldisc = 0;
+                        
+                        do {
+                            if (totalqty < qtyused) {
+                                disc = totalqty * pval;
+                                beforeDisc += disc;
+                                totalqty -= totalqty;
+                                qtyused -= totalqty;
+                            } else if (totalqty > qtyused) {
+                                disc = qtyused * pval;
+                                beforeDisc += disc;
+                                totalqty -= qtyused;
+                                qtyused -= qtyused;
+                            } else if (totalqty === qtyused) {
+                                disc = qtyused * pval;
+                                beforeDisc += disc;
+                                totalqty -= qtyused;
+                                qtyused -= qtyused;
+                            }
+                            
+                            if (qtyused === 0) {
+                                totaldisc += beforeDisc * (price/100);
+                            }
+                            
+                            if (qtyused === 0 && times > 0 && totalqty > 0) {
+                                beforeDisc = 0;
+                                qtyused = qty;
+                                times--;
+                                limit--;
+                            }
+                        } while (times > 0 && times < limit)
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    //for all orders and orders above a specified amount
+                    
+                    //get total quantity of cart
+                    totalqty = 0;
+                    for (var i = 0; i < pcount; i++) {
+                        var s = "prodqty" + i;
+                        totalqty += parseFloat(document.getElementById(s).value);
+                    }
+                    
+                    //get number of times maximum to run
+                    if (limit === "0") {
+                        limit = Math.ceil(totalqty/qty);
+                    } 
+                    times = Math.floor(totalqty / qty);
+                    
+                    if (totalqty > 0 && (times > 0 || totalqty % qty === 0)) {
+                        qtyused = qty;
+                        beforeDisc = 0;
+                        totaldisc = 0;
+                        
+                        var e = pcount-1;
+                        qtystr = "prodqty" + e;
+                        qtyval = parseFloat(document.getElementById(qtystr).value);
+                        pstr = "prodprice" + e;
+                        pval = parseFloat(document.getElementById(pstr).value);
+                        var curqty = qtyval;
+                        do {
+                            if (curqty < qtyused) {
+                                disc = curqty * pval;
+                                beforeDisc += disc;
+                                qtyused -= curqty;
+                                curqty -= curqty;
+                            } else if (curqty > qtyused) {
+                                disc = qtyused * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                curqty -= qtyused;
+                            } else if (curqty === qtyused) {
+                                disc = qtyused * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                curqty -= qtyused;
+                            }
+                            
+                            if (qtyval === 0) {
+                                e--;
+                                qtystr = "prodqty" + e;
+                                qtyval = parseFloat(document.getElementById(qtystr).value);
+                                pstr = "prodprice" + e;
+                                pval = parseFloat(document.getElementById(pstr).value);
+                                curqty = qtyval;
+                            }
+                            
+                            if (qtyused === 0) {
+                                totaldisc += beforeDisc * (price/100);
+                            }
+                            if (qtyused === 0 && times > 0 && curqty > 0) {
+                                beforeDisc = 0;
+                                qtyused = qty;
+                                times--;
+                                limit--;
+                            } 
+                            
+                        } while (times > 0 && times < limit)
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            } else if (valArr.indexOf("Next") > -1) {
+                //next discount (Buy A Next Pair B% Discount)
+                qty = parseFloat(valArr[1]);
+                
+                //get length to find position of % & drop it
+                length = valArr[4].length;
+                price = parseFloat(valArr[4].substring(0, length));
+                
+                if (type === "category") {
+                
+                    //get total qty in array
+                    totalqty = 0;
+                    for (var i = 0; i < result.length; i++) {
+                        var s = "prodqty" + i;
+                        totalqty += parseFloat(document.getElementById(s).value);
+                    }
+                    
+                    qtyused = qty;
+                    beforeDisc = 0;
+                    totaldisc = 0;
+                    
+                    //get number of times maximum to run
+                    if (limit === "0") {
+                        limit = Math.ceil(totalqty/qty);
+                    } 
+                    
+                    times = Math.floor(totalqty / (qty + 1));
+                    if (totalqty > 0 && (times > 0 || totalqty % (qty +1) === 0)) {
+                        
+                        e = 0;
+                        
+                        do {
+                            qtystr = "prodqty" + result[e];
+                            qtyval = parseFloat(document.getElementById(qtystr).value);
+                            pstr = "prodprice" + result[e];
+                            pval = parseFloat(document.getElementById(pstr).value);
+                            
+                            if (qtyval > qtyused) {
+                                disc = 1 * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            } else if (qtyval === qtyused) {
+                                disc = 1 * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            }
+                            e++;
+                            
+                            if (qtyused === 0) {
+                                totaldisc += beforeDisc * (price/100);
+                            }
+                            
+                            if (qtyused === 0 && times > 0 && totalqty > 0) {
+                                beforeDisc = 0;
+                                qtyused = qty;
+                                times--;
+                                limit--;
+                            } 
+                        } while (e < pcount && times > 0 && times < limit)
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (type === "product") {
+                    qtystr = "prodqty" + result;
+                    qtyval = parseFloat(document.getElementById(qtystr).value);
+                    pstr = "prodprice" + result;
+                    pval = parseFloat(document.getElementById(pstr).value);
+                    
+                    totalqty = qtyval;
+                    qtyused = qty;
+                    beforeDisc = 0;
+                    totaldisc = 0;
+                    
+                    //get number of times maximum to run
+                    if (limit === "0") {
+                        limit = Math.ceil(totalqty/qty);
+                    } 
+                    
+                    times = Math.floor(totalqty/qty);
+                    
+                    if (totalqty > 0 && (times > 0 || totalqty % qty === 0)) {
+                    
+                        do {
+                            if (totalqty > qtyused) {
+                                disc = 1 * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            } else if (totalqty === qtyused) {
+                                disc = 1 * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            }
+
+                            if (qtyused === 0) {
+                                totaldisc += beforeDisc * (price/100);
+                            }
+                            
+                            if (qtyused === 0 && times > 0 && totalqty > 0) {
+                                beforeDisc = 0;
+                                qtyused = qty;
+                                times--;
+                                limit--;
+                            } 
+                        } while (times > 0 && times < limit)
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    //get total quantity in cart
+                    totalqty = 0;
+                    for (var i = 0; i < pcount; i++) {
+                        var s = "prodqty" + i;
+                        totalqty += parseFloat(document.getElementById(s).value);
+                    }
+                    
+                    qtyused = qty;
+                    beforeDisc = 0;
+                    totaldisc = 0;
+                    
+                    //get number of times maximum to run
+                    if (limit === "0") {
+                        limit = Math.ceil(totalqty/qty);
+                    } 
+                    
+                    times = Math.floor(totalqty/qty);
+                    e = pcount-1;
+                    
+                    if (totalqty > 0 && (times > 0 || totalqty % qty === 0)) {
+                        do {
+                            qtystr = "prodqty" + e;
+                            qtyval = parseFloat(document.getElementById(qtystr).value);
+                            pstr = "prodprice" + e;
+                            pval = parseFloat(document.getElementById(pstr).value);
+                            
+                            if (qtyval > qtyused) {
+                                disc = 1 * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            } else if (qtyval === qtyused) {
+                                disc = 1 * pval;
+                                beforeDisc += disc;
+                                qtyused -= qtyused;
+                                totalqty -= qtyused;
+                            }
+                            
+                            e--;
+                            
+                            if (qtyused === 0) {
+                                totaldisc += beforeDisc * (price/100);
+                            }
+                            
+                            if (qtyused === 0 && times > 0 && totalqty > 0) {
+                                beforeDisc = 0; 
+                                qtyused = qty;
+                                times--;
+                                limit--;
+                            }
+                        } while (e >= 0 && times > 0 && times < limit)
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            } else if (valArr.indexOf("Get") > -1 && valArr[1].indexOf('%') > -1) {
+                //fixed discount
+                
+                //drop the %
+                var len = valArr[1].length;
+                price = parseFloat(valArr[1].substring(0, len));
+                
+                if (type === "category") {
+                    //reset values
+                    beforeDisc = 0;
+                    totaldisc = 0;
+                    
+                    //reset total quantity
+                    totalqty = 0;
+                    for (var e = 0; e < result.length; e++) {
+                        var s = "prodqty" + result[e];
+                        totalqty += parseFloat(document.getElementById(s).value);
+                    }
+                    
+                    if (totalqty > 0) {
+                        for (var i = 0; i < result.length; i++) {
+                            qtystr = "prodqty" + result[i];
+                            qtyval = parseFloat(document.getElementById(qtystr).value);
+                            pstr = "prodprice" + result[i];
+                            pval = parseFloat(document.getElementById(pstr).value);
+
+                            beforeDisc += qtyval * pval;
+                        }
+                        
+                        totaldisc += beforeDisc * (price/100);
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (type === "product") {
+                    //reset values
+                    totaldisc = 0;
+                    beforeDisc = 0;
+                    
+                    //reset total quantity
+                    totalqty = 0;
+                    var s = "prodqty" + result;
+                    totalqty += parseFloat(document.getElementBtId(s).value);
+                    
+                    if (totalqty > 0) {
+                        qtystr = "prodqty" + result;
+                        qtyval = document.getElementById(qtystr).value;
+                        pstr = "prodprice" + result;
+                        pval = document.getElementById(pstr).value;
+                        
+                        beforeDisc += qtyval * pval;
+                        
+                        totaldisc += beforeDisc * (price/100);
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    //reset values
+                    totaldisc = 0;
+                    beforeDisc = 0;
+                    
+                    //get qty of cart
+                    if (pcount > 0) {
+                        //get cost of all products
+                        for (var i = 0; i < pcount; i++) {
+                            qtystr = "prodqty" + i;
+                            qtyval = parseFloat(document.getElementById(qtystr).value);
+                            pstr = "prodprice" + i;
+                            pval = parseFloat(document.getElementById(pstr).value);
+                            
+                            beforeDisc += qtyval * pval;
+                        }   
+                        totaldisc += beforeDisc * (price/100);
+                        document.getElementById('discountAmount').value = totaldisc;
+                        document.getElementById('showDiscount').innerHTML = "<strong> -$"+totaldisc+"</strong>";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            } else if (valArr.indexOf("Get") > -1 && valArr[1].indexOf('$') > -1) {
+                //fixed amount
+                
+                //drop the $
+                price = parseFloat(valArr[1].substring(1));
+                
+                check = false;
+                
+                if (type === "category") {
+                    //if quantity purchased from that array is more than 0, apply discount
+                    if (result.length > 0) {
+                        check = true;
+                    }
+                } else if (type === "product") {
+                    qtystr = "prodqty" + result;
+                    qtyval = parseFloat(document.getElementById(qtystr).value);
+                    
+                    //if quantity purchased from that product is more than 0, apply discount
+                    if (qtyval > 0) {
+                        check = true;
+                    }
+                } else {
+                    //if quantity purchased is more than 0, apply discount
+                    if (pcount > 0) {
+                        check = true;
+                    }
+                }
+                
+                if (check) {
+                    document.getElementById('discountAmount').value = price;
+                    document.getElementById('showDiscount').innerHTML = "<strong> -$"+price+"</strong>";
+                    return true;
+                } else {
+                    return false;
                 }
             }
         }
@@ -788,7 +1335,6 @@ and open the template in the editor.
                 var str = "prodTags" + i;
                 var t = document.getElementById(str).value;
                 var prodtags = t.split(",");
-                
                 for(var j = 0; j < prodtags.length; j++) {
                     var p = prodtags[j];
                     
@@ -835,7 +1381,8 @@ and open the template in the editor.
                             } else if (termArr.indexOf("above") > -1) {
                                 var amt = termArr[termArr.length-1];
                                 amt = amt.substring(1);
-                                if (amt > <?php echo intval($cost); ?>) {
+                                
+                                if (<?php echo intval($cost); ?> > amt) {
                                     termsMet = true;
                                     //get conditions
                                     conditionsMet = getConditions("above", "string", val, limit);
@@ -844,8 +1391,7 @@ and open the template in the editor.
                                 var tags = termArr[termArr.length-1];
                                 //array of product positions that have the tag(s)
                                 var arrResult = checkTags(tags);
-
-                                if (arrResult.length > 0) {
+                                if (arrResult[0] !== "") {
                                     termsMet = true;
                                     //get conditions
                                     conditionsMet = getConditions(arrResult, "category", val, limit);
@@ -866,8 +1412,11 @@ and open the template in the editor.
                             if (termsMet === false || conditionsMet === false) {
                                 if (conVal !== "" && termVal !== "") {
                                     document.getElementById('invalidTerms').innerHTML = conVal + ", For " + termVal;
+                                    document.getElementById('validCode').style.display = "none";
+                                    document.getElementById('discount').value = "";
                                 }
                             } else {
+                                document.getElementById('invalidTerms').innerHTML = "";
                                 document.getElementById('validCode').style.display = "block";
                                 document.getElementById('discount').value = val;
                                 document.getElementById('invalidCode').style.display = "none";
