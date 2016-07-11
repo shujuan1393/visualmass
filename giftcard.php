@@ -82,7 +82,7 @@
                         <div id='date' class='full_section giftcard col-md-12'>
                             <h4>CIRCLE CIRCLE THING HERE</h4>
                             <h4>WHEN DO YOU WANT IT?</h4>
-                            <p>You pick the date, and we'll send it to you.</p>
+                            <p>You pick the date, and we'll send it for you.</p>
                             <input type='hidden' name='selectedDate' id='selectedDate'>
                             <div id='calendar' class='col-md-2 col-md-offset-5' style='height: 300px;'></div>
                         </div>

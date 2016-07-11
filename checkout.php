@@ -91,10 +91,11 @@ and open the template in the editor.
                             die(mysqli_error($link));
                         } else {
                             $urow = mysqli_fetch_assoc($ures);
-                            
+                            $add = $urow['address']." ".$urow['apt'].", ".$urow['country']." ".$urow['zip'];
                         }
                     }
                             
+                    $count = 0;
                     ?>
                     <div class='col-md-6 col-md-offset-3'>
                         <p id='nanError' style="display: none;">Please enter numbers only</p>
@@ -109,26 +110,72 @@ and open the template in the editor.
                             <input type='text' name='email' id='email'  maxlength="50" placeholder="EMAIL" 
                                    value='<?php if (!empty($urow['email'])) { echo $urow['email']; } ?>'/><br/>
                             <input type='text' name='address' id='address'  maxlength="50" placeholder="STREET ADDRESS" 
-                                   value='<?php if (!empty($urow['address'])) { echo $urow['address']; } ?>'/><br/>
+                                   value='<?php if (!empty($add)) { echo $add; } ?>'/><br/>
                             <input type='text' name='phone' id='phone'  maxlength="50" placeholder="PHONE" 
                                    value='<?php if (!empty($urow['phone'])) { echo $urow['phone']; } ?>' onkeypress='return isNumber(event)'/><br/>
-
-                            <h5>Bill to</h5>
-                            <div id='payments'>
-                            <input type='radio' name='payment' id='credit' value='visa/mastercard'> Visa / Mastercard <br>
-                            <input type='radio' name='payment' id='braintree' value='braintree/paypal'> BrainTree / PayPal<br>
-                            <input type='radio' name='payment' id='apple' value='apple'> Apple Pay <br>
-                            <br>
+                            
+                            <input type='hidden' name='hiddenaddress' id='hiddenaddress' 
+                                   value='<?php if (!empty($urow['address'])) { echo $urow['address']; } ?>'/>
+                            <input type='hidden' name='apt' id='apt' 
+                                   value='<?php if (!empty($urow['apt'])) { echo $urow['apt']; } ?>'/>
+                            <input type='hidden' name='country' id='country' 
+                                   value='<?php if (!empty($urow['country'])) { echo $urow['country']; } ?>'/>
+                            <input type='hidden' name='zip' id='zip'
+                                   value='<?php if (!empty($urow['zip'])) { echo $urow['zip']; } ?>'/>
+                            
+                            <?php if (isset($_SESSION['hometrydeliver'])) { ?>
+                            <div id='hometrydeliver' class='col-md-6 col-md-offset-3'>
+                            <h5 class='caps'>Home Try-On Delivery Options</h5>
+                            <input type='hidden' name='selectedDeliveryDate' id='selectedDeliveryDate'>
+                            <div id='deliverError' class='error' style='display:none;'>No timings selected</div>
+                            <p>Select the most suitable date and timing(s) to start your 1-week trial</p>
+                                <input type="checkbox" name="timings[]" value="MORNING"> Morning 
+                                <input type="checkbox" name="timings[]" value="AFTERNOON"> Afternoon
+                                <input type="checkbox" name="timings[]" value="EVENING"> Evening  
+                                <input type='hidden' name='selectedDate' id='selectedDate'>
+                                <div id='calendar' class='col-md-3' style='height: 300px;'></div>
                             </div>
-                            <div id='card' style='display:none;'><input type='text' name='card' id='card'  maxlength="50" placeholder="CARD DETAILS" 
-                                                                        value='<?php if (!empty($urow['phone'])) { echo $urow['phone']; } ?>'/><br/></div>
+                            <button id='getTimes' class='caps button'>Get Timings</button>
+                            <?php } ?>
+                            <br>
+                            <?php if (isset($_SESSION['deliveryTimings'])) { ?>
+                            <div id='deliveryAvailability' class='col-md-6 col-md-offset-3'>
+                                <?php 
+                                    $deliveryArr = $_SESSION['deliveryTimings'];
+                                    $selectedDate = $deliveryArr[0]['date'];
+                                    $date = date("d M y",strtotime($selectedDate));
+                                    echo "<p>For your selected date, ".$date.",</p>";
+                                    echo "<p> there are ".count($deliveryArr[0]['deliveryWindow'])." available slots</p>";
+                                    $slots = $deliveryArr[0]['deliveryWindow'];
+                                    for ($s = 0; $s < count($slots); $s++) {
+                                        $slot = explode(" ",$slots[$s]);
+                                        $time = count($slot)-1;
+                                        echo "<input type='radio' name='time' id='time".$count."' value='".$slots[$s]."'>&nbsp;"
+                                                .$slot[$time]."<br>";
+                                        $count++;
+                                    }
+                                ?>
+                                <br>
+                                Delivery Comments (if any): <br>
+                                <input type='text' name='comments' id='comments'><br>
+                                <p>Please select another date/timing if you do not find any suitable options</p>
+                            </div>
+                            <?php } ?>
+                            <div class='col-md-6 col-md-offset-3'>
+                                <h5>Bill to</h5>
+                                <div id='payments'>
+                                <input type='radio' name='payment' id='credit' value='visa/mastercard'> Visa / Mastercard <br>
+                                <input type='radio' name='payment' id='braintree' value='braintree/paypal'> BrainTree / PayPal<br>
+                                <input type='radio' name='payment' id='apple' value='apple'> Apple Pay <br>
+                                <br>
+                                </div>
+                                <div id='card' style='display:none;'><input type='text' name='card' id='card'  maxlength="50" placeholder="CARD DETAILS" 
+                                                                            value='<?php if (!empty($urow['phone'])) { echo $urow['phone']; } ?>'/><br/></div>
 
-                            <!--<form id="checkout" method="post" action="/checkout">-->
-                                <div id="braintree-pay" style='display:none;'></div>
-<!--                                    <input type="submit" value="Pay $10">
-                            </form>-->
+                                    <div id="braintree-pay" style='display:none;'></div>
 
-                                <input type='submit' name='submit' value='PROCEED TO REVIEW'>
+                                    <input type='submit' name='submit' value='PROCEED TO REVIEW'>
+                            </div>
                         </form>
                     </div>
 
@@ -139,6 +186,63 @@ and open the template in the editor.
         </div>
     </body>
     <script>
+        function getRadio(num) {
+            var str = "time"+num;
+            
+            document.getElementById(str).onclick = function() {
+                var val = this.value;
+                if (val !== null) {
+                    document.getElementById('selectedDeliveryDate').value = val;
+                }
+            };
+        }
+        
+        for(var i = 0; i < <?php echo $count; ?>; i++) {
+            getRadio(i);
+        }
+        
+        var timesBtn = document.getElementById('getTimes');
+        
+        if (timesBtn !== null) {
+            timesBtn.onclick = function() {
+                //get values from timing checkbox
+                var checkboxes = document.getElementsByName('timings[]');
+                var vals = "";
+                for (var i=0, n=checkboxes.length;i<n;i++) {
+                  if (checkboxes[i].checked) 
+                  {
+                  vals += ","+checkboxes[i].value;
+                  }
+                }
+                if (vals) vals = vals.substring(1);
+                
+                if (vals !== "") {
+                    document.getElementById('deliverError').style.display = "none";
+                    //get address & selected date & pass to another page to process (via AJAX)
+                    var date = document.getElementById('selectedDate').value;
+                    var add = document.getElementById('hiddenaddress').value;
+                    var zip = document.getElementById('zip').value;
+                    var country = document.getElementById('country').value;
+                    var apt = document.getElementById('apt').value;
+                    var userid = <?php echo "'".GetCartId()."'"; ?>;
+                    window.location = "deliveryTimings.php?id="+userid+"&date="+date+"&add="+add
+                    +"&country="+country+"&zip="+zip+"&apt="+apt+"&timing="+vals;
+                } else {
+                    document.getElementById('deliverError').style.display = "block";
+                }
+            };
+        }
+        
+        //handle calendar events
+        var myCalendar = new dhtmlXCalendarObject("calendar");
+        myCalendar.hideTime();
+        myCalendar.show();
+        myCalendar.setPosition(null, null);
+        var myEvent = myCalendar.attachEvent("onClick", function(){
+            var date = myCalendar.getDate(true);
+            document.getElementById('selectedDate').value = date;
+        });
+        
         var obj = document.getElementById('guestCheckout');
         if (obj !== null) {
             obj.onclick = function() {

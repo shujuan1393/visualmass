@@ -238,8 +238,6 @@
     </body>
     
     <script>
-        
-        
         for (var i = 0; i < <?php echo $rowcount; ?>; i++) {
 //            var container = document.getElementById('products_table'),
 //                firstChild = container.childNodes[i+2];
@@ -363,7 +361,7 @@
             var prod = "prod" + num;
             var obj = document.getElementById(prod);
             if (val === 'yes') {
-                if (avail.indexOf("hometry") > -1) {
+                if (avail.indexOf("tryon") > -1) {
                     obj.style.display = "block";
                 } else {
                     obj.style.display = "none";                

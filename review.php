@@ -1,6 +1,7 @@
 <?php
     require_once 'config/db.php';
     $nonceFromTheClient = $_POST["payment_method_nonce"];    
+    $selectedDeliveryDate = $_POST['selectedDeliveryDate'];
 ?>
 <!DOCTYPE html>
 <!--
@@ -64,6 +65,9 @@ and open the template in the editor.
                             $email = $_POST['email'];
                             $isGuest = $_POST['isGuest'];
                             $phone = $_POST['phone'];
+                            $zip = $_POST['zip'];
+                            $apt = $_POST['apt'];
+                            $country = $_POST['country'];
                             
                             echo $firstname . " ".$lastname."<br>";
                             echo $email."<br>";
@@ -72,8 +76,15 @@ and open the template in the editor.
                         <strong>Billing Details</strong> <br>
                         <?php 
                             $payment = $_POST['payment'];
+                            $comments = $_POST['comments'];
                             echo "<div class='caps'>". $payment."</div>";
                             // echo $_POST['']; 
+                            $deliverArr = explode(" ", $selectedDeliveryDate);
+                            if (isset($_SESSION['hometrydeliver'])) { 
+                                echo "<h5>Home Try-On Delivery Date</h5>";
+                                echo $deliverArr[0]." ".$deliverArr[1]." ".$deliverArr[4]."<br>";
+                                echo $comments;
+                            }
                         ?>
                     </div>
                     <div id='summary' class='col-md-6'>
@@ -359,10 +370,15 @@ and open the template in the editor.
             var firstname = <?php echo '"'.$firstname.'"'; ?>;
             var lastname = <?php echo '"'.$lastname.'"'; ?>;
             var address = <?php echo '"'.$address.'"'; ?>;
+            var country = <?php echo '"'.$country.'"'; ?>;
+            var zip = <?php echo '"'.$zip.'"'; ?>;
+            var apt = <?php echo '"'.$apt.'"'; ?>;
             var email = <?php echo '"'.$email.'"'; ?>;
             var phone = <?php echo '"'.$phone.'"'; ?>;
+            var delivery = <?php echo '"'.$selectedDeliveryDate.'"'; ?>;
             var code = document.getElementById('discount').value;
             var amount = document.getElementById('discountAmount').value;
+            var comments = <?php echo '"'.$comments.'"'; ?>;
             
             if (code === "" || amount === "") {
                 code = document.getElementById('redeem').value;
@@ -371,8 +387,9 @@ and open the template in the editor.
             
             window.location = "processPayment.php?id=" + str + "&cost=" + cost + "&payment=" + payment + 
                     "&firstname=" + firstname + "&lastname="+lastname + 
-                    "&email="+email+"&phone="+phone+"&address=" + address + 
-                    "&code=" + code + "&amount=" + amount;
+                    "&email="+email+"&phone="+phone+"&address=" + address + "&country=" + country +
+                    "&apt=" + apt + "&zip=" + zip + "&comments=" + comments +
+                    "&code=" + code + "&amount=" + amount + "&delivery=" + delivery;
         }
         
 //        document.getElementById('addCode').onclick = function() {
@@ -1238,7 +1255,7 @@ and open the template in the editor.
                     //reset total quantity
                     totalqty = 0;
                     var s = "prodqty" + result;
-                    totalqty += parseFloat(document.getElementBtId(s).value);
+                    totalqty += parseFloat(document.getElementById(s).value);
                     
                     if (totalqty > 0) {
                         qtystr = "prodqty" + result;

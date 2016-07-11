@@ -172,10 +172,14 @@ and open the template in the editor.
                                 $trycount = $tryres -> num_rows;
                                 $totalcount = $trycount + $buyres;
                                 if ($trycount === 0) {
+                                    //unset session variable
+                                    unset($_SESSION['hometrydeliver']);
                                     echo "<script>document.getElementById('numrows').value = ".$totalcount.";</script>";
                                     echo "<script>document.getElementById('emptyCart').style.display='block';</script>";
                                     echo "<script>document.getElementById('home').style.display='none';</script>";
                                 } else {
+                                    //set session variable
+                                    $_SESSION['hometrydeliver'] = "yes";
                                     echo "<script>document.getElementById('emptyCart').style.display='none';</script>";
                                     while($row = mysqli_fetch_assoc($tryres)) {
                                         echo "<script>document.getElementById('numrows').value = ".$totalcount.";</script>";

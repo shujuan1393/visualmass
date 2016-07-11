@@ -27,7 +27,7 @@ if(isset($_POST['submit'])) {
 
         $checkSql = "Select * from settings where type='general'";
         $result = mysqli_query($link, $checkSql);
-
+        
         if (!mysqli_query($link,$checkSql)) {
             echo("Error description: " . mysqli_error($link));
         } else {

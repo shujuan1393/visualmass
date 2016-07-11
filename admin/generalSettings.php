@@ -85,7 +85,7 @@ if (!mysqli_query($link,$selectSql)) {
 
                                                     while ($row = mysqli_fetch_assoc($result)) {
                                                         echo "<option value='".$row['code']."'";
-                                                        if (strcmp($priStore[1], $row['code'])) {
+                                                        if (strcmp($priStore[1], $row['code']) === 0) {
                                                             echo " selected";
                                                         }
                                                         echo ">".$row['name']."</option>";
