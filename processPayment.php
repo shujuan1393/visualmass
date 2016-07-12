@@ -163,9 +163,10 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
         ]
     ]);
 
+    //create orderid
+    $orderid = "ON-".rand();
+    
     if ($result->success) {
-        //create orderid
-        $orderid = "ON-".rand();
         $transaction = $result->transaction;
         $transaction->status;
         
