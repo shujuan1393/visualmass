@@ -10,9 +10,11 @@ require_once '../config/db.php';
 if (isset($_POST['submit'])) {
     $webstore = $_POST['title'];
     $metadata = htmlentities($_POST['metadata']);
+    $ticker = $_POST['ticker'];
     
     $val = "web=".$webstore."#";
-    $val .= "meta=".$metadata;
+    $val .= "meta=".$metadata."#";
+    $val .= "ticker=".$ticker;
     
     $checkSql = "Select * from settings where type='web'";
     $cresult = mysqli_query($link, $checkSql);
@@ -102,8 +104,15 @@ if (!mysqli_query($link,$selectSql)) {
                             <textarea name='metadata'><?php if (!empty($meta[1])) { echo $meta[1]; } ?></textarea>
                             <script type="text/javascript">
                                 CKEDITOR.replace('metadata');
-                            </script>
-
+                            </script><br>
+                            Ticker:
+                            <?php 
+                                if (!empty($valArr[2])) {
+                                    $tick = explode("ticker=", $valArr[2]);
+                                }
+                            ?>
+                            <input type='text' name='ticker' 
+                                   value="<?php if (!empty($tick[1])) { echo $tick[1]; } ?>"><br>
                             <input type='submit' name='submit' value='Save' />
                         </form>
                     </div>

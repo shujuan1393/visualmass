@@ -59,6 +59,7 @@ if (isset($_SESSION['loggedUserEmail'])) {
         $valArr = explode("#", $hrow['value']);
         $title = explode("web=", $valArr[0]);
         $meta = explode("meta=", $valArr[1]);
+        $ticker = explode("ticker=", $valArr[2]);
     }
     
     // Define variables for SEO
@@ -67,7 +68,19 @@ if (isset($_SESSION['loggedUserEmail'])) {
     $pageCanonical = 'http://www.visualmass.co/';
     // We don't want the search engines to see our website just yet
     $pageRobots = 'noindex,nofollow';
-
+    
+    //get amount from settings
+    $set = "Select * from settings where type='storecredit';";
+    $sres = mysqli_query($link, $set);
+    if (!mysqli_query($link, $set)) {
+        die(mysqli_error($link));
+    } else {
+        $srow = mysqli_fetch_assoc($sres);
+        $valArr = explode("&", $srow['value']);
+        if(!empty($valArr[1])){
+            $profile = explode("profile=", $valArr[1]);
+        }
+    }
 ?>
 
 <html>
@@ -118,9 +131,37 @@ if (isset($_SESSION['loggedUserEmail'])) {
     </head>
     <body>	
         <div class="se-pre-con"></div>
+        <?php if(!empty($ticker[1])) { ?>
+        <form name="ticker"> 
+        <input id='ticker' style='text-align: center;width:100%!important;background-color: #cccccc;color:#fff!important;' name="text" VALUE="<?php 
+                echo $ticker[1]." | "; 
+                if (isset($_SESSION['profile'])) {
+                    if(!empty($profile[1])) { 
+                        echo "Complete your profile now and get store credit worth $". $profile[1]." | ";
+                    }
+                }
+            ?>"> 
+        </form>
+<!--        <div id='ticker' class='text-center' style='background-color: #cccccc; color:#fff!important;'>
+            <?php 
+//                echo $ticker[1]." | "; 
+                if (isset($_SESSION['profile'])) {
+            ?>
+                Complete your profile now and get store credit worth $<?php if(!empty($profile[1])) { echo $profile[1]; } ?>
+            <?php
+                }
+            ?>
+        </div>-->
+        <?php } 
+        
+        if (isset($_SESSION['profile'])) { ?>
+<!--            <div id='completeProfile' class='text-center'>
+                <h5>Complete your profile now and get store credit worth $<?php if(!empty($profile[1])) { echo $profile[1]; } ?></h5>
+            </div>-->
+        <?php } ?>
         <div id='whole_header'>
             <div class="left_nav">
-                <a id='logoheader' class="navbar-brand" href="index.html"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
+                <a id='logoheader' class="navbar-brand" href="index.php"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
 <!--=======
         <script src="https://js.braintreegateway.com/js/braintree-2.24.1.min.js"></script>
         <link rel="stylesheet" href="styles/font-awesome.min.css">
@@ -191,26 +232,6 @@ if (isset($_SESSION['loggedUserEmail'])) {
             </div>
         </div>
         
-        <?php 
-            //get amount from settings
-        $set = "Select * from settings where type='storecredit';";
-        $sres = mysqli_query($link, $set);
-        if (!mysqli_query($link, $set)) {
-            die(mysqli_error($link));
-        } else {
-            $srow = mysqli_fetch_assoc($sres);
-            $valArr = explode("&", $srow['value']);
-            if(!empty($valArr[1])){
-                $profile = explode("profile=", $valArr[1]);
-            }
-        }
-        
-        if (isset($_SESSION['profile'])) { ?>
-            <div id='completeProfile' class='row text-center'>
-                <h5>Complete your profile now and get store credit worth $<?php if(!empty($profile[1])) { echo $profile[1]; } ?></h5>
-            </div>
-        <?php } ?>
-        
         <div class="modal fade modal-fullscreen force-fullscreen" id="myModal" tabindex="-1" 
              role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -230,6 +251,17 @@ if (isset($_SESSION['loggedUserEmail'])) {
           </div><!-- /.modal -->
           
         <script>  
+            var speed = 200;
+            var chars = 1;
+            function ScrollMarquee() {
+                window.setTimeout('ScrollMarquee()',speed);
+
+                var msg = document.ticker.text.value; 
+                document.ticker.text.value =
+                msg.substring(chars) +
+                msg.substring(0,chars); 
+            } 
+            ScrollMarquee();
             function ourstory(type) {
                 window.location = "ourstory.php?type=" + type;
             }
