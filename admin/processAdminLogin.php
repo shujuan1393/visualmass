@@ -38,7 +38,7 @@ if(empty($_POST['email']) || empty($_POST['password'])) {
                     $now = date("Y-m-d h:i:sa");
                     $updateSql = "UPDATE staff set lastlogin='$now' where id=". $row['id'];
                     mysqli_query($link, $updateSql);
-                    header('Location: admin.php');                      
+                    header('Location: index.php');                      
 //                } 
             }
         } 

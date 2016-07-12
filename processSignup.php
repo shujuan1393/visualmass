@@ -13,8 +13,8 @@ function gen_uuid($name, $len=8) {
 
     $hex = $name . uniqid("", true);   
     
-    echo $hex;
-    exit();
+//    echo $hex;
+//    exit();
     $pack = pack('H*', $hex);
     $tmp =  base64_encode($pack);
 
@@ -31,10 +31,18 @@ function gen_uuid($name, $len=8) {
 if(empty($_POST['email']) || empty($_POST['password']) ||
         empty($_POST['firstName']) || empty($_POST['lastName']) ) {
     $_SESSION['signUpError'] = "Empty field(s)";
-    header('Location: signUp.php');
+    if (isset($_GET['checkout'])) {
+        header("Location: checkout.php?error=1&signup=1");
+    } else {
+        header('Location: signUp.php');
+    }
 } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     $_SESSION['signUpError'] = "Invalid email";
-    header('Location: signUp.php');
+    if (isset($_GET['checkout'])) {
+        header("Location: checkout.php?error=1&signup=1");
+    } else {
+        header('Location: signUp.php');
+    }
 } else {
     unset($_SESSION['signUpError']);
     $firstName = trim($_POST['firstName']);
@@ -58,7 +66,11 @@ if(empty($_POST['email']) || empty($_POST['password']) ||
     } else {
         if ($result->num_rows != 0) {
             $_SESSION['signUpError'] = "Account already exists";
-            header("Location: signUp.php");
+            if (isset($_GET['checkout'])) {
+                header("Location: checkout.php?error=1&signup=1");
+            } else {
+                header("Location: signUp.php");
+            }
         } else {
             $mail = new PHPMailer;
 
@@ -102,7 +114,11 @@ if(empty($_POST['email']) || empty($_POST['password']) ||
                 $_SESSION['loggedUser'] = $firstName;
 
                 mysqli_query($link, $sql);
-                header("Location: index.php");
+                if (isset($_GET['checkout'])) {
+                    header("Location: checkout.php?signin=1");
+                } else {
+                    header("Location: index.php");
+                }
             }
 //            echo "<h2>Thank you for signing up with us!</h2>";
         } 

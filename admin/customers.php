@@ -25,7 +25,7 @@ require_once '../config/db.php';
                     <div class="col-lg-12">
                         <ol class="breadcrumb">
                             <li>
-                                <a href="admin.php"><i class="fa fa-home"></i></a>
+                                <a href="index.php"><i class="fa fa-home"></i></a>
                             </li>
                             <li class="active">
                                 CUSTOMERS

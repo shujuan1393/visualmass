@@ -55,7 +55,25 @@ and open the template in the editor.
                         <?php } ?>
                     </div>
                     <div id='signupNow' class='col-md-6' style='display: none;'>
-                        <h2>HELLO</h2>
+                        <h4>CREATE A NEW ACCOUNT</h4>
+                        
+                        <div id="signUpError" class="error">
+                            <?php 
+                                if (isset($_SESSION['signUpError'])) {
+                                    echo $_SESSION['signUpError'];
+                                }
+                            ?>
+                        </div>
+                       <form id='signupForm' action='processSignup.php?checkout=1' method='post' accept-charset='UTF-8'>
+                            <input type='hidden' name='submitted' id='submitted' value='1'/>
+
+                            <input type='text' name='firstName' id='firstName'  maxlength="50" placeholder="First Name" /><br>
+                            <input type='text' name='lastName' id='lastName'  maxlength="50" placeholder="Last Name" /><br>
+                            <input type='text' name='email' id='email'  maxlength="50" placeholder="Email" /><br>
+                            <input type='password' name='password' id='password' maxlength="50" placeholder="Password" /><br>
+                            <input type='submit' name='Submit' value='Create account' />
+
+                        </form>
                     </div>
                     
                     <div id='existingCust' class='col-md-6'>
@@ -91,7 +109,11 @@ and open the template in the editor.
                             die(mysqli_error($link));
                         } else {
                             $urow = mysqli_fetch_assoc($ures);
-                            $add = $urow['address']." ".$urow['apt'].", ".$urow['country']." ".$urow['zip'];
+                            if (empty($urow['address']) && empty($urow['apt']) && empty($urow['country']) && empty($urow['zip'])) {
+                                $add = "";
+                            } else {
+                                $add = $urow['address']." ".$urow['apt'].", ".$urow['country']." ".$urow['zip'];
+                            }
                         }
                     }
                             
@@ -269,6 +291,12 @@ and open the template in the editor.
             };
         }
         
+        <?php if(isset($_GET['error']) && isset($_GET['signup'])) { ?>
+                document.getElementById('existingCust').style.display = "none";
+                document.getElementById('signupNow').style.display = "block";
+                obj.style.display = "none";
+                document.getElementById('backButton').style.display = "block";
+        <?php } ?>
         var back = document.getElementById('backButton');
         
         if (back !== null) {
