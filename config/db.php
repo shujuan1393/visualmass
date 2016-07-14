@@ -73,6 +73,8 @@ if (!mysqli_query($link, $disc)) {
         }
     }
 }
+
+//set timezone
 $timezone = 'UTC';
 if (is_link('/etc/localtime')) {
     // Mac OS X (and older Linuxes)    
