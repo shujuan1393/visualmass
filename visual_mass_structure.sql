@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 27, 2016 at 09:20 AM
+-- Generation Time: Jul 14, 2016 at 09:41 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `advertisements`
 --
 
-CREATE TABLE IF NOT EXISTS `advertisements` (
+CREATE TABLE `advertisements` (
   `id` int(11) NOT NULL,
   `title` varchar(150) NOT NULL,
   `image` varchar(300) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `advertisements` (
 -- Table structure for table `blog`
 --
 
-CREATE TABLE IF NOT EXISTS `blog` (
+CREATE TABLE `blog` (
   `id` int(11) NOT NULL,
   `title` varchar(200) NOT NULL,
   `html` longtext NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `blog` (
 -- Table structure for table `careers`
 --
 
-CREATE TABLE IF NOT EXISTS `careers` (
+CREATE TABLE `careers` (
   `id` int(11) NOT NULL,
   `title` varchar(150) NOT NULL,
   `html` longtext NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `careers` (
 -- Table structure for table `cart`
 --
 
-CREATE TABLE IF NOT EXISTS `cart` (
+CREATE TABLE `cart` (
   `id` int(11) NOT NULL,
   `cartid` varchar(300) NOT NULL,
   `pid` varchar(300) NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `cart` (
 -- Table structure for table `categories`
 --
 
-CREATE TABLE IF NOT EXISTS `categories` (
+CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
   `type` varchar(100) NOT NULL,
   `name` varchar(150) NOT NULL
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
 -- Table structure for table `contact`
 --
 
-CREATE TABLE IF NOT EXISTS `contact` (
+CREATE TABLE `contact` (
   `id` int(11) NOT NULL,
   `type` varchar(30) NOT NULL,
   `title` varchar(50) NOT NULL,
@@ -126,17 +126,58 @@ CREATE TABLE IF NOT EXISTS `contact` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `deliveries`
+--
+
+CREATE TABLE `deliveries` (
+  `id` int(11) NOT NULL,
+  `orderid` varchar(150) NOT NULL,
+  `deliveryid` varchar(500) NOT NULL,
+  `trackingnumber` varchar(500) NOT NULL,
+  `trackingurl` varchar(500) NOT NULL,
+  `cost` varchar(200) NOT NULL,
+  `comments` varchar(500) NOT NULL,
+  `status` varchar(300) NOT NULL,
+  `statename` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `discountarchives`
+--
+
+CREATE TABLE `discountarchives` (
+  `id` int(11) NOT NULL,
+  `code` varchar(200) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `disclimit` int(11) NOT NULL,
+  `recurrence` varchar(200) NOT NULL,
+  `discusage` int(11) NOT NULL,
+  `userlimit` int(11) NOT NULL,
+  `start` date NOT NULL,
+  `end` date NOT NULL,
+  `disctype` varchar(300) NOT NULL,
+  `disccondition` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `discounts`
 --
 
-CREATE TABLE IF NOT EXISTS `discounts` (
+CREATE TABLE `discounts` (
   `id` int(11) NOT NULL,
   `code` varchar(30) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
-  `amount` varchar(300) NOT NULL,
   `disclimit` varchar(150) NOT NULL,
+  `userlimit` varchar(100) NOT NULL,
   `recurrence` varchar(40) NOT NULL,
   `discusage` varchar(30) NOT NULL,
+  `disctype` varchar(200) NOT NULL,
+  `disccondition` varchar(200) NOT NULL,
+  `serial` varchar(100) NOT NULL,
   `start` date NOT NULL,
   `end` date NOT NULL,
   `status` varchar(30) NOT NULL
@@ -148,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `discounts` (
 -- Table structure for table `employeeTypes`
 --
 
-CREATE TABLE IF NOT EXISTS `employeeTypes` (
+CREATE TABLE `employeeTypes` (
   `id` int(11) NOT NULL,
   `code` varchar(100) NOT NULL,
   `name` varchar(300) NOT NULL
@@ -160,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `employeeTypes` (
 -- Table structure for table `faq`
 --
 
-CREATE TABLE IF NOT EXISTS `faq` (
+CREATE TABLE `faq` (
   `id` int(11) NOT NULL,
   `title` varchar(200) NOT NULL,
   `html` longtext NOT NULL,
@@ -174,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `faq` (
 -- Table structure for table `favourites`
 --
 
-CREATE TABLE IF NOT EXISTS `favourites` (
+CREATE TABLE `favourites` (
   `pid` varchar(50) NOT NULL,
   `email` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -185,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `favourites` (
 -- Table structure for table `forms`
 --
 
-CREATE TABLE IF NOT EXISTS `forms` (
+CREATE TABLE `forms` (
   `id` int(11) NOT NULL,
   `type` varchar(40) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -202,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `forms` (
 -- Table structure for table `giftcards`
 --
 
-CREATE TABLE IF NOT EXISTS `giftcards` (
+CREATE TABLE `giftcards` (
   `id` int(11) NOT NULL,
   `code` varchar(20) NOT NULL,
   `name` varchar(400) NOT NULL,
@@ -219,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `giftcards` (
 -- Table structure for table `homepage`
 --
 
-CREATE TABLE IF NOT EXISTS `homepage` (
+CREATE TABLE `homepage` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `image` varchar(500) NOT NULL,
@@ -240,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `homepage` (
 -- Table structure for table `hometry`
 --
 
-CREATE TABLE IF NOT EXISTS `hometry` (
+CREATE TABLE `hometry` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `html` longtext NOT NULL,
@@ -261,7 +302,7 @@ CREATE TABLE IF NOT EXISTS `hometry` (
 -- Table structure for table `inventory`
 --
 
-CREATE TABLE IF NOT EXISTS `inventory` (
+CREATE TABLE `inventory` (
   `id` int(11) NOT NULL,
   `pid` varchar(200) NOT NULL,
   `quantity` int(100) NOT NULL,
@@ -276,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
 -- Table structure for table `jobs`
 --
 
-CREATE TABLE IF NOT EXISTS `jobs` (
+CREATE TABLE `jobs` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `html` longtext NOT NULL,
@@ -291,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `jobs` (
 -- Table structure for table `locations`
 --
 
-CREATE TABLE IF NOT EXISTS `locations` (
+CREATE TABLE `locations` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `code` varchar(5) NOT NULL,
@@ -315,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `locations` (
 -- Table structure for table `mailinglist`
 --
 
-CREATE TABLE IF NOT EXISTS `mailinglist` (
+CREATE TABLE `mailinglist` (
   `email` varchar(300) NOT NULL,
   `preference` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -326,7 +367,7 @@ CREATE TABLE IF NOT EXISTS `mailinglist` (
 -- Table structure for table `materials`
 --
 
-CREATE TABLE IF NOT EXISTS `materials` (
+CREATE TABLE `materials` (
   `id` int(11) NOT NULL,
   `name` varchar(300) NOT NULL,
   `details` longtext NOT NULL,
@@ -339,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `materials` (
 -- Table structure for table `orders`
 --
 
-CREATE TABLE IF NOT EXISTS `orders` (
+CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `orderid` varchar(100) NOT NULL,
   `pid` varchar(100) NOT NULL,
@@ -362,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
 -- Table structure for table `ourstory`
 --
 
-CREATE TABLE IF NOT EXISTS `ourstory` (
+CREATE TABLE `ourstory` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `html` longtext NOT NULL,
@@ -379,7 +420,7 @@ CREATE TABLE IF NOT EXISTS `ourstory` (
 -- Table structure for table `pages`
 --
 
-CREATE TABLE IF NOT EXISTS `pages` (
+CREATE TABLE `pages` (
   `id` int(11) NOT NULL,
   `title` varchar(500) NOT NULL,
   `image` varchar(800) NOT NULL,
@@ -401,7 +442,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
 -- Table structure for table `productbanner`
 --
 
-CREATE TABLE IF NOT EXISTS `productbanner` (
+CREATE TABLE `productbanner` (
   `id` int(11) NOT NULL,
   `gender` varchar(150) NOT NULL,
   `categories` varchar(150) NOT NULL,
@@ -414,7 +455,7 @@ CREATE TABLE IF NOT EXISTS `productbanner` (
 -- Table structure for table `productdescription`
 --
 
-CREATE TABLE IF NOT EXISTS `productdescription` (
+CREATE TABLE `productdescription` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `image` varchar(500) NOT NULL,
@@ -435,7 +476,7 @@ CREATE TABLE IF NOT EXISTS `productdescription` (
 -- Table structure for table `products`
 --
 
-CREATE TABLE IF NOT EXISTS `products` (
+CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `pid` varchar(500) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -461,7 +502,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 -- Table structure for table `productstatistics`
 --
 
-CREATE TABLE IF NOT EXISTS `productstatistics` (
+CREATE TABLE `productstatistics` (
   `id` int(11) NOT NULL,
   `type` varchar(300) NOT NULL,
   `pid` varchar(300) NOT NULL,
@@ -476,7 +517,7 @@ CREATE TABLE IF NOT EXISTS `productstatistics` (
 -- Table structure for table `referrals`
 --
 
-CREATE TABLE IF NOT EXISTS `referrals` (
+CREATE TABLE `referrals` (
   `id` int(11) NOT NULL,
   `orderid` varchar(300) NOT NULL,
   `email` varchar(300) NOT NULL,
@@ -490,7 +531,7 @@ CREATE TABLE IF NOT EXISTS `referrals` (
 -- Table structure for table `searchstatistics`
 --
 
-CREATE TABLE IF NOT EXISTS `searchstatistics` (
+CREATE TABLE `searchstatistics` (
   `id` int(11) NOT NULL,
   `type` varchar(200) NOT NULL,
   `keyword` varchar(300) NOT NULL,
@@ -503,7 +544,7 @@ CREATE TABLE IF NOT EXISTS `searchstatistics` (
 -- Table structure for table `services`
 --
 
-CREATE TABLE IF NOT EXISTS `services` (
+CREATE TABLE `services` (
   `id` int(11) NOT NULL,
   `servicecode` varchar(10) NOT NULL,
   `servicename` varchar(50) NOT NULL
@@ -515,7 +556,7 @@ CREATE TABLE IF NOT EXISTS `services` (
 -- Table structure for table `settings`
 --
 
-CREATE TABLE IF NOT EXISTS `settings` (
+CREATE TABLE `settings` (
   `id` int(11) NOT NULL,
   `type` varchar(40) NOT NULL,
   `value` longtext NOT NULL
@@ -527,7 +568,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 -- Table structure for table `staff`
 --
 
-CREATE TABLE IF NOT EXISTS `staff` (
+CREATE TABLE `staff` (
   `id` int(11) NOT NULL,
   `firstname` varchar(40) NOT NULL,
   `lastname` varchar(40) NOT NULL,
@@ -549,7 +590,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
 -- Table structure for table `tags`
 --
 
-CREATE TABLE IF NOT EXISTS `tags` (
+CREATE TABLE `tags` (
   `id` int(11) NOT NULL,
   `type` varchar(100) NOT NULL,
   `keyword` varchar(300) NOT NULL,
@@ -562,7 +603,7 @@ CREATE TABLE IF NOT EXISTS `tags` (
 -- Table structure for table `terms`
 --
 
-CREATE TABLE IF NOT EXISTS `terms` (
+CREATE TABLE `terms` (
   `id` int(11) NOT NULL,
   `title` varchar(300) NOT NULL,
   `html` longtext NOT NULL,
@@ -575,7 +616,7 @@ CREATE TABLE IF NOT EXISTS `terms` (
 -- Table structure for table `user`
 --
 
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `firstname` varchar(40) NOT NULL,
   `lastname` varchar(40) NOT NULL,
@@ -633,6 +674,18 @@ ALTER TABLE `categories`
 -- Indexes for table `contact`
 --
 ALTER TABLE `contact`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `discountarchives`
+--
+ALTER TABLE `discountarchives`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -843,6 +896,16 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `contact`
 --
 ALTER TABLE `contact`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `discountarchives`
+--
+ALTER TABLE `discountarchives`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `discounts`

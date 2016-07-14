@@ -21,6 +21,9 @@ if (isset($_GET['delete'])) {
     $discterm = $_POST['conditionfor'];
     $serial = $_POST['serial'];
     
+    if (empty($serial)) {
+        $serial = "no";
+    }
     if (strcmp($serial, "yes") === 0 && (empty($_POST['limit']) || strcmp($_POST['limit'], "unlimited") === 0)) { 
         unset($_SESSION['addDiscSuccess']);
         unset($_SESSION['updateDiscError']);
@@ -104,7 +107,7 @@ if (isset($_GET['delete'])) {
             $discount = "Get ".$_POST['fixedperc']."% Off";
         } else if (strcmp($disctype, "fixedamount") === 0) {
             $discount = "Get $".$_POST['fixedamt']." Off";
-        } else if (strcmp($disctype. "upgrade") === 0) {
+        } else if (strcmp($disctype, "upgrade") === 0) {
             $discount = "Get One Free Upgrade";
         }
         $condition;

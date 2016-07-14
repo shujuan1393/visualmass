@@ -18,7 +18,7 @@ and open the template in the editor.
             <div id="header"><?php require_once 'nav/header.php';?></div>
             
             <div id="content">
-                <h3>ORDER HISTORY</h3>
+                <h3>ORDER HISTORY</h3><br>
                 <table>
                     <tr>
                         <td width='20%'>Order #</td>
@@ -33,79 +33,85 @@ and open the template in the editor.
                     if (!mysqli_query($link, $orders)) {
                         die(mysqli_error($link));
                     } else {
-                        $count = 0;
-                        while($row = mysqli_fetch_assoc($ores)) { 
+                        if ($ores -> num_rows > 0) {
+                            $count = 0;
+                            while($row = mysqli_fetch_assoc($ores)) { 
                 ?>
-                        <tr>
-                        <td>
-                            <?php echo $row['orderid']; ?>
-                        </td>
-                        <td>
-                            <?php 
-                                $date = date("M d, Y", strtotime($row['datepaid']));
-                                echo "<div class='accordion' id='".$count."'> Purchased on ".$date
-                                        ." (CLICK TO VIEW MORE DETAILS) <i class='fa fa-caret-down' aria-hidden='true'></i></div>";
-                                echo "<div class='panel' id='panel".$count."'>";
-                                $relorders = "Select * from orders where orderid = '".$row['orderid']."';";
-                                $relres = mysqli_query($link, $relorders);
-                                
-                                if (!mysqli_query($link, $relorders)) {
-                                    die(mysqli_error($link));
-                                } else {
-                                    while ($r1 = mysqli_fetch_assoc($relres)) {
-                                        if (is_numeric(strpos($r1['type'], "@"))) {
-                                            $getprod = "Select * from giftcards where code ='".$r1['pid']."';";
-                                        } else {
-                                            $getprod = "Select * from products where pid ='".$r1['pid']."';";
-                                        }
-                                        
-                                        $pres = mysqli_query($link, $getprod);
-                                        $prow = mysqli_fetch_assoc($pres);
-                                        $price = $r1['price'] * $r1['quantity'];
-                                        echo $r1['quantity'] ." ".$prow['name'];
-                                        if (strcmp($r1['type'], "hometry") === 0) {
-                                            echo " for home try-on";
-                                           //get delivery tracking information
-                                            $del = "Select * from deliveries where orderid='".$row['orderid']."';";
-                                            $dres = mysqli_query($link, $del);
-                                            
-                                            if (!mysqli_query($link, $del)) {
-                                                die(mysqli_error($link));
+                            <tr>
+                            <td>
+                                <?php echo $row['orderid']; ?>
+                            </td>
+                            <td>
+                                <?php 
+                                    $date = date("M d, Y", strtotime($row['datepaid']));
+                                    echo "<div class='accordion' id='".$count."'> Purchased on ".$date
+                                            ." (CLICK TO VIEW MORE DETAILS) <i class='fa fa-caret-down' aria-hidden='true'></i></div>";
+                                    echo "<div class='panel' id='panel".$count."'>";
+                                    $relorders = "Select * from orders where orderid = '".$row['orderid']."';";
+                                    $relres = mysqli_query($link, $relorders);
+
+                                    if (!mysqli_query($link, $relorders)) {
+                                        die(mysqli_error($link));
+                                    } else {
+                                        while ($r1 = mysqli_fetch_assoc($relres)) {
+                                            if (is_numeric(strpos($r1['type'], "@"))) {
+                                                $getprod = "Select * from giftcards where code ='".$r1['pid']."';";
                                             } else {
-                                                if ($dres -> num_rows > 0) {
-                                                    $drow = mysqli_fetch_assoc($dres);
-                                                    echo "<br><br>Delivery Details";
-                                                    echo "<br>ID: <a href='orders.php?did=".$drow['deliveryid']."'>".$drow['deliveryid']."</a><br>";
-                                                    echo "Tracking Number: ".$drow['trackingnumber']."<br>";
-                                                    echo "Click <a href='".$drow['trackingurl']."' target='_blank'>here</a> to track your delivery";
-                                                    echo "<div class='caps'>".$drow['statename']."</div>";
-                                                }
+                                                $getprod = "Select * from products where pid ='".$r1['pid']."';";
                                             }
-                                        } else {
-                                            echo " - $".$price;
+
+                                            $pres = mysqli_query($link, $getprod);
+                                            $prow = mysqli_fetch_assoc($pres);
+                                            $price = $r1['price'] * $r1['quantity'];
+                                            echo $r1['quantity'] ." ".$prow['name'];
+                                            if (strcmp($r1['type'], "hometry") === 0) {
+                                                echo " for home try-on";
+                                               //get delivery tracking information
+                                                $del = "Select * from deliveries where orderid='".$row['orderid']."';";
+                                                $dres = mysqli_query($link, $del);
+
+                                                if (!mysqli_query($link, $del)) {
+                                                    die(mysqli_error($link));
+                                                } else {
+                                                    if ($dres -> num_rows > 0) {
+                                                        $drow = mysqli_fetch_assoc($dres);
+                                                        echo "<br><br>Delivery Details";
+                                                        echo "<br>ID: <a href='orders.php?did=".$drow['deliveryid']."'>".$drow['deliveryid']."</a><br>";
+                                                        echo "Tracking Number: ".$drow['trackingnumber']."<br>";
+                                                        echo "Click <a href='".$drow['trackingurl']."' target='_blank'>here</a> to track your delivery";
+                                                        echo "<div class='caps'>".$drow['statename']."</div>";
+                                                    }
+                                                }
+                                            } else {
+                                                echo " - $".$price;
+                                            }
+                                            echo "<br>";
                                         }
-                                        echo "<br>";
                                     }
-                                }
-                                echo "</div>";
-                            ?>
-                        </td>
-                        <td class='caps'>
-                            <?php echo $row['status']; ?>
-                        </td>
-                        <td>
-                            <?php echo $row['totalcost']; ?>
-                        </td>
-                        </tr>
+                                    echo "</div>";
+                                ?>
+                            </td>
+                            <td class='caps'>
+                                <?php echo $row['status']; ?>
+                            </td>
+                            <td>
+                                <?php echo $row['totalcost']; ?>
+                            </td>
+                            </tr>
                 <?php   
-                            $count++;
-                        } 
+                                $count++;
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>";
+                            echo "<h4>Sorry, you do not have any past orders yet :( </h4>";
+                            echo "<h5>Start shopping now!</h5>";
+                            echo "</td></tr>";
+                        }
                 ?>
                 <?php
                     }
                 ?>
                 </table>
-                
                 <?php if(isset($_GET['did'])) { 
                     $did = $_GET['did'];
                 ?>
