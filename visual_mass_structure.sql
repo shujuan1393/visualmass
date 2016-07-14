@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 14, 2016 at 09:41 AM
+-- Generation Time: Jul 14, 2016 at 09:38 PM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -60,7 +60,8 @@ CREATE TABLE `blog` (
   `visibility` varchar(30) NOT NULL,
   `author` varchar(100) NOT NULL,
   `dateposted` datetime NOT NULL,
-  `tags` varchar(500) NOT NULL
+  `tags` varchar(500) NOT NULL,
+  `scheduled` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -347,7 +348,9 @@ CREATE TABLE `locations` (
   `featured` longtext NOT NULL,
   `images` longtext,
   `type` varchar(11) NOT NULL,
-  `services` varchar(80) NOT NULL
+  `services` varchar(80) NOT NULL,
+  `status` varchar(200) NOT NULL,
+  `scheduled` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -428,12 +431,34 @@ CREATE TABLE `pages` (
   `html` longtext NOT NULL,
   `htmlpos` varchar(500) NOT NULL,
   `status` varchar(100) NOT NULL,
+  `scheduled` timestamp NULL DEFAULT NULL,
   `link` longtext NOT NULL,
   `linkpos` longtext NOT NULL,
   `buttontext` longtext NOT NULL,
   `fieldorder` bigint(20) NOT NULL,
   `type` varchar(200) NOT NULL,
   `pageid` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `partners`
+--
+
+CREATE TABLE `partners` (
+  `id` int(11) NOT NULL,
+  `company` varchar(300) NOT NULL,
+  `address` varchar(300) NOT NULL,
+  `apt` varchar(200) NOT NULL,
+  `city` varchar(200) NOT NULL,
+  `country` varchar(200) NOT NULL,
+  `zip` varchar(100) NOT NULL,
+  `contactname` varchar(300) NOT NULL,
+  `phone` varchar(100) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `type` varchar(150) NOT NULL,
+  `dateadded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -493,7 +518,9 @@ CREATE TABLE `products` (
   `availability` varchar(40) NOT NULL,
   `locations` longtext NOT NULL,
   `locationqty` longtext NOT NULL,
-  `gender` varchar(20) NOT NULL
+  `gender` varchar(20) NOT NULL,
+  `status` varchar(200) NOT NULL,
+  `scheduled` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -788,6 +815,12 @@ ALTER TABLE `pages`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `partners`
+--
+ALTER TABLE `partners`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `productbanner`
 --
 ALTER TABLE `productbanner`
@@ -976,6 +1009,11 @@ ALTER TABLE `ourstory`
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `partners`
+--
+ALTER TABLE `partners`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `productbanner`
