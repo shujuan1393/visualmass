@@ -76,7 +76,7 @@ ul {
     padding: 5px;
 }
 
-.error {
+#nanError, .error {
    color: red!important; 
    padding: 5px;
 }

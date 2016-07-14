@@ -160,7 +160,7 @@
             <?php } ?>
             <?php if (in_array("partners", $checkArr)) { ?>
             <li <?php if (in_array("partners.php", $urlArr)) echo "class='active'"; ?> >
-                <a href='#'><i class="fa fa-fw fa-suitcase>"></i> PARTNERS</a>
+                <a href='partners.php'><i class="fa fa-fw fa-suitcase>"></i> PARTNERS</a>
             </li>
             <?php } ?>
             <?php if (in_array("products", $checkArr)) { ?>
