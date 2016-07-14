@@ -57,7 +57,7 @@ function geocode($address){
             
             <div id="content">
                 <?php
-                    $banner = "Select * from locations where id='".$_GET['id']."';";
+                    $banner = "Select * from locations where id='".$_GET['id']."' and status='active';";
                     $bresult = mysqli_query($link, $banner);
                     
                     if (!mysqli_query($link, $banner)) {

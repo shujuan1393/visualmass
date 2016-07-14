@@ -48,9 +48,20 @@ if (isset($_GET['delete'])) {
 //            header('Location: products.php#add');
 //        }
 //    }
-    
+    $status = $_POST['status'];
     $exist = $_POST['addExisting'];
-    if(empty($_POST['name']) || empty($_POST['desc']) || empty($_POST['price']) 
+    
+    if (strcmp($status, "inactive") === 0 && (empty($_POST['date4']) || empty($_POST['scheduledtime']))) {
+        unset($_SESSION['addProdSuccess']);
+        unset($_SESSION['updateProdError']);
+        unset($_SESSION['updateProdSuccess']);
+        $_SESSION['addProdError'] = "Date/time not selected for scheduled product release";
+        if (!empty($_POST['editid'])) {
+            header('Location: products.php?id='.$_POST['editid']);
+        } else {
+            header('Location: products.php#add');
+        }
+    } else if(empty($_POST['name']) || empty($_POST['desc']) || empty($_POST['price']) 
             || empty($_POST['type']) || empty($_POST['tags']) || empty($_POST['gender']) 
             || empty($_POST['visibility']) || empty($_POST['availability']) || empty($_POST['colourcode'] 
                     || empty($_POST['width']) || empty($_POST['measurement'])) ) {
@@ -195,6 +206,11 @@ if (isset($_GET['delete'])) {
             $type = $_POST['type'];
             $tags = $_POST['tags'];
             $width = $_POST['width'];
+            
+            $scheduledate = $_POST['date4'];
+            $scheduletime = $_POST['scheduledtime'];
+            $schedule = date('Y-m-d G:i:s', strtotime($scheduledate." ".$scheduletime));
+
             $measure1 = $_POST['measurement1'];
             $measure2 = $_POST['measurement2'];
             $measure3 = $_POST['measurement3'];
@@ -319,7 +335,7 @@ if (isset($_GET['delete'])) {
                         . " price='$price', quantity='$qty', type='$type',"
                         . " images='$images', tags='$tags', visibility='$vis',"
                         . " availability='$avai', locations ='$locs', locationqty = '$locqty', gender='$gender',"
-                        . "width='$width', measurement='$measurement', featured='$featured' "
+                        . "width='$width', measurement='$measurement', featured='$featured', status='$status', scheduled='$schedule' "
                         . "where pid='$editcode'";
                 
                 unset($_SESSION["addProdError"]);
@@ -327,9 +343,9 @@ if (isset($_GET['delete'])) {
                 $_SESSION['updateProdSuccess'] = "Product updated successfully";
             } else {
                 $productSql = "INSERT INTO products (pid, name, description, price, quantity, type,featured, "
-                        . "images, tags, visibility, availability, locations, locationqty, gender, width, measurement) "
+                        . "images, tags, visibility, availability, locations, locationqty, gender, width, measurement, status, scheduled) "
                         . "VALUES('$code','$name', '$desc', '$price', '$qty', '$type', '$featured', '$images', '$tags',"
-                        . "'$vis', '$avai', '$locs', '$locqty', '$gender', '$width', '$measurement')";
+                        . "'$vis', '$avai', '$locs', '$locqty', '$gender', '$width', '$measurement', '$status', '$schedule')";
 
                 unset($_SESSION["addProdError"]);
                 unset($_SESSION["updateProdError"]);
@@ -342,6 +358,7 @@ if (isset($_GET['delete'])) {
 //                echo $productSql."<br>";
 //                exit();
                 mysqli_query($link, $productSql);
+                unset($_SESSION['randomString']);
                 header('Location: products.php#add');
                 
                 

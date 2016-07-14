@@ -19,7 +19,20 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
     
     $erow = mysqli_fetch_assoc($result);
 } else if (isset($_GET['add'])) {
-    if (empty($_POST['name'])) {
+    $status = $_POST['status'];
+    $exist = $_POST['addExisting'];
+    
+    if (strcmp($status, "inactive") === 0 && (empty($_POST['date4']) || empty($_POST['scheduledtime']))) {
+        unset($_SESSION['updatePageError']);
+        unset($_SESSION['addPageSuccess']);
+        unset($_SESSION['addPageError']);
+
+        unset($_SESSION['updatePageSectionError']);
+        unset($_SESSION['updatePageSectionSuccess']);
+        unset($_SESSION['addPageSectionSuccess']);
+        unset($_SESSION['addPageSectionError']);
+        $_SESSION['addPageError'] = "Date/time not selected for scheduled page release";
+    } else if (empty($_POST['name'])) {
         unset($_SESSION['updatePageError']);
         unset($_SESSION['addPageSuccess']);
         unset($_SESSION['addPageError']);
@@ -86,15 +99,18 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
             }
             
             $name = $_POST['name'];
-            $status = $_POST['status'];
-
+            $scheduledate = $_POST['date4'];
+            $scheduletime = $_POST['scheduledtime'];
+            $schedule = date('Y-m-d G:i:s', strtotime($scheduledate." ".$scheduletime));
+            
             if (!empty($_POST['editid'])) {
                 //update all fields with edited form name;
                 $formName = "Select * from pages where id='".$_POST['editid']."';";
                 $res = mysqli_query($link, $formName);
                 $row = mysqli_fetch_assoc($res);
 
-                $sql = "UPDATE pages set title='$name', status='$status', image='$image', type='banner' where id='".$_POST['editid']."';";
+                $sql = "UPDATE pages set title='$name', status='$status', scheduled='$schedule', "
+                        . "image='$image', type='banner' where id='".$_POST['editid']."';";
                 mysqli_query($link, $sql);
 
                 unset($_SESSION['updatePageError']);
@@ -107,7 +123,8 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                 unset($_SESSION['addPageSectionError']);
                 $_SESSION['updatePageSuccess'] = "Page updated successfully";
             } else {
-                $sql = "INSERT INTO pages (title, status, image, type) VALUES ('$name', '$status', '$image', 'banner');";
+                $sql = "INSERT INTO pages (title, status, image, type, scheduled) VALUES "
+                        . "('$name', '$status', '$image', 'banner', '$schedule');";
                 mysqli_query($link, $sql);
 
                 unset($_SESSION['updatePageError']);
@@ -277,9 +294,9 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                     <input type='text' name='name' id='name' 
                                                            value="<?php if (isset($frow['title'])) { echo $frow['title']; } ?>"/>
                                                 </td>
-                                                <td>
+                                                <td width='45%'>
                                                     Status:
-                                                    <select name="status">
+                                                    <select name="status" id='status'>
                                                         <option value="active" <?php 
                                                             if (!empty($frow['status'])) {
                                                                 if(strcmp("active", $frow['status']) === 0) {
@@ -298,7 +315,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2">
+                                                <td>
                                                     <?php 
                                                     if (isset($frow['image'])) {
                                                         $browArr = explode(".", $frow['image']);
@@ -322,6 +339,17 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                     Image:
                                                     <input type="file" name="image" id='image' />
                                                 </td>
+                                                <td id='scheduledposts' style='display:none;'>
+                                                    Scheduled Date/Time:<br>
+                                                    <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if(!empty($frow['scheduled'])) {
+                                                        echo date('Y-m-d', strtotime($frow['scheduled']));
+                                                        } ?>'>
+                                                    <input style='width:45%!important;' id="setTimeExample" name='scheduledtime' placeholder="TIME" 
+                                                           type="text" class="time" value='<?php if(!empty($frow['scheduled'])) {
+                                                        echo date('H.i.s', strtotime($frow['scheduled']));
+                                                        } ?>'/><br>
+                                                    <button id="setTimeButton">Set current time</button>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
@@ -334,6 +362,22 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                             </div>
                             <div id="menu1" class="tab-pane fade">
                                 <h1 class="page-header">Manage Page Sections</h3>
+                                
+                                <div id="updatePageSectionError" class="error">
+                                    <?php 
+                                        if (isset($_SESSION['updatePageSectionError'])) {
+                                            echo $_SESSION['updatePageSectionError'];
+                                        }
+                                    ?>
+                                </div>
+
+                                <div id="updatePageSectionSuccess" class="success">
+                                    <?php 
+                                        if (isset($_SESSION['updatePageSectionSuccess'])) {
+                                            echo $_SESSION['updatePageSectionSuccess'];
+                                        }
+                                    ?>
+                                </div>
                                 <p>
                                     <?php 
                                         //get num of sections for each page
@@ -529,9 +573,11 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                         ?>
                                                     </select>
                                                 </td>
-                                                <td>
+                                            </tr>
+                                            <tr>
+                                                <td width="45%">
                                                     Status*:
-                                                    <select name='status'>
+                                                    <select name='status2' id='status2'>
                                                         <option value='active' <?php 
                                                             if (isset($erow['status'])) {
                                                                 if(strcmp($erow['status'], "active") === 0) {
@@ -547,6 +593,17 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                             }
                                                         ?>>Inactive</option>
                                                     </select>
+                                                </td>
+                                                <td id='scheduledposts2' style='display:none;'>
+                                                    Scheduled Date/Time:<br>
+                                                    <input style='width:45%!important;' type="text" placeholder="DATE" id="date5" name="date5" value='<?php if(!empty($erow['scheduled'])) {
+                                                        echo date('Y-m-d', strtotime($erow['scheduled']));
+                                                        } ?>'>
+                                                    <input style='width:45%!important;' id="setTimeExample2" name='scheduledtime2' placeholder="TIME" 
+                                                           type="text" class="time" value='<?php if(!empty($erow['scheduled'])) {
+                                                        echo date('H.i.s', strtotime($erow['scheduled']));
+                                                        } ?>'/><br>
+                                                    <button id="setTimeButton2">Set current time</button>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1000,6 +1057,61 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
 </html>
 
 <script>
+    var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
+    myCalendar2.hideTime();
+    var myCalendar = new dhtmlXCalendarObject(["date5"]);
+    myCalendar.hideTime();
+
+    $(function() {
+        $('#setTimeExample').timepicker();
+        $('#setTimeButton').on('click', function (event){
+            event.preventDefault();
+            $('#setTimeExample').timepicker('setTime', new Date());
+        });
+        
+        var status = document.getElementById('status').value;
+        
+        if (status === "inactive") {
+            document.getElementById('scheduledposts').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts').style.display = "none";
+        }
+        
+        $('#setTimeExample2').timepicker();
+        $('#setTimeButton2').on('click', function (event){
+            event.preventDefault();
+            $('#setTimeExample2').timepicker('setTime', new Date());
+        });
+        
+        var status = document.getElementById('status2').value;
+        
+        if (status === "inactive") {
+            document.getElementById('scheduledposts2').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts2').style.display = "none";
+        }
+    });
+    
+    document.getElementById('status').onclick = function() {
+        var val = this.value;
+        
+        if (val === "inactive") {
+            document.getElementById('scheduledposts').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts').style.display = "none";
+        }
+    };
+    
+    document.getElementById('status2').onclick = function() {
+        var val = this.value;
+        
+        if (val === "inactive") {
+            document.getElementById('scheduledposts2').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts2').style.display = "none";
+        }
+    };
+    
     var count = document.getElementById('buttonno').value;
     attachClick(count);
     

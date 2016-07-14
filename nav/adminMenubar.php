@@ -293,6 +293,9 @@
                     <li <?php if (in_array("onestory.php", $urlArr)) echo "class='active'" ?> >
                         <a href='onestory.php'>GIFT INITIATIVE</a>
                     </li>
+                    <li <?php if (in_array("pages.php", $urlArr)) echo "class='active'" ?> >
+                        <a href='pages.php'>PAGES</a>
+                    </li>
                     <li <?php if (in_array("prodBanner.php", $urlArr)) echo "class='active'" ?> >
                         <a href='prodBanner.php'>PRODUCT BANNERS</a>
                     </li>
@@ -301,9 +304,6 @@
                     </li>
                     <li <?php if (in_array("terms.php", $urlArr)) echo "class='active'" ?> >
                         <a href='terms.php'>TERMS</a>
-                    </li>
-                    <li <?php if (in_array("pages.php", $urlArr)) echo "class='active'" ?> >
-                        <a href='pages.php'>PAGES</a>
                     </li>
                 </ul>
             </li>

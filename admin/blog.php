@@ -177,8 +177,9 @@ if (isset($_GET['id'])) {
                                         
                                         <select name='author' id="existingAuthor">
                                             <?php 
-                                                $userSql = "Select firstname, lastname from staff UNION ALL"
-                                                        . " Select firstname, lastname from authors";
+                                                $userSql = "Select firstname, lastname from staff ";
+//                                                        . "UNION ALL"
+//                                                        . " Select firstname, lastname from authors";
                                                 $uresult = mysqli_query($link, $userSql);
 
                                                 while ($urow = mysqli_fetch_assoc($uresult)) {
@@ -270,11 +271,13 @@ if (isset($_GET['id'])) {
                                 <tr>
                                     <td>
                                         Publish Date:
-                                        <input type="text" id="date3" name="date3">
+                                        <input type="text" id="date3" name="date3" value='<?php if(!empty($erow['dateposted'])) {
+                                            echo $erow['dateposted'];
+                                            } ?>'>
                                     </td>
                                     <td>
                                         Visibility*:
-                                        <select name='visibility'>
+                                        <select name='visibility' id='visibility'>
                                             <option value='active' <?php 
                                                 if (!empty($erow['visibility'])) {
                                                     if (strcmp($erow['visibility'], "active") === 0) {
@@ -303,6 +306,17 @@ if (isset($_GET['id'])) {
 
                                         Image:
                                         <input type="file" name="image" id='image' accept="image/*" />
+                                    </td>
+                                    <td id='scheduledposts' style='display:none;'>
+                                        Scheduled Date/Time:<br>
+                                        <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if(!empty($erow['scheduled'])) {
+                                            echo date('Y-m-d', strtotime($erow['scheduled']));
+                                            } ?>'>
+                                        <input style='width:45%!important;' id="setTimeExample" name='scheduledtime' placeholder="TIME" 
+                                               type="text" class="time" value='<?php if(!empty($erow['scheduled'])) {
+                                            echo date('H.i.s', strtotime($erow['scheduled']));
+                                            } ?>'/><br>
+                                        <button id="setTimeButton">Set current time</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -358,8 +372,37 @@ if (isset($_GET['id'])) {
     <?php } ?>
         
     var myCalendar = new dhtmlXCalendarObject(["date3"]);
-            myCalendar.hideTime();
+    myCalendar.hideTime();
+    
+    var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
+    myCalendar2.hideTime();
 
+    $(function() {
+        $('#setTimeExample').timepicker();
+        $('#setTimeButton').on('click', function (event){
+            event.preventDefault();
+            $('#setTimeExample').timepicker('setTime', new Date());
+        });
+        
+        var status = document.getElementById('visibility').value;
+        
+        if (status === "inactive") {
+            document.getElementById('scheduledposts').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts').style.display = "none";
+        }
+    });
+    
+    document.getElementById('visibility').onclick = function() {
+        var val = this.value;
+        
+        if (val === "inactive") {
+            document.getElementById('scheduledposts').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts').style.display = "none";
+        }
+    };
+    
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -494,7 +537,8 @@ if (isset($_GET['id'])) {
         var val = selectize.getValue();
         document.getElementById('tags').value = val;
         checkValue();
-        
+    });
+    
     $("#filter").keyup(function () {
         var search = $(this).val();
         $(".searchable").children().show();

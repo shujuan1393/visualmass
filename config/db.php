@@ -73,3 +73,73 @@ if (!mysqli_query($link, $disc)) {
         }
     }
 }
+$timezone = 'UTC';
+if (is_link('/etc/localtime')) {
+    // Mac OS X (and older Linuxes)    
+    // /etc/localtime is a symlink to the 
+    // timezone in /usr/share/zoneinfo.
+    $filename = readlink('/etc/localtime');
+    if (strpos($filename, '/usr/share/zoneinfo/') === 0) {
+        $timezone = substr($filename, 20);
+    }
+} elseif (file_exists('/etc/timezone')) {
+    // Ubuntu / Debian.
+    $data = file_get_contents('/etc/timezone');
+    if ($data) {
+        $timezone = $data;
+    }
+} elseif (file_exists('/etc/sysconfig/clock')) {
+    // RHEL / CentOS
+    $data = parse_ini_file('/etc/sysconfig/clock');
+    if (!empty($data['ZONE'])) {
+        $timezone = $data['ZONE'];
+    }
+}
+ 
+date_default_timezone_set($timezone);
+
+//scheduled release of blog posts, products, locations, pages
+$sql = "Select * from blog where visibility='inactive';";
+$bres = mysqli_query($link, $sql);
+
+if (!mysqli_query($link, $sql)) {
+    die(mysqli_error($link));
+} else {
+    if ($bres -> num_rows > 0) {
+        while ($row=  mysqli_fetch_assoc($bres)) {
+            $date = date('Y-m-d G:i:s');
+            $today = date('Y-m-d G:i:s', strtotime($date));
+            $scheduled = $row['scheduled'];
+            
+            if ($today >= $scheduled) {
+                $update = "UPDATE blog set visibility='active', dateposted='$scheduled' where id='".$row['id']."';";
+                mysqli_query($link, $update);
+            }
+        }
+    }
+}
+
+setActive($link, "products");
+setActive($link, "locations");
+setActive($link, "pages");
+
+function setActive($link, $table) {
+    $product = "Select * from ".$table." where status='inactive';";
+    $pres = mysqli_query($link, $product);
+
+    if(!mysqli_query($link, $product)) {
+        die(mysqli_error($link));
+    } else {
+        if ($pres -> num_rows > 0) {
+            while($row = mysqli_fetch_assoc($pres)) {
+                $date = date('Y-m-d G:i:s');
+                $today = date('Y-m-d G:i:s', strtotime($date));
+                $scheduled = $row['scheduled'];
+                if ($today >= $scheduled) {
+                    $update = "UPDATE ".$table." set status='active' where id='".$row['id']."';";
+                    mysqli_query($link, $update);
+                }
+            }
+        }
+    }
+}

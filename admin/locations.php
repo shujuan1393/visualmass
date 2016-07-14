@@ -231,6 +231,38 @@ if (isset($_GET['id'])) {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>
+                                        Status*:
+                                        <select name='status' id='status'>
+                                            <option value='active' <?php 
+                                                if (!empty($erow['status'])) {
+                                                    if (strcmp($erow['status'], "active") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                }
+                                            ?>>Active</option>
+                                            <option value='inactive' <?php 
+                                                if (!empty($erow['status'])) {
+                                                    if (strcmp($erow['status'], "inactive") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                }
+                                            ?>>Inactive</option>
+                                        </select>
+                                    </td>
+                                    <td id='scheduledposts' style='display:none;'>
+                                        Scheduled Date/Time:<br>
+                                        <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if(!empty($erow['scheduled'])) {
+                                            echo date('Y-m-d', strtotime($erow['scheduled']));
+                                            } ?>'>
+                                        <input style='width:45%!important;' id="setTimeExample" name='scheduledtime' placeholder="TIME" 
+                                               type="text" class="time" value='<?php if(!empty($erow['scheduled'])) {
+                                            echo date('H.i.s', strtotime($erow['scheduled']));
+                                            } ?>'/><br>
+                                        <button id="setTimeButton">Set current time</button>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td colspan="2">
                                         Opening Hours:
                                         <textarea name="opening" id='opening'><?php 
@@ -368,10 +400,40 @@ if (isset($_GET['id'])) {
 </html>
 
 <script>
+    var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
+    myCalendar2.hideTime();
+
+    $(function() {
+        $('#setTimeExample').timepicker();
+        $('#setTimeButton').on('click', function (event){
+            event.preventDefault();
+            $('#setTimeExample').timepicker('setTime', new Date());
+        });
+        
+        var status = document.getElementById('status').value;
+        
+        if (status === "inactive") {
+            document.getElementById('scheduledposts').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts').style.display = "none";
+        }
+    });
+    
+    document.getElementById('status').onclick = function() {
+        var val = this.value;
+        
+        if (val === "inactive") {
+            document.getElementById('scheduledposts').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts').style.display = "none";
+        }
+    };
+    
     function unlinkImg(img) {
         var id;
         <?php if (isset($_GET['id'])) { ?> 
-                id = <?php echo $_GET['id']; } else { ?>;
+                id = <?php echo $_GET['id']; ?>; 
+        <?php    } else { ?>;
                 id = "";
         <?php } ?>
         window.location="processMedia.php?type=locations&id="+id+"&file=" + img;

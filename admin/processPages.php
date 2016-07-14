@@ -28,8 +28,20 @@ if (isset($_GET['update'])) {
             }
         } 
     }
+    $status = $_POST['status2'];
     
-    if(empty($_POST['title'])) {
+    if (strcmp($status, "inactive") === 0 && (empty($_POST['date5']) || empty($_POST['scheduledtime2']))) {
+        unset($_SESSION['addPageSectionSuccess']);
+        unset($_SESSION['updatePageSectionError']);
+        unset($_SESSION['updatePageSectionSuccess']);
+        unset($_SESSION['uploadPageSectionError']);
+        $_SESSION['addPageSectionError'] = "Date/time not selected for scheduled page release";
+        if (!empty($_POST['editid'])) {
+            header("Location: pages.php?id=".$_POST['editid']."#menu1");
+        } else {
+            header('Location: pages.php#menu1');
+        }
+    } else if(empty($_POST['title'])) {
         unset($_SESSION['addPageSectionSuccess']);
         unset($_SESSION['updatePageSectionError']);
         unset($_SESSION['updatePageSectionSuccess']);
@@ -115,12 +127,15 @@ if (isset($_GET['update'])) {
         }
         $title = $_POST['title'];
         $pageid = $_POST['pageid'];
-        $status = $_POST['status'];
         $html = htmlentities($_POST['html']);
         $htmlpos = $_POST['htmlpos'];
         $fieldorder = $_POST['order'];
         $imagepos = $_POST['imagepos'];
-                
+        
+        $scheduledate = $_POST['date5'];
+        $scheduletime = $_POST['scheduledtime2'];
+        $schedule = date('Y-m-d G:i:s', strtotime($scheduledate." ".$scheduletime));
+        
         $image = "";
         $target_dir = "../uploads/pages/";
         
@@ -204,7 +219,7 @@ if (isset($_GET['update'])) {
                 
                 $updatePageSectionSql = "UPDATE pages SET title='$title', link='$pagelink', "
                     . "image='$image', status='$status', pageid='$pageid', html='$html', htmlpos='$htmlpos',"
-                        . "imagepos='$imagepos', linkpos='$linkpos', buttontext='$buttonlink', "
+                        . "imagepos='$imagepos', linkpos='$linkpos', scheduled='$schedule', buttontext='$buttonlink', "
                         . "fieldorder='$fieldorder', type='section' where id = '$editid';";
                 
                 if (mysqli_query($link, $updatePageSectionSql)) {
@@ -218,9 +233,9 @@ if (isset($_GET['update'])) {
                     echo "Error updating record: " . mysqli_error($link);
                 }
             } else {
-                $advSql = "INSERT INTO pages (title, image, imagepos, buttontext, "
+                $advSql = "INSERT INTO pages (title, image, imagepos, buttontext, scheduled"
                         . "link, linkpos, status, html, htmlpos, fieldorder, type, pageid) "
-                    . "VALUES ('$title','$image', '$imagepos', '$buttonlink',"
+                    . "VALUES ('$title','$image', '$imagepos', '$buttonlink', '$schedule',"
                         . " '$pagelink', '$linkpos', '$status', '$html', '$htmlpos', "
                         . "'$fieldorder', 'section', '$pageid');";
 

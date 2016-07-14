@@ -19,7 +19,19 @@ if (isset($_GET['delete'])) {
         header("Location: locations.php");
     } 
 } else if (isset($_POST['submit'])) {
-    if(empty($_POST['name']) || empty($_POST['address']) 
+    $status = $_POST['status'];
+    
+    if (strcmp($status, "inactive") === 0 && (empty($_POST['date4']) || empty($_POST['scheduledtime']))) {
+        unset($_SESSION['addLocSuccess']);
+        unset($_SESSION['updateLocError']);
+        unset($_SESSION['updateLocSuccess']);
+        $_SESSION['addLocError'] = "Date/time not selected for scheduled release of location";
+        if (!empty($_POST['editid'])) {
+            header('Location: locations.php?id='.$_POST['editid']);
+        } else {
+            header('Location: locations.php');
+        }
+    } else if(empty($_POST['name']) || empty($_POST['address']) 
             || empty($_POST['phone']) || empty($_POST['city']) 
             || empty($_POST['zip']) || empty($_POST['country']) 
             || empty($_POST['services']) || empty($_POST['code']) ) {
@@ -28,7 +40,11 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateLocSuccess']);
         $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addLocError'] = "Empty field(s)";
-        header('Location: locations.php');
+        if (!empty($_POST['editid'])) {
+            header('Location: locations.php?id='.$_POST['editid']);
+        } else {
+            header('Location: locations.php');
+        }
     } else {
         unset($_SESSION['addLocError']);
         unset($_SESSION['updateLocSuccess']);
@@ -45,6 +61,11 @@ if (isset($_GET['delete'])) {
         $loctype = $_POST['type'];
         $desc = htmlentities($_POST['desc']);
         $opening = htmlentities($_POST['opening']);
+        
+        $scheduledate = $_POST['date4'];
+        $scheduletime = $_POST['scheduledtime'];
+        $schedule = date('Y-m-d G:i:s', strtotime($scheduledate." ".$scheduletime));
+        
         $serviceArr = $_POST['services'];
         $services = "";
 
@@ -196,7 +217,7 @@ if (isset($_GET['delete'])) {
                 . "apt='".$apt."', city ='".$city."', description='".$desc."', "
                 . "zip='".$zip."', country ='".$country."', opening ='".$opening."', "
                 . "featured='".$image."', images ='".$images."', type ='".$loctype."', "
-                . "services='".$services."' where id='". $editid. "'";
+                . "services='".$services."', status='$status', scheduled='$schedule' where id='". $editid. "'";
                 
                 if (mysqli_query($link, $updateSql)) {
                     unset($_SESSION['addLocSuccess']);
@@ -211,9 +232,11 @@ if (isset($_GET['delete'])) {
                 unset($_SESSION['randomString']);
                 // output data of each row
                 $locSql = "INSERT INTO locations (code, name, address, phone, apt, city, zip"
-                        . ", country, type, services, featured, images, description, opening) "
+                        . ", country, type, services, featured, images, description, opening, "
+                        . "status, scheduled) "
                         . "VALUES ('$loccode', '$locname', '$address', '$phone', '$apt', '$city', '$zip', '$country',"
-                        . "'$loctype', '$services', '$image', '$images', '$desc', '$opening');";
+                        . "'$loctype', '$services', '$image', '$images', '$desc', '$opening', "
+                        . "'$status', '$schedule');";
 
                 mysqli_query($link, $locSql);
                 unset($_SESSION['uploadLocError']);

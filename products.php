@@ -77,7 +77,7 @@
                 </div>
                 <?php 
                     $sql = "Select * from products where type='".$_GET['type']."' and "
-                            . "gender LIKE '%".$_GET['gender']."%';";
+                            . "gender LIKE '%".$_GET['gender']."%' and status='active';";
                     $result = mysqli_query($link, $sql);
                     
                     $count = 0;
@@ -141,7 +141,7 @@
                                     }
                                     echo '</ul></div>';
 
-                                    $relProd = "Select * from products where pid like '".$pidArr[0]."%' and pid <> '$pid';";
+                                    $relProd = "Select * from products where pid like '".$pidArr[0]."%' and pid <> '$pid' and status='active';";
                                     $relres = mysqli_query($link, $relProd);
 
                                     if (!mysqli_query($link, $relProd)) {

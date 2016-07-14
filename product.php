@@ -24,7 +24,7 @@
             
             <div id="content">
                 <?php
-                    $banner = "Select * from products where pid='".$_GET['id']."';";
+                    $banner = "Select * from products where pid='".$_GET['id']."' and status='active';";
                     $bresult = mysqli_query($link, $banner);
                     
                     $count = 0;
@@ -84,7 +84,7 @@
                   </div>
                 <div id='lens_select' class='text-center' style='display:none;'>
                     <?php 
-                        $lens = "Select * from products where type='Lens';";
+                        $lens = "Select * from products where type='Lens' and status='active';";
                         $lenres = mysqli_query($link, $lens);
 
                         $lcount = 0;
@@ -119,7 +119,7 @@
                                         $idToCheck = $selPid;
                                     }
                                     
-                                    $relProds = "Select * from products where pid like '".$idToCheck."%';";
+                                    $relProds = "Select * from products where pid like '".$idToCheck."%' and status='active';";
                                     $relres = mysqli_query($link, $relProds);
                                     
                                     $relcount = 0;
@@ -387,7 +387,8 @@
                 <div class='col-md-8'>
                     <div class='row'>
                     <?php 
-                        $productsSql = "Select * from products where pid <> '".$brow['pid']."' and type ='".$brow['type']."' LIMIT 3;";
+                        $productsSql = "Select * from products where pid <> '".$brow['pid']."' and type ='".$brow['type']."' "
+                                . "and status='active' LIMIT 3;";
                        
                         $recResult = mysqli_query($link, $productsSql);
                         if (!mysqli_query($link, $productsSql)) {

@@ -83,11 +83,11 @@ and open the template in the editor.
                     <div id='blog_content'>
                         <?php 
                             if (isset($_GET['cat'])) {
-                                $get = "Select * from blog where categories LIKE '%".$_GET['cat']."%';";
+                                $get = "Select * from blog where categories LIKE '%".$_GET['cat']."%' and visibility='active';";
                             } else if (isset($_GET['id'])) { 
-                                $get = "Select * from blog where id = '".$_GET['id']."';";
+                                $get = "Select * from blog where id = '".$_GET['id']."' and visibility='active';";
                             } else {
-                                $get = "Select * from blog order by dateposted desc";
+                                $get = "Select * from blog where visibility='active' order by dateposted desc";
                             }
                             
                             $result = mysqli_query($link, $get);
@@ -140,7 +140,7 @@ and open the template in the editor.
                 <?php
                         }
                     }
-                    $advSql = "Select * from advertisements where status='active' and visibility like '%blog%';";
+                    $advSql = "Select * from advertisements where visibility='active' and visibility like '%blog%';";
                     $advres = mysqli_query($link, $advSql);
                 ?>
                 

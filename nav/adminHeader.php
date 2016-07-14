@@ -37,7 +37,11 @@ require_once '../config/db.php';
     <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
-
+    
+    <!-- -->
+    <script type="text/javascript" src="../timepicker/jquery.timepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="../timepicker/jquery.timepicker.css" />
+    
     <!-- CK Editor -->
     <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
     

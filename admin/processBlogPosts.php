@@ -18,21 +18,41 @@ if (isset($_GET['delete'])) {
         header("Location: blog.php");
     } 
 } else if (isset($_POST['submit'])) {
-    if(empty($_POST['title']) || empty($_POST['html']) || 
+    $visibility = $_POST['visibility'];
+    
+    if (strcmp($visibility, "inactive") === 0 && (empty($_POST['date4']) || empty($_POST['scheduledtime']))) {
+        unset($_SESSION['addBlogSuccess']);
+        unset($_SESSION['updateBlogError']);
+        unset($_SESSION['updateBlogSuccess']);
+        $_SESSION['addBlogError'] = "Date/time not selected for scheduled post";
+        if (!empty($_POST['editid'])) {
+            header('Location: blog.php?id='.$_POST['editid']);
+        } else {
+            header('Location: blog.php');
+        }
+    } else if(empty($_POST['title']) || empty($_POST['html']) || 
             (strcmp($_POST['addNewAuthor'], "yes") === 0 && (empty($_POST['firstname']) 
                     || empty($_POST['lastname']) || empty($_POST['email']) || empty($_POST['phone'])) )) {
         unset($_SESSION['addBlogSuccess']);
         unset($_SESSION['updateBlogError']);
         unset($_SESSION['updateBlogSuccess']);
         $_SESSION['addBlogError'] = "Empty field(s)";
-        header('Location: blog.php');
+        if (!empty($_POST['editid'])) {
+            header('Location: blog.php?id='.$_POST['editid']);
+        } else {
+            header('Location: blog.php');
+        }
     } else if (strcmp($_POST['addNewAuthor'], "yes") === 0 
             && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) { 
         unset($_SESSION['addBlogSuccess']);
         unset($_SESSION['updateBlogError']);
         unset($_SESSION['updateBlogSuccess']);
         $_SESSION['addBlogError'] = "Invalid email address";
-        header('Location: blog.php');
+        if (!empty($_POST['editid'])) {
+            header('Location: blog.php?id='.$_POST['editid']);
+        } else {
+            header('Location: blog.php');
+        }
     } else {
         unset($_SESSION['addBlogError']);
         unset($_SESSION['updateBlogError']);
@@ -42,8 +62,12 @@ if (isset($_GET['delete'])) {
         $title = $_POST['title'];
         $excerpt = htmlentities($_POST['excerpt']);
         $html = htmlentities($_POST['html']);
-        $visibility = $_POST['visibility'];
         $date = $_POST['date3'];
+        
+        $scheduledate = $_POST['date4'];
+        $scheduletime = $_POST['scheduledtime'];
+        $schedule = date('Y-m-d G:i:s', strtotime($scheduledate." ".$scheduletime));
+        
         $author;
         
         if (strcmp($_POST['addNewAuthor'], "yes") === 0) {
@@ -173,7 +197,7 @@ if (isset($_GET['delete'])) {
                 
                 $updateDiscSql = "UPDATE blog SET title='$title', excerpt='$excerpt', "
                     . "html='$html', visibility='$visibility', categories='$cats', dateposted='$date', "
-                    . "tags='$tags', image='$image' where id = '$editid';";
+                    . "tags='$tags', image='$image', scheduled='$schedule' where id = '$editid';";
 
                 if (mysqli_query($link, $updateDiscSql)) {
                     unset($_SESSION['addBlogSuccess']);
@@ -186,8 +210,8 @@ if (isset($_GET['delete'])) {
                 }
             } else {
                 $blogSql = "INSERT INTO blog (title, excerpt, image, html, visibility, "
-                        . "author, dateposted, tags, categories) VALUES ('$title','$excerpt', '$image', '$html', "
-                        . "'$visibility', '$author', '$date', '$tags', '$cats');";
+                        . "author, dateposted, tags, categories, scheduled) VALUES ('$title','$excerpt', '$image', '$html', "
+                        . "'$visibility', '$author', '$date', '$tags', '$cats', '$schedule');";
 
                 mysqli_query($link, $blogSql);
                 $_SESSION['addBlogSuccess'] = "Blog entry successfully added";

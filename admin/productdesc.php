@@ -627,7 +627,7 @@ if (isset($_GET['id'])) {
                                                                         <div id='page<?php  echo $i+1; ?>' style='display:none;'>
                                                                             <select name='pageItem<?php  echo $i+1; ?>'>
                                                                                 <?php 
-                                                                                    $pagesql = "Select * from pages where type='banner';";
+                                                                                    $pagesql = "Select * from pages where type='banner' and status='active';";
                                                                                     $pageres = mysqli_query($link, $pagesql);
 
                                                                                     if (!mysqli_query($link, $pagesql)) {
@@ -732,7 +732,7 @@ if (isset($_GET['id'])) {
                                                                         <div id='page<?php  echo $i+1; ?>' style='display:none;'>
                                                                             <select name='pageItem<?php  echo $i+1; ?>'>
                                                                                 <?php 
-                                                                                    $pagesql = "Select * from pages where type='banner';";
+                                                                                    $pagesql = "Select * from pages where type='banner' and status='active';";
                                                                                     $pageres = mysqli_query($link, $pagesql);
 
                                                                                     if (!mysqli_query($link, $pagesql)) {
@@ -953,7 +953,7 @@ if (isset($_GET['id'])) {
                 + "<div id='page"+count+"' style='display:none;'>"
                 + "<select name='pageItem"+count+"'>"
                 + "    <?php 
-                        $sql = "Select * from pages where type='banner';";
+                        $sql = "Select * from pages where type='banner' and status='active';";
                         $pres = mysqli_query($link, $sql);
 
                         if (!mysqli_query($link, $sql)) {

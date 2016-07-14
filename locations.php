@@ -136,30 +136,34 @@
                         <div id='scrollable_loc' style='float:left;'>
                             <ul>
                                 <?php 
-                                    $ret = "Select * from locations where type='retail';";
+                                    $ret = "Select * from locations where type='retail' and status='active';";
                                     $retres = mysqli_query($link, $ret);
 
                                     if (!mysqli_query($link, $ret)) {
                                         echo "Error: ".mysqli_error($link);                                
                                     } else {
-                                        echo "<li class='store_header'>RETAIL STORE</li>";
-                                        $locCount = 0;
-                                        while($row = mysqli_fetch_assoc($retres)) {
-                                            echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
-                                            $locCount++;
+                                        if ($retres -> num_rows > 0) {
+                                            echo "<li class='store_header'>RETAIL STORE</li>";
+                                            $locCount = 0;
+                                            while($row = mysqli_fetch_assoc($retres)) {
+                                                echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
+                                                $locCount++;
+                                            }
                                         }
                                     }
 
-                                    $pop = "Select * from locations where type='popup';";
+                                    $pop = "Select * from locations where type='popup' and status='active';";
                                     $popres = mysqli_query($link, $pop);
 
                                     if (!mysqli_query($link, $pop)) {
                                         echo "Error: ".mysqli_error($link);                                
                                     } else {
-                                        echo "<li class='store_header'>POP-UP STORE</li>";
-                                        while($row = mysqli_fetch_assoc($popres)) {
-                                            echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
-                                            $locCount++;
+                                        if ($popres -> num_rows > 0) {
+                                            echo "<li class='store_header'>POP-UP STORE</li>";
+                                            while($row = mysqli_fetch_assoc($popres)) {
+                                                echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
+                                                $locCount++;
+                                            }
                                         }
                                     }
                                 ?>
@@ -175,19 +179,127 @@
                     
                     <div id='retails' class='col-md-10 col-md-offset-2'>
                     <?php 
-                        $retail = "Select * from locations where type='retail';";
+                        $retail = "Select * from locations where type='retail' and status='active';";
                         $retailres = mysqli_query($link, $retail);
                         
                         if (!mysqli_query($link, $retail)) {
                             echo "Error: ".mysqli_error($link);
                         } else {
                             $count = 0;
-                            while ($row = mysqli_fetch_assoc($retailres)) {
-                                $pos = strpos($row['featured'], '/');
-                                $url = substr($row['featured'], $pos+1);
-                                
-                                echo "<div id='loc".$count."' class='row'>";
-                                    echo "<div id='retailadd".$count."' class='col-md-10'>";
+                            if ($retailres -> num_rows > 0) {
+                                while ($row = mysqli_fetch_assoc($retailres)) {
+                                    $pos = strpos($row['featured'], '/');
+                                    $url = substr($row['featured'], $pos+1);
+
+                                    echo "<div id='loc".$count."' class='row'>";
+                                        echo "<div id='retailadd".$count."' class='col-md-10'>";
+                                        echo "<h4 id='".$row['name']."'><a href='location.php?id=".$row['id']."'>".$row['name']."</a></h4>";
+                                        echo "<p>".$row['address']." ".$row['apt']. "</p>";
+                                        echo "<p>".$row['country']." ".$row['zip']."</p>";
+                                        echo "</div>";
+                                        echo "<div id='storeimg' class='col-md-5'><img src='".$url."' style='width:100%'></div>";
+                                        echo "<div class='col-md-5'>";
+
+                                        /******* GEOCODE ******/
+
+                                        // get latitude, longitude and formatted address
+                                        $data_arr = geocode($row['country']. " ". $row['zip']);
+
+                                        // if able to geocode the address
+                                        if($data_arr){
+
+                                            $latitude = $data_arr[0];
+                                            $longitude = $data_arr[1];
+                                            $formatted_address = $data_arr[2];
+
+                                        ?>
+
+                                        <!-- google map will be shown here -->
+                                        <!--<div id="gmap_canvas" style='width: 100%;'>Loading map...</div>-->
+                                        <div id="gmap_canvas<?php echo $count;?>" style='width: 100%; height:70%; margin: 5px;'>Loading map...</div>
+
+                                        <!-- JavaScript to show google map -->
+                                        <script type="text/javascript">
+                                            function init_map() {
+                                                var myOptions = {
+                                                    zoom: 14,
+                                                    center: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
+                                                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                                                };
+
+                                                var mapname = "gmap_canvas" + <?php echo $count;?>;
+                                                map = new google.maps.Map(document.getElementById(mapname), myOptions);
+        //                                            map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
+
+                                                var image = {
+                                                    url: 'images/Monogram.png', 
+                                                    scaledSize: new google.maps.Size(50, 50)   
+                                                }; 
+                                                marker = new google.maps.Marker({
+                                                    map: map,
+                                                    position: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
+                                                    icon: image
+                                                });
+        //                                        infowindow = new google.maps.InfoWindow({
+        //                                            content: "<?php echo $formatted_address; ?>"
+        //                                        });
+                                                google.maps.event.addListener(marker, "click", function () {
+                                                    infowindow.open(map, marker);
+                                                });
+        //                                        infowindow.open(map, marker);
+                                            }
+
+                                            google.maps.event.addDomListener(window, 'load', init_map);
+                                        </script>
+
+                                        <?php
+                                        // if unable to geocode the address                                
+                                        }else{
+                                            echo "No map found.";
+                                        }
+
+                                        $servArr = explode(",", $row['services']);
+
+                                        echo "</div>";
+                                        echo "<div id='loc_service".$count."' class='loc_serv col-md-10'>";
+                                        echo "<ul>";
+
+                                        for ($i = 0; $i < count($servArr); $i++) {
+                                            echo "<li servId='".$servArr[$i]."'>".$servArr[$i]."</li>";
+                                        }                                
+                                        echo "</ul>";
+                                        echo "</div>";
+                                    echo "</div>";
+                                    $count++;
+                                }
+                            } 
+                        }
+                    ?>
+                    </div>
+                </div>
+                
+                </div>
+                
+                <div id='popup_locs' class='locrow row'>
+                    <h3 id='popup'>POP-UP</h3>
+                    <div id='popup_filter' style='display: none;'>
+                        <h4>There are no popup stores for this filter.</h4>
+                    </div>
+                    <div id='pops' class='col-md-10 col-md-offset-2'>
+                    <?php 
+                        $popup = "Select * from locations where type='popup' and status='active';";
+                        $popupres = mysqli_query($link, $popup);
+                        
+                        if (!mysqli_query($link, $popup)) {
+                            echo "Error: ".mysqli_error($link);
+                        } else {
+                            if ($popupres -> num_rows > 0) {
+                                while ($row = mysqli_fetch_assoc($popupres)) {
+                                    $pos = strpos($row['featured'], '/');
+                                    $url = substr($row['featured'], $pos+1);
+
+                                    echo "<div id='loc".$count."' class='row'>";
+                                    echo "<div id='popupadd".$count."' class='col-md-10'>";
                                     echo "<h4 id='".$row['name']."'><a href='location.php?id=".$row['id']."'>".$row['name']."</a></h4>";
                                     echo "<p>".$row['address']." ".$row['apt']. "</p>";
                                     echo "<p>".$row['country']." ".$row['zip']."</p>";
@@ -227,9 +339,10 @@
     //                                            map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
 
                                             var image = {
-                                                url: 'images/Monogram.png', 
-                                                scaledSize: new google.maps.Size(50, 50)   
+                                                url: 'images/Monogram.png',
+                                                scaledSize: new google.maps.Size(20, 20)    
                                             }; 
+
                                             marker = new google.maps.Marker({
                                                 map: map,
                                                 position: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
@@ -253,125 +366,20 @@
                                         echo "No map found.";
                                     }
 
-                                    $servArr = explode(",", $row['services']);
+                                    $pservArr = explode(",", $row['services']);
 
                                     echo "</div>";
                                     echo "<div id='loc_service".$count."' class='loc_serv col-md-10'>";
                                     echo "<ul>";
 
-                                    for ($i = 0; $i < count($servArr); $i++) {
-                                        echo "<li servId='".$servArr[$i]."'>".$servArr[$i]."</li>";
+                                    for ($i = 0; $i < count($pservArr); $i++) {
+                                        echo "<li servId='".$pservArr[$i]."'>".$pservArr[$i]."</li>";
                                     }                                
                                     echo "</ul>";
                                     echo "</div>";
-                                echo "</div>";
-                                $count++;
-                            }
-                        }
-                    ?>
-                    </div>
-                </div>
-                
-                </div>
-                
-                <div id='popup_locs' class='locrow row'>
-                    <h3 id='popup'>POP-UP</h3>
-                    <div id='popup_filter' style='display: none;'>
-                        <h4>There are no popup stores for this filter.</h4>
-                    </div>
-                    <div id='pops' class='col-md-10 col-md-offset-2'>
-                    <?php 
-                        $popup = "Select * from locations where type='popup';";
-                        $popupres = mysqli_query($link, $popup);
-                        
-                        if (!mysqli_query($link, $popup)) {
-                            echo "Error: ".mysqli_error($link);
-                        } else {
-                            while ($row = mysqli_fetch_assoc($popupres)) {
-                                $pos = strpos($row['featured'], '/');
-                                $url = substr($row['featured'], $pos+1);
-                                
-                                echo "<div id='loc".$count."' class='row'>";
-                                echo "<div id='popupadd".$count."' class='col-md-10'>";
-                                echo "<h4 id='".$row['name']."'><a href='location.php?id=".$row['id']."'>".$row['name']."</a></h4>";
-                                echo "<p>".$row['address']." ".$row['apt']. "</p>";
-                                echo "<p>".$row['country']." ".$row['zip']."</p>";
-                                echo "</div>";
-                                echo "<div id='storeimg' class='col-md-5'><img src='".$url."' style='width:100%'></div>";
-                                echo "<div class='col-md-5'>";
-                                
-                                /******* GEOCODE ******/
-                                
-                                // get latitude, longitude and formatted address
-                                $data_arr = geocode($row['country']. " ". $row['zip']);
-
-                                // if able to geocode the address
-                                if($data_arr){
-
-                                    $latitude = $data_arr[0];
-                                    $longitude = $data_arr[1];
-                                    $formatted_address = $data_arr[2];
-
-                                ?>
-
-                                <!-- google map will be shown here -->
-                                <!--<div id="gmap_canvas" style='width: 100%;'>Loading map...</div>-->
-                                <div id="gmap_canvas<?php echo $count;?>" style='width: 100%; height:70%; margin: 5px;'>Loading map...</div>
-                                
-                                <!-- JavaScript to show google map -->
-                                <script type="text/javascript">
-                                    function init_map() {
-                                        var myOptions = {
-                                            zoom: 14,
-                                            center: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
-                                            mapTypeId: google.maps.MapTypeId.ROADMAP
-                                        };
-                                        
-                                        var mapname = "gmap_canvas" + <?php echo $count;?>;
-                                        map = new google.maps.Map(document.getElementById(mapname), myOptions);
-//                                            map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
-                                        
-                                        var image = {
-                                            url: 'images/Monogram.png',
-                                            scaledSize: new google.maps.Size(20, 20)    
-                                        }; 
-                                        
-                                        marker = new google.maps.Marker({
-                                            map: map,
-                                            position: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
-                                            icon: image
-                                        });
-//                                        infowindow = new google.maps.InfoWindow({
-//                                            content: "<?php echo $formatted_address; ?>"
-//                                        });
-                                        google.maps.event.addListener(marker, "click", function () {
-                                            infowindow.open(map, marker);
-                                        });
-//                                        infowindow.open(map, marker);
-                                    }
-                                    
-                                    google.maps.event.addDomListener(window, 'load', init_map);
-                                </script>
-
-                                <?php
-                                // if unable to geocode the address                                
-                                }else{
-                                    echo "No map found.";
+                                    echo "</div>";
+                                    $count++;
                                 }
-                                
-                                $pservArr = explode(",", $row['services']);
-                                
-                                echo "</div>";
-                                echo "<div id='loc_service".$count."' class='loc_serv col-md-10'>";
-                                echo "<ul>";
-                                
-                                for ($i = 0; $i < count($pservArr); $i++) {
-                                    echo "<li servId='".$pservArr[$i]."'>".$pservArr[$i]."</li>";
-                                }                                
-                                echo "</ul>";
-                                echo "</div>";
-                                echo "</div>";
-                                $count++;
                             }
                         }
                         $advSql = "Select * from advertisements where status='active' and visibility like '%locations%';";
