@@ -8,22 +8,38 @@
 require_once '../config/db.php';
 
 if (isset($_GET['edit'])) {
-    $editid = $_POST['editid'];
-    $editcode = $_POST['editcode'];
-    $editname = $_POST['editname'];
+    $_SESSION['code'] = $_POST['editcode'];
+    $_SESSION['name'] = $_POST['editname'];
     
-    $updateSql = "UPDATE employeeTypes SET code='". $editcode. "', "
-            . "name ='" .$editname. "' where id='". $editid. "'";
-    
-    if (mysqli_query($link, $updateSql)) {
+    if(empty($_POST['editcode']) || empty($_POST['editname']) ) {
         unset($_SESSION['addEmpTypeSuccess']);
         unset($_SESSION['updateEmpTypeError']);
-        $_SESSION['updateEmpTypeSuccess'] = "Record updated successfully";
-        echo "<script>window.history.back()</script>";
-    } else {
-        echo "Error updating record: " . mysqli_error($link);
-    }
+        $_SESSION['addEmpTypeError'] = "Empty field(s)";
+        if (!empty($_POST['editid'])) {
+            header("Location: accountSettings.php?id=".$_POST['editid']."#menu1");
+        } else {
+           header("Location: accountSettings.php#menu1");
+        }
+    } else { 
+        unset($_SESSION['code']);
+        unset($_SESSION['name']);
+        
+        $editid = $_POST['editid'];
+        $editcode = $_POST['editcode'];
+        $editname = $_POST['editname'];
 
+        $updateSql = "UPDATE employeeTypes SET code='". $editcode. "', "
+                . "name ='" .$editname. "' where id='". $editid. "'";
+
+        if (mysqli_query($link, $updateSql)) {
+            unset($_SESSION['addEmpTypeSuccess']);
+            unset($_SESSION['updateEmpTypeError']);
+            $_SESSION['updateEmpTypeSuccess'] = "Record updated successfully";
+            echo "<script>window.history.back()</script>";
+        } else {
+            echo "Error updating record: " . mysqli_error($link);
+        }
+    }
 } else if (isset($_GET['delete'])) {
     $deletesql = "DELETE FROM employeeTypes where id ='". $_GET['id']."'";
     if (mysqli_query($link, $deletesql)) {
@@ -34,6 +50,9 @@ if (isset($_GET['edit'])) {
         echo "<script>window.history.back()</script>";
     } 
 } else if (isset($_GET['add'])) {
+    $_SESSION['code'] = $_POST['code'];
+    $_SESSION['name'] = $_POST['name'];
+    
     if(empty($_POST['code']) || empty($_POST['name']) ) {
         unset($_SESSION['addEmpTypeSuccess']);
         unset($_SESSION['updateEmpTypeError']);
@@ -44,6 +63,9 @@ if (isset($_GET['edit'])) {
            header("Location: accountSettings.php#menu1");
         }
     } else {        
+        unset($_SESSION['code']);
+        unset($_SESSION['name']);
+        
         $code = $_POST['code'];
         $name = $_POST['name'];
         
@@ -138,6 +160,4 @@ if (isset($_GET['edit'])) {
 
             }
         }
-    
-    
 }

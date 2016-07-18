@@ -8,6 +8,7 @@
 require_once '../config/db.php';
 
 if (isset($_GET['add'])) {
+    $_SESSION['name'] = $_POST['name'];
     if(empty($_POST['name'])) {
         unset($_SESSION['addBlogCatSuccess']);
         unset($_SESSION['updateBlogCatSuccess']);
@@ -21,6 +22,8 @@ if (isset($_GET['add'])) {
         $_SESSION['addBlogCatError'] = "Empty field(s)";
         echo "<script>window.history.back()</script>";
     } else {
+        unset($_SESSION['name']);
+        
         if (empty($_POST['editid'])) {
             $sql = "INSERT INTO categories (type, name) VALUES ('blog', '".$_POST['name']."');";
            
@@ -72,6 +75,12 @@ if (isset($_GET['add'])) {
 //        echo "<script>window.history.back()</script>";
     } 
 } else if (isset($_GET['update'])) {
+    $_SESSION['firstname'] = $_POST['firstname'];
+    $_SESSION['lastname'] = $_POST['lastname'];
+    $_SESSION['email'] = $_POST['email'];
+    $_SESSION['phone'] = $_POST['phone'];
+    $_SESSION['date'] = $_POST['date3'];
+    
     if(empty($_POST['firstname']) || empty($_POST['lastname'])
             || empty($_POST['email']) || empty($_POST['phone'])) {
         unset($_SESSION['addBlogCatSuccess']);
@@ -107,6 +116,12 @@ if (isset($_GET['add'])) {
         }
 //        echo "<script>window.history.back()</script>";
     } else {
+        unset($_SESSION['firstname']);
+        unset($_SESSION['lastname']);
+        unset($_SESSION['email']);
+        unset($_SESSION['phone']);
+        unset($_SESSION['date']);
+        
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
         $email = $_POST['email'];

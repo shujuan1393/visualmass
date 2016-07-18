@@ -7,7 +7,7 @@
  */
 require_once '../config/db.php';
 
-if (empty($_GET['delete']) && isset($_GET['id'])) {
+if (empty($_GET['delete']) && isset($_GET['id']) && !isset($_SESSION['title']) && !isset($_SESSION['html']) && !isset($_SESSION['order'])) {
     $editFaq = "Select * from faq where id ='". $_GET['id']."'";
     $editresult = mysqli_query($link, $editFaq);
     
@@ -17,7 +17,7 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
     } else {
         $editrow = mysqli_fetch_assoc($editresult);
     }
-    
+
     unset($_SESSION['updateFaqSuccess']);
     unset($_SESSION['updateFaqError']);
     unset($_SESSION['addFaqSuccess']);
@@ -38,6 +38,10 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         
     } 
 } else if (isset($_GET['update'])) {
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['html'] = $_POST['html'];
+    $_SESSION['order'] = $_POST['order'];
+    
     if (empty($_POST['title']) || empty($_POST['html'])) {
         unset($_SESSION['updateFaqSuccess']);
         unset($_SESSION['addFaqSuccess']);
@@ -51,6 +55,10 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             header("Location: faq.php#menu1");
         }
     } else {
+        unset($_SESSION['title']);
+        unset($_SESSION['html']);
+        unset($_SESSION['order']);
+        
         $title = $_POST['title'];
         $html = htmlentities($_POST['html']);
 
@@ -66,26 +74,21 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             unset($_SESSION['updateFaqError']);
             unset($_SESSION['addFaqBannerError']);
             unset($_SESSION['addFaqBannerSuccess']);
-            mysqli_query($link, $faqSql);
             $_SESSION['addFaqSuccess'] = "FAQ section successfully added";
-            
-            header("Location: faq.php#menu1");
         } else {
             $faqSql = "UPDATE faq SET title='$title', html='$html', "
                 . "type='section', fieldorder='$order' where id = '$editid';";
-            if (mysqli_query($link, $faqSql)) {
-                unset($_SESSION['addFaqSuccess']);
-                unset($_SESSION['addFaqError']);
-                unset($_SESSION['updateFaqError']);
-                unset($_SESSION['addFaqBannerError']);
-                unset($_SESSION['addFaqBannerSuccess']);
-                $_SESSION['updateFaqSuccess'] = "Record updated successfully";
-                
-                header("Location: faq.php#menu1");
-            } else {
-                echo "Error updating record: " . mysqli_error($link);
-            }
+            
+            unset($_SESSION['addFaqSuccess']);
+            unset($_SESSION['addFaqError']);
+            unset($_SESSION['updateFaqError']);
+            unset($_SESSION['addFaqBannerError']);
+            unset($_SESSION['addFaqBannerSuccess']);
+            $_SESSION['updateFaqSuccess'] = "Record updated successfully";
         }
+        mysqli_query($link, $faqSql);
+
+        header("Location: faq.php#menu1");
     }
 } else if (isset($_POST['submit'])) {
     if (!empty($_FILES['image']['name'])) {
@@ -348,27 +351,37 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                                 <td>
                                                     Title*:
                                                     <input type='text' name='title' id='title' 
-                                                           value="<?php if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
+                                                           value="<?php if(isset($_SESSION['title'])) {
+                                                               echo $_SESSION['title'];
+                                                           } else if (isset($editrow['title']) && !isset($_SESSION['title'])) { 
+                                                               echo $editrow['title']; 
+                                                           }  
+                                                               ?>"/>
                                                 </td>
                                                 <td>
                                                     Order*:
                                                     <input type='text' name='order' id='order'  
                                                        onkeypress="return isNumber(event)" 
                                                            value="<?php 
-                                                                if(!empty($editrow['fieldorder'])){
-                                                                    if (isset($editrow['fieldorder'])) { 
+                                                                if(isset($_SESSION['order'])) {
+                                                                    echo $_SESSION['order'];
+                                                                } else if(!empty($editrow['fieldorder'])){
+                                                                    if (isset($editrow['fieldorder']) && !isset($_SESSION['order'])) { 
                                                                         echo $editrow['fieldorder']; 
                                                                     } else { 
                                                                         echo $rowCount+1; 
-
                                                                     } 
-                                                                }?>"/>
+                                                                } ?>"/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
                                                     Content*: 
-                                                    <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
+                                                    <textarea name="html"><?php if(isset($_SESSION['html'])) {
+                                                        echo $_SESSION['html'];
+                                                    } else if (isset($editrow['html']) && !isset($_SESSION['html'])) { 
+                                                        echo $editrow['html']; 
+                                                    }?></textarea>
                                                     <script type="text/javascript">
                                                         CKEDITOR.replace('html');
                                                     </script>
@@ -414,12 +427,12 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             window.location="faq.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addFaqError']);
-                unset($_SESSION['addFaqSuccess']);
-                unset($_SESSION['updateFaqSuccess']);
-                unset($_SESSION['addFaqBannerSuccess']);
-                unset($_SESSION['addFaqBannerError']);
-                $_SESSION['updateFaqError'] = "Nothing was deleted";
+//                unset($_SESSION['addFaqError']);
+//                unset($_SESSION['addFaqSuccess']);
+//                unset($_SESSION['updateFaqSuccess']);
+//                unset($_SESSION['addFaqBannerSuccess']);
+//                unset($_SESSION['addFaqBannerError']);
+//                $_SESSION['updateFaqError'] = "Nothing was deleted";
             ?>
             window.location='faq.php#menu1';
         }

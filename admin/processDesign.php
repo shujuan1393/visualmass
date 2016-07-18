@@ -100,6 +100,11 @@ if (isset($_GET['delete'])) {
     }
     
 } else if (isset($_POST['submit'])) {
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['html'] = $_POST['html'];
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['order'] = $_POST['order'];
+    
     if(empty($_POST['title']) || empty($_POST['html'])) {
         unset($_SESSION['addDesSuccess']);
         unset($_SESSION['updateDesError']);
@@ -111,6 +116,11 @@ if (isset($_GET['delete'])) {
             header("Location: designstory.php#menu1");
         }
     } else { 
+        unset($_SESSION['title']);
+        unset($_SESSION['html']);
+        unset($_SESSION['status']);
+        unset($_SESSION['order']);
+        
         unset($_SESSION['addDesError']);
         unset($_SESSION['updateDesError']);
         unset($_SESSION['updateDesSuccess']);

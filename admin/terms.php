@@ -129,7 +129,7 @@ if (isset($_GET['id'])) {
 
                             <input type='hidden' name='submitted' id='submitted' value='1'/>
                             <input type='hidden' name='editid' id='editid' 
-                                   value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
+                                   value='<?php if (isset($_GET['id'])) { echo $_GET['id']; }?>'/>
             
                             <table class="content">
                                 <tr>
@@ -137,9 +137,11 @@ if (isset($_GET['id'])) {
                                     Title*:
                                     <input type='text' name='title' id='title' 
                                            value='<?php 
-                                           if (!empty($erow['title'])) {
+                                           if (isset($_SESSION['title'])) {
+                                               echo $_SESSION['title'];
+                                           } else if (!empty($erow['title'])) {
                                                echo $erow['title'];
-                                           }
+                                           } 
                                            ?>'/>
                                     </td>
                                     <td>
@@ -147,22 +149,26 @@ if (isset($_GET['id'])) {
                                     <input type='text' name='order' id='order'  
                                        onkeypress="return isNumber(event)" 
                                            value="<?php 
-                                                if(!empty($erow['fieldorder'])){
+                                                if (isset($_SESSION['order'])) {
+                                                    echo $_SESSION['order'];
+                                                } else if(!empty($erow['fieldorder'])){
                                                     if (isset($erow['fieldorder'])) { 
                                                         echo $erow['fieldorder']; 
                                                     } else { 
                                                         echo $rowCount+1; 
                                                     }
-                                                }?>"/>
+                                                } ?>"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
                                         Content*: 
                                         <textarea name="html"><?php 
-                                               if (!empty($erow['html'])) {
-                                                   echo $erow['html'];
-                                               }
+                                                if (isset($_SESSION['html'])) {
+                                                    echo $_SESSION['html'];
+                                                } else if (!empty($erow['html'])) {
+                                                    echo $erow['html'];
+                                                }  
                                                ?></textarea>
                                         <script type="text/javascript">
                                             CKEDITOR.replace('html');
@@ -206,10 +212,10 @@ if (isset($_GET['id'])) {
             window.location="processTerms.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addTermError']);
-                unset($_SESSION['addTermSuccess']);
-                unset($_SESSION['updateTermSuccess']);
-                $_SESSION['updateTermError'] = "Nothing was deleted";
+//                unset($_SESSION['addTermError']);
+//                unset($_SESSION['addTermSuccess']);
+//                unset($_SESSION['updateTermSuccess']);
+//                $_SESSION['updateTermError'] = "Nothing was deleted";
             ?>
             window.location='terms.php';
         }

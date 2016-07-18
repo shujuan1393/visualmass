@@ -150,7 +150,7 @@ if (isset($_GET['id'])) {
                                             <input type='text' name='code' id='code' value ="<?php 
                                                 if(isset($_SESSION['randomString'])) { 
                                                     echo $_SESSION['randomString']; } 
-                                                if (!empty($erow['pid'])) {
+                                                else if (!empty($erow['pid'])) {
                                                     $pos = strpos($erow['pid'], "-");
                                                     if (is_numeric($pos)) {
                                                         $pids = explode("-", $erow['pid']);
@@ -158,6 +158,8 @@ if (isset($_GET['id'])) {
                                                     } else {
                                                         echo $erow['pid'];
                                                     }
+                                                } else if (isset($_SESSION['code'])) {
+                                                    echo $_SESSION['code'];
                                                 }
                                                 ?>" maxlength="50" />
                                             </div>
@@ -179,7 +181,24 @@ if (isset($_GET['id'])) {
                                                         //get related products
                                                         $relpos = strpos($pid, '-');
                                                         if (!is_numeric($relpos)) {
-                                                            echo "<option value='".$pid."'>".$pid."</option>";
+                                                            echo "<option value='".$pid."'";
+                                                            if (isset($_SESSION['code'])) {
+                                                                if(strcmp($_SESSION['code'], $pid) === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($erow['pid'])) {
+                                                                $pos = strpos($erow['pid'], "-");
+                                                                if (is_numeric($pos)) {
+                                                                    $pids = explode("-", $erow['pid']);
+                                                                    $code = $pids[0];
+                                                                } else {
+                                                                    $code = $erow['pid'];
+                                                                }
+                                                                if(strcmp($code, $pid) === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } 
+                                                            echo ">".$pid."</option>";
                                                         }
                                                     }
                                                 }
@@ -190,13 +209,15 @@ if (isset($_GET['id'])) {
                                     <td width='45%'>
                                         Colour*:
                                         <input type='text' name='colourcode' value='<?php 
-                                            if (!empty($erow['pid'])){
+                                            if (isset($_SESSION['colourcode'])) {
+                                                echo $_SESSION['colourcode'];
+                                            } else if (!empty($erow['pid'])){
                                                 $pos = strpos($erow['pid'], "-");
                                                 if (is_numeric($pos)) {
                                                     $pids = explode("-", $erow['pid']);
                                                     echo $pids[1];
                                                 } 
-                                            }
+                                            } 
                                         ?>'>
                                     </td>
                                 </tr>
@@ -204,27 +225,31 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Name*:
                                         <input type='text' name='name' id='name'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['name'])) {
+                                        if (isset($_SESSION['name'])) {
+                                            echo $_SESSION['name'];
+                                        } else if (!empty($erow['name'])) {
                                             echo $erow['name'];
-                                        }
+                                        }  
                                             ?>"/>
                                     </td>
                                     <td>
                                         <?php 
-                                            if (!empty($erow['visibility'])) {
+                                            if (isset($_SESSION['visibility'])) {
+                                                $visib = explode(",", $_SESSION['visibility']);
+                                            } else if (!empty($erow['visibility'])) {
                                                 $visib = explode(",", $erow['visibility']);
-                                            }
+                                            }  
                                         ?>
                                         Visibility*: <br/>
                                         <input name='visibility[]' type='checkbox' value='retail' <?php 
-                                            if (!empty($erow['visibility'])) {
+                                            if (!empty($erow['visibility']) || isset($_SESSION['visibility'])) {
                                                 if (in_array("retail", $visib)) {
                                                     echo " checked";
                                                 }
                                             }
                                             ?>><label>Retail</label>
                                         <input name='visibility[]' type='checkbox' value='popup' <?php 
-                                            if (!empty($erow['visibility'])) {
+                                            if (!empty($erow['visibility']) || isset($_SESSION['visibility'])) {
                                                 if (in_array("popup", $visib)) {
                                                     echo " checked";
                                                 }
@@ -236,9 +261,11 @@ if (isset($_GET['id'])) {
                                     <td colspan="2">
                                         Description*:
                                         <textarea name='desc' id='desc'><?php 
-                                        if (!empty($erow['description'])) {
+                                        if (isset($_SESSION['desc'])) {
+                                            echo $_SESSION['desc'];
+                                        } else if (!empty($erow['description'])) {
                                             echo $erow['description'];
-                                        }
+                                        }  
                                             ?></textarea>
                                         <script type="text/javascript">
                                             CKEDITOR.replace('desc');
@@ -251,28 +278,40 @@ if (isset($_GET['id'])) {
                                         Status*:
                                         <select name='status' id='status'>
                                             <option value='active' <?php 
-                                                if (!empty($erow['status'])) {
+                                                if (isset($_SESSION['status'])) {
+                                                    if (strcmp($_SESSION['status'], "active") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['status'])) {
                                                     if (strcmp($erow['status'], "active") === 0) {
                                                         echo " selected";
                                                     }
-                                                }
+                                                }  
                                             ?>>Active</option>
                                             <option value='inactive' <?php 
-                                                if (!empty($erow['status'])) {
+                                                if (isset($_SESSION['status'])) {
+                                                    if (strcmp($_SESSION['status'], "inactive") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['status'])) {
                                                     if (strcmp($erow['status'], "inactive") === 0) {
                                                         echo " selected";
                                                     }
-                                                }
+                                                } 
                                             ?>>Inactive</option>
                                         </select>
                                     </td>
                                     <td id='scheduledposts' style='display:none;'>
                                         Scheduled Date/Time:<br>
-                                        <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if(!empty($erow['scheduled'])) {
+                                        <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if (isset($_SESSION['date4'])) {
+                                                echo $_SESSION['date4'];
+                                            } else if(!empty($erow['scheduled'])) {
                                             echo date('Y-m-d', strtotime($erow['scheduled']));
                                             } ?>'>
                                         <input style='width:45%!important;' id="setTimeExample" name='scheduledtime' placeholder="TIME" 
-                                               type="text" class="time" value='<?php if(!empty($erow['scheduled'])) {
+                                               type="text" class="time" value='<?php if (isset($_SESSION['time'])) {
+                                                echo $_SESSION['time'];
+                                            } else if(!empty($erow['scheduled'])) {
                                             echo date('H.i.s', strtotime($erow['scheduled']));
                                             } ?>'/><br>
                                         <button id="setTimeButton">Set current time</button>
@@ -283,7 +322,9 @@ if (isset($_GET['id'])) {
                                         Price*:
                                         <input type='text' name='price' id='price' 
                                                onkeypress="return isNumberKey(event)" value ="<?php 
-                                        if (!empty($erow['price'])) {
+                                        if (isset($_SESSION['price'])) {
+                                            echo $_SESSION['price'];
+                                        } else if (!empty($erow['price'])) {
                                             echo $erow['price'];
                                         }
                                             ?>"/>
@@ -294,14 +335,18 @@ if (isset($_GET['id'])) {
                                         Width*:
                                         <input type='text' name='width' id='width' 
                                                onkeypress="return isNumber(event)" value ="<?php 
-                                        if (!empty($erow['width'])) {
+                                        if (isset($_SESSION['width'])) {
+                                            echo $_SESSION['width'];
+                                        } else if (!empty($erow['width'])) {
                                             echo $erow['width'];
                                         }
                                             ?>"/>
                                     </td>
                                     <td>
                                         <?php 
-                                            if (!empty($erow['measurement'])) {
+                                            if (isset($_SESSION['measurement'])) {
+                                                $measureArr = explode("-", $_SESSION['measurement']);
+                                            } else if (!empty($erow['measurement'])) {
                                                 $measureArr = explode("-", $erow['measurement']);
                                             }
                                         ?>
@@ -342,11 +387,15 @@ if (isset($_GET['id'])) {
                                                 $res = mysqli_query($link, $types);
                                                 while($trow = mysqli_fetch_assoc($res)) {
                                                     echo "<option value='".$trow['name']."'";
-                                                    if (!empty($erow['type'])) {
+                                                    if (isset($_SESSION['type'])) {
+                                                        if (strcmp($_SESSION['type'], $trow['name']) === 0) {
+                                                            echo " selected";
+                                                        }
+                                                    } else if (!empty($erow['type'])) {
                                                         if (strcmp($erow['type'], $trow['name']) === 0) {
                                                             echo " selected";
                                                         }
-                                                    }
+                                                    } 
                                                     echo ">".$trow['name']."</option>";
                                                 }
                                             ?>
@@ -354,20 +403,22 @@ if (isset($_GET['id'])) {
                                     </td>
                                     <td>
                                         <?php 
-                                            if (!empty($erow['gender'])){
+                                            if (isset($_SESSION['gender'])) {
+                                                $genArr = explode(",", $_SESSION['gender']);
+                                            } else if (!empty($erow['gender'])){
                                                 $genArr = explode(",", $erow['gender']);
-                                            }
+                                            } 
                                         ?>
                                         Gender*: <br/>
                                         <input name='gender[]' type='checkbox' value='men' <?php 
-                                            if (!empty($erow['gender'])) {
+                                            if (!empty($erow['gender']) || isset($_SESSION['gender'])) {
                                                 if (in_array("men", $genArr)) {
                                                     echo " checked";
                                                 }
                                             }
                                             ?>>Men
                                         <input name='gender[]' type='checkbox' value='women' <?php 
-                                            if (!empty($erow['gender'])) {
+                                            if (!empty($erow['gender']) || isset($_SESSION['gender'])) {
                                                 if (in_array("women", $genArr)) {
                                                     echo " checked";
                                                 }
@@ -391,13 +442,15 @@ if (isset($_GET['id'])) {
                                 <tr>
                                     <td colspan='2'>
                                         <?php 
-                                            if (!empty($erow['availability'])) {
+                                            if (isset($_SESSION['availability'])) {
+                                                $avai = explode(",", $_SESSION['availability']);
+                                            } else if (!empty($erow['availability'])) {
                                                 $avai = explode(",", $erow['availability']);
-                                            }
+                                            }  
                                         ?>
                                         Availability*: <br/>
                                         <input name='availability[]' type='checkbox' value='sale' <?php 
-                                            if (!empty($erow['availability'])) {
+                                            if (!empty($erow['availability']) || isset($_SESSION['availability'])) {
                                                 if (in_array("sale", $avai)) {
                                                     echo " checked";
                                                 }
@@ -407,7 +460,7 @@ if (isset($_GET['id'])) {
                                             ?>>For Sale
                                         <?php if ((!empty($permission[1])) && (strcmp($permission[1], "on") === 0)) { ?>
                                             <input name='availability[]' type='checkbox' value='tryon' <?php 
-                                                if (!empty($erow['availability'])) {
+                                                if (!empty($erow['availability']) || isset($_SESSION['availability'])) {
                                                     if (in_array("tryon", $avai)) {
                                                         echo " checked";
                                                     }
@@ -466,10 +519,13 @@ if (isset($_GET['id'])) {
                                 <tr id='locationLinks'>
                                     <td colspan="2">
                                         <?php 
-                                            if(!empty($erow['locations'])) {
+                                            if (isset($_SESSION['locations']) && isset($_SESSION['tracks']) && isset($_SESSION['locqty'])) {
+                                                $slocs = $_SESSION['locations'];
+                                                $slocqty = $_SESSION['locqty'];
+                                            } else if(!empty($erow['locations'])) {
                                                 $slocs = explode(",", $erow['locations']);
                                                 $slocqty = explode(",", $erow['locationqty']);
-                                            }
+                                            }  
                                         ?>
                                         <input type='hidden' name='locno' id='locno' value='<?php 
                                                 if(!empty($slocs)) {
@@ -694,7 +750,7 @@ if (isset($_GET['id'])) {
     function unlinkImg(img) {
         var id;
         <?php if (isset($_GET['id'])) { ?> 
-                id = <?php echo $_GET['id']; ?>;                
+                id = <?php echo "'".$_GET['id']."'"; ?>;                
         <?php } else { ?>;
                 id = "";
         <?php } ?>
@@ -704,7 +760,7 @@ if (isset($_GET['id'])) {
     function unlinkFeatImg(img) {
         var id;
         <?php if (isset($_GET['id'])) { ?> 
-                id = <?php echo $_GET['id']; ?>;
+                id = <?php echo "'".$_GET['id']."'"; ?>;
         <?php } else { ?>;
                 id = "";
         <?php } ?>
@@ -718,7 +774,21 @@ if (isset($_GET['id'])) {
 
         var selectize_tags = $("#select-to")[0].selectize;
         <?php 
-        if (isset($_GET['id'])) {
+        if (isset($_SESSION['tags'])) {
+            $tagsAr = explode(",", $_SESSION['tags']);
+                
+                for ($i = 0; $i < count($tagsAr); $i++) {
+        ?>
+            selectize_tags.addOption({
+                
+        <?php
+                    echo "tag: '".$tagsAr[$i]."'";
+        ?>
+            });
+            selectize_tags.addItem('<?php echo $tagsAr[$i]; ?>');
+        <?php
+                }
+        } else if (isset($_GET['id'])) {
             $tagsql = "Select * from products where pid='".$_GET['id']."';";
             $tresult = mysqli_query($link, $tagsql);
 
@@ -742,7 +812,7 @@ if (isset($_GET['id'])) {
                 }
 //                }
             }
-        }
+        } 
         ?>
     });
     

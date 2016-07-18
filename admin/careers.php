@@ -17,13 +17,13 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
     } else {
         $editrow = mysqli_fetch_assoc($editresult);
     }
-    
-    unset($_SESSION['updateCareerSuccess']);
-    unset($_SESSION['updateCareerError']);
-    unset($_SESSION['addCareerSuccess']);
-    unset($_SESSION['addCareerError']);
-    unset($_SESSION['addCareerBannerError']);
-    unset($_SESSION['addCareerBannerSuccess']);
+//    
+//    unset($_SESSION['updateCareerSuccess']);
+//    unset($_SESSION['updateCareerError']);
+//    unset($_SESSION['addCareerSuccess']);
+//    unset($_SESSION['addCareerError']);
+//    unset($_SESSION['addCareerBannerError']);
+//    unset($_SESSION['addCareerBannerSuccess']);
 } else if (isset($_GET['delete'])) {
     $deletesql = "DELETE FROM careers where id ='". $_GET['id']."'";
     if (mysqli_query($link, $deletesql)) {
@@ -37,6 +37,11 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
         header("Location: careers.php#menu1");
     } 
 } else if (isset($_GET['update'])) {
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['html'] = $_POST['html'];
+    $_SESSION['order'] = $_POST['order'];
+    $_SESSION['status'] = $_POST['status'];
+    
     if (empty($_POST['title']) || empty($_POST['html'])) {
         unset($_SESSION['updateCareerSuccess']);
         unset($_SESSION['updateCareerError']);
@@ -50,6 +55,11 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             header("Location: careers.php#menu1");
         }
     } else {
+        unset($_SESSION['title']);
+        unset($_SESSION['html']);
+        unset($_SESSION['order']);
+        unset($_SESSION['status']);
+        
         $title = $_POST['title'];
         $html = htmlentities($_POST['html']);
 
@@ -349,19 +359,23 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                                 <td>
                                                     Title*:
                                                     <input type='text' name='title' id='title' 
-                                                           value="<?php if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
+                                                           value="<?php if (isset($_SESSION['title'])) { 
+                                                               echo $_SESSION['title'];
+                                                           } else if (isset($editrow['title'])) { echo $editrow['title']; } ?>"/>
                                                 </td>
                                                 <td>
                                                     Order*:
                                                     <input type='text' name='order' id='order'  
                                                        onkeypress="return isNumber(event)" 
                                                            value="<?php 
-                                                            if(!empty($editrow['fieldorder'])){
+                                                            if (isset($_SESSION['order'])) { 
+                                                               echo $_SESSION['order'];
+                                                            } else if(!empty($editrow['fieldorder'])){
                                                                 if (isset($editrow['fieldorder'])) { 
                                                                     echo $editrow['fieldorder']; 
-                                                                } else { 
-                                                                    echo $rowCount+1;
                                                                 } 
+                                                            } else { 
+                                                                echo $rowCount+1;
                                                             } ?>"/>
                                                 </td>
                                             </tr>
@@ -370,14 +384,22 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                                     Status*:
                                                     <select name='status'>
                                                         <option value='active' <?php 
-                                                            if(isset($editrow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                               if (strcmp($_SESSION['status'], "active") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if(isset($editrow['status'])) {
                                                                 if (strcmp($editrow['status'], "active") === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
                                                         ?>>Active</option>
                                                         <option value='inactive' <?php 
-                                                            if(isset($editrow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                               if (strcmp($_SESSION['status'], "inactive") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if(isset($editrow['status'])) {
                                                                 if (strcmp($editrow['status'], "inactive") === 0) {
                                                                     echo " selected";
                                                                 }
@@ -389,7 +411,10 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
                                             <tr>
                                                 <td colspan="2">
                                                     Content*: 
-                                                    <textarea name="html"><?php if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
+                                                    <textarea name="html"><?php 
+                                                    if (isset($_SESSION['html'])) { 
+                                                        echo $_SESSION['html'];
+                                                    } else if (isset($editrow['html'])) { echo $editrow['html']; } ?></textarea>
                                                     <script type="text/javascript">
                                                         CKEDITOR.replace('html');
                                                     </script>
@@ -436,12 +461,12 @@ if (empty($_GET['delete']) && isset($_GET['id'])) {
             window.location="careers.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addCareerError']);
-                unset($_SESSION['addCareerSuccess']);
-                unset($_SESSION['updateCareerSuccess']);
-                unset($_SESSION['addCareerBannerSuccess']);
-                unset($_SESSION['addCareerBannerError']);
-                $_SESSION['updateCareerError'] = "Nothing was deleted";
+//                unset($_SESSION['addCareerError']);
+//                unset($_SESSION['addCareerSuccess']);
+//                unset($_SESSION['updateCareerSuccess']);
+//                unset($_SESSION['addCareerBannerSuccess']);
+//                unset($_SESSION['addCareerBannerError']);
+//                $_SESSION['updateCareerError'] = "Nothing was deleted";
             ?>
             window.location='careers.php#menu1';
         }

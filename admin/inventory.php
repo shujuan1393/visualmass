@@ -166,11 +166,15 @@ if (isset($_GET['id'])) {
 
                                             while ($row = mysqli_fetch_assoc($prodResult)) {
                                                 echo "<option value='".$row['pid']."' ";
-                                                if (isset($_GET['id'])) {
+                                                if (isset($_SESSION['product'])) {
+                                                    if (strcmp($_SESSION['product'], $row['pid']) === 0) {
+                                                        echo "selected";
+                                                    }
+                                                } else if (isset($_GET['id'])) {
                                                     if (strcmp($resrow['pid'], $row['pid']) === 0) {
                                                         echo "selected";
                                                     }
-                                                }
+                                                } 
 
                                                 echo ">";
                                                 echo $row['name']." (".$row['pid'].")</option>";
@@ -190,11 +194,15 @@ if (isset($_GET['id'])) {
 
                                             while ($row = mysqli_fetch_assoc($locres)) {
                                                 echo "<option value='".$row['code']."' ";
-                                                if (isset($_GET['id'])) {
+                                                if(isset($_SESSION['location'])) {
+                                                    if (strcmp($_SESSION['location'], $row['code']) === 0) {
+                                                        echo "selected";
+                                                    }
+                                                } else if (isset($_GET['id'])) {
                                                     if (strcmp($resrow['location'], $row['code']) === 0) {
                                                         echo "selected";
                                                     }
-                                                }
+                                                }  
 
                                                 echo ">";
                                                 echo $row['name']."</option>";
@@ -212,11 +220,13 @@ if (isset($_GET['id'])) {
 
                                     Price*:
                                     <input type='text' name='price' id='price' 
-                                           <?php 
-                                            if (isset($_GET['id'])) {
-                                                echo "value='".$resrow['price']."'";
-                                            }
-                                           ?>
+                                           value='<?php 
+                                            if(isset($_SESSION['price'])) {
+                                                echo $_SESSION['price'];
+                                            } else if (isset($_GET['id'])) {
+                                                echo $resrow['price'];
+                                            }  
+                                           ?>'
                                            onkeypress="return isNumberKey(event)" />
 
                                     </td>
@@ -229,11 +239,13 @@ if (isset($_GET['id'])) {
                                 ?>
                                         Quantity*:
                                         <input type='text' name='qty' id='qty' 
-                                               <?php 
-                                                if (isset($_GET['id'])) {
-                                                    echo "value='".$resrow['quantity']."'";
-                                                }
-                                               ?>
+                                               value='<?php 
+                                                if (isset($_SESSION['qty'])) {
+                                                    echo $_SESSION['qty'];
+                                                } else if (isset($_GET['id'])) {
+                                                    echo $resrow['quantity'];
+                                                } 
+                                               ?>'
                                                onkeypress="return isNumber(event)" />
                                         <p id='nanError' style="display: none;">Please enter numbers only</p>
                                     </td>

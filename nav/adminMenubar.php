@@ -115,8 +115,8 @@
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
-            <li <?php if (in_array("admin.php", $urlArr)) echo "class='active'"; ?> >
-                <a href='admin.php'><i class="fa fa-fw fa-home"></i> HOME</a>
+            <li <?php if (in_array("index.php", $urlArr)) echo "class='active'"; ?> >
+                <a href='index.php'><i class="fa fa-fw fa-home"></i> HOME</a>
             </li>
             <?php if (in_array("cust", $checkArr)) { ?>
             <li <?php if (in_array("customers.php", $urlArr)) echo "class='active'"; ?> >

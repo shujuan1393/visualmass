@@ -208,7 +208,9 @@ if (isset($_GET['id'])) {
                                                 <td colspan="2">
                                                     Title*:</label>
                                                     <input type='text' name='title' id='title'
-                                                           value='<?php if (!empty($erow['title'])) { echo $erow['title']; }?>'/>
+                                                           value='<?php if (isset($_SESSION['title'])) { 
+                                                               echo $_SESSION['title'];
+                                                           } else if (!empty($erow['title'])) { echo $erow['title']; }?>'/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -216,20 +218,30 @@ if (isset($_GET['id'])) {
                                                     Order*:
                                                     <input type='text' name='order' id='order'  
                                                        onkeypress="return isNumber(event)" 
-                                                           value="<?php if (isset($erow['fieldorder'])) { echo $erow['fieldorder']; } else { echo $rowCount+1; } ?>"/>
+                                                           value="<?php if (isset($_SESSION['order'])) { 
+                                                               echo $_SESSION['order'];
+                                                           } else if (isset($erow['fieldorder'])) { echo $erow['fieldorder']; } else { echo $rowCount+1; } ?>"/>
                                                 </td>
                                                 <td>
                                                     Status*:
                                                     <select name='status'>
                                                         <option value='active' <?php 
-                                                            if (!empty($erow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                                if (strcmp($_SESSION['status'], "active") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($erow['status'])) {
                                                                 if (strcmp($erow['status'], "active") === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
                                                         ?>>Active</option>
                                                         <option value='inactive' <?php 
-                                                            if (!empty($erow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                                if (strcmp($_SESSION['status'], "inactive") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($erow['status'])) {
                                                                 if (strcmp($erow['status'], "inactive") === 0) {
                                                                     echo " selected";
                                                                 }
@@ -242,7 +254,9 @@ if (isset($_GET['id'])) {
                                                 <td colspan="2">
                                                     Content*: 
                                                     <textarea name="html"><?php 
-                                                        if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
+                                                        if (isset($_SESSION['html'])) { 
+                                                            echo $_SESSION['html'];
+                                                        } else if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
                                                     <script type="text/javascript">
                                                         CKEDITOR.replace('html');
                                                     </script>
@@ -277,10 +291,10 @@ if (isset($_GET['id'])) {
             window.location="processDesign.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addDesError']);
-                unset($_SESSION['addDesSuccess']);
-                unset($_SESSION['updateDesSuccess']);
-                $_SESSION['updateDesError'] = "Nothing was deleted";
+//                unset($_SESSION['addDesError']);
+//                unset($_SESSION['addDesSuccess']);
+//                unset($_SESSION['updateDesSuccess']);
+//                $_SESSION['updateDesError'] = "Nothing was deleted";
             ?>
             window.location='designstory.php#menu1';
         }

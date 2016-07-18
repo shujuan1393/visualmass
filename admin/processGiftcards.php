@@ -17,10 +17,20 @@ if (isset($_GET['delete'])) {
         header("Location: giftcards.php");
     } 
 } else if (isset($_POST['submit'])) {
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['desc'] = $_POST['desc'];
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['type'] = $_POST['type'];
+    $_SESSION['customise'] = $_POST['customise'];
+    $_SESSION['randomString'] = $_POST['code'];
+    $_SESSION['amount'] = $_POST['amount'];
+    
+//    echo $_SESSION['name'];
+//    echo "<br>";
+//    exit();
     if(empty($_POST['name']) || empty($_POST['desc']) || empty($_POST['status']) ||
             empty($_POST['type']) || empty($_POST['code'])
             || (strcmp($_POST['customise'], "no")===0 && empty($_POST['amount']) )) {
-        $_SESSION['randomString'] = $_POST['code'];
         unset($_SESSION['addGiftSuccess']);
         unset($_SESSION['updateGiftSuccess']);
         unset($_SESSION['updateGiftError']);
@@ -31,6 +41,14 @@ if (isset($_GET['delete'])) {
             header('Location: giftcards.php');
         }
     } else {
+        unset($_SESSION['name']);
+        unset($_SESSION['desc']);
+        unset($_SESSION['status']);
+        unset($_SESSION['type']);
+        unset($_SESSION['customise']);
+        unset($_SESSION['amount']);
+        unset($_SESSION['randomString']);
+        
         unset($_SESSION['addGiftError']);
         unset($_SESSION['updateGiftSuccess']);
         unset($_SESSION['updateGiftError']);

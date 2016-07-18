@@ -88,13 +88,14 @@ if (!mysqli_query($link,$selectSql)) {
                                                 $count = 0;
                                                 while ($row1 = mysqli_fetch_assoc($empTypeResult)) {
                                                     $str = $row1['code']."=";
-                                                    if (stripos($savedrow['value'], $str) !== FALSE) {
+                                                   
+                                                    if (is_numeric(strpos($savedrow['value'], $str))) {
                                                         $checkArr = explode($str, $valArr[$count]);
                                                         $count++;
                                                         $accessArr;
                                                         if (!empty($checkArr[1])) {
                                                             $accessArr = explode(",", $checkArr[1]);
-                                                        }else{
+                                                        } else{
                                                             $accessArr = array();
                                                         }
                                                     }
@@ -203,6 +204,7 @@ if (!mysqli_query($link,$selectSql)) {
                                             </td>
                                             <?php 
                                                     echo "</tr>";
+                                                    $accessArr = array();
                                                     }
                                             ?>
                                             <tr>
@@ -315,17 +317,21 @@ if (!mysqli_query($link,$selectSql)) {
                                                 <td>
                                                     Code*:
                                                     <input type='text' name='code' id='code'  maxlength="50" value='<?php 
-                                                            if (isset($erow['code'])) {
+                                                            if (isset($_SESSION['code'])) {
+                                                                echo $_SESSION['code'];
+                                                            } else if (isset($erow['code'])) {
                                                                 echo $erow['code'];
-                                                            }
+                                                            }  
                                                            ?>'/>
                                                 </td>
                                                 <td>
                                                     Name*:
                                                     <input type='text' name='name' id='name'  maxlength="50" value='<?php 
-                                                            if (isset($erow['name'])) {
+                                                            if (isset($_SESSION['name'])) {
+                                                                echo $_SESSION['name'];
+                                                            } else if (isset($erow['name'])) {
                                                                 echo $erow['name'];
-                                                            }
+                                                            }  
                                                            ?>'/>
                                                 </td>
                                             </tr>
@@ -358,11 +364,11 @@ if (!mysqli_query($link,$selectSql)) {
             window.location="saveAccountSettings.php?delete=1&id=" + empId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['updateEmpTypeSuccess']);
-                unset($_SESSION['updateAccSetSuccess']);
-                unset($_SESSION['addEmpTypeSuccess']);
-                unset($_SESSION['addEmpTypeError']);
-                $_SESSION['updateEmpTypeError'] = "Nothing was deleted";
+//                unset($_SESSION['updateEmpTypeSuccess']);
+//                unset($_SESSION['updateAccSetSuccess']);
+//                unset($_SESSION['addEmpTypeSuccess']);
+//                unset($_SESSION['addEmpTypeError']);
+//                $_SESSION['updateEmpTypeError'] = "Nothing was deleted";
             ?>
             window.location='accountSettings.php';
         }

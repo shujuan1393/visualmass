@@ -136,20 +136,31 @@ if (isset($_GET['id'])) {
                                     Name*:
                                     <input type='text' name='name' id='name'  maxlength="50" 
                                            value='<?php if (!empty($erow['servicename'])) 
-                                               { echo $erow['servicename']; }?>'/>
+                                               { echo $erow['servicename']; 
+                                               } else if (isset($_SESSION['name'])) {
+                                                   echo $_SESSION['name'];
+                                               }
+?>'/>
                                     </td>
                                     <td>
                                     Service Code*:
                                     <input type='text' name='code' id='code'  maxlength="50" 
                                            value='<?php if (!empty($erow['servicecode'])) 
-                                               { echo $erow['servicecode']; }?>'/>
+                                               { echo $erow['servicecode']; 
+                                               } else if (isset($_SESSION['code'])) {
+                                                   echo $_SESSION['code'];
+                                               }?>'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
                                         Description:
                                         <textarea name="desc" id='desc'><?php 
-                                            if(!empty($erow['description'])) { echo $erow['description']; }?></textarea>
+                                            if(!empty($erow['description'])) { 
+                                                echo $erow['description']; 
+                                            } else if (isset($_SESSION['desc'])) {
+                                                echo $_SESSION['desc'];
+                                            }?></textarea>
                                         <script type="text/javascript">
                                             CKEDITOR.replace('desc');
                                         </script>

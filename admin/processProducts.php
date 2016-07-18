@@ -18,12 +18,78 @@ if (isset($_GET['delete'])) {
         header("Location: products.php#add");
     } 
 } else if (isset($_POST['submitted'])) {
+    $_SESSION['code'] = $_POST['code'];
+    $_SESSION['colourcode'] = $_POST['colourcode'];
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['tags'] = $_POST['tags'];
+    $_SESSION['quantity'] = $_POST['quantity'];
+    $_SESSION['desc'] = $_POST['desc'];
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['price'] = $_POST['price'];
+    $_SESSION['width'] = $_POST['width'];
+    $_SESSION['measurement'] = $_POST['measurement1']."-".$_POST['measurement2']."-".$_POST['measurement3'];
+    $_SESSION['type'] = $_POST['type'];
+    $_SESSION['date4'] = $_POST['date4'];
+    $_SESSION['time'] = $_POST['scheduledtime'];
+    $gendersArr = $_POST['gender'];
+    $genders = "";
+
+    for($i = 0; $i < count($gendersArr); $i++) {
+        $genders .= $gendersArr[$i];
+
+        if ($i+1 !== count($gendersArr)) {
+            $genders.=",";
+        }
+    }
+    $_SESSION['gender'] = $genders;
+    
+    $visbArr = $_POST['visibility'];
+    $visb = "";
+
+    for($i = 0; $i < count($visbArr); $i++) {
+        $visb .= $visbArr[$i];
+
+        if ($i+1 !== count($visbArr)) {
+            $visb.=",";
+        }
+    }
+    $_SESSION['visibility'] = $visb;
+
+    $availArr = $_POST['availability'];
+    $avail = "";
+
+    for($i = 0; $i < count($availArr); $i++) {
+        $avail .= $availArr[$i];
+
+        if ($i+1 !== count($availArr)) {
+            $avail.=",";
+        }
+    }
+    $_SESSION['availability'] = $avail;
+    
+    //get all locations
+    $locno = $_POST['locno'];
+    $locs = array();
+    $tracks = array();
+    $quantity = array();
+    
+    for ($i = 1; $i <= $locno; $i++) {
+        $loci = "locations".$i;
+        $tracki = "track".$i;
+        $qtyi = "qty".$i;
+        array_push($quantity, $_POST[$qtyi]);
+        array_push($tracks, $_POST[$tracki]);
+        array_push($locs, $_POST[$loci]);
+    }
+    
+    $_SESSION['locations'] = $locs;
+    $_SESSION['tracks'] = $tracks;
+    $_SESSION['locqty'] = $quantity;
+    
     unset($_SESSION['addProdSuccess']);
     unset($_SESSION['addProdError']);
     unset($_SESSION['updateProdError']);
     unset($_SESSION['updateProdSuccess']);
-    
-    $locno = $_POST['locno'];
     
     for ($i = 1; $i <= $locno; $i++) {
         $loci = "locations".$i;
@@ -61,7 +127,7 @@ if (isset($_GET['delete'])) {
         } else {
             header('Location: products.php#add');
         }
-    } else if(empty($_POST['name']) || empty($_POST['desc']) || empty($_POST['price']) 
+    } else if(empty($_POST['code']) || empty($_POST['name']) || empty($_POST['desc']) || empty($_POST['price']) 
             || empty($_POST['type']) || empty($_POST['tags']) || empty($_POST['gender']) 
             || empty($_POST['visibility']) || empty($_POST['availability']) || empty($_POST['colourcode'] 
                     || empty($_POST['width']) || empty($_POST['measurement'])) ) {
@@ -197,6 +263,26 @@ if (isset($_GET['delete'])) {
         }
         
         if (!isset($_SESSION['addProdError'])) {
+            unset($_SESSION['code']);
+            unset($_SESSION['colourcode']);
+            unset($_SESSION['name']);
+            unset($_SESSION['tags']);
+            unset($_SESSION['quantity']);
+            unset($_SESSION['visibility']);
+            unset($_SESSION['desc']);
+            unset($_SESSION['status']);
+            unset($_SESSION['price']);
+            unset($_SESSION['width']);
+            unset($_SESSION['measurement']);
+            unset($_SESSION['type']);
+            unset($_SESSION['gender']);
+            unset($_SESSION['availability']);
+            unset($_SESSION['locations']);
+            unset($_SESSION['tracks']);
+            unset($_SESSION['locqty']);
+            unset($_SESSION['date4']);
+            unset($_SESSION['time']);
+            
             $code = $_POST['code'];
             $color = $_POST['colourcode'];
             $name = $_POST['name'];

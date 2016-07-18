@@ -140,7 +140,9 @@ if (isset($_GET['id'])) {
                                 <td>
                                     Title*:
                                     <input type='text' name='title' id='title'  maxlength="50" value ="<?php 
-                                    if (!empty($erow['title'])) {
+                                    if (isset($_SESSION['title'])) { 
+                                        echo $_SESSION['title'];
+                                    } else if (!empty($erow['title'])) {
                                         echo $erow['title'];
                                     }
                                         ?>"/>
@@ -148,7 +150,11 @@ if (isset($_GET['id'])) {
                                 <td>
                                     Featured?
                                     <input type='checkbox' name='featured' id='featured' value='yes' <?php 
-                                    if (!empty($erow['featured'])) {
+                                    if (isset($_SESSION['featured'])) { 
+                                        if (strcmp($_SESSION['featured'], "yes") === 0) {
+                                            echo " checked";
+                                        }
+                                    } else if (!empty($erow['featured'])) {
                                         if (strcmp($erow['featured'], "yes") === 0) {
                                             echo " checked";
                                         }
@@ -161,14 +167,22 @@ if (isset($_GET['id'])) {
                                     Type*:
                                     <select name="type">
                                         <option value="hq" <?php 
-                                        if (!empty($erow['type'])) {
+                                        if (isset($_SESSION['type'])) { 
+                                            if (strcmp($_SESSION['type'], "hq") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if (!empty($erow['type'])) {
                                             if (strcmp($erow['type'], "hq") === 0) {
                                                 echo " selected";
                                             }
                                         }
                                         ?>>Headquarters</option>
                                         <option value="retail" <?php 
-                                        if (!empty($erow['type'])) {
+                                        if (isset($_SESSION['type'])) { 
+                                            if (strcmp($_SESSION['type'], "retail") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if (!empty($erow['type'])) {
                                             if (strcmp($erow['type'], "retail") === 0) {
                                                 echo " selected";
                                             }
@@ -178,16 +192,24 @@ if (isset($_GET['id'])) {
                                 </td>
                                 <td>
                                     Status*:
-                                    <select name="status">
+                                    <select name="status" id='status'>
                                         <option value="active" <?php 
-                                        if (!empty($erow['status'])) {
+                                        if (isset($_SESSION['status'])) { 
+                                            if (strcmp($_SESSION['status'], "active") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if (!empty($erow['status'])) {
                                             if (strcmp($erow['status'], "active") === 0) {
                                                 echo " selected";
                                             }
                                         }
                                         ?>>Active</option>
                                         <option value="inactive" <?php 
-                                        if (!empty($erow['status'])) {
+                                        if (isset($_SESSION['status'])) { 
+                                            if (strcmp($_SESSION['status'], "inactive") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if (!empty($erow['status'])) {
                                             if (strcmp($erow['status'], "inactive") === 0) {
                                                 echo " selected";
                                             }
@@ -197,10 +219,29 @@ if (isset($_GET['id'])) {
                                 </td>
                             </tr>
                             <tr>
+                                <td colspan='2' id='scheduledposts' style='display:none;'>
+                                    Scheduled Date/Time:<br>
+                                    <input style='width:38%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if (isset($_SESSION['scheduledate'])) {
+                                            echo $_SESSION['scheduledate'];
+                                        } else if(!empty($erow['scheduled'])) {
+                                        echo date('Y-m-d', strtotime($erow['scheduled']));
+                                        } ?>'>
+                                    <input style='width:38%!important;' id="setTimeExample" name='scheduledtime' placeholder="TIME" 
+                                           type="text" class="time" value='<?php if (isset($_SESSION['time'])) {
+                                            echo $_SESSION['time'];
+                                        } else if(!empty($erow['scheduled'])) {
+                                        echo date('H.i.s', strtotime($erow['scheduled']));
+                                        }?>'/><br>
+                                    <button id="setTimeButton">Set current time</button>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td colspan='2'>
                                     Description*:
                                     <textarea name='html' id='html'><?php 
-                                    if (!empty($erow['html'])) {
+                                    if (isset($_SESSION['html'])) { 
+                                        echo $_SESSION['html'];
+                                    } else if (!empty($erow['html'])) {
                                         echo $erow['html'];
                                     }
                                         ?></textarea>
@@ -235,8 +276,8 @@ if (isset($_GET['id'])) {
             window.location="processJobs.php?delete=1&id=" + prodId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['updateJobSuccess']);
-                $_SESSION['updateJobError'] = "Nothing was deleted";
+//                unset($_SESSION['updateJobSuccess']);
+//                $_SESSION['updateJobError'] = "Nothing was deleted";
             ?>
             window.location='jobs.php';
         }
@@ -268,5 +309,35 @@ if (isset($_GET['id'])) {
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>"
         });
     });
+    
+    var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
+    myCalendar2.hideTime();
+    
+    $(function() {
+        $('#setTimeExample').timepicker();
+        $('#setTimeButton').on('click', function (event){
+            event.preventDefault();
+            $('#setTimeExample').timepicker('setTime', new Date());
+        });
+        
+        
+    });
+    var status = document.getElementById('status').value;
+        
+    if (status === "inactive") {
+        document.getElementById('scheduledposts').style.display = "block";
+    } else {
+        document.getElementById('scheduledposts').style.display = "none";
+    }
+    
+    document.getElementById('status').onclick = function() {
+        var val = document.getElementById('status').value;
+        
+        if (val === "inactive") {
+            document.getElementById('scheduledposts').style.display = "block";
+        } else {
+            document.getElementById('scheduledposts').style.display = "none";
+        }
+    };
 </script>
 

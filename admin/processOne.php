@@ -99,6 +99,11 @@ if (isset($_GET['delete'])) {
     }
     
 } else if (isset($_POST['submit'])) {
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['html'] = $_POST['html'];
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['order'] = $_POST['order'];
+    
     if(empty($_POST['title']) || empty($_POST['html'])) {
         unset($_SESSION['addOneSuccess']);
         unset($_SESSION['updateOneError']);
@@ -110,6 +115,11 @@ if (isset($_GET['delete'])) {
             header("Location: onestory.php#menu1");
         }
     } else { 
+        unset($_SESSION['title']);
+        unset($_SESSION['html']);
+        unset($_SESSION['status']);
+        unset($_SESSION['order']);
+        
         unset($_SESSION['addOneError']);
         unset($_SESSION['updateOneError']);
         unset($_SESSION['updateOneSuccess']);

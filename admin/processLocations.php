@@ -19,6 +19,34 @@ if (isset($_GET['delete'])) {
         header("Location: locations.php");
     } 
 } else if (isset($_POST['submit'])) {
+    //store session variables
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['address'] = $_POST['address'];
+    $_SESSION['phone'] = $_POST['phone'];
+    $_SESSION['apt'] = $_POST['apt'];
+    $_SESSION['city'] = $_POST['city'];
+    $_SESSION['zip'] = $_POST['zip'];
+    $_SESSION['country'] = $_POST['country'];
+    $_SESSION['type'] = $_POST['type'];
+    $_SESSION['randomString'] = $_POST['code'];
+    $sesserv = $_POST['services'];
+    $sessionserv = "";
+
+    for($i = 0; $i < count($sesserv); $i++) {
+        $sessionserv .= $sesserv[$i];
+
+        if ($i+1 !== count($sesserv)) {
+            $sessionserv.=",";
+        }
+    }
+    $_SESSION['services'] = $sessionserv;
+    
+    $_SESSION['opening'] = $_POST['opening'];
+    $_SESSION['description'] = $_POST['desc'];
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['date4'] = $_POST['date4'];
+    $_SESSION['time'] = $_POST['scheduledtime'];
+    
     $status = $_POST['status'];
     
     if (strcmp($status, "inactive") === 0 && (empty($_POST['date4']) || empty($_POST['scheduledtime']))) {
@@ -38,7 +66,6 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addLocSuccess']);
         unset($_SESSION['updateLocError']);
         unset($_SESSION['updateLocSuccess']);
-        $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addLocError'] = "Empty field(s)";
         if (!empty($_POST['editid'])) {
             header('Location: locations.php?id='.$_POST['editid']);
@@ -209,6 +236,22 @@ if (isset($_GET['delete'])) {
         }
         
         if (!isset($_SESSION['uploadLocError'])) {
+            unset($_SESSION['name']);
+            unset($_SESSION['address']);
+            unset($_SESSION['phone']);
+            unset($_SESSION['apt']);
+            unset($_SESSION['city']);
+            unset($_SESSION['zip']);
+            unset($_SESSION['country']);
+            unset($_SESSION['type']);
+            unset($_SESSION['services']);
+            unset($_SESSION['opening']);
+            unset($_SESSION['description']);
+            unset($_SESSION['status']);
+            unset($_SESSION['date4']);
+            unset($_SESSION['time']);
+            unset($_SESSION['randomString']);
+            
             if (!empty($_POST['editid'])) {
                 $editid = $_POST['editid'];
                 
@@ -228,8 +271,7 @@ if (isset($_GET['delete'])) {
                 } else {
                     echo "Error updating record: " . mysqli_error($link);
                 }
-            } else {
-                unset($_SESSION['randomString']);
+            } else {                
                 // output data of each row
                 $locSql = "INSERT INTO locations (code, name, address, phone, apt, city, zip"
                         . ", country, type, services, featured, images, description, opening, "

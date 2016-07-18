@@ -151,8 +151,11 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Name*:
                                         <input type='text' name='name' id='name'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['name'])) { 
-                                            echo $erow['name']; }?>"/>
+                                        if(isset($_SESSION['name'])) { 
+                                            echo $_SESSION['name']; 
+                                        } else if (!empty($erow['name'])) { 
+                                            echo $erow['name']; 
+                                        }  ?>"/>
                                     </td>
                                     <td>
                                         Location Code*: <br/>
@@ -160,8 +163,8 @@ if (isset($_GET['id'])) {
                                         <div style="overflow: hidden;" >
                                         <input type='text' name='code' id='code' value ="<?php 
                                         if(isset($_SESSION['randomString'])) { 
-                                            echo $_SESSION['randomString']; } 
-                                        if (!empty($erow['code'])) { 
+                                            echo $_SESSION['randomString']; 
+                                        } else if (!empty($erow['code'])) { 
                                             echo $erow['code']; }?>" maxlength="50" />
                                         </div>
                                     </td>
@@ -171,24 +174,36 @@ if (isset($_GET['id'])) {
                                         Phone*:
                                         <input type='text' name='phone' id='phone'  maxlength="50"  
                                                onkeypress="return isNumber(event)" value ="<?php 
-                                               if(!empty($erow['phone'])) echo $erow['phone']; ?>"/>
+                                               if(isset($_SESSION['phone'])) { 
+                                                echo $_SESSION['phone']; 
+                                               } else if(!empty($erow['phone'])) { 
+                                                   echo $erow['phone']; 
+                                               } ?>"/>
                                     </td>
                                     <td>
                                         Type*:
                                         <select name="type">
                                             <option value="retail" <?php 
-                                                if (!empty($erow['type'])) {
+                                                if(isset($_SESSION['type'])) { 
+                                                    if (strcmp($_SESSION['type'], "retail") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['type'])) {
                                                     if (strcmp($erow['type'], "retail") === 0) {
                                                         echo " selected";
                                                     }
-                                                }
+                                                } 
                                             ?>>Retail</option>
                                             <option value="popup" <?php 
-                                                if (!empty($erow['type'])) {
+                                                if(isset($_SESSION['type'])) { 
+                                                    if (strcmp($_SESSION['type'], "popup") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['type'])) {
                                                     if (strcmp($erow['type'], "popup") === 0) {
                                                         echo " selected";
                                                     }
-                                                }
+                                                } 
                                             ?>>Pop-up</option>
                                         </select>
                                     </td>
@@ -197,37 +212,52 @@ if (isset($_GET['id'])) {
                                     <td colspan="2">
                                         Address*:
                                         <input type='text' name='address' id='address'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['address'])) { 
-                                            echo $erow['address']; }?>"/>
+                                        if (isset($_SESSION['address'])) { 
+                                            echo $_SESSION['address']; 
+                                        } else if (!empty($erow['address'])) { 
+                                            echo $erow['address']; 
+                                        } else ?>"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         Apt, suite:
                                         <input type='text' name='apt' id='apt'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['apt'])) { 
-                                            echo $erow['apt']; }?>"/>
+                                        if(isset($_SESSION['apt'])) { 
+                                            echo $_SESSION['apt']; 
+                                        } else if (!empty($erow['apt'])) { 
+                                            echo $erow['apt']; 
+                                        } ?>"/>
                                     </td>
                                     <td>
                                         ZIP Code*:
                                         <input type='text' name='zip' id='zip'  maxlength="50"  
                                                onkeypress="return isNumber(event)" value ="<?php 
-                                        if (!empty($erow['zip'])) { 
-                                            echo $erow['zip']; }?>"/>
+                                        if(isset($_SESSION['zip'])) { 
+                                            echo $_SESSION['zip']; 
+                                        } else if (!empty($erow['zip'])) { 
+                                            echo $erow['zip'];
+                                        } ?>"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         City*:
                                         <input type='text' name='city' id='city'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['city'])) { 
-                                            echo $erow['city']; }?>"/>
+                                        if(isset($_SESSION['city'])) { 
+                                            echo $_SESSION['city']; 
+                                        } else if (!empty($erow['city'])) { 
+                                            echo $erow['city']; 
+                                        } ?>"/>
                                     </td>
                                     <td>
                                         Country*:
                                         <input type='text' name='country' id='country'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['country'])) { 
-                                            echo $erow['country']; }?>"/>
+                                        if(isset($_SESSION['country'])) { 
+                                            echo $_SESSION['country']; 
+                                        } else if (!empty($erow['country'])) { 
+                                            echo $erow['country'];
+                                        } ?>"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -235,28 +265,38 @@ if (isset($_GET['id'])) {
                                         Status*:
                                         <select name='status' id='status'>
                                             <option value='active' <?php 
-                                                if (!empty($erow['status'])) {
+                                                if(isset($_SESSION['status'])) { 
+                                                    if (strcmp($_SESSION['status'], "active") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['status'])) {
                                                     if (strcmp($erow['status'], "active") === 0) {
                                                         echo " selected";
                                                     }
-                                                }
+                                                }  
                                             ?>>Active</option>
                                             <option value='inactive' <?php 
-                                                if (!empty($erow['status'])) {
+                                                if(isset($_SESSION['status'])) { 
+                                                    if (strcmp($_SESSION['status'], "inactive") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['status'])) {
                                                     if (strcmp($erow['status'], "inactive") === 0) {
                                                         echo " selected";
                                                     }
-                                                }
+                                                }  
                                             ?>>Inactive</option>
                                         </select>
                                     </td>
                                     <td id='scheduledposts' style='display:none;'>
                                         Scheduled Date/Time:<br>
-                                        <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if(!empty($erow['scheduled'])) {
+                                        <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if(isset($_SESSION['date4'])) { 
+                                            echo $_SESSION['date4']; } else if(!empty($erow['scheduled'])) {
                                             echo date('Y-m-d', strtotime($erow['scheduled']));
-                                            } ?>'>
+                                            }  ?>'>
                                         <input style='width:45%!important;' id="setTimeExample" name='scheduledtime' placeholder="TIME" 
-                                               type="text" class="time" value='<?php if(!empty($erow['scheduled'])) {
+                                               type="text" class="time" value='<?php if(isset($_SESSION['time'])) { 
+                                            echo $_SESSION['time']; } else if(!empty($erow['scheduled'])) {
                                             echo date('H.i.s', strtotime($erow['scheduled']));
                                             } ?>'/><br>
                                         <button id="setTimeButton">Set current time</button>
@@ -266,14 +306,22 @@ if (isset($_GET['id'])) {
                                     <td colspan="2">
                                         Opening Hours:
                                         <textarea name="opening" id='opening'><?php 
-                                            if(!empty($erow['opening'])) { echo $erow['opening']; }?></textarea>
+                                            if(isset($_SESSION['opening'])) { 
+                                            echo $_SESSION['opening']; 
+                                            } else if(!empty($erow['opening'])) { 
+                                                echo $erow['opening']; 
+                                            } ?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
                                         Description:
                                         <textarea name="desc" id='desc'><?php 
-                                            if(!empty($erow['description'])) { echo $erow['description']; }?></textarea>
+                                            if (isset($_SESSION['description'])) { 
+                                                echo $_SESSION['description']; 
+                                            } else if(!empty($erow['description'])) { 
+                                                echo $erow['description']; 
+                                            } ?></textarea>
                                         <script type="text/javascript">
                                             CKEDITOR.replace('desc');
                                         </script>
@@ -343,9 +391,11 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Services*: <br/>
                                         <?php
-                                            if(!empty($erow['services'])){
+                                            if(isset($_SESSION['services'])) { 
+                                                $serviceArr = explode(",", $_SESSION['services']);
+                                            } else if(!empty($erow['services'])){
                                                 $serviceArr = explode(",", $erow['services']);
-                                            }
+                                            }  
                                             $serviceSql = "Select * from services";
                                             $serviceResult = mysqli_query($link, $serviceSql);
 
@@ -362,7 +412,7 @@ if (isset($_GET['id'])) {
                                                 while($row = mysqli_fetch_assoc($serviceResult)) {
                                                     echo '<input type="checkbox" name="services[]" 
                                                 value="'.$row['servicecode'].'"';
-                                                    if (!empty($erow['services'])) {
+                                                    if (!empty($erow['services']) || isset($_SESSION['services'])) {
                                                         if (in_array($row['servicecode'], $serviceArr)) {
                                                             echo " checked";
                                                         }

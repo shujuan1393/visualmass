@@ -154,9 +154,11 @@ if (isset($_GET['id'])) {
                                         Name:
                                         <input type='text' name='name' id='name'  maxlength="50" 
                                                value ="<?php 
-                                        if (!empty($erow['name'])) {
+                                        if (isset($_SESSION['name'])) {
+                                            echo $_SESSION['name'];
+                                        } else if (!empty($erow['name'])) {
                                             echo $erow['name'];
-                                        }
+                                        } 
                                             ?>"/>
                                     </td>
                                     <td>
@@ -165,31 +167,32 @@ if (isset($_GET['id'])) {
                                         <div style="overflow: hidden;" >
                                             <input type='text' name='code' id='code' value ="<?php 
                                                 if(isset($_SESSION['randomString'])) { 
-                                                    echo $_SESSION['randomString']; 
-
+                                                    echo $_SESSION['randomString'];
                                                 } else if (!empty($erow['code'])) {
                                                     echo $erow['code'];
-                                                } ?>" maxlength="50" />
+                                                }?>" maxlength="50" />
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <?php
-                                            if (!empty($erow['discusage'])) { 
+                                            if (isset($_SESSION['usage'])) {
+                                                $usageArr = explode(",", $_SESSION['usage']);
+                                            } else if (!empty($erow['discusage'])) { 
                                                 $usageArr = explode(",", $erow['discusage']);
-                                            }
+                                            }  
                                         ?>
                                         Usage*: <br/>
                                         <input type='checkbox' name='usage[]' value="cust" <?php 
-                                                if (!empty($erow['discusage'])) {
+                                                if (!empty($erow['discusage']) || isset($_SESSION['usage'])) {
                                                     if (in_array("cust", $usageArr)) {
                                                         echo " checked";
                                                     }
                                                 }
                                             ?>>Customer 
                                         <input type='checkbox' name='usage[]' value='emp' <?php 
-                                                if (!empty($erow['discusage'])) {
+                                                if (!empty($erow['discusage']) || isset($_SESSION['usage'])) {
                                                     if (in_array("emp", $usageArr)) {
                                                         echo " checked";
                                                     }
@@ -200,9 +203,11 @@ if (isset($_GET['id'])) {
                                         Limit Per User*:
                                         <input type='text' name='userlimit' id='userlimit'  maxlength="50"  
                                                onkeypress="return isNumber(event)" value ="<?php 
-                                                if (!empty($erow['userlimit'])) {
+                                                if (isset($_SESSION['userlimit'])) {
+                                                    echo $_SESSION['userlimit'];
+                                                } else if (!empty($erow['userlimit'])) {
                                                     echo $erow['userlimit'];
-                                                }
+                                                }  
                                             ?>"/>
                                     </td>                                
                                 </tr>
@@ -210,20 +215,26 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Track Serial Number?: <br/>
                                         <input type='checkbox' name='serial' value="yes" <?php 
-                                                if (!empty($erow['serial'])) {
+                                                if (isset($_SESSION['serial'])) {
+                                                    if(strcmp("yes", $_SESSION['serial']) === 0) {
+                                                        echo " checked";
+                                                    }
+                                                } else if (!empty($erow['serial'])) {
                                                     if (strcmp("yes", $erow['serial']) === 0) {
                                                         echo " checked";
                                                     }
-                                                }
+                                                } 
                                             ?>>Yes 
                                     </td>
                                     <td>
                                         Limit*:
                                         <input type='text' name='limit' id='limit'  maxlength="50"  
                                                onkeypress="return isNumber(event)" value ="<?php 
-                                                if (!empty($erow['disclimit'])) {
+                                                if (isset($_SESSION['disclimit'])) {
+                                                    echo $_SESSION['disclimit'];
+                                                } else if (!empty($erow['disclimit'])) {
                                                     echo $erow['disclimit'];
-                                                }
+                                                } 
                                             ?>"/>
                                     </td> 
                                 </tr>
@@ -237,15 +248,19 @@ if (isset($_GET['id'])) {
                                         <div id='conditiontype'>
                                             <?php 
 
-                                            if(!empty($erow['disccondition'])){
+                                            if (isset($_SESSION['condition'])) {
+                                                $condition = $_SESSION['condition'];
+                                            } else if(!empty($erow['disccondition'])){
                                                 if (isset($erow['disccondition'])) {
                                                     $condition = $erow['disccondition'];
                                                 } else {
                                                     $condition = "";
                                                 }
-                                            }
+                                            } 
 
-                                            if(!empty($erow['disctype'])){
+                                            if (isset($_SESSION['discterms'])) {
+                                                $disctype = $_SESSION['discterms'];
+                                            } else if(!empty($erow['disctype'])){
                                                 if (isset($erow['disctype'])) {
                                                     $disctype = $erow['disctype'];
                                                 } else {
@@ -253,7 +268,7 @@ if (isset($_GET['id'])) {
                                                 }
 
                                                 $typeArr = explode(" ", $disctype);
-                                            }
+                                            }  
 
                                             ?>
                                             <select name='condition' id='condition'>
@@ -371,7 +386,10 @@ if (isset($_GET['id'])) {
                                                     <span class='pull-left padded-input'>Buy&nbsp; </span> 
                                                     <span class='pull-right' style='width: 80%!important;'>
                                                         <input type='text' name='bundleamtqty' 
-                                                               value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                               value='<?php 
+                                                               if (isset($_SESSION['bundleamt']['qty'])) {
+                                                                   echo $_SESSION['bundleamt']['qty'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
                                                                 if (strcmp($_SESSION['editcondition'], "bundleamount") === 0) { 
                                                                     echo $typeArr[1];
                                                                 } 
@@ -383,7 +401,9 @@ if (isset($_GET['id'])) {
                                                     <span class='pull-left padded-input'>For $</span>
                                                     <span class='pull-right' style='width: 80%!important;'>
                                                         <input type='text' name='bundleamtprice' 
-                                                               value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                               value='<?php if (isset($_SESSION['bundleamt']['price'])) {
+                                                                   echo $_SESSION['bundleamt']['price'];
+                                                               } if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
                                                                 if (strcmp($_SESSION['editcondition'], "bundleamount") === 0) { 
                                                                     echo substr($typeArr[3], 1);
                                                                 } 
@@ -397,7 +417,9 @@ if (isset($_GET['id'])) {
                                                     <span class='pull-left padded-input'>Buy&nbsp; </span> 
                                                     <span class='pull-right' style='width: 80%!important;'>
                                                         <input type='text' name='bundlediscqty' 
-                                                               value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                               value='<?php if (isset($_SESSION['bundledisc']['qty'])) {
+                                                                   echo $_SESSION['bundledisc']['qty'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
                                                                 if (strcmp($_SESSION['editcondition'], "bundlediscount") === 0) { 
                                                                     echo $typeArr[1];
                                                                 } 
@@ -408,7 +430,9 @@ if (isset($_GET['id'])) {
                                                 <div class='pull-right' style='width: 48%!important;'>
                                                     <span class='pull-left' style='width: 80%!important;'>
                                                         <input type='text' name='bundlediscprice' 
-                                                               value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                               value='<?php if (isset($_SESSION['bundledisc']['price'])) {
+                                                                   echo $_SESSION['bundledisc']['price'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
                                                                 if (strcmp($_SESSION['editcondition'], "bundlediscount") === 0) { 
                                                                     echo substr($typeArr[3], 0, -1); 
                                                                 } 
@@ -423,7 +447,9 @@ if (isset($_GET['id'])) {
                                                     <span class='pull-left padded-input'>Buy&nbsp; </span> 
                                                     <span class='pull-right' style='width: 80%!important;'>
                                                         <input type='text' name='nextfreeqty' 
-                                                               value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                               value='<?php if (isset($_SESSION['nextfree']['qty'])) {
+                                                                   echo $_SESSION['nextfree']['qty'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
                                                                 if (strcmp($_SESSION['editcondition'], "nextfree") === 0) { 
                                                                     echo $typeArr[1];
                                                                 } 
@@ -435,7 +461,9 @@ if (isset($_GET['id'])) {
                                                     <span class='pull-left padded-input'>Free  </span>
                                                     <span class='pull-right' style='width: 80%!important;'>
                                                         <input type='text' name='nextfreeamt'
-                                                               value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                               value='<?php if (isset($_SESSION['nextfree']['amt'])) {
+                                                                   echo $_SESSION['nextfree']['amt'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
                                                                 if (strcmp($_SESSION['editcondition'], "nextfree") === 0) { 
                                                                     echo $typeArr[3];
                                                                 } 
@@ -449,7 +477,9 @@ if (isset($_GET['id'])) {
                                                     <span class='pull-left padded-input'>Buy&nbsp; </span> 
                                                     <span class='pull-right' style='width: 80%!important;'>
                                                         <input type='text' name='nextdiscqty' 
-                                                               value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                               value='<?php if (isset($_SESSION['nextdisc']['qty'])) {
+                                                                   echo $_SESSION['nextdisc']['qty'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
                                                                 if (strcmp($_SESSION['editcondition'], "nextdiscount") === 0) { 
                                                                     echo $typeArr[1];
                                                                 } 
@@ -460,9 +490,11 @@ if (isset($_GET['id'])) {
                                                 <div class='pull-right' style='width: 48%!important;'>
                                                     <span class='pull-left' style='width: 80%!important;'>
                                                         <input type='text' name='nextdiscamt' 
-                                                               value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                               value='<?php if (isset($_SESSION['nextdisc']['amt'])) {
+                                                                   echo $_SESSION['nextdisc']['amt'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
                                                                     if (strcmp($_SESSION['editcondition'], "nextdiscount") === 0) { 
-                                                                        echo substr($typeArr[3], 0, -1); 
+                                                                        echo substr($typeArr[4], 0, -1); 
                                                                     } 
                                                                 } ?>'
                                                                onkeypress="return isNumber(event)">
@@ -473,7 +505,9 @@ if (isset($_GET['id'])) {
                                             <div id='fixedpercent' style='display:none;'>
                                                 <span class='pull-left' style='width: 50%!important;'>
                                                     <input type='text' name='fixedperc'
-                                                        value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                        value='<?php if (isset($_SESSION['fixedperc'])) {
+                                                                   echo $_SESSION['fixedperc'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
                                                                 if (strcmp($_SESSION['editcondition'], "fixedpercent") === 0) { 
                                                                     echo substr($typeArr[1], 0, -1); 
                                                                 } 
@@ -486,7 +520,9 @@ if (isset($_GET['id'])) {
                                                 <span class='pull-left padded-input'>$ &nbsp; </span>
                                                 <span class='pull-left' style='width: 50%!important;'>
                                                     <input type='text' name='fixedamt' 
-                                                           value='<?php if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                           value='<?php if (isset($_SESSION['fixedamt'])) {
+                                                                   echo $_SESSION['fixedamt'];
+                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
                                                                 if (strcmp($_SESSION['editcondition'], "fixedamount") === 0) { 
                                                                     echo substr($typeArr[1], 1); 
                                                                 } 
@@ -574,7 +610,9 @@ if (isset($_GET['id'])) {
                                                 <span class='pull-left padded-input'>$ &nbsp; </span>
                                                 <span class='pull-left' style='width: 50%!important;'>
                                                     <input type='text' name='aboveamt' 
-                                                           value='<?php if(isset($_SESSION['editterms']) && !empty($condArr[1])) {
+                                                           value='<?php if (isset($_SESSION['aboveamt'])) { 
+                                                               echo $_SESSION['aboveamt'];
+                                                           } else if(isset($_SESSION['editterms']) && !empty($condArr[1])) {
                                                                 if (strcmp($_SESSION['editterms'], "ordersabove") === 0) { 
                                                                     echo substr($condArr[2], 1);
                                                                 } 
@@ -604,7 +642,13 @@ if (isset($_GET['id'])) {
                                                     } else {
                                                         while ($row = mysqli_fetch_assoc($pres)) {
                                                             echo "<option value='".$row['name']."'"; 
-                                                            if(isset($_SESSION['editterms']) && !empty($condArr[2])) {
+                                                            if(isset($_SESSION['discterms']) && isset($_SESSION['specificprod'])) {
+                                                                if (strcmp($_SESSION['discterms'], "specificprod") === 0) { 
+                                                                    if (strcmp($row['name'], $_SESSION['specificprod']) === 0) {
+                                                                        echo " selected";
+                                                                    }
+                                                                } 
+                                                            } else if(isset($_SESSION['editterms']) && !empty($condArr[2])) {
                                                                 if (strcmp($_SESSION['editterms'], "specificprod") === 0) { 
                                                                     if (strcmp($row['name'], $condArr[2]) === 0) {
                                                                         echo " selected";
@@ -635,28 +679,44 @@ if (isset($_GET['id'])) {
                                         Recurrence*:
                                         <select name='recurrence'>
                                             <option value='adhoc' <?php 
-                                                if (!empty($erow['recurrence'])) {
+                                                if (isset($_SESSION['recurrence'])) { 
+                                                    if(strcmp($_SESSION['recurrence'], "adhoc") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['recurrence'])) {
                                                     if (strcmp($erow['recurrence'], "adhoc") === 0) {
                                                         echo " selected";
                                                     }
                                                 }
                                             ?>>Ad-hoc</option>
                                             <option value='weekly' <?php 
-                                                if (!empty($erow['recurrence'])) {
+                                                if (isset($_SESSION['recurrence'])) { 
+                                                    if(strcmp($_SESSION['recurrence'], "weekly") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['recurrence'])) {
                                                     if (strcmp($erow['recurrence'], "weekly") === 0) {
                                                         echo " selected";
                                                     }
                                                 }
                                             ?>>Weekly</option>
                                             <option value='monthly' <?php 
-                                                if (!empty($erow['recurrence'])) {
+                                                if (isset($_SESSION['recurrence'])) { 
+                                                    if(strcmp($_SESSION['recurrence'], "monthly") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['recurrence'])) {
                                                     if (strcmp($erow['recurrence'], "monthly") === 0) {
                                                         echo " selected";
                                                     }
                                                 }
                                             ?>>Monthly</option>
                                             <option value='yearly' <?php 
-                                                if (!empty($erow['recurrence'])) {
+                                                if (isset($_SESSION['recurrence'])) { 
+                                                    if(strcmp($_SESSION['recurrence'], "yearly") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['recurrence'])) {
                                                     if (strcmp($erow['recurrence'], "yearly") === 0) {
                                                         echo " selected";
                                                     }
@@ -668,14 +728,22 @@ if (isset($_GET['id'])) {
                                         Status*:
                                         <select name='status'>
                                             <option value='active' <?php 
-                                                if (!empty($erow['status'])) {
+                                                if (isset($_SESSION['status'])) { 
+                                                    if(strcmp($_SESSION['status'], "active") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['status'])) {
                                                     if (strcmp($erow['status'], "active") === 0) {
                                                         echo " selected";
                                                     }
                                                 }
                                             ?>>Active</option>
                                             <option value='inactive' <?php 
-                                                if (!empty($erow['status'])) {
+                                                if (isset($_SESSION['status'])) { 
+                                                    if(strcmp($_SESSION['status'], "inactive") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['status'])) {
                                                     if (strcmp($erow['status'], "inactive") === 0) {
                                                         echo " selected";
                                                     }
@@ -688,14 +756,18 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Start date:
                                         <input type="text" id="date3" name="date3" 
-                                               value='<?php if (!empty($erow['start'])) { 
+                                               value='<?php if (isset($_SESSION['start'])) { 
+                                                    echo $_SESSION['start'];
+                                                } else if (!empty($erow['start'])) { 
                                                    echo $erow['start'];
                                                 }?>'>
                                     </td>
                                     <td>
                                         End date:
                                         <input type="text" id="date4" name="date4"
-                                               value='<?php if (!empty($erow['end'])) { 
+                                               value='<?php if (isset($_SESSION['end'])) { 
+                                                    echo $_SESSION['end'];
+                                                } else if (!empty($erow['end'])) { 
                                                    echo $erow['end'];
                                                 }?>'>
                                     </td>
@@ -831,10 +903,10 @@ if (isset($_GET['id'])) {
             window.location="processDiscounts.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addDiscError']);
-                unset($_SESSION['addDiscSuccess']);
-                unset($_SESSION['updateDiscSuccess']);
-                $_SESSION['updateDiscError'] = "Nothing was deleted";
+//                unset($_SESSION['addDiscError']);
+//                unset($_SESSION['addDiscSuccess']);
+//                unset($_SESSION['updateDiscSuccess']);
+//                $_SESSION['updateDiscError'] = "Nothing was deleted";
             ?>
             window.location='discounts.php';
         }
@@ -898,7 +970,20 @@ if (isset($_GET['id'])) {
 
         var selectize_tags = $("#select-to")[0].selectize;
         <?php 
-        if (isset($_GET['id'])) {
+        if (isset($_SESSION['tags'])) { 
+            $tagsAr = explode(",", $_SESSION['tags']);
+            for ($i = 0; $i < count($tagsAr); $i++) {
+        ?>
+            selectize_tags.addOption({
+                
+        <?php
+                    echo "tag: '".$tagsAr[$i]."'";
+        ?>
+            });
+            selectize_tags.addItem('<?php echo $tagsAr[$i]; ?>');
+        <?php
+                }
+        } else if (isset($_GET['id'])) {
             $tagsql = "Select * from discounts where id='".$_GET['id']."';";
             $tresult = mysqli_query($link, $tagsql);
 
@@ -1118,7 +1203,8 @@ if (isset($_GET['id'])) {
         var str = '<?php echo $_SESSION['editterms']; ?>';
         checkCondType(str);
     <?php } ?>
-        
+        checkCondition("");
+        checkCondType("");
     $(document).ready(function() {
         if(location.hash) {
             $('a[href=' + location.hash + ']').tab('show');

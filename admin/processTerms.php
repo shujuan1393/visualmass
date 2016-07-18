@@ -17,6 +17,10 @@ if (isset($_GET['delete'])) {
         header("Location: terms.php");
     } 
 } else if (isset($_POST['submit'])) {
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['html'] = $_POST['html'];
+    $_SESSION['order'] = $_POST['order'];
+    
     if(empty($_POST['title']) || empty($_POST['html']) ) {
         unset($_SESSION['updateTermSuccess']);
         unset($_SESSION['addTermSuccess']);
@@ -27,6 +31,10 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateTermSuccess']);
         unset($_SESSION['addTermError']);
         unset($_SESSION['updateTermError']);
+        
+        unset($_SESSION['title']);
+        unset($_SESSION['html']);
+        unset($_SESSION['order']);
         
         $title = $_POST['title'];
         $order = $_POST['order'];

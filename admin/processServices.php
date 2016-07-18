@@ -17,6 +17,10 @@ if (isset($_GET['delete'])) {
         header("Location: serviceSettings.php");
     } 
 } else {
+    $_SESSION['code'] = $_POST['code'];
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['desc'] = $_POST['desc'];
+    
     if(empty($_POST['code']) || empty($_POST['name']) ) {
         unset($_SESSION['addServSuccess']);
         unset($_SESSION['updateServError']);
@@ -24,6 +28,10 @@ if (isset($_GET['delete'])) {
         $_SESSION['addServError'] = "Empty field(s)";
         header('Location: serviceSettings.php');
     } else {
+        unset($_SESSION['code']);
+        unset($_SESSION['name']);
+        unset($_SESSION['desc']);
+        
         unset($_SESSION['addServError']);
         unset($_SESSION['updateServError']);
         unset($_SESSION['updateServSuccess']);
@@ -51,7 +59,7 @@ if (isset($_GET['delete'])) {
                     . "VALUES ('$code','$name', '$desc');";
 
             mysqli_query($link, $sql);
-
+            
             $_SESSION['addServSuccess'] = "Service successfully added";
             header('Location: serviceSettings.php');
         }

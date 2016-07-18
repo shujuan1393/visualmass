@@ -21,6 +21,11 @@ if (isset($_GET['delete'])) {
 //        echo "<script>window.history.back()</script>";
     } 
 } else {
+    $_SESSION['firstname'] = $_POST['firstName'];
+    $_SESSION['lastname'] = $_POST['lastName'];
+    $_SESSION['email'] = $_POST['email'];
+    $_SESSION['type'] = $_POST['type'];
+    
     if(empty($_POST['email']) || empty($_POST['firstName']) 
             || empty($_POST['lastName']) ) {
         unset($_SESSION['addEmpSuccess']);
@@ -43,7 +48,12 @@ if (isset($_GET['delete'])) {
         } else {
             header("Location: users.php#menu1");
         }
-    } else {        
+    } else {   
+        unset($_SESSION['firstname']);
+        unset($_SESSION['lastname']);
+        unset($_SESSION['email']);
+        unset($_SESSION['type']);
+        
         $empfirst = $_POST['firstName'];
         $emplast = $_POST['lastName'];
         $empemail = $_POST['email'];
@@ -59,6 +69,7 @@ if (isset($_GET['delete'])) {
             if (mysqli_query($link, $updateSql)) {
                 unset($_SESSION['addEmpSuccess']);
                 unset($_SESSION['updateError']);
+                unset($_SESSION['addEmpError']);
                 $_SESSION['updateSuccess'] = "Record updated successfully";
             
                 header("Location: users.php#menu1");

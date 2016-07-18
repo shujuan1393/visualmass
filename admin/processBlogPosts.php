@@ -18,6 +18,36 @@ if (isset($_GET['delete'])) {
         header("Location: blog.php");
     } 
 } else if (isset($_POST['submit'])) {
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['excerpt'] = $_POST['excerpt'];
+    $_SESSION['author'] = $_POST['author'];
+    $_SESSION['firstname'] = $_POST['firstname'];
+    $_SESSION['lastname'] = $_POST['lastname'];
+    $_SESSION['email'] = $_POST['email'];
+    $_SESSION['phone'] = $_POST['phone'];
+    $catsArr = $_POST['categories'];
+    $cat = "";
+
+    for($i = 0; $i < count($catsArr); $i++) {
+        $cat .= $catsArr[$i];
+
+        if ($i+1 !== count($catsArr)) {
+            $cat.=",";
+        }
+    }
+    $_SESSION['categories'] = $cat;
+    $_SESSION['tags'] = $_POST['tags'];
+    $_SESSION['publish'] = $_POST['date3'];
+    $_SESSION['visibility'] = $_POST['visibility'];
+    $_SESSION['scheduledate'] = $_POST['date4'];
+    $_SESSION['time'] = $_POST['scheduledtime'];
+    $_SESSION['image'] = $_FILES['image']['name'];
+    $_SESSION['html'] = $_POST['html'];
+    
+//    echo $_SESSION['visibility'];
+//    echo "<br>";
+//    echo $_SESSION['excerpt'];
+//    exit();
     $visibility = $_POST['visibility'];
     
     if (strcmp($visibility, "inactive") === 0 && (empty($_POST['date4']) || empty($_POST['scheduledtime']))) {
@@ -53,7 +83,7 @@ if (isset($_GET['delete'])) {
         } else {
             header('Location: blog.php');
         }
-    } else {
+    } else {        
         unset($_SESSION['addBlogError']);
         unset($_SESSION['updateBlogError']);
         unset($_SESSION['updateBlogSuccess']);
@@ -192,6 +222,21 @@ if (isset($_GET['delete'])) {
         }
         
         if (!isset($_SESSION['uploadBlogError'])) {
+            unset($_SESSION['title']);
+            unset($_SESSION['excerpt']);
+            unset($_SESSION['author']);
+            unset($_SESSION['firstname']);
+            unset($_SESSION['lastname']);
+            unset($_SESSION['email']);
+            unset($_SESSION['phone']);
+            unset($_SESSION['categories']);
+            unset($_SESSION['tags']);
+            unset($_SESSION['publish']);
+            unset($_SESSION['visibility']);
+            unset($_SESSION['scheduledate']);
+            unset($_SESSION['time']);
+            unset($_SESSION['image']);
+            unset($_SESSION['html']);
             if (!empty($_POST['editid'])) {
                 $editid = $_POST['editid'];
                 

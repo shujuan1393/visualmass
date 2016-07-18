@@ -213,18 +213,22 @@ if (isset($_GET['id'])) {
                                                     First Name*:
                                                     <input type='text' name='firstName' id='firstName'  maxlength="50" 
                                                            value='<?php 
-                                                           if (!empty($erow['firstname'])) {
+                                                           if (isset($_SESSION['firstname'])) {
+                                                               echo $_SESSION['firstname'];
+                                                           } else if (!empty($erow['firstname'])) {
                                                                echo $erow['firstname'];
-                                                           }
+                                                           }  
                                                            ?>'/>
                                                 </td>
                                                 <td>
                                                     Last Name*:
                                                     <input type='text' name='lastName' id='lastName'  maxlength="50" 
                                                            value='<?php 
-                                                           if (!empty($erow['lastname'])) {
+                                                           if (isset($_SESSION['lastname'])) {
+                                                               echo $_SESSION['lastname'];
+                                                           } else if (!empty($erow['lastname'])) {
                                                                echo $erow['lastname'];
-                                                           }
+                                                           }  
                                                            ?>'/>
                                                 </td>
                                             </tr>
@@ -233,9 +237,11 @@ if (isset($_GET['id'])) {
                                                     Email*:
                                                     <input type='text' name='email' id='email'  maxlength="50" 
                                                            value='<?php 
-                                                           if (!empty($erow['email'])) {
+                                                           if (isset($_SESSION['email'])) {
+                                                               echo $_SESSION['email'];
+                                                           } else if (!empty($erow['email'])) {
                                                                echo $erow['email'];
-                                                           }
+                                                           }  
                                                            ?>'/>
                                                 </td>
                                                 <td>
@@ -253,11 +259,15 @@ if (isset($_GET['id'])) {
                                                                 } else {
                                                                     while ($row1 = mysqli_fetch_assoc($typeresult)) {
                                                                         echo "<option value='".$row1['code']."'";
-                                                                        if (!empty($erow['type'])) {
-                                                                            if (strcmp($erow['type'], $row1['code']) === 0) {
+                                                                        if (isset($_SESSION['type'])) {
+                                                                            if(strcmp($_SESSION['type'], $row1['code']) === 0) {
                                                                                 echo " selected";
                                                                             }
-                                                                        }
+                                                                        } else if (!empty($erow['type'])) {
+                                                                            if (strcmp($erow['type'], $row1['code']) === 0) {
+                                                                                echo " selected";
+                                                                            } 
+                                                                        }  
                                                                         echo ">".$row1['name']."</option>";
                                                                     }
                                                                 }
@@ -295,10 +305,10 @@ if (isset($_GET['id'])) {
             window.location="processUsers.php?delete=1&id=" + empId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['updateSuccess']);
-                unset($_SESSION['addEmpSuccess']);
-                unset($_SESSION['addEmpError']);
-                $_SESSION['updateError'] = "Nothing was deleted";
+//                unset($_SESSION['updateSuccess']);
+//                unset($_SESSION['addEmpSuccess']);
+//                unset($_SESSION['addEmpError']);
+//                $_SESSION['updateError'] = "Nothing was deleted";
             ?>
             window.location='users.php#menu1';
         }

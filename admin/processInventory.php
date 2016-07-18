@@ -22,11 +22,21 @@ if (isset($_GET['edit'])) {
     $_SESSION['updateInvSuccess'] = "Inventory updated successfully";
     header('Location: inventory.php');
 } else if (isset($_POST['submit'])) {
-    if(empty($_POST['qty'])) {
+    $_SESSION['product'] = $_POST['product'];
+    $_SESSION['location'] = $_POST['location'];
+    $_SESSION['price'] = $_POST['price'];
+    $_SESSION['qty'] = $_POST['qty'];
+    
+    if(empty($_POST['qty']) || empty($_POST['price'])) {
         unset($_SESSION['updateInvSuccess']);
         $_SESSION['updateInvError'] = "Empty field(s)";
         header('Location: inventory.php');
     } else {
+        unset($_SESSION['product']);
+        unset($_SESSION['location']);
+        unset($_SESSION['price']);
+        unset($_SESSION['qty']);
+        
         $checkSql = "Select * from inventory where pid = '" . $_POST['product'] . "'";
         $checkResult = mysqli_query($link, $checkSql);
         
@@ -54,15 +64,16 @@ if (isset($_GET['edit'])) {
             
             $addInvSql = "UPDATE inventory set quantity='$newQty', price='$price', type='$type' "
                     . "where pid='$pcode' and location ='$location'";
+            $_SESSION['updateInvSuccess'] = "Inventory updated successfully";
         } else {
             $addInvSql = "INSERT INTO inventory (pid, location, quantity, price, type) VALUES"
                     . "('$pcode','$loc', '$qty', '$price', '$type');";
+            $_SESSION['updateInvSuccess'] = "Inventory added successfully";
         }
         
         mysqli_query($link, $addInvSql);
             
         unset($_SESSION["updateInvError"]);
-        $_SESSION['updateInvSuccess'] = "Inventory added successfully";
         header('Location: inventory.php');
     }
 }

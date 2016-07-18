@@ -112,7 +112,11 @@ require_once '../config/db.php';
                                              die(mysqli_error($link));
                                          } else {
                                              $row = mysqli_fetch_assoc($res);
-                                             $datepaid = date("d M Y H:i", strtotime($row['datepaid']));                                        
+                                             $datepaid = date("d M Y H:i", strtotime($row['datepaid'])); 
+                                             
+                                             if (intval($row['totalcost']) === 0) {
+                                                 echo "<h4>No past orders</h4>";
+                                             } else {
                                      ?>
                                      <script>
                                          var date1 = new Date();
@@ -121,22 +125,23 @@ require_once '../config/db.php';
                                          document.write("<h4>About " + Math.floor(hours) + " hours ago</h4>");
                                      </script>
                                      <?php
-                                             $orderid = $row['orderid'];
-                                             $idArr = explode("-", $orderid);
-                                             if (in_array("ON", $idArr)) {
-                                                 echo "<p>Online Store</p>";
-                                             } else {
-                                                 $loc = "Select * from locations where code ='".$idArr[0]."';";
-                                                 $lres = mysqli_query($link, $loc);
+                                                $orderid = $row['orderid'];
+                                                $idArr = explode("-", $orderid);
+                                                if (in_array("ON", $idArr)) {
+                                                    echo "<p>Online Store</p>";
+                                                } else {
+                                                    $loc = "Select * from locations where code ='".$idArr[0]."';";
+                                                    $lres = mysqli_query($link, $loc);
 
-                                                 if (!mysqli_query($link, $loc)) {
-                                                     die(mysqli_error($link));
-                                                 } else {
-                                                     $row = mysqli_fetch_assoc($lres);
+                                                    if (!mysqli_query($link, $loc)) {
+                                                        die(mysqli_error($link));
+                                                    } else {
+                                                        $row = mysqli_fetch_assoc($lres);
 
-                                                     echo "Point of Sale - ".$row['name'];
-                                                 }
-                                             }
+                                                        echo "Point of Sale - ".$row['name'];
+                                                    }
+                                                }
+                                            }
                                          }
                                      ?>
                                  </div>
@@ -150,14 +155,23 @@ require_once '../config/db.php';
                                              die(mysqli_error($link));
                                          } else {
                                              $row = mysqli_fetch_assoc($tres);
-                                             echo "<h4>$".$row['total']."</h4>";
+                                             if (intval($row['total']) === 0) {
+                                                 $cost = 0;
+                                             } else {
+                                                 $cost = $row['total'];
+                                             }
+                                             echo "<h4>$".$cost."</h4>";
                                              echo "<p>".$row['count']." orders</p>";
                                      ?>
                                  </div>
                                  <div class='col-md-4'>
                                      Average per order:
                                      <?php 
-                                             $avg = $row['total'] / $row['count'];
+                                             if (intval($row['total']) === 0) {
+                                                $avg = 0;
+                                             } else {
+                                                $avg = $row['total'] / $row['count'];
+                                             }
                                              echo "<h4>$$avg</h4>";
                                          }
                                      ?>
@@ -178,57 +192,67 @@ require_once '../config/db.php';
                                      if (!mysqli_query($link, $recent)) {
                                          die(mysqli_error($link));
                                      } else {
-                                         while ($row = mysqli_fetch_assoc($res)) {
-                                             echo "<div class='accordion'><h5>".$row['orderid']. " on ".date("d M Y H:i", strtotime($row['datepaid']));
-                                             $ordertotal = "Select SUM(totalcost) as total from orders where orderid='".$row['orderid']."' group by orderid;";
-                                             $result = mysqli_query($link, $ordertotal);
+                                        if ($res -> num_rows === 0) {
+                                            echo "<h5>No recent orders</h5>";
+                                        } else {
+                                            while ($row = mysqli_fetch_assoc($res)) {
+                                                echo "<div class='accordion'><h5>".$row['orderid']. " on ".date("d M Y H:i", strtotime($row['datepaid']));
+                                                $ordertotal = "Select SUM(totalcost) as total from orders where orderid='".$row['orderid']."' group by orderid;";
+                                                $result = mysqli_query($link, $ordertotal);
 
-                                             if (!mysqli_query($link, $ordertotal)) {
-                                                 die(mysqli_error($link));
-                                             } else {
-                                                 $one = mysqli_fetch_assoc($result);
-                                                 echo "<div class='pull-right'><span>$".$one['total']."</span></div>"."</h5></div>";
-                                             }
+                                                if (!mysqli_query($link, $ordertotal)) {
+                                                    die(mysqli_error($link));
+                                                } else {
+                                                    $one = mysqli_fetch_assoc($result);
+                                                    echo "<div class='pull-right'><span>$".$one['total']."</span></div>"."</h5></div>";
+                                                }
+                                                
+                                                //get product ids from orders table
+                                                $products = "Select * from orders where orderid='".$row['orderid']."';";
+                                                $pres = mysqli_query($link, $products);
+                                                if (!mysqli_query($link, $products)) {
+                                                    die(mysqli_error($link));
+                                                } else {
+                                                    echo "<div class='panel'>";
+                                                    while ($prow = mysqli_fetch_assoc($pres)) {
+                                                        if (is_numeric(strpos($prow['type'], "@"))) {
+                                                            $gift = "Select * from giftcards where code = '".$prow['pid']."';";
+                                                            $gres = mysqli_query($link, $gift);
 
-                                             $products = "Select * from orders where orderid='".$row['orderid']."';";
-                                             $pres = mysqli_query($link, $products);
-                                             if (!mysqli_query($link, $products)) {
-                                                 die(mysqli_error($link));
-                                             } else {
-                                                 echo "<div class='panel'>";
-                                                 while ($prow = mysqli_fetch_assoc($pres)) {
-                                                     if (is_numeric(strpos($prow['type'], "@"))) {
-                                                         $gift = "Select * from giftcards where code = '".$prow['pid']."';";
-                                                         $gres = mysqli_query($link, $gift);
+                                                            if (!mysqli_query($link, $gift)) {
+                                                                die(mysqli_error($link));
+                                                            } else {
+                                                                $grow = mysqli_fetch_assoc($gres);
+                                                                echo "<a href='giftcards.php?id=".$grow['id']."#add'>".$grow['name']."</a><br>";
+                                                                echo "<a href='giftcards.php?id=".$grow['id']."#add'>GIFTCARD IMAGE<img src='' width='300'></a>";
 
-                                                         if (!mysqli_query($link, $gift)) {
-                                                             die(mysqli_error($link));
-                                                         } else {
-                                                             $grow = mysqli_fetch_assoc($gres);
-                                                             echo "<a href='giftcards.php?id=".$grow['id']."#add'>".$grow['name']."</a><br>";
-                                                             echo "<a href='giftcards.php?id=".$grow['id']."#add'>GIFTCARD IMAGE<img src='' width='300'></a>";
+                                                                echo "<div class='pull-right'><span>".$prow['quantity']." x $".$grow['amount']."</span></div><br>";
+                                                            }
+                                                        } else {
+                                                            $getname = "Select * from products where pid = '".$prow['pid']."';";
+                                                            $nres = mysqli_query($link, $getname);
 
-                                                             echo "<div class='pull-right'><span>".$prow['quantity']." x $".$grow['amount']."</span></div><br>";
-                                                         }
-                                                     } else {
-                                                         $getname = "Select * from products where pid = '".$prow['pid']."';";
-                                                         $nres = mysqli_query($link, $getname);
-
-                                                         if (!mysqli_query($link, $getname)) {
-                                                             die(mysqli_error($link));
-                                                         } else {
-                                                             $nrow = mysqli_fetch_assoc($nres);
-                                                             echo "<a href='products.php?id=".$nrow['pid']."#add'>".$nrow['name']."</a><br>";
-                                                             if (!empty($nrow['featured'])) {
-                                                                 $images = explode(",", $nrow['featured']);
-                                                                 echo "<a href='products.php?id=".$nrow['pid']."#add'><img src='".$images[0]."' width='300'></a>";
-                                                             }
-                                                             echo "<div class='pull-right'><span>".$prow['quantity']." x $".$nrow['price']."</span></div><br>";
-                                                         }
-                                                     }
-                                                 }
-                                                 echo "</div>";
-                                             }
+                                                            if (!mysqli_query($link, $getname)) {
+                                                                die(mysqli_error($link));
+                                                            } else {
+                                                                $nrow = mysqli_fetch_assoc($nres);
+                                                                echo "<a href='products.php?id=".$nrow['pid']."#add'>".$nrow['name']."</a><br>";
+                                                                if (!empty($nrow['featured'])) {
+                                                                    $images = explode(",", $nrow['featured']);
+                                                                    echo "<a href='products.php?id=".$nrow['pid']."#add'><img src='".$images[0]."' width='300'></a>";
+                                                                }
+                                                                
+                                                                if (strcmp($row['type'], "hometry") === 0) {
+                                                                    echo "<div class='pull-right' style='margin-top:-20px;'>Home Try-on</div><br>";
+                                                                } else {
+                                                                    echo "<div class='pull-right' style='margin-top:-20px;'>".$prow['quantity']." x $".$nrow['price']."</div><br>";
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    echo "</div>";
+                                                }
+                                            }
                                          }
                                      }
                                  ?>

@@ -155,7 +155,9 @@ if (!mysqli_query($link,$selectSql)) {
 
                                         Name*:
                                         <input type='text' name='name' id='name'  maxlength="50" value='<?php 
-                                                if (isset($crow['name'])) {
+                                                if (isset($_SESSION['name'])) {
+                                                    echo $_SESSION['name'];
+                                                } else if (isset($crow['name'])) {
                                                     echo $crow['name'];
                                                 }
                                                ?>'/>
@@ -267,7 +269,9 @@ if (!mysqli_query($link,$selectSql)) {
                                                 <td>
                                                     First Name*:
                                                     <input type='text' name='firstname' id='firstname'  maxlength="50" value='<?php 
-                                                            if (isset($erow['firstname'])) {
+                                                            if (isset($_SESSION['firstname'])) {
+                                                                echo $_SESSION['firstname'];
+                                                            } else if (isset($erow['firstname'])) {
                                                                 echo $erow['firstname'];
                                                             }
                                                            ?>'/>
@@ -275,7 +279,9 @@ if (!mysqli_query($link,$selectSql)) {
                                                 <td>
                                                     Last Name*:
                                                     <input type='text' name='lastname' id='lastname'  maxlength="50" value='<?php 
-                                                            if (isset($erow['lastname'])) {
+                                                            if (isset($_SESSION['lastname'])) {
+                                                                echo $_SESSION['lastname'];
+                                                            } else if (isset($erow['lastname'])) {
                                                                 echo $erow['lastname'];
                                                             }
                                                            ?>'/>
@@ -285,7 +291,9 @@ if (!mysqli_query($link,$selectSql)) {
                                                 <td>
                                                     Email*:
                                                     <input type='text' name='email' id='email'  maxlength="50" value='<?php 
-                                                            if (isset($erow['email'])) {
+                                                            if (isset($_SESSION['email'])) {
+                                                                echo $_SESSION['email'];
+                                                            } else if (isset($erow['email'])) {
                                                                 echo $erow['email'];
                                                             }
                                                            ?>'/>
@@ -294,7 +302,9 @@ if (!mysqli_query($link,$selectSql)) {
                                                     Phone*:
                                                     <input type='text' name='phone' id='phone'  maxlength="50" 
                                                            onkeypress="return isNumber(event)" value='<?php 
-                                                            if (isset($erow['phone'])) {
+                                                            if (isset($_SESSION['phone'])) {
+                                                                echo $_SESSION['phone'];
+                                                            } else if (isset($erow['phone'])) {
                                                                 echo $erow['phone'];
                                                             }
                                                            ?>'/>
@@ -304,7 +314,9 @@ if (!mysqli_query($link,$selectSql)) {
                                                 <td colspan="2">
                                                     Date Joined:
                                                     <input type="text" id="date3" name="date3" value='<?php 
-                                                            if (isset($erow['datejoined'])) {
+                                                            if (isset($_SESSION['date'])) {
+                                                                echo $_SESSION['date'];
+                                                            } else if (isset($erow['datejoined'])) {
                                                                 echo $erow['datejoined'];
                                                             }
                                                            ?>'>
@@ -355,10 +367,10 @@ if (!mysqli_query($link,$selectSql)) {
             window.location="saveBlogSettings.php?delete=1&aid=" + empId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addAuthorSuccess']);
-                unset($_SESSION['addAuthorError']);
-                unset($_SESSION['updateAuthorSuccess']);
-                $_SESSION['updateAuthorError'] = "Nothing was deleted";
+//                unset($_SESSION['addAuthorSuccess']);
+//                unset($_SESSION['addAuthorError']);
+//                unset($_SESSION['updateAuthorSuccess']);
+//                $_SESSION['updateAuthorError'] = "Nothing was deleted";
             ?>
             window.location='blogSettings.php#menu1';
         }
@@ -370,10 +382,10 @@ if (!mysqli_query($link,$selectSql)) {
             window.location="saveBlogSettings.php?delete=1&id=" + empId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addBlogCatSuccess']);
-                unset($_SESSION['addBlogCatError']);
-                unset($_SESSION['updateBlogCatSuccess']);
-                $_SESSION['updateBlogCatError'] = "Nothing was deleted";
+//                unset($_SESSION['addBlogCatSuccess']);
+//                unset($_SESSION['addBlogCatError']);
+//                unset($_SESSION['updateBlogCatSuccess']);
+//                $_SESSION['updateBlogCatError'] = "Nothing was deleted";
             ?>
             window.location='blogSettings.php';
         }

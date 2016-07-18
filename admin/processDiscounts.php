@@ -17,6 +17,40 @@ if (isset($_GET['delete'])) {
         header("Location: discounts.php");
     } 
 } else if (isset($_POST['submit'])) {
+    $_SESSION['randomString'] = $_POST['code'];
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['disclimit'] = $_POST['limit'];
+    $_SESSION['recurrence'] = $_POST['recurrence'];
+    $_SESSION['userlimit'] = $_POST['userlimit'];
+    $_SESSION['start'] = $_POST['date3'];
+    $_SESSION['end'] = $_POST['date4'];
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['condition'] = $_POST['condition'];
+    $_SESSION['discterms'] = $_POST['conditionfor'];
+    $_SESSION['serial'] = $_POST['serial'];
+    
+    $usagesArr = $_POST['usage'];
+    $usages = "";
+
+    for($i = 0; $i < count($usagesArr); $i++) {
+        $usages .= $usagesArr[$i];
+
+        if ($i+1 !== count($usagesArr)) {
+            $usages.=",";
+        }
+    }
+    $_SESSION['usage'] = $usages;
+    
+    $_SESSION['bundledisc'] = array("qty" => $_POST['bundlediscqty'], "price" => $_POST['bundlediscprice']);
+    $_SESSION['bundleamt'] = array("qty" => $_POST['bundleamtqty'], "price" => $_POST['bundleamtprice']);
+    $_SESSION['nextfree'] = array("qty" => $_POST['nextfreeqty'], "amt" => $_POST['nextfreeamt']);
+    $_SESSION['nextdisc'] = array("qty" => $_POST['nextdiscqty'], "amt" => $_POST['nextdiscamt']);
+    $_SESSION['fixedperc'] = $_POST['fixedperc'];
+    $_SESSION['fixedamt'] = $_POST['fixedamt'];
+    $_SESSION['aboveamt'] = $_POST['aboveamt'];
+    $_SESSION['tags'] = $_POST['tags'];
+    $_SESSION['specificprod'] = $_POST['specificprod'];
+    
     $disctype = $_POST['condition'];
     $discterm = $_POST['conditionfor'];
     $serial = $_POST['serial'];
@@ -28,7 +62,6 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addDiscSuccess']);
         unset($_SESSION['updateDiscError']);
         unset($_SESSION['updateDiscSuccess']);
-        $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addDiscError'] = "Limit is not numeric when serial tracking is enabled";
         if (!empty($_POST['editid'])) {
             header ("Location: discounts.php?id=".$_POST['editid']);
@@ -39,7 +72,6 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addDiscSuccess']);
         unset($_SESSION['updateDiscError']);
         unset($_SESSION['updateDiscSuccess']);
-        $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addDiscError'] = "Empty field(s)";
         if (!empty($_POST['editid'])) {
             header ("Location: discounts.php?id=".$_POST['editid']);
@@ -56,7 +88,6 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addDiscSuccess']);
         unset($_SESSION['updateDiscError']);
         unset($_SESSION['updateDiscSuccess']);
-        $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addDiscError'] = "Empty field(s)";
         $_SESSION['condition'] = $disctype;
         if (!empty($_POST['editid'])) {
@@ -71,7 +102,6 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addDiscSuccess']);
         unset($_SESSION['updateDiscError']);
         unset($_SESSION['updateDiscSuccess']);
-        $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addDiscError'] = "Empty field(s)";
         $_SESSION['discterms'] = $discterm;
         if (!empty($_POST['editid'])) {
@@ -85,7 +115,6 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['addDiscSuccess']);
         unset($_SESSION['updateDiscError']);
         unset($_SESSION['updateDiscSuccess']);
-        $_SESSION['randomString'] = $_POST['code'];
         $_SESSION['addDiscError'] = "Empty field(s)";
         if (!empty($_POST['editid'])) {
             header ("Location: discounts.php?id=".$_POST['editid']);
@@ -93,6 +122,28 @@ if (isset($_GET['delete'])) {
             header('Location: discounts.php');
         }
     } else {
+        unset($_SESSION['randomString']);
+        unset($_SESSION['name']);
+        unset($_SESSION['disclimit']);
+        unset($_SESSION['recurrence']);
+        unset($_SESSION['usage']);
+        unset($_SESSION['userlimit']);
+        unset($_SESSION['start']);
+        unset($_SESSION['end']);
+        unset($_SESSION['status']);
+        unset($_SESSION['condition']);
+        unset($_SESSION['discterms']);
+        unset($_SESSION['serial']);
+        unset($_SESSION['bundledisc']);
+        unset($_SESSION['bundleamt']);
+        unset($_SESSION['nextfree']);
+        unset($_SESSION['nextdisc']);
+        unset($_SESSION['fixedperc']);
+        unset($_SESSION['fixedamt']);
+        unset($_SESSION['aboveamt']);
+        unset($_SESSION['tags']);
+        unset($_SESSION['specificprod']);
+
         $discount;
         
         if (strcmp($disctype, "bundlediscount") === 0) { 

@@ -151,7 +151,11 @@ if (isset($_GET['id'])) {
                                     <td colspan='2'>
                                         <div class="pull-left">Title*:</div><div id="showDiv" class="text-right">+ Add Excerpt</div>
                                         <input type='text' name='title' id='title'
-                                               value='<?php if (!empty($erow['title'])) { echo $erow['title']; }?>'/>
+                                               value='<?php if (isset($_SESSION['title'])) {
+                                                   echo $_SESSION['title'];
+                                               } else if (!empty($erow['title'])) { 
+                                                   echo $erow['title']; 
+                                               } ?>'/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -160,7 +164,11 @@ if (isset($_GET['id'])) {
                                             Excerpt:
                                             <textarea name="excerpt" id='excerpt'>
                                                 <?php 
-                                                    if(!empty($erow['excerpt'])) { echo $erow['excerpt']; }
+                                                    if (isset($_SESSION['excerpt'])) {
+                                                        echo $_SESSION['excerpt'];
+                                                    } else if(!empty($erow['excerpt'])) { 
+                                                        echo $erow['excerpt']; 
+                                                    }  
                                                 ?>
                                             </textarea>
                                             <script type="text/javascript">
@@ -185,7 +193,11 @@ if (isset($_GET['id'])) {
                                                 while ($urow = mysqli_fetch_assoc($uresult)) {
                                                     $name = $urow['firstname'] . " " . $urow['lastname'];
                                                     echo "<option value='". $name."' ";
-                                                    if (!empty($erow['author'])) {
+                                                    if (isset($_SESSION['author'])) {
+                                                        if (strcmp($_SESSION['author'], $name) === 0) {
+                                                            echo " selected";
+                                                        }
+                                                    } else if (!empty($erow['author'])) {
                                                         if (strcmp($erow['author'], $name) === 0) {
                                                             echo " selected";
                                                         }
@@ -213,22 +225,42 @@ if (isset($_GET['id'])) {
                                             <tr>
                                                 <td>
                                                     First Name*:
-                                                    <input type='text' name='firstname' id='firstname'  maxlength="50"/>
+                                                    <input type='text' name='firstname' id='firstname'  maxlength="50"
+                                                           value='<?php
+                                                           if (isset($_SESSION['firstname'])) {
+                                                               echo $_SESSION['firstname'];
+                                                           }
+                                                           ?>'/>
                                                 </td>
                                                 <td>
                                                     Last Name*:
-                                                    <input type='text' name='lastname' id='lastname'  maxlength="50"/>
+                                                    <input type='text' name='lastname' id='lastname'  maxlength="50"
+                                                           value='<?php
+                                                           if (isset($_SESSION['lastname'])) {
+                                                               echo $_SESSION['lastname'];
+                                                           }
+                                                           ?>'/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
                                                     Email*:
-                                                    <input type='text' name='email' id='email'  maxlength="50"/>
+                                                    <input type='text' name='email' id='email'  maxlength="50"
+                                                           value='<?php
+                                                           if (isset($_SESSION['email'])) {
+                                                               echo $_SESSION['email'];
+                                                           }
+                                                           ?>'/>
                                                 </td>
                                                 <td>
                                                     Phone*:
                                                     <input type='text' name='phone' id='phone'  maxlength="50" 
-                                                           onkeypress="return isNumber(event)"/>    
+                                                           onkeypress="return isNumber(event)"
+                                                           value='<?php
+                                                           if (isset($_SESSION['phone'])) {
+                                                               echo $_SESSION['phone'];
+                                                           }
+                                                           ?>'/>    
                                                 </td>
                                             </tr>
                                         </table>
@@ -239,7 +271,9 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Categories*: <br>
                                         <?php
-                                            if(!empty($erow['categories'])) {
+                                            if (isset($_SESSION['categories'])) {
+                                                $cats = explode(",", $_SESSION['categories']);
+                                            } else if(!empty($erow['categories'])) {
                                                 $cats = explode(",", $erow['categories']);
                                             }
 
@@ -248,7 +282,7 @@ if (isset($_GET['id'])) {
 
                                             while ($brow = mysqli_fetch_assoc($bresult)) {
                                                 echo "<input name='categories[]' type='checkbox' value='".$brow['name']."'";
-                                                if (!empty($erow['categories'])) {
+                                                if (!empty($erow['categories']) || isset($_SESSION['categories'])) {
                                                     if (in_array($brow['name'], $cats)) {
                                                         echo " checked";
                                                     }
@@ -271,26 +305,37 @@ if (isset($_GET['id'])) {
                                 <tr>
                                     <td>
                                         Publish Date:
-                                        <input type="text" id="date3" name="date3" value='<?php if(!empty($erow['dateposted'])) {
+                                        <input type="text" id="date3" name="date3" value='<?php if (isset($_SESSION['publish'])) {
+                                                echo $_SESSION['publish'];
+                                            } else if(!empty($erow['dateposted'])) {
                                             echo $erow['dateposted'];
-                                            } ?>'>
+                                            } 
+?>'>
                                     </td>
                                     <td>
                                         Visibility*:
                                         <select name='visibility' id='visibility'>
                                             <option value='active' <?php 
-                                                if (!empty($erow['visibility'])) {
+                                                if (isset($_SESSION['visibility'])) {
+                                                    if (strcmp($_SESSION['visibility'], "active") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['visibility'])) {
                                                     if (strcmp($erow['visibility'], "active") === 0) {
                                                         echo " selected";
                                                     }
-                                                }
+                                                } 
                                             ?>>Active</option>
                                             <option value='inactive' <?php 
-                                                if (!empty($erow['visibility'])) {
+                                                if (isset($_SESSION['visibility'])) {
+                                                    if (strcmp($_SESSION['visibility'], "inactive") === 0) {
+                                                        echo " selected";
+                                                    }
+                                                } else if (!empty($erow['visibility'])) {
                                                     if (strcmp($erow['visibility'], "inactive") === 0) {
                                                         echo " selected";
                                                     }
-                                                }
+                                                } 
                                             ?>>Inactive</option>
                                         </select>
                                     </td>
@@ -309,13 +354,17 @@ if (isset($_GET['id'])) {
                                     </td>
                                     <td id='scheduledposts' style='display:none;'>
                                         Scheduled Date/Time:<br>
-                                        <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if(!empty($erow['scheduled'])) {
+                                        <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if (isset($_SESSION['scheduledate'])) {
+                                                echo $_SESSION['scheduledate'];
+                                            } else if(!empty($erow['scheduled'])) {
                                             echo date('Y-m-d', strtotime($erow['scheduled']));
                                             } ?>'>
                                         <input style='width:45%!important;' id="setTimeExample" name='scheduledtime' placeholder="TIME" 
-                                               type="text" class="time" value='<?php if(!empty($erow['scheduled'])) {
+                                               type="text" class="time" value='<?php if (isset($_SESSION['time'])) {
+                                                echo $_SESSION['time'];
+                                            } else if(!empty($erow['scheduled'])) {
                                             echo date('H.i.s', strtotime($erow['scheduled']));
-                                            } ?>'/><br>
+                                            }?>'/><br>
                                         <button id="setTimeButton">Set current time</button>
                                     </td>
                                 </tr>
@@ -324,7 +373,11 @@ if (isset($_GET['id'])) {
                                         Content*: 
                                         <textarea name="html">
                                             <?php 
-                                                if(!empty($erow['html'])) { echo $erow['html']; }
+                                                if (isset($_SESSION['html'])) {
+                                                    echo $_SESSION['html'];
+                                                } else if(!empty($erow['html'])) { 
+                                                    echo $erow['html']; 
+                                                } 
                                             ?>
                                         </textarea>
                                         <script type="text/javascript">
@@ -384,17 +437,19 @@ if (isset($_GET['id'])) {
             $('#setTimeExample').timepicker('setTime', new Date());
         });
         
-        var status = document.getElementById('visibility').value;
         
-        if (status === "inactive") {
-            document.getElementById('scheduledposts').style.display = "block";
-        } else {
-            document.getElementById('scheduledposts').style.display = "none";
-        }
     });
     
+    var status = document.getElementById('visibility').value;
+        
+    if (status === "inactive") {
+        document.getElementById('scheduledposts').style.display = "block";
+    } else {
+        document.getElementById('scheduledposts').style.display = "none";
+    }
+    
     document.getElementById('visibility').onclick = function() {
-        var val = this.value;
+        var val = document.getElementById('visibility').value;
         
         if (val === "inactive") {
             document.getElementById('scheduledposts').style.display = "block";
@@ -434,7 +489,19 @@ if (isset($_GET['id'])) {
             document.getElementById('addNewAuthor').value = "yes";
         }
     };
-
+    <?php if (!empty($erow['excerpt']) || isset($_SESSION['excerpt'])) {
+    ?>
+        document.getElementById('addExcerpt').style.display = "block";
+    <?php
+        }
+    ?>
+    
+    <?php if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email']) && isset($_SESSION['phone'])) {
+    ?>
+        document.getElementById('existingAuthor').style.display = "block";
+    <?php
+        }
+    ?>
     function deleteFunction(locId) {
         var r = confirm("Are you sure you wish to delete this blog entry?");
         if (r === true) {
@@ -457,7 +524,21 @@ if (isset($_GET['id'])) {
 
         var selectize_tags = $("#select-to")[0].selectize;
         <?php 
-        if (isset($_GET['id'])) {
+        if (isset($_SESSION['tags'])) {
+            $tagsAr = explode(",", $_SESSION['tags']);
+                
+            for ($i = 0; $i < count($tagsAr); $i++) {
+        ?>
+            selectize_tags.addOption({
+                
+        <?php
+                    echo "tag: '".$tagsAr[$i]."'";
+        ?>
+            });
+            selectize_tags.addItem('<?php echo $tagsAr[$i]; ?>');
+        <?php
+            }
+        } else if (isset($_GET['id'])) {
             $tagsql = "Select * from blog where id='".$_GET['id']."';";
             $tresult = mysqli_query($link, $tagsql);
 
@@ -481,7 +562,7 @@ if (isset($_GET['id'])) {
                 }
 //                }
             }
-        }
+        } 
         ?>
     });
     

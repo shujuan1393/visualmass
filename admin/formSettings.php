@@ -18,6 +18,9 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
     
     $editrow = mysqli_fetch_assoc($result);
 } else if (isset($_GET['add'])) {
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['status'] = $_POST['status'];
+    
     if (empty($_POST['name'])) {
         unset($_SESSION['updateFormError']);
         unset($_SESSION['addFormSuccess']);
@@ -28,7 +31,15 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         unset($_SESSION['addFormFieldSuccess']);
         unset($_SESSION['addFormFieldError']);
         $_SESSION['addFormError'] = "Empty field(s)";
+        if (!empty($_POST['editid'])) {
+            header("Location: formSettings.php?fid=".$_POST['editid']."");
+        } else {
+            header("Location: formSettings.php");
+        }
     } else {
+        unset($_SESSION['name']);
+        unset($_SESSION['status']);
+        
         unset($_SESSION['addFormError']);
         $name = $_POST['name'];
         $status = $_POST['status'];
@@ -95,6 +106,13 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         header("Location: formSettings.php#menu1");
     } 
 } else if (isset($_GET['update'])) {
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['type'] = $_POST['type'];
+    $_SESSION['options'] = $_POST['options'];
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['order'] = $_POST['order'];
+    $_SESSION['form'] = $_POST['form'];
+    
     if(empty($_POST['name']) || 
             (strcmp($_POST['type'], "dropdown") === 0 && empty($_POST['options'])) || 
             (strcmp($_POST['type'], "checkbox") === 0 && empty($_POST['options']))) {
@@ -106,12 +124,19 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         unset($_SESSION['addFormSuccess']);
         unset($_SESSION['addFormError']);
         $_SESSION['addFormFieldError'] = "Empty field(s)";
-        if (!empty($_POST['editid'])) {
-            header("Location: formSettings.php?id=".$_POST['editid']."#menu1");
+        if (!empty($_POST['editfieldid'])) {
+            header("Location: formSettings.php?id=".$_POST['editfieldid']."#menu1");
         } else {
             header("Location: formSettings.php#menu1");
         }
     } else {
+        unset($_SESSION['name']);
+        unset($_SESSION['type']);
+        unset($_SESSION['order']);
+        unset($_SESSION['form']);
+        unset($_SESSION['options']);
+        unset($_SESSION['status']);
+        
         unset($_SESSION['updateFormSuccess']);
         unset($_SESSION['updateFormError']);
         unset($_SESSION['addFormSuccess']);
@@ -264,7 +289,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
 
                                         <input type='hidden' name='submitted' id='submitted' value='1'/>
                                         <input type='hidden' name='editid' id='editid' value='<?php 
-                                            if (!isset($_GET['delete']) && isset($_GET['fid'])) {
+                                            if (isset($_GET['fid'])) {
                                                 echo $_GET['fid'];
                                             }
                                         ?>'/>
@@ -274,20 +299,31 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                 <td>
                                                     Name*:
                                                     <input type='text' name='name' id='name' 
-                                                           value="<?php if (isset($frow['name'])) { echo $frow['name']; } ?>"/>
+                                                           value="<?php 
+                                                           if (isset($_SESSION['name'])) { 
+                                                               echo $_SESSION['name'];
+                                                           } else if (isset($frow['name'])) { echo $frow['name']; } ?>"/>
                                                 </td>
                                                 <td>
                                                     Status:
                                                     <select name="status">
                                                         <option value="active" <?php 
-                                                            if (!empty($frow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                               if(strcmp("active", $_SESSION['status']) === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($frow['status'])) {
                                                                 if(strcmp("active", $frow['status']) === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
                                                             ?>>Active</option>
                                                         <option value="inactive" <?php 
-                                                            if (!empty($frow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                               if(strcmp("inactive", $_SESSION['status']) === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($frow['status'])) {
                                                                 if(strcmp("inactive", $frow['status']) === 0) {
                                                                     echo " selected";
                                                                 }
@@ -411,7 +447,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                         <h1 id="addff" class="page-header">Add/Edit Form Field</h1>
 
                                         <input type="hidden" name="editfieldid" id="editfieldid" 
-                                               value="<?php if(!isset($_GET['delete']) && isset($_GET['id'])) { echo $_GET['id']; } ?>"
+                                               value="<?php if(!isset($_GET['delete']) && isset($_GET['id'])) { echo $_GET['id']; } ?>">
                                         <input type='hidden' name='submitted' id='submitted' value='1'/>
 
                                         <table class="content">
@@ -419,13 +455,17 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                 <td>
                                                     Name*:
                                                     <input type='text' name='name' id='name' 
-                                                            value="<?php if (isset($editrow['name'])) { echo $editrow['name']; } ?>"/>
+                                                            value="<?php if (isset($_SESSION['name'])) { 
+                                                                echo $_SESSION['name'];
+                                                            } else if (isset($editrow['name'])) { echo $editrow['name']; } ?>"/>
                                                  </td>
                                                  <td>
                                                      Order*:
                                                      <input type='text' name='order' id='order'  
                                                         onkeypress="return isNumber(event)" 
-                                                            value="<?php if (isset($editrow['fieldorder'])) { echo $editrow['fieldorder']; } ?>"/>
+                                                            value="<?php if (isset($_SESSION['order'])) { 
+                                                                echo $_SESSION['order'];
+                                                            } else if (isset($editrow['fieldorder'])) { echo $editrow['fieldorder']; } ?>"/>
                                                  </td>
                                              </tr>
                                              <tr>
@@ -438,7 +478,11 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                         while ($row1 = mysqli_fetch_assoc($fresult)) {
                                                     ?>
                                                         <option value="<?php echo $row1['name'];?>" <?php 
-                                                                if(isset($editrow['form'])) {
+                                                                if (isset($_SESSION['form'])) { 
+                                                                    if (strcmp($_SESSION['form'], $row1['name']) === 0) {
+                                                                        echo " selected";
+                                                                    }
+                                                                } else if(isset($editrow['form'])) {
                                                                     if (strcmp($editrow['form'], $row1['name']) === 0) {
                                                                         echo " selected";
                                                                     }
@@ -453,14 +497,22 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                     Status:
                                                     <select name="status">
                                                         <option value="active" <?php 
-                                                            if (!empty($editrow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                                if (strcmp($_SESSION['status'], "active") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($editrow['status'])) {
                                                                 if(strcmp("active", $editrow['status']) === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
                                                             ?>>Active</option>
                                                         <option value="inactive" <?php 
-                                                            if (!empty($editrow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                                if (strcmp($_SESSION['status'], "inactive") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($editrow['status'])) {
                                                                 if(strcmp("inactive", $editrow['status']) === 0) {
                                                                     echo " selected";
                                                                 }
@@ -475,7 +527,11 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                     <select name='type'>
                                                         <option value='textbox'
                                                                 <?php
-                                                                    if (isset($editrow['field'])) {
+                                                                    if (isset($_SESSION['type'])) { 
+                                                                        if (strcmp($_SESSION['type'], "textbox") === 0) {
+                                                                            echo " selected";
+                                                                        }
+                                                                    } else if (isset($editrow['field'])) {
                                                                         if (strcmp($editrow['field'], "textbox") === 0) {
                                                                             echo " selected";
                                                                         }
@@ -484,7 +540,11 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                                 >Single-line Textbox</option>
                                                         <option value='dropdown'
                                                                 <?php
-                                                                    if (isset($editrow['field'])) {
+                                                                    if (isset($_SESSION['type'])) { 
+                                                                        if (strcmp($_SESSION['type'], "dropdown") === 0) {
+                                                                            echo " selected";
+                                                                        }
+                                                                    } else if (isset($editrow['field'])) {
                                                                         if (strcmp($editrow['field'], "dropdown") === 0) {
                                                                             echo " selected";
                                                                         }
@@ -492,7 +552,11 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                                 ?>>Dropdown List</option>
                                                         <option value='checkbox'
                                                                 <?php
-                                                                    if (isset($editrow['field'])) {
+                                                                    if (isset($_SESSION['type'])) { 
+                                                                        if (strcmp($_SESSION['type'], "checkbox") === 0) {
+                                                                            echo " selected";
+                                                                        }
+                                                                    } else if (isset($editrow['field'])) {
                                                                         if (strcmp($editrow['field'], "checkbox") === 0) {
                                                                             echo " selected";
                                                                         }
@@ -500,7 +564,11 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                                 ?>>Checkbox</option>
                                                         <option value='textarea'
                                                                 <?php
-                                                                    if (isset($editrow['field'])) {
+                                                                    if (isset($_SESSION['type'])) { 
+                                                                        if (strcmp($_SESSION['type'], "textarea") === 0) {
+                                                                            echo " selected";
+                                                                        }
+                                                                    } else if (isset($editrow['field'])) {
                                                                         if (strcmp($editrow['field'], "textarea") === 0) {
                                                                             echo " selected";
                                                                         }
@@ -513,7 +581,9 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
                                                 <td colspan="2">
                                                     Options (only for dropdown & checkbox types): 
                                                     <p class='setting-tooltips'>Please place a comma (,) after each option</p>
-                                                    <textarea name="options"><?php if (isset($editrow['options'])) { echo $editrow['options']; } ?></textarea>
+                                                    <textarea name="options"><?php if (isset($_SESSION['options'])) { 
+                                                                            echo $_SESSION['options'];
+                                                                    } else if (isset($editrow['options'])) { echo $editrow['options']; } ?></textarea>
 
                                                     
                                                 </td>
@@ -550,14 +620,14 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
             window.location="formSettings.php?delete=1&fid=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addFormError']);
-                unset($_SESSION['addFormSuccess']);
-                unset($_SESSION['updateFormSuccess']);
-                unset($_SESSION['addFormFieldError']);
-                unset($_SESSION['addFormFieldSuccess']);
-                unset($_SESSION['updateFormFieldSuccess']);
-                unset($_SESSION['updateFormFieldError']);
-                $_SESSION['updateFormError'] = "Nothing was deleted";
+//                unset($_SESSION['addFormError']);
+//                unset($_SESSION['addFormSuccess']);
+//                unset($_SESSION['updateFormSuccess']);
+//                unset($_SESSION['addFormFieldError']);
+//                unset($_SESSION['addFormFieldSuccess']);
+//                unset($_SESSION['updateFormFieldSuccess']);
+//                unset($_SESSION['updateFormFieldError']);
+//                $_SESSION['updateFormError'] = "Nothing was deleted";
             ?>
             window.location='formSettings.php';
         }
@@ -568,14 +638,14 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
             window.location="formSettings.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addFormError']);
-                unset($_SESSION['updateFormError']);
-                unset($_SESSION['addFormSuccess']);
-                unset($_SESSION['updateFormSuccess']);
-                unset($_SESSION['addFormFieldError']);
-                unset($_SESSION['addFormFieldSuccess']);
-                unset($_SESSION['updateFormFieldSuccess']);
-                $_SESSION['updateFormFieldError'] = "Nothing was deleted";
+//                unset($_SESSION['addFormError']);
+//                unset($_SESSION['updateFormError']);
+//                unset($_SESSION['addFormSuccess']);
+//                unset($_SESSION['updateFormSuccess']);
+//                unset($_SESSION['addFormFieldError']);
+//                unset($_SESSION['addFormFieldSuccess']);
+//                unset($_SESSION['updateFormFieldSuccess']);
+//                $_SESSION['updateFormFieldError'] = "Nothing was deleted";
             ?>
             window.location='formSettings.php#menu1';
         }
@@ -586,7 +656,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         var inputText = this.children[index].innerHTML.trim();
         var count = document.getElementById(inputText+ "Value").value;
         <?php
-        if(!isset($_GET['id'])) {
+        if(!isset($_GET['id']) && !isset($_SESSION['order'])) {
         ?>
             document.getElementById('order').value = Number(count)+1;
         <?php 
@@ -599,7 +669,7 @@ if (!isset($_GET['delete']) && isset($_GET['fid'])) {
         var inputText = document.getElementById('form').children[index].innerHTML.trim();
         var count = document.getElementById(inputText+ "Value").value;
         <?php
-        if(!isset($_GET['id'])) {
+        if(!isset($_GET['id']) && !isset($_SESSION['order'])) {
         ?>
             document.getElementById('order').value = Number(count)+1;
         <?php 
