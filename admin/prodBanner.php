@@ -8,11 +8,15 @@
 require_once '../config/db.php';
 
 if (isset($_POST['submit'])) {
+    $_SESSION['gender'] = $_POST['gender'];
+    $_SESSION['categories'] = $_POST['categories'];
+    
     unset($_SESSION['addProdBannerSuccess']);
     unset($_SESSION['addProdBannerError']);
     
-    if (!empty($_FILES['image']['name'])) {
-        
+    if (empty($_FILES['image']['name'])) { 
+        $_SESSION['addProdBannerError'] = "No image selected";
+    } else {
         $gender = $_POST['gender'];
         $categories = $_POST['categories'];
         
@@ -48,6 +52,8 @@ if (isset($_POST['submit'])) {
                 unset($_SESSION['addProdBannerSuccess']);
                 $_SESSION['addProdBannerError'] = "Sorry, there was an error uploading your file.";
             } else {
+                unset($_SESSION['gender']);
+                unset($_SESSION['categories']);
                 unset($_SESSION['addProdBannerError']);
                 
                 $check = "Select * from productbanner where gender='$gender' "
@@ -160,14 +166,36 @@ if (isset($_POST['submit'])) {
                                 <tr>
                                     <td>
                                         <select id='gender' name='gender'>
-                                            <option value='men'>Men</option>
-                                            <option value='women'>Women</option>
+                                            <option value='men' 
+                                                    <?php if (isset($_SESSION['gender'])) { 
+                                                            if (strcmp($_SESSION['gender'], "men") === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        }
+                                                    ?>>Men</option>
+                                            <option value='women'
+                                                    <?php if (isset($_SESSION['gender'])) { 
+                                                            if (strcmp($_SESSION['gender'], "women") === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        }
+                                                    ?>>Women</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select id='categories' name='categories'>
-                                            <option value='frames'>Glasses</option>
-                                            <option value='sunglasses'>Sunglasses</option>
+                                            <option value='frames' <?php if (isset($_SESSION['categories'])) { 
+                                                            if (strcmp($_SESSION['categories'], "frames") === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        }
+                                                    ?>>Glasses</option>
+                                            <option value='sunglasses'<?php if (isset($_SESSION['categories'])) { 
+                                                            if (strcmp($_SESSION['categories'], "sunglasses") === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        }
+                                                    ?>>Sunglasses</option>
                                         </select>
                                     </td>
                                 </tr>

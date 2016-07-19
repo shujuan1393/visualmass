@@ -212,19 +212,25 @@ if (isset($_GET['id'])) {
                                                 <td>
                                                     Title*:
                                                     <input type='text' name='title' id='title' maxlength="50" 
-                                                           value='<?php if (!empty($erow['title'])) { echo $erow['title']; } ?>'/>
+                                                           value='<?php if (isset($_SESSION['title'])) { 
+                                                               echo $_SESSION['title'];
+                                                           } else if (!empty($erow['title'])) { 
+                                                               echo $erow['title']; 
+                                                           } ?>'/>
                                                 </td>
                                                 <td>
                                                     Order*:
                                                     <input type='text' name='order' id='order'  
                                                        onkeypress="return isNumber(event)" 
                                                            value="<?php 
-                                                                if(!empty($erow['fieldorder'])){
+                                                                if (isset($_SESSION['order'])) { 
+                                                                    echo $_SESSION['order'];
+                                                                } else if(!empty($erow['fieldorder'])){
                                                                     if (isset($erow['fieldorder'])) { 
                                                                         echo $erow['fieldorder']; 
-                                                                    } else { 
-                                                                        echo $rowCount+1;
                                                                     } 
+                                                                } else { 
+                                                                    echo $rowCount+1;
                                                                 } ?>"/>
                                                 </td>
                                             </tr>
@@ -243,21 +249,33 @@ if (isset($_GET['id'])) {
                                                 <td>
                                                     Image Position*: <br/>
                                                     <input type='radio' name='imagepos' value='left' <?php 
-                                                        if (!empty($erow['imagepos'])) {
+                                                        if (isset($_SESSION['imagepos'])) { 
+                                                            if (strcmp($_SESSION['imagepos'], "left") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['imagepos'])) {
                                                             if (strcmp($erow['imagepos'], "left") === 0) {
                                                                 echo " checked";
                                                             }
                                                         }
                                                     ?>>Left 
                                                     <input type='radio' name='imagepos' value='background' <?php 
-                                                        if (!empty($erow['imagepos'])) {
+                                                        if (isset($_SESSION['imagepos'])) { 
+                                                            if (strcmp($_SESSION['imagepos'], "background") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['imagepos'])) {
                                                             if (strcmp($erow['imagepos'], "background") === 0) {
                                                                 echo " checked";
                                                             }
                                                         }
                                                     ?>>Background 
                                                     <input type='radio' name='imagepos' value='right' <?php 
-                                                        if (!empty($erow['imagepos'])) {
+                                                        if (isset($_SESSION['imagepos'])) { 
+                                                            if (strcmp($_SESSION['imagepos'], "right") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['imagepos'])) {
                                                             if (strcmp($erow['imagepos'], "right") === 0) {
                                                                 echo " checked";
                                                             }
@@ -270,14 +288,22 @@ if (isset($_GET['id'])) {
                                                     Status*:
                                                     <select name='status'>
                                                         <option value='active' <?php 
-                                                            if (!empty($erow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                                if (strcmp($_SESSION['status'], "active") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($erow['status'])) {
                                                                 if (strcmp($erow['status'], "active") === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
                                                         ?>>Active</option>
                                                         <option value='inactive' <?php 
-                                                            if (!empty($erow['status'])) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                                if (strcmp($_SESSION['status'], "inactive") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($erow['status'])) {
                                                                 if (strcmp($erow['status'], "inactive") === 0) {
                                                                     echo " selected";
                                                                 }
@@ -290,7 +316,9 @@ if (isset($_GET['id'])) {
                                                 <td colspan="2">
                                                     Content (optional): 
                                                     <textarea name="html"><?php 
-                                                        if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
+                                                        if (isset($_SESSION['html'])) { 
+                                                            echo $_SESSION['html'];
+                                                        } else if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
                                                     <script type="text/javascript">
                                                         CKEDITOR.replace('html');
                                                     </script>
@@ -300,21 +328,33 @@ if (isset($_GET['id'])) {
                                                 <td>
                                                     Content Position: <br/>
                                                     <input type='radio' name='htmlpos' value='left' <?php 
-                                                        if (!empty($erow['htmlpos'])) {
+                                                        if (isset($_SESSION['htmlpos'])) { 
+                                                            if (strcmp($_SESSION['htmlpos'], "left") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['htmlpos'])) {
                                                             if (strcmp($erow['htmlpos'], "left") === 0) {
                                                                 echo " checked";
                                                             }
                                                         }
                                                     ?>>Left 
                                                     <input type='radio' name='htmlpos' value='center' <?php 
-                                                        if (!empty($erow['htmlpos'])) {
+                                                        if (isset($_SESSION['htmlpos'])) { 
+                                                            if (strcmp($_SESSION['htmlpos'], "center") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['htmlpos'])) {
                                                             if (strcmp($erow['htmlpos'], "center") === 0) {
                                                                 echo " checked";
                                                             }
                                                         }
                                                     ?>>Center 
                                                     <input type='radio' name='htmlpos' value='right' <?php 
-                                                        if (!empty($erow['htmlpos'])) {
+                                                        if (isset($_SESSION['htmlpos'])) { 
+                                                            if (strcmp($_SESSION['htmlpos'], "right") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['htmlpos'])) {
                                                             if (strcmp($erow['htmlpos'], "right") === 0) {
                                                                 echo " checked";
                                                             }
@@ -325,14 +365,21 @@ if (isset($_GET['id'])) {
                                             <tr>
                                                 <td colspan="2">
                                                     <?php 
-                                                        if (!empty($erow['buttontext'])) {
+                                                        if (isset($_SESSION['buttontexts'])) { 
+                                                            $buttontexts = $_SESSION['buttontexts'];
+                                                        } else if (!empty($erow['buttontext'])) {
                                                             $buttontexts = explode(",", $erow['buttontext']);
                                                         }
-                                                        if (!empty($erow['link'])) {
+                                                        
+                                                        if (isset($_SESSION['links'])) { 
+                                                            $links = $_SESSION['links'];
+                                                        } else if (!empty($erow['link'])) {
                                                             $links = explode(",", $erow['link']);
                                                         }
 
-                                                        if (!empty($erow['linkpos'])) {
+                                                        if (isset($_SESSION['linkpos'])) { 
+                                                            $linkposArr = $_SESSION['linkpos'];
+                                                        } else if (!empty($erow['linkpos'])) {
                                                             $linkposArr = explode(",", $erow['linkpos']);
                                                         }
                                                     ?>
@@ -757,10 +804,10 @@ if (isset($_GET['id'])) {
             window.location="processHomeTry.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addHomeError']);
-                unset($_SESSION['addHomeSuccess']);
-                unset($_SESSION['updateHomeSuccess']);
-                $_SESSION['updateHomeError'] = "Nothing was deleted";
+//                unset($_SESSION['addHomeError']);
+//                unset($_SESSION['addHomeSuccess']);
+//                unset($_SESSION['updateHomeSuccess']);
+//                $_SESSION['updateHomeError'] = "Nothing was deleted";
             ?>
             window.location='homeTry.php#menu1';
         }

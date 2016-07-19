@@ -9,6 +9,49 @@
 require_once '../config/db.php';
 
 if (isset($_GET['update'])) {
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['order'] = $_POST['order'];
+    $_SESSION['imagepos'] = $_POST['imagepos'];
+    $_SESSION['status'] = $_POST['status2'];
+    $_SESSION['html'] = $_POST['html'];
+    $_SESSION['htmlpos'] = $_POST['htmlpos'];
+    
+    $buttons = $_POST['buttonno'];
+    $links = array();
+    $linkpos = array();
+    $buttontext = array();
+    
+    for ($i = 1; $i <= $buttons; $i++) {
+        $linki = "type".$i;
+        $linkposi = "linkpos".$i;
+        $buttoni = "buttontext".$i;
+        
+        $selLink = $_POST[$linki];
+        if (strcmp($selLink, "products") === 0)  {
+            $secondLink = "productstype".$i;
+            array_push($links, $selLink.".php?".$_POST[$secondLink]);
+        } else if (strcmp($selLink, "product") === 0) {
+            $secondLink = "productItem".$i;
+            array_push($links, $selLink.".php?id=".$_POST[$secondLink]);
+        } else if (strcmp($selLink, "ourstory") === 0) {
+            $secondLink = "ourstorytype".$i;
+            array_push($links, $selLink.".php?type=".$_POST[$secondLink]);
+        } else if (strcmp($selLink, "page") === 0) {
+            $secondLink = "pageItem".$i;
+            array_push($links, $selLink.".php?id=".$_POST[$secondLink]);
+        }
+        
+        array_push($buttontext, $_POST[$buttoni]);
+        array_push($linkpos, $_POST[$linkposi]);
+    }
+    
+    $_SESSION['buttontexts'] = $buttontext;
+    $_SESSION['linkpos'] = $linkpos;
+    $_SESSION['links'] = $links;
+    $_SESSION['page'] = $_POST['pageid'];
+    $_SESSION['date2'] = $_POST['date5'];
+    $_SESSION['time2'] = $_POST['scheduledtime2'];
+    
     $buttonno = $_POST['buttonno'];
     
     for ($i = 1; $i <= $buttonno; $i++) {
@@ -85,7 +128,20 @@ if (isset($_GET['update'])) {
         } else {
             header('Location: pages.php#menu1');
         }
-    } else if (!isset($_SESSION['addPageSectionError'])){
+    } else {
+        unset($_SESSION['title']);
+        unset($_SESSION['page']);
+        unset($_SESSION['order']);
+        unset($_SESSION['imagepos']);
+        unset($_SESSION['status']);
+        unset($_SESSION['html']);
+        unset($_SESSION['htmlpos']);
+        unset($_SESSION['buttontexts']);
+        unset($_SESSION['linkpos']);
+        unset($_SESSION['links']);
+        unset($_SESSION['date2']);
+        unset($_SESSION['time2']);
+        
         unset($_SESSION['addPageSectionError']);
         unset($_SESSION['updatePageSectionError']);
         unset($_SESSION['updatePageSectionSuccess']);

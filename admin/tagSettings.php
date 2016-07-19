@@ -27,6 +27,9 @@ if (isset($_GET['id']) && !isset($_GET['delete'])) {
     unset($_SESSION['addTagSuccess']);
     $_SESSION['updateTagSuccess'] = "Record deleted successfully";
 } else if (isset($_POST['submit'])) {
+    $_SESSION['keyword'] = $_POST['keyword'];
+    $_SESSION['type'] = $_POST['type'];
+    
     if (empty($_POST['keyword']) || empty($_POST['type'])) {
         unset($_SESSION['updateTagError']);
         unset($_SESSION['updateTagSuccess']);
@@ -43,6 +46,8 @@ if (isset($_GET['id']) && !isset($_GET['delete'])) {
             die(mysqli_error($link));
         } else {
             if (!empty($_POST['editid'])) {
+                unset($_SESSION['keyword']);
+                unset($_SESSION['type']);
                 $editid = $_POST['editid'];
                 $sql = "UPDATE tags set keyword = '$keyword', type='$type' where id='$editid';";
                 unset($_SESSION['updateTagError']);
@@ -53,6 +58,8 @@ if (isset($_GET['id']) && !isset($_GET['delete'])) {
                 mysqli_query($link, $sql);
             } else {
                 if ($cres -> num_rows === 0) {
+                    unset($_SESSION['keyword']);
+                    unset($_SESSION['type']);
                     $sql = "INSERT INTO tags (keyword, type) VALUES ('$keyword', '$type');";
                     unset($_SESSION['updateTagError']);
                     unset($_SESSION['addTagError']);
@@ -185,20 +192,30 @@ if (isset($_GET['id']) && !isset($_GET['delete'])) {
             
                             Keyword*:
                             <input type='text' name='keyword' id='keyword'  maxlength="50" 
-                                   value='<?php if (!empty($erow['keyword'])) 
+                                   value='<?php if (isset($_SESSION['keyword'])) { 
+                                       echo $_SESSION['keyword'];
+                                   } else if (!empty($erow['keyword'])) 
                                        { echo $erow['keyword']; }?>'/>
                             
                             Type*:
                             <select name='type'>
                                 <option value='blog' <?php 
-                                    if (!empty($erow['type'])) {
+                                    if (isset($_SESSION['type'])) { 
+                                        if (strcmp($_SESSION['type'], "blog") === 0) {
+                                            echo " selected";
+                                        }
+                                    } else if (!empty($erow['type'])) {
                                         if (strcmp($erow['type'], "blog") === 0) {
                                             echo " selected";
                                         }
                                     }
                                 ?>>Blog</option>
                                 <option value='product' <?php 
-                                    if (!empty($erow['type'])) {
+                                    if (isset($_SESSION['type'])) { 
+                                        if (strcmp($_SESSION['type'], "product") === 0) {
+                                            echo " selected";
+                                        }
+                                    } else if (!empty($erow['type'])) {
                                         if (strcmp($erow['type'], "product") === 0) {
                                             echo " selected";
                                         }

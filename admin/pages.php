@@ -19,8 +19,13 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
     
     $erow = mysqli_fetch_assoc($result);
 } else if (isset($_GET['add'])) {
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['date'] = $_POST['date4'];
+    $_SESSION['time'] = $_POST['scheduledtime'];
+    
     $status = $_POST['status'];
-    $exist = $_POST['addExisting'];
+//    $exist = $_POST['addExisting'];
     
     if (strcmp($status, "inactive") === 0 && (empty($_POST['date4']) || empty($_POST['scheduledtime']))) {
         unset($_SESSION['updatePageError']);
@@ -32,6 +37,11 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
         unset($_SESSION['addPageSectionSuccess']);
         unset($_SESSION['addPageSectionError']);
         $_SESSION['addPageError'] = "Date/time not selected for scheduled page release";
+        if (!empty($_POST['editpageid'])) {
+            header("Location: pages.php?pid=".$_POST['editpageid']);
+        } else {
+            header("Location: pages.php");
+        }
     } else if (empty($_POST['name'])) {
         unset($_SESSION['updatePageError']);
         unset($_SESSION['addPageSuccess']);
@@ -42,101 +52,126 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
         unset($_SESSION['addPageSectionSuccess']);
         unset($_SESSION['addPageSectionError']);
         $_SESSION['addPageError'] = "Empty field(s)";
-    } else {
-        unset($_SESSION['addPageError']);
-        if (empty($_POST['name'])) {
-            $_SESSION['addPageError'] = "Empty field(s)";
+        if (!empty($_POST['editpageid'])) {
+            header("Location: pages.php?pid=".$_POST['editpageid']);
         } else {
-            $image;
-            if (!empty($_FILES['image']['name'])) {
-                unset($_SESSION['updatePageSectionSuccess']);
-                unset($_SESSION['addPageSectionSuccess']);
-                unset($_SESSION['addPageSectionError']);
-                unset($_SESSION['updatePageSectionError']);
+            header("Location: pages.php");
+        }
+    } else {
+        $image;
+        if (!empty($_FILES['image']['name'])) {
+            unset($_SESSION['updatePageSectionSuccess']);
+            unset($_SESSION['addPageSectionSuccess']);
+            unset($_SESSION['addPageSectionError']);
+            unset($_SESSION['updatePageSectionError']);
 
-                $target_dir = "../uploads/banner/";
-                $random_digit=md5(uniqid(rand(), true));
-                $new_file = 'page_'.$random_digit.basename($_FILES["image"]["name"]);
-                $target_file = $target_dir . $new_file;
-                $uploadOk = 1;
+            $target_dir = "../uploads/banner/";
+            $random_digit=md5(uniqid(rand(), true));
+            $new_file = 'page_'.$random_digit.basename($_FILES["image"]["name"]);
+            $target_file = $target_dir . $new_file;
+            $uploadOk = 1;
 
-                $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+            $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 
-                // Check if file already exists
-                if (file_exists($target_file)) {
-                    unset($_SESSION['addPageSuccess']);
-                    $_SESSION['addPageError'] = "Sorry, file already exists.";
-        //            header('Location: faq.php');
-                }
-
-                // Allow certain file formats
-                if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-                && $imageFileType != "gif" && $imageFileType != "mp3" && $imageFileType != "mp4" 
-                        && $imageFileType != "wma" ) {
-                    unset($_SESSION['addPageSuccess']);
-                    $_SESSION['addPageError'] = "Sorry, only JPG, JPEG, PNG, GIF, MP3, MP4 & WMA files are allowed.";
-        //            header('Location: faq.php');
-                }
-
-                // Check file size
-                if ($_FILES["image"]["size"] > 5000000) {
-                    unset($_SESSION['addPageSuccess']);
-                    $_SESSION['addPageError'] = "Sorry, uploads cannot be greater than 5MB.";
-                }
-
-                if (!isset($_SESSION['addPageError'])) {
-                    if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                        unset($_SESSION['addPageSuccess']);
-                        $_SESSION['addPageError'] = "Sorry, there was an error uploading your file.";
-        //                header('Location: faq.php');   
-                    } else {
-                        unset($_SESSION['addPageError']);
-                        $image = $target_file;
-                    }
-                }
-            } else {
-                $image = $_POST['oldBanner'];
-            }
-            
-            $name = $_POST['name'];
-            $scheduledate = $_POST['date4'];
-            $scheduletime = $_POST['scheduledtime'];
-            $schedule = date('Y-m-d G:i:s', strtotime($scheduledate." ".$scheduletime));
-            
-            if (!empty($_POST['editid'])) {
-                //update all fields with edited form name;
-                $formName = "Select * from pages where id='".$_POST['editid']."';";
-                $res = mysqli_query($link, $formName);
-                $row = mysqli_fetch_assoc($res);
-
-                $sql = "UPDATE pages set title='$name', status='$status', scheduled='$schedule', "
-                        . "image='$image', type='banner' where id='".$_POST['editid']."';";
-                mysqli_query($link, $sql);
-
-                unset($_SESSION['updatePageError']);
+            // Check if file already exists
+            if (file_exists($target_file)) {
                 unset($_SESSION['addPageSuccess']);
-                unset($_SESSION['addPageError']);
-
-                unset($_SESSION['updatePageSectionError']);
-                unset($_SESSION['updatePageSectionSuccess']);
-                unset($_SESSION['addPageSectionSuccess']);
-                unset($_SESSION['addPageSectionError']);
-                $_SESSION['updatePageSuccess'] = "Page updated successfully";
-            } else {
-                $sql = "INSERT INTO pages (title, status, image, type, scheduled) VALUES "
-                        . "('$name', '$status', '$image', 'banner', '$schedule');";
-                mysqli_query($link, $sql);
-
-                unset($_SESSION['updatePageError']);
-                unset($_SESSION['updatePageSuccess']);
-                unset($_SESSION['addPageError']);
-
-                unset($_SESSION['updatePageSectionError']);
-                unset($_SESSION['updatePageSectionSuccess']);
-                unset($_SESSION['addPageSectionSuccess']);
-                unset($_SESSION['addPageSectionError']);
-                $_SESSION['addPageSuccess'] = "Page added successfully";
+                $_SESSION['addPageError'] = "Sorry, file already exists.";
+                if (!empty($_POST['editpageid'])) {
+                    header("Location: pages.php?pid=".$_POST['editpageid']);
+                } else {
+                    header("Location: pages.php");
+                }
+    //            header('Location: faq.php');
             }
+
+            // Allow certain file formats
+            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif" && $imageFileType != "mp3" && $imageFileType != "mp4" 
+                    && $imageFileType != "wma" ) {
+                unset($_SESSION['addPageSuccess']);
+                $_SESSION['addPageError'] = "Sorry, only JPG, JPEG, PNG, GIF, MP3, MP4 & WMA files are allowed.";
+                if (!empty($_POST['editpageid'])) {
+                    header("Location: pages.php?pid=".$_POST['editpageid']);
+                } else {
+                    header("Location: pages.php");
+                }
+    //            header('Location: faq.php');
+            }
+
+            // Check file size
+            if ($_FILES["image"]["size"] > 5000000) {
+                unset($_SESSION['addPageSuccess']);
+                $_SESSION['addPageError'] = "Sorry, uploads cannot be greater than 5MB.";
+                if (!empty($_POST['editpageid'])) {
+                    header("Location: pages.php?pid=".$_POST['editpageid']);
+                } else {
+                    header("Location: pages.php");
+                }
+            }
+
+            if (!isset($_SESSION['addPageError'])) {
+                if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                    unset($_SESSION['addPageSuccess']);
+                    $_SESSION['addPageError'] = "Sorry, there was an error uploading your file.";
+                    if (!empty($_POST['editpageid'])) {
+                        header("Location: pages.php?pid=".$_POST['editpageid']);
+                    } else {
+                        header("Location: pages.php");
+                    }
+    //                header('Location: faq.php');   
+                } else {
+                    unset($_SESSION['addPageError']);
+                    $image = $target_file;
+                }
+            }
+        } else {
+            $image = $_POST['oldBanner'];
+        }
+        
+        unset($_SESSION['name']);
+        unset($_SESSION['status']);
+        unset($_SESSION['date']);
+        unset($_SESSION['time']);
+
+        $name = $_POST['name'];
+        $scheduledate = $_POST['date4'];
+        $scheduletime = $_POST['scheduledtime'];
+        $schedule = date('Y-m-d G:i:s', strtotime($scheduledate." ".$scheduletime));
+
+        if (!empty($_POST['editpageid'])) {
+            //update all fields with edited form name;
+            $formName = "Select * from pages where id='".$_POST['editpageid']."';";
+            $res = mysqli_query($link, $formName);
+            $row = mysqli_fetch_assoc($res);
+
+            $sql = "UPDATE pages set title='$name', status='$status', scheduled='$schedule', "
+                    . "image='$image', type='banner' where id='".$_POST['editpageid']."';";
+            mysqli_query($link, $sql);
+
+            unset($_SESSION['updatePageError']);
+            unset($_SESSION['addPageSuccess']);
+            unset($_SESSION['addPageError']);
+
+            unset($_SESSION['updatePageSectionError']);
+            unset($_SESSION['updatePageSectionSuccess']);
+            unset($_SESSION['addPageSectionSuccess']);
+            unset($_SESSION['addPageSectionError']);
+            $_SESSION['updatePageSuccess'] = "Page updated successfully";
+        } else {
+            $sql = "INSERT INTO pages (title, status, image, type, scheduled) VALUES "
+                    . "('$name', '$status', '$image', 'banner', '$schedule');";
+            mysqli_query($link, $sql);
+
+            unset($_SESSION['updatePageError']);
+            unset($_SESSION['updatePageSuccess']);
+            unset($_SESSION['addPageError']);
+
+            unset($_SESSION['updatePageSectionError']);
+            unset($_SESSION['updatePageSectionSuccess']);
+            unset($_SESSION['addPageSectionSuccess']);
+            unset($_SESSION['addPageSectionError']);
+            $_SESSION['addPageSuccess'] = "Page added successfully";
         }
     }
 } else if (isset($_GET['delete']) && isset($_GET['pid'])) {
@@ -281,7 +316,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                         <h1 id="addf" class="page-header">Add/Edit Pages</h1>
 
                                         <input type='hidden' name='submitted' id='submitted' value='1'/>
-                                        <input type='hidden' name='editid' id='editid' value='<?php 
+                                        <input type='hidden' name='editpageid' id='editpageid' value='<?php 
                                             if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 echo $_GET['pid'];
                                             }
@@ -292,21 +327,31 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 <td>
                                                     Name*:
                                                     <input type='text' name='name' id='name' 
-                                                           value="<?php if (isset($frow['title'])) { echo $frow['title']; } ?>"/>
+                                                           value="<?php if (isset($_SESSION['name'])) { 
+                                                               echo $_SESSION['name'];
+                                                           } else if (isset($frow['title'])) { echo $frow['title']; } ?>"/>
                                                 </td>
                                                 <td width='45%'>
                                                     Status:
                                                     <select name="status" id='status'>
                                                         <option value="active" <?php 
-                                                            if (!empty($frow['status'])) {
-                                                                if(strcmp("active", $frow['status']) === 0) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                               if(strcmp($_SESSION['status'], "active") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($frow['status'])) {
+                                                                if(strcmp($frow['status'], "active") === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
                                                             ?>>Active</option>
                                                         <option value="inactive" <?php 
-                                                            if (!empty($frow['status'])) {
-                                                                if(strcmp("inactive", $frow['status']) === 0) {
+                                                            if (isset($_SESSION['status'])) { 
+                                                               if(strcmp($_SESSION['status'], "inactive") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($frow['status'])) {
+                                                                if(strcmp($frow['status'], "inactive") === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
@@ -317,7 +362,7 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                             <tr>
                                                 <td>
                                                     <?php 
-                                                    if (isset($frow['image'])) {
+                                                    if (isset($_GET['pid']) && !empty($frow['image'])) {
                                                         $browArr = explode(".", $frow['image']);
                                                         $ext = $browArr[count($browArr)-1];
 
@@ -341,11 +386,15 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 </td>
                                                 <td id='scheduledposts' style='display:none;'>
                                                     Scheduled Date/Time:<br>
-                                                    <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if(!empty($frow['scheduled'])) {
+                                                    <input style='width:45%!important;' type="text" placeholder="DATE" id="date4" name="date4" value='<?php if (isset($_SESSION['date'])) { 
+                                                               echo $_SESSION['date'];
+                                                            } else if(!empty($frow['scheduled'])) {
                                                         echo date('Y-m-d', strtotime($frow['scheduled']));
                                                         } ?>'>
                                                     <input style='width:45%!important;' id="setTimeExample" name='scheduledtime' placeholder="TIME" 
-                                                           type="text" class="time" value='<?php if(!empty($frow['scheduled'])) {
+                                                           type="text" class="time" value='<?php if (isset($_SESSION['time'])) { 
+                                                               echo $_SESSION['time'];
+                                                            } else if(!empty($frow['scheduled'])) {
                                                         echo date('H.i.s', strtotime($frow['scheduled']));
                                                         } ?>'/><br>
                                                     <button id="setTimeButton">Set current time</button>
@@ -495,14 +544,18 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 <td>
                                                     Title*:
                                                     <input type='text' name='title' id='title' maxlength="50" 
-                                                           value='<?php if (!empty($erow['title'])) { echo $erow['title']; } ?>'/>
+                                                           value='<?php if (isset($_SESSION['title'])) {
+                                                                echo $_SESSION['title']; 
+                                                               } else if (!empty($erow['title'])) { echo $erow['title']; } ?>'/>
                                                 </td>
                                                 <td>
                                                     Order*:
                                                     <input type='text' name='order' id='order'  
                                                        onkeypress="return isNumber(event)" 
                                                            value="<?php 
-                                                                if(!empty($erow['fieldorder'])){
+                                                                if (isset($_SESSION['order'])) {
+                                                                    echo $_SESSION['order']; 
+                                                                } else if(!empty($erow['fieldorder'])){
                                                                     if (isset($erow['fieldorder'])) { 
                                                                         echo $erow['fieldorder']; 
                                                                     } else { 
@@ -526,21 +579,33 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 <td>
                                                     Image Position*: <br/>
                                                     <input type='radio' name='imagepos' value='left' <?php 
-                                                        if (!empty($erow['imagepos'])) {
+                                                        if (isset($_SESSION['imagepos'])) {
+                                                            if (strcmp($_SESSION['imagepos'], "left") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['imagepos'])) {
                                                             if (strcmp($erow['imagepos'], "left") === 0) {
                                                                 echo " checked";
                                                             }
                                                         }
                                                     ?>>Left 
                                                     <input type='radio' name='imagepos' value='background' <?php 
-                                                        if (!empty($erow['imagepos'])) {
+                                                        if (isset($_SESSION['imagepos'])) {
+                                                            if (strcmp($_SESSION['imagepos'], "background") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['imagepos'])) {
                                                             if (strcmp($erow['imagepos'], "background") === 0) {
                                                                 echo " checked";
                                                             }
                                                         }
                                                     ?>>Background 
                                                     <input type='radio' name='imagepos' value='right' <?php 
-                                                        if (!empty($erow['imagepos'])) {
+                                                        if (isset($_SESSION['imagepos'])) {
+                                                            if (strcmp($_SESSION['imagepos'], "right") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['imagepos'])) {
                                                             if (strcmp($erow['imagepos'], "right") === 0) {
                                                                 echo " checked";
                                                             }
@@ -561,7 +626,11 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                             } else {
                                                                 while ($row = mysqli_fetch_assoc($res)) {
                                                                     echo "<option value='".$row['id']."' ";
-                                                                    if (isset($erow['pageid'])) {
+                                                                    if (isset($_SESSION['page'])) {
+                                                                        if (strcmp($_SESSION['page'], $row['id']) === 0) {
+                                                                            echo " selected";
+                                                                        }
+                                                                    } else if (isset($erow['pageid'])) {
                                                                         if (strcmp($erow['pageid'], $row['id']) === 0) {
                                                                             echo " selected";
                                                                         }
@@ -579,14 +648,22 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                     Status*:
                                                     <select name='status2' id='status2'>
                                                         <option value='active' <?php 
-                                                            if (isset($erow['status'])) {
+                                                            if (isset($_SESSION['status'])) {
+                                                                if (strcmp($_SESSION['status'], "active") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (isset($erow['status'])) {
                                                                 if(strcmp($erow['status'], "active") === 0) {
                                                                     echo " selected";
                                                                 }
                                                             }
                                                         ?>>Active</option>
                                                         <option value='inactive' <?php 
-                                                            if (isset($erow['status'])) {
+                                                            if (isset($_SESSION['status'])) {
+                                                                if (strcmp($_SESSION['status'], "inactive") === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (isset($erow['status'])) {
                                                                 if(strcmp($erow['status'], "inactive") === 0) {
                                                                     echo " selected";
                                                                 }
@@ -596,11 +673,15 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 </td>
                                                 <td id='scheduledposts2' style='display:none;'>
                                                     Scheduled Date/Time:<br>
-                                                    <input style='width:45%!important;' type="text" placeholder="DATE" id="date5" name="date5" value='<?php if(!empty($erow['scheduled'])) {
+                                                    <input style='width:45%!important;' type="text" placeholder="DATE" id="date5" name="date5" value='<?php if (isset($_SESSION['date2'])) {
+                                                                echo $_SESSION['date2'];
+                                                            } else if(!empty($erow['scheduled'])) {
                                                         echo date('Y-m-d', strtotime($erow['scheduled']));
                                                         } ?>'>
                                                     <input style='width:45%!important;' id="setTimeExample2" name='scheduledtime2' placeholder="TIME" 
-                                                           type="text" class="time" value='<?php if(!empty($erow['scheduled'])) {
+                                                           type="text" class="time" value='<?php if (isset($_SESSION['time2'])) {
+                                                                echo $_SESSION['time2'];
+                                                            } else if(!empty($erow['scheduled'])) {
                                                         echo date('H.i.s', strtotime($erow['scheduled']));
                                                         } ?>'/><br>
                                                     <button id="setTimeButton2">Set current time</button>
@@ -610,7 +691,9 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 <td colspan="2">
                                                     Content (optional): 
                                                     <textarea name="html"><?php 
-                                                        if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
+                                                        if (isset($_SESSION['html'])) {
+                                                            echo $_SESSION['html'];
+                                                        } else if(!empty($erow['html'])) { echo $erow['html']; }?></textarea>
                                                     <script type="text/javascript">
                                                         CKEDITOR.replace('html');
                                                     </script>
@@ -620,21 +703,33 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                                 <td>
                                                     Content Position: <br/>
                                                     <input type='radio' name='htmlpos' value='left' <?php 
-                                                        if (!empty($erow['htmlpos'])) {
+                                                        if (isset($_SESSION['htmlpos'])) {
+                                                            if (strcmp($_SESSION['htmlpos'], "left") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['htmlpos'])) {
                                                             if (strcmp($erow['htmlpos'], "left") === 0) {
                                                                 echo " checked";
                                                             }
                                                         }
                                                     ?>>Left 
                                                     <input type='radio' name='htmlpos' value='center' <?php 
-                                                        if (!empty($erow['htmlpos'])) {
+                                                        if (isset($_SESSION['htmlpos'])) {
+                                                            if (strcmp($_SESSION['htmlpos'], "center") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['htmlpos'])) {
                                                             if (strcmp($erow['htmlpos'], "center") === 0) {
                                                                 echo " checked";
                                                             }
                                                         }
                                                     ?>>Center 
                                                     <input type='radio' name='htmlpos' value='right' <?php 
-                                                        if (!empty($erow['htmlpos'])) {
+                                                        if (isset($_SESSION['htmlpos'])) {
+                                                            if (strcmp($_SESSION['htmlpos'], "right") === 0) {
+                                                                echo " checked";
+                                                            }
+                                                        } else if (!empty($erow['htmlpos'])) {
                                                             if (strcmp($erow['htmlpos'], "right") === 0) {
                                                                 echo " checked";
                                                             }
@@ -645,14 +740,21 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
                                             <tr>
                                                 <td colspan="2">
                                                     <?php 
-                                                        if (!empty($erow['buttontext'])) {
+                                                        if (isset($_SESSION['buttontexts'])) { 
+                                                            $buttontexts = $_SESSION['buttontexts'];
+                                                        } else if (!empty($erow['buttontext'])) {
                                                             $buttontexts = explode(",", $erow['buttontext']);
                                                         }
-                                                        if (!empty($erow['link'])) {
+                                                        
+                                                        if (isset($_SESSION['links'])) { 
+                                                            $links = $_SESSION['links'];
+                                                        } else if (!empty($erow['link'])) {
                                                             $links = explode(",", $erow['link']);
                                                         }
 
-                                                        if (!empty($erow['linkpos'])) {
+                                                        if (isset($_SESSION['linkpos'])) { 
+                                                            $linkposArr = $_SESSION['linkpos'];
+                                                        } else if (!empty($erow['linkpos'])) {
                                                             $linkposArr = explode(",", $erow['linkpos']);
                                                         }
                                                     ?>
@@ -1121,14 +1223,14 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
             window.location="pages.php?delete=1&pid=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addPageError']);
-                unset($_SESSION['addPageSuccess']);
-                unset($_SESSION['updatePageSuccess']);
-                unset($_SESSION['addPageSectionError']);
-                unset($_SESSION['addPageSectionSuccess']);
-                unset($_SESSION['updatePageSectionSuccess']);
-                unset($_SESSION['updatePageSectionError']);
-                $_SESSION['updatePageError'] = "Nothing was deleted";
+//                unset($_SESSION['addPageError']);
+//                unset($_SESSION['addPageSuccess']);
+//                unset($_SESSION['updatePageSuccess']);
+//                unset($_SESSION['addPageSectionError']);
+//                unset($_SESSION['addPageSectionSuccess']);
+//                unset($_SESSION['updatePageSectionSuccess']);
+//                unset($_SESSION['updatePageSectionError']);
+//                $_SESSION['updatePageError'] = "Nothing was deleted";
             ?>
             window.location='pages.php';
         }
@@ -1139,14 +1241,14 @@ if (!isset($_GET['delete']) && isset($_GET['pid'])) {
             window.location="pages.php?delete=1&id=" + locId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['addPageError']);
-                unset($_SESSION['updatePageError']);
-                unset($_SESSION['addPageSuccess']);
-                unset($_SESSION['updatePageSuccess']);
-                unset($_SESSION['addPageSectionError']);
-                unset($_SESSION['addPageSectionSuccess']);
-                unset($_SESSION['updatePageSectionSuccess']);
-                $_SESSION['updatePageSectionError'] = "Nothing was deleted";
+//                unset($_SESSION['addPageError']);
+//                unset($_SESSION['updatePageError']);
+//                unset($_SESSION['addPageSuccess']);
+//                unset($_SESSION['updatePageSuccess']);
+//                unset($_SESSION['addPageSectionError']);
+//                unset($_SESSION['addPageSectionSuccess']);
+//                unset($_SESSION['updatePageSectionSuccess']);
+//                $_SESSION['updatePageSectionError'] = "Nothing was deleted";
             ?>
             window.location='pages.php#menu1';
         }

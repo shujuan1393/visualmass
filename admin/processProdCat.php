@@ -14,7 +14,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateProdCatError']);
         unset($_SESSION['addProdCatError']);
         $_SESSION['updateProdCatSuccess'] = "Record deleted successfully";
-        header("Location: productCatSettings.php");
+        header("Location: productSettings.php");
     } 
 } else {
     if(empty($_POST['name']) ) {
@@ -22,7 +22,7 @@ if (isset($_GET['delete'])) {
         unset($_SESSION['updateProdCatError']);
         unset($_SESSION['updateProdCatSuccess']);
         $_SESSION['addProdCatError'] = "Empty field(s)";
-        header('Location: productCatSettings.php');
+        header('Location: productSettings.php');
     } else {
         unset($_SESSION['addProdCatError']);
         unset($_SESSION['updateProdCatError']);
@@ -39,7 +39,7 @@ if (isset($_GET['delete'])) {
                 unset($_SESSION['addProdCatSuccess']);
                 unset($_SESSION['updateProdCatError']);
                 $_SESSION['updateProdCatSuccess'] = "Record updated successfully";
-                header("Location: productCatSettings.php");
+                header("Location: productSettings.php");
             } else {
                 echo "Error updating record: " . mysqli_error($link);
             }
@@ -51,7 +51,7 @@ if (isset($_GET['delete'])) {
             mysqli_query($link, $sql);
 
             $_SESSION['addProdCatSuccess'] = "Product Category successfully added";
-            header('Location: productCatSettings.php');
+            header('Location: productSettings.php');
         }
     } 
 }

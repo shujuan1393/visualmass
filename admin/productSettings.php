@@ -237,12 +237,16 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
 
                                     Name*:
                                     <input type='text' name='name' id='name'  maxlength="50" 
-                                           value='<?php if (!empty($mrow['name'])) 
+                                           value='<?php if (isset($_SESSION['name'])) { 
+                                               echo $_SESSION['name'];
+                                           } else if (!empty($mrow['name'])) 
                                                { echo $mrow['name']; }?>'/>
                                     <br>
                                     
                                     Details*:
-                                    <textarea name="details" id="details"><?php if(!empty($mrow['details'])) {
+                                    <textarea name="details" id="details"><?php if (isset($_SESSION['details'])) { 
+                                               echo $_SESSION['details'];
+                                           } else if(!empty($mrow['details'])) {
                                         echo $mrow['details']; }?></textarea>
                                     <script>
                                         CKEDITOR.replace('details');
@@ -282,8 +286,8 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
             window.location="processProdCat.php?delete=1&id=" + empId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['updateProdCatSuccess']);
-                $_SESSION['updateProdCatError'] = "Nothing was deleted";
+//                unset($_SESSION['updateProdCatSuccess']);
+//                $_SESSION['updateProdCatError'] = "Nothing was deleted";
             ?>
             window.location='productSettings.php';
         }
@@ -294,8 +298,8 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
             window.location="processProdMat.php?delete=1&id=" + empId;
         } else if (r === false) {
             <?php
-                unset($_SESSION['updateProdMatSuccess']);
-                $_SESSION['updateProdMatError'] = "Nothing was deleted";
+//                unset($_SESSION['updateProdMatSuccess']);
+//                $_SESSION['updateProdMatError'] = "Nothing was deleted";
             ?>
             window.location='productSettings.php#prodMat';
         }

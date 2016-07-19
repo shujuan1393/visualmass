@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 14, 2016 at 09:38 PM
+-- Generation Time: Jul 19, 2016 at 10:19 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -324,7 +324,8 @@ CREATE TABLE `jobs` (
   `html` longtext NOT NULL,
   `status` varchar(50) NOT NULL,
   `featured` varchar(10) DEFAULT NULL,
-  `type` varchar(50) NOT NULL
+  `type` varchar(50) NOT NULL,
+  `scheduled` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -574,7 +575,8 @@ CREATE TABLE `searchstatistics` (
 CREATE TABLE `services` (
   `id` int(11) NOT NULL,
   `servicecode` varchar(10) NOT NULL,
-  `servicename` varchar(50) NOT NULL
+  `servicename` varchar(50) NOT NULL,
+  `description` longtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1064,6 +1066,11 @@ ALTER TABLE `staff`
 -- AUTO_INCREMENT for table `tags`
 --
 ALTER TABLE `tags`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `terms`
+--
+ALTER TABLE `terms`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `user`

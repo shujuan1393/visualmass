@@ -102,6 +102,46 @@ if (isset($_GET['delete']) && isset($_GET['banner'])) {
     }
     
 } else if (isset($_POST['submit'])) {
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['order'] = $_POST['order'];
+    $_SESSION['imagepos'] = $_POST['imagepos'];
+    $_SESSION['status'] = $_POST['status'];
+    $_SESSION['html'] = $_POST['html'];
+    $_SESSION['htmlpos'] = $_POST['htmlpos'];
+    
+    $buttons = $_POST['buttonno'];
+    $links = array();
+    $linkpos = array();
+    $buttontext = array();
+    
+    for ($i = 1; $i <= $buttons; $i++) {
+        $linki = "type".$i;
+        $linkposi = "linkpos".$i;
+        $buttoni = "buttontext".$i;
+        
+        $selLink = $_POST[$linki];
+        if (strcmp($selLink, "products") === 0)  {
+            $secondLink = "productstype".$i;
+            array_push($links, $selLink.".php?".$_POST[$secondLink]);
+        } else if (strcmp($selLink, "product") === 0) {
+            $secondLink = "productItem".$i;
+            array_push($links, $selLink.".php?id=".$_POST[$secondLink]);
+        } else if (strcmp($selLink, "ourstory") === 0) {
+            $secondLink = "ourstorytype".$i;
+            array_push($links, $selLink.".php?type=".$_POST[$secondLink]);
+        } else if (strcmp($selLink, "page") === 0) {
+            $secondLink = "pageItem".$i;
+            array_push($links, $selLink.".php?id=".$_POST[$secondLink]);
+        }
+        
+        array_push($buttontext, $_POST[$buttoni]);
+        array_push($linkpos, $_POST[$linkposi]);
+    }
+    
+    $_SESSION['buttontexts'] = $buttontext;
+    $_SESSION['linkpos'] = $linkpos;
+    $_SESSION['links'] = $links;
+    $_SESSION['type'] = $_POST['type'];
     
     $buttonno = $_POST['buttonno'];
     
@@ -174,7 +214,7 @@ if (isset($_GET['delete']) && isset($_GET['banner'])) {
         } else {
             header('Location: productdesc.php#menu1');
         }
-    } else if (!isset($_SESSION['addProdDescError'])){
+    } else {
         unset($_SESSION['addProdDescError']);
         unset($_SESSION['updateProdDescError']);
         unset($_SESSION['updateProdDescSuccess']);
@@ -302,6 +342,17 @@ if (isset($_GET['delete']) && isset($_GET['banner'])) {
         }
         
         if (!isset($_SESSION['uploadProdDescError'])) {
+            unset($_SESSION['title']);
+            unset($_SESSION['type']);
+            unset($_SESSION['order']);
+            unset($_SESSION['imagepos']);
+            unset($_SESSION['status']);
+            unset($_SESSION['html']);
+            unset($_SESSION['htmlpos']);
+            unset($_SESSION['buttontexts']);
+            unset($_SESSION['linkpos']);
+            unset($_SESSION['links']);
+            
             if (!empty($_POST['editid'])) {
                 $editid = $_POST['editid'];
                 

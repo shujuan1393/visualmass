@@ -17,6 +17,9 @@ if (isset($_GET['delete'])) {
         header("Location: productSettings.php#prodMat");
     } 
 } else {
+    $_SESSION['name'] = $_POST['name'];
+    $_SESSION['details'] = $_POST['details'];
+    
     if(empty($_POST['name']) || empty($_POST['details'])) {
         unset($_SESSION['addProdMatSuccess']);
         unset($_SESSION['updateProdMatError']);
@@ -28,6 +31,9 @@ if (isset($_GET['delete'])) {
             header('Location: productSettings.php#prodMat');
         }
     } else {
+        unset($_SESSION['name']);
+        unset($_SESSION['details']);
+        
         unset($_SESSION['addProdMatError']);
         unset($_SESSION['updateProdMatError']);
         unset($_SESSION['updateProdMatSuccess']);

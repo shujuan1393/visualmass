@@ -17,6 +17,17 @@ if (isset($_GET['delete'])) {
         header("Location: partners.php");
     } 
 } else if (isset($_POST['submit'])) {
+    $_SESSION['company'] = $_POST['company'];
+    $_SESSION['contactname'] = $_POST['contactname'];
+    $_SESSION['phone'] = $_POST['phone'];
+    $_SESSION['address'] = $_POST['address'];
+    $_SESSION['country'] = $_POST['country'];
+    $_SESSION['zip'] = $_POST['zip'];
+    $_SESSION['city'] = $_POST['city'];
+    $_SESSION['apt'] = $_POST['apt'];
+    $_SESSION['type'] = $_POST['type'];
+    $_SESSION['email'] = $_POST['email'];
+    
     if(empty($_POST['company']) || empty($_POST['contactname']) || 
             empty($_POST['phone']) || empty($_POST['address']) || empty($_POST['email']) 
             || empty($_POST['address']) || empty($_POST['country']) || empty($_POST['zip'])) {
@@ -40,6 +51,17 @@ if (isset($_GET['delete'])) {
             header('Location: partners.php');
         }
     } else {
+        unset($_SESSION['company']);
+        unset($_SESSION['contactname']);
+        unset($_SESSION['phone']);
+        unset($_SESSION['address']);
+        unset($_SESSION['country']);
+        unset($_SESSION['zip']);
+        unset($_SESSION['city']);
+        unset($_SESSION['apt']);
+        unset($_SESSION['type']);
+        unset($_SESSION['email']);
+
         unset($_SESSION['addPartnerError']);
         unset($_SESSION['updatePartnerError']);
         unset($_SESSION['updatePartnerSuccess']);

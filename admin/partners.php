@@ -148,19 +148,25 @@ if (isset($_GET['id'])) {
                                     <td colspan='2'>
                                         <div class="pull-left">Company*:</div>
                                         <input type='text' name='company' id='company'
-                                               value='<?php if (!empty($erow['company'])) { echo $erow['company']; }?>'/>
+                                               value='<?php if (isset($_SESSION['company'])) {
+                                                   echo $_SESSION['company'];
+                                               } else if (!empty($erow['company'])) { echo $erow['company']; }?>'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         Contact Name*:
-                                        <input type="text" id="contactname" name="contactname" value='<?php if(!empty($erow['contactname'])) {
+                                        <input type="text" id="contactname" name="contactname" value='<?php if (isset($_SESSION['contactname'])) {
+                                                   echo $_SESSION['contactname'];
+                                               } else if(!empty($erow['contactname'])) {
                                             echo $erow['contactname'];
                                             } ?>'>
                                     </td>
                                     <td>
                                         Phone*:
-                                        <input type="text" id="phone" name="phone" value='<?php if(!empty($erow['phone'])) {
+                                        <input type="text" id="phone" name="phone" value='<?php if (isset($_SESSION['phone'])) {
+                                                   echo $_SESSION['phone'];
+                                               } else if(!empty($erow['phone'])) {
                                             echo $erow['phone'];
                                             } ?>' onkeypress="return isNumber(event)">
                                     </td>
@@ -169,7 +175,9 @@ if (isset($_GET['id'])) {
                                     <td colspan="2">
                                         Address*:
                                         <input type='text' name='address' id='address'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['address'])) { 
+                                        if (isset($_SESSION['address'])) {
+                                            echo $_SESSION['address'];
+                                        } else if (!empty($erow['address'])) { 
                                             echo $erow['address']; }?>"/>
                                     </td>
                                 </tr>
@@ -177,14 +185,18 @@ if (isset($_GET['id'])) {
                                     <td>
                                         Apt, suite:
                                         <input type='text' name='apt' id='apt'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['apt'])) { 
+                                        if (isset($_SESSION['apt'])) {
+                                            echo $_SESSION['apt'];
+                                        } else if (!empty($erow['apt'])) { 
                                             echo $erow['apt']; }?>"/>
                                     </td>
                                     <td>
                                         ZIP Code*:
                                         <input type='text' name='zip' id='zip'  maxlength="50"  
                                                onkeypress="return isNumber(event)" value ="<?php 
-                                        if (!empty($erow['zip'])) { 
+                                        if (isset($_SESSION['zip'])) {
+                                            echo $_SESSION['zip'];
+                                        } else if (!empty($erow['zip'])) { 
                                             echo $erow['zip']; }?>"/>
                                     </td>
                                 </tr>
@@ -192,22 +204,28 @@ if (isset($_GET['id'])) {
                                     <td>
                                         City:
                                         <input type='text' name='city' id='city'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['city'])) { 
+                                        if (isset($_SESSION['city'])) {
+                                            echo $_SESSION['city'];
+                                        } else if (!empty($erow['city'])) { 
                                             echo $erow['city']; }?>"/>
                                     </td>
                                     <td>
                                         Country*:
                                         <input type='text' name='country' id='country'  maxlength="50" value ="<?php 
-                                        if (!empty($erow['country'])) { 
+                                        if (isset($_SESSION['country'])) {
+                                            echo $_SESSION['country'];
+                                        } else if (!empty($erow['country'])) { 
                                             echo $erow['country']; }?>"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         Contact Email*:
-                                        <input type="text" id="email" name="email" value='<?php if(!empty($erow['email'])) {
+                                        <input type="text" id="email" name="email" value='<?php if (isset($_SESSION['email'])) {
+                                            echo $_SESSION['email'];
+                                        } else if(!empty($erow['email'])) {
                                             echo $erow['email'];
-                                            } ?>'>
+                                        } ?>'>
                                     </td>
                                     <td>
                                         Type*:
@@ -222,7 +240,11 @@ if (isset($_GET['id'])) {
                                                     if($res -> num_rows > 0) {
                                                         while($row = mysqli_fetch_assoc($res)) {
                                                             echo "<option value='".$row['name']."'";
-                                                            if (!empty($erow['type'])) {
+                                                            if (isset($_SESSION['type'])) {
+                                                                if (strcmp($_SESSION['type'], $row['name']) === 0) {
+                                                                    echo " selected";
+                                                                }
+                                                            } else if (!empty($erow['type'])) {
                                                                 if (strcmp($erow['type'], $row['name']) === 0) {
                                                                     echo " selected";
                                                                 }
