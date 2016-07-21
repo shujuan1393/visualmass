@@ -71,7 +71,7 @@
                         
                                 <div id='img-col' class='col-lg-3 col-md-4 col-sm-5'>
                                     <?php 
-                                        echo '<button class="btn-overlay" onClick="deleteImg(\''.$img.'\')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+                                        echo '<a class="btn-overlay" onClick="deleteImg(\''.$img.'\')"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                                     ?>
                                     <a href='#' class='pop' onclick='setImg(this); return false;'>
                                         <img src='<?php echo $img; ?>' class='img-grid'/>

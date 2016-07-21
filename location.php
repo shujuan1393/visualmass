@@ -57,9 +57,10 @@ function geocode($address){
             
             <div id="content">
                 <?php
+                if (!empty($_GET['id'])){
                     $banner = "Select * from locations where id='".$_GET['id']."';";
                     $bresult = mysqli_query($link, $banner);
-                    
+                
                     if (!mysqli_query($link, $banner)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
@@ -144,6 +145,7 @@ function geocode($address){
                         // if unable to geocode the address
                         }else{
                             echo "No map found.";
+                        }
                         }
                         ?>
                     </div>

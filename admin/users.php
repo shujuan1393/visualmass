@@ -341,7 +341,8 @@ if (isset($_GET['id'])) {
     $(document).ready(function() {
         $('#example').DataTable({
             dom: "<'row'tr>" +
-                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            responsive: true
         });
     });
 </script>

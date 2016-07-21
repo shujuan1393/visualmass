@@ -38,13 +38,10 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+        <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <i class="fa fa-navicon"></i>
         </button>
-        <a class="navbar-brand" href="index.html"><img class="navbar-logo" src="../images/HorizontalLogo_black.png" alt=""/></a>
-       
+        <a href="admin.php"><img class="navbar-logo" src="../images/HorizontalLogo_black.png" alt=""/></a>
     </div>
     <!-- Top Menu Items -->
     <ul class="nav navbar-right top-nav">
@@ -75,21 +72,6 @@
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
             <ul class="dropdown-menu alert-dropdown">
-<!--                <li>
-                    <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                </li>
-                <li>
-                    <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                </li>
-                <li>
-                    <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                </li>
-                <li>
-                    <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                </li>
-                <li>
-                    <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                </li>-->
                 <li>
                     <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
                 </li>
