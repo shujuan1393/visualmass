@@ -152,101 +152,87 @@ if (isset($_SESSION['loggedUserEmail'])) {
                 }
             ?>"> 
         </form>
-<!--        <div id='ticker' class='text-center' style='background-color: #cccccc; color:#fff!important;'>
-            <?php 
-//                echo $ticker[1]." | "; 
-                if (isset($_SESSION['profile'])) {
-            ?>
-                Complete your profile now and get store credit worth $<?php if(!empty($profile[1])) { echo $profile[1]; } ?>
-            <?php
-                }
-            ?>
-        </div>-->
-        <?php } 
-        
-        if (isset($_SESSION['profile'])) { ?>
-<!--            <div id='completeProfile' class='text-center'>
-                <h5>Complete your profile now and get store credit worth $<?php if(!empty($profile[1])) { echo $profile[1]; } ?></h5>
-            </div>-->
         <?php } ?>
-        <!— Navigation —>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <!— Brand and toggle get grouped for better mobile display —>
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-            <i class="fa fa-navicon"></i>
-        </button>
-        <a href="index.php"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
         
-        <a href="cart.php" class="sm-nav navbar-toggle pull-right caps">Cart</a>
-    </div>
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <!— Top Menu Items —>
-        <ul class="nav navbar-left top-nav caps content-inline">
-            <li class="dropdown pull-left">
-                <a href="#" id="showGlasses" class="dropdown-toggle" data-toggle="dropdown">Glasses</a>
-            </li>
-            <li class="dropdown pull-left">
-                <a href="#" id="showSunglasses" class="dropdown-toggle" data-toggle="dropdown">Sunglasses</a>
-            </li>
-            <li class="dropdown pull-right">
-                <a id="nav-collapse2" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
-                <ul class="dropdown-menu caps">
-                    <li class="dropdown pull-left">
-                        <a href="hometry.php" >Home Try-on</a>
-                    </li>
-                    <li class="dropdown pull-left">
-                        <a href="location.php" >Location</a>
-                    </li>
-                </ul>
-            </li>
-            <li id="collapse-nav" class="dropdown pull-left">
-                <a href="hometry.php" >Home Try-on</a>
-            </li>
-            <li id="collapse-nav" class="dropdown pull-left">
-                <a href="location.php" >Location</a>
-            </li>
-            <li class="dropdown pull-left">
-                <a href="#" id="showStory" class="dropdown-toggle" data-toggle="dropdown">Our Story</a>
-            </li>
-        </ul>
-        <ul class="nav navbar-right top-nav caps content-inline">
-            <li class="dropdown caps pull-left">
-                <?php 
-                    if (isset($_SESSION['loggedUser'])) {
-                ?>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['loggedUser'] ?></a>
-                <?php 
-                    } else {
-                ?>
-                <a href='login.php' id='signin' data-toggle="modal" data-target="#myModal">Sign In</a>
-                <?php 
-                    } 
-                ?>
-                <ul class="dropdown-menu caps">
-                    <li>
-                        <a href="profile.php">Profile</a>
-                    </li>
-                    <li>
-                        <a href="favourites.php">Favourites</a>
-                    </li>
-                    <li>
-                        <a href="orders.php">Orders</a>
-                    </li>
-                    <li>
-                        <a href="logout.php">Log Out</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="pull-left">
-                <a href="faq.php" > Help</a>
-            </li>
-            <li id="ddl-nav" class="pull-left">
-                <a href="cart.php" > Cart</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+        <!— Navigation —>
+            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <!— Brand and toggle get grouped for better mobile display —>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <i class="fa fa-navicon"></i>
+                    </button>
+                    <a href="index.php"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
+
+                    <a href="cart.php" class="sm-nav navbar-toggle pull-right caps">Cart</a>
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <!— Top Menu Items —>
+                    <ul class="nav navbar-left top-nav caps content-inline">
+                        <li class="dropdown pull-left">
+                            <a href="#" id="showGlasses" class="dropdown-toggle" data-toggle="dropdown">Glasses</a>
+                        </li>
+                        <li class="dropdown pull-left">
+                            <a href="#" id="showSunglasses" class="dropdown-toggle" data-toggle="dropdown">Sunglasses</a>
+                        </li>
+                        <li class="dropdown pull-right">
+                            <a id="nav-collapse2" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
+                            <ul class="dropdown-menu caps">
+                                <li class="dropdown pull-left">
+                                    <a href="hometry.php" >Home Try-on</a>
+                                </li>
+                                <li class="dropdown pull-left">
+                                    <a href="location.php" >Location</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li id="collapse-nav" class="dropdown pull-left">
+                            <a href="hometry.php" >Home Try-on</a>
+                        </li>
+                        <li id="collapse-nav" class="dropdown pull-left">
+                            <a href="location.php" >Location</a>
+                        </li>
+                        <li class="dropdown pull-left">
+                            <a href="#" id="showStory" class="dropdown-toggle" data-toggle="dropdown">Our Story</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-right top-nav caps content-inline">
+                        <li class="dropdown caps pull-left">
+                            <?php 
+                                if (isset($_SESSION['loggedUser'])) {
+                            ?>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['loggedUser'] ?></a>
+                            <?php 
+                                } else {
+                            ?>
+                            <a href='login.php' id='signin' data-toggle="modal" data-target="#myModal">Sign In</a>
+                            <?php 
+                                } 
+                            ?>
+                            <ul class="dropdown-menu caps">
+                                <li>
+                                    <a href="profile.php">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="favourites.php">Favourites</a>
+                                </li>
+                                <li>
+                                    <a href="orders.php">Orders</a>
+                                </li>
+                                <li>
+                                    <a href="logout.php">Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="pull-left">
+                            <a href="faq.php" > Help</a>
+                        </li>
+                        <li id="ddl-nav" class="pull-left">
+                            <a href="cart.php" > Cart</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        
             <div id='glasses' style='display:none;'>
                 <ul class='col-md-12'>
                     <li class='col-md-6'><button id='glassesmen' class='button'>SHOP MEN</button></li>
@@ -348,10 +334,6 @@ if (isset($_SESSION['loggedUserEmail'])) {
                 if (document.getElementById('sunglasses').style.display === 'block') {
                     document.getElementById('sunglasses').style.display = 'none';
                 }
-            };
-            
-            document.getElementById('logoheader').onclick = function(){  
-                window.location = "index.php";
             };
             
             $('#user').mouseover(function () {
