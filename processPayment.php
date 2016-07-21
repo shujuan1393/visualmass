@@ -320,18 +320,22 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                         }
                     }
                     
+                    if (is_numeric(strpos($orderid, "ON"))) {
+                        $location = "online";
+                    }
+                    
                     if ($canuse === true) {
                         $order = "INSERT INTO orders (orderid, pid, price, quantity, type, payment, details, status, orderedby, "
-                                . "totalcost, dateordered, discountcode)"
+                                . "totalcost, dateordered, discountcode, location)"
                                 . " VALUES ('$orderid','$pid', '$price', '$quantity', '$type', '$payment','$details', 'paid', "
-                                . "'$email', '$unitcost', '".$row['datetime']."', '$discount');";
+                                . "'$email', '$unitcost', '".$row['datetime']."', '$discount', '$location');";
                         mysqli_query($link, $order);
                         $remove = "DELETE FROM cart where id ='".$row['id']."';";
                         mysqli_query($link, $remove);      
 
                         //add to statistics
-                        $stats = "INSERT INTO productstatistics (type, customer, orderid) VALUES ('$type', '$email', '$orderid');";
-                        mysqli_query($stats);
+                        $stats = "INSERT INTO productstatistics (type, pid, customer, orderid) VALUES ('$type', '$pid', '$email', '$orderid');";
+                        mysqli_query($link, $stats);
                     }
                 } else {
                     $order = "INSERT INTO orders (orderid, pid, price, quantity, type, payment, details, status, orderedby, "
@@ -343,8 +347,8 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                     mysqli_query($link, $remove);      
 
                     //add to statistics
-                    $stats = "INSERT INTO productstatistics (type, customer, orderid) VALUES ('$type', '$email', '$orderid');";
-                    mysqli_query($stats);
+                        $stats = "INSERT INTO productstatistics (type, pid, customer, orderid) VALUES ('$type', '$pid', '$email', '$orderid');";
+                        mysqli_query($link, $stats);
                 }
                 
                 //get products that are hometry
@@ -386,7 +390,8 @@ if (isset($_GET['id']) && isset($_GET['cost'])) {
                 $comments = $_GET['comments'];
                 $deliveryDate = $_GET['delivery'];
                 $dateArr = explode(" ", $deliveryDate);
-                $thisdate = DateTime::createFromFormat('d/m/Y', $dateArr[1])->format('Y-m-d');
+                $thisdate = date('Y-m-d', strtotime($dateArr[1]));
+                //DateTime::createFromFormat('d/m/Y', $dateArr[1])->format('Y-m-d');
                 //get primary store from settings
                 $settings = "Select * from settings where type='general';";
                 $setres = mysqli_query($link, $settings);

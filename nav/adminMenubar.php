@@ -239,7 +239,7 @@
             <?php } ?> 
             <?php if (in_array("stats", $checkArr)) { ?>
             <li <?php if (in_array("statistics.php", $urlArr)) echo "class='active'" ?> >
-                <a href='#'><i class="fa fa-fw fa-line-chart"></i> STATISTICS</a>
+                <a href='statistics.php'><i class="fa fa-fw fa-line-chart"></i> STATISTICS</a>
             </li>
             <?php } ?> 
             <?php if (in_array("emp", $checkArr)) { ?>
