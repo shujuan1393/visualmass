@@ -135,6 +135,168 @@ unset($_SESSION['addProdBannerError']);
                         <h1 class="page-header">
                             <?php echo $welcome = "<script>document.write(welcome)</script>" .$_SESSION['loggedUser']; ?>
                         </h1>
+                        
+                        <div id="today">
+                            <h4>Today is <?php echo date('D, d M Y'); ?></h4>
+                            
+                            <?php 
+                                $sales = "Select SUM(totalcost) as total, location from orders where DATE(datepaid)=CURDATE() group by location;";
+                                
+                                $salesres = mysqli_query($link, $sales);
+                                $chartArr = array(
+                                    "caption" => "Overall Sales", 
+                                    "paletteColors" => "#0075c2,#1aaf5d,#f2c500,#f45b00,#8e0000",
+                                    "bgColor" => "#ffffff",
+                                    "showBorder" => "0",
+                                    "use3DLighting" => "0",
+                                    "showShadow" => "0",
+                                    "enableSmartLabels" => "1",
+                                    "startingAngle" => "0",
+                                    "showPercentValues" => "1",
+                                    "showPercentInTooltip" => "0",
+                                    "decimals" => "3",
+                                    "captionFontSize" => "14",
+                                    "subcaptionFontSize" => "14",
+                                    "subcaptionFontBold" => "0",
+                                    "toolTipColor" => "#ffffff",
+                                    "toolTipBorderThickness" => "0",
+                                    "toolTipBgColor" => "#ccc",
+                                    "toolTipBgAlpha" => "80",
+                                    "toolTipBorderRadius" => "2",
+                                    "toolTipPadding" => "5",
+//                                    "showHoverEffect" => "0.7",
+                                    "showLegend" => "1",
+                                    "legendBgColor" => "#ffffff",
+                                    "legendBorderAlpha" => "0",
+                                    "legendShadow" => "0",
+                                    "legendItemFontSize" => "10",
+                                    "legendItemFontColor" => "#666666",
+                                    "useDataPlotColorForLabels" => "1");
+                                
+                                $data = array("chart" => $chartArr, "data" => "");
+//                                
+                                if (!mysqli_query($link, $sales)) {
+                                    die(mysqli_error($link));
+                                } else {
+                                    $result = array();
+                                    $count = 0;
+                                    if($salesres -> num_rows > 0) {
+                                        while($row = mysqli_fetch_assoc($salesres)) {
+                                            $result[$count] = array($row['location'] => $row['total']);
+                                            $count++;
+                                        }
+                                    } 
+                                }
+                                
+                                $data['data'] = array();
+                                // Iterate through the data in `$actualData` and insert in to the `$arrData` array.
+                                foreach ($result as $key => $value) {
+                                    foreach($value as $k => $v) {
+                                        array_push($data['data'],
+                                            array(
+                                                'label' => $k,
+                                                'value' => $v
+                                            )
+                                        );
+                                    }
+                                }
+//                                print_r($data['data']);
+                                $arr = json_encode($data);
+                                
+//                                print_r($arr);
+                                $columnChart = new FusionCharts(
+                                    "pie2D", 
+                                    "sales" , 
+                                    "420", 
+                                    "400", 
+                                    "salesChart", 
+                                    "json", 
+                                    $arr);
+                                
+                                $columnChart->render();
+                                
+                                $visitChart = $chartArr;
+                                $visitChart['caption'] = "Sales Per Visitor";
+                                unset($visitChart['paletteColors']);
+                                $visitors = array("chart" => $visitChart, "data" => "");
+                                
+                                $cust = "Select SUM(totalcost) as total, user.email as email from user join orders where user.email = orders.orderedby and DATE(orders.datepaid) = CURDATE() group by user.email;";
+                                $cres = mysqli_query($link, $cust);
+                                
+                                if(!mysqli_query($link, $cust)) {
+                                    die(mysqli_error($link));
+                                } else {
+                                    $result = array();
+                                    $count = 0;
+                                    while($row = mysqli_fetch_array($cres)) {
+                                        $result[$count] = array($row['email'] => $row['total']);
+                                        $count++;
+                                    }
+                                }
+                                
+                                $visitors['data'] = array();
+                                // Iterate through the data in `$actualData` and insert in to the `$arrData` array.
+                                foreach ($result as $key => $value) {
+                                    foreach($value as $k => $v) {
+                                        array_push($visitors['data'],
+                                            array(
+                                                'label' => $k,
+                                                'value' => $v
+                                            )
+                                        );
+                                    }
+                                }
+                                $visitorArr = json_encode($visitors);
+                                
+//                                print_r($visitors);
+                                $visitorChart = new FusionCharts(
+                                    "pie2D", 
+                                    "visitors" , 
+                                    "420", 
+                                    "400", 
+                                    "visitorChart", 
+                                    "json", 
+                                    $visitorArr);
+                                
+                                $visitorChart->render();
+                                
+                            ?>
+                            <table>
+                                <tr>
+                                    <td id="salesChart" width="40%"></td>
+                                    <td id="visitorChart" width="40%"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="updates">
+                            <h4>Recently logged in</h4>
+                            <?php 
+                                $users = "Select * from staff order by lastlogin desc LIMIT 5";
+                                $ures = mysqli_query($link, $users);
+                                
+                                if(!mysqli_query($link, $users)) {
+                                    die(mysqli_error($link));
+                                } else {
+                                    if($ures -> num_rows > 0) {
+                            ?>
+                                <table>
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>Last Login</th>
+                                    </thead>
+                                    <?php while ($row = mysqli_fetch_assoc($ures)) { 
+                                            echo "<tr>";
+                                            echo "<td>".$row['firstname']." ".$row['lastname']."</td>";
+                                            echo "<td>".date('d M Y H:i:s', strtotime($row['lastlogin']))."</td>";
+                                            echo "</tr>";
+                                        } 
+                                    ?>
+                                </table>
+                            <?php
+                                    }
+                                }
+                            ?>
+                        </div>
                     </div>
                 </div>
                 <!-- /.row -->

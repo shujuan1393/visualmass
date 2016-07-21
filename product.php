@@ -34,6 +34,16 @@
                         if ($bresult -> num_rows == 0) {
                             echo "<h3 class='banner-title'>Sorry, this product is no longer available.</h3>";
                         } else {
+                            //add to product statistics as a view
+                            if (isset($_SESSION['loggedUserEmail'])) {
+                                $cust = $_SESSION['loggedUserEmail'];
+                            } else {
+                                $cust = GetCartId();
+                            }
+                            
+                            $pstats = "INSERT INTO productstatistics (pid, type, customer) VALUES ('".$_GET['id']."', 'viewproduct', '$cust');";
+                            mysqli_query($link, $pstats);
+                            
                             $brow = mysqli_fetch_assoc($bresult);
                             
                             $browArr = explode(",", $brow['images']);

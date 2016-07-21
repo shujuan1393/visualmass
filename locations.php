@@ -396,13 +396,11 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title">Modal title</h4>
+                  <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
               </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
@@ -583,9 +581,9 @@
 
 //                                    echo "<div class='section-link'>";
                         if (strcmp($linkposArr[0], "center") === 0) {
-                            $toPrint .= "<div class='section-link col-md-3' style='left: 25%; right: 25%;'>";
+                            $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
                         } else {
-                            $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
+                            $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
                         }
                         for ($i = 0; $i < count($textArr); $i++) {
                             if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
@@ -593,17 +591,16 @@
                             }
                             if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
                                 if (strcmp($linkposArr[$i], "center") === 0) {
-                                    $toPrint .= "<div class='section-link col-md-3' style='left: 25%; right: 25%;'>";
+                                    $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
                                 } else {
-                                    $toPrint .= "<div class='section-link col-md-3' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
+                                    $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
                                 }
                             }
                             $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
                             $prevpos = $linkposArr[$i];
                         }
-                        
+                        $toPrint .= "</div>";
                     }
-                    $toPrint .= "</div>";
                     $toPrint .= "</div>";
                 ?>    
                     var newElm = document.createElement('div');

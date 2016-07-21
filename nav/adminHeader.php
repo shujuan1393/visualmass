@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 require_once '../config/db.php';
+include("../fusioncharts/fusioncharts.php");
 ?>
 
 <head>
@@ -40,6 +41,8 @@ require_once '../config/db.php';
     
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
     
+    <!--fusion charts-->
+    <script type="text/javascript" src="../fusioncharts/fusioncharts.js"></script>
     <!-- -->
     <script type="text/javascript" src="../timepicker/jquery.timepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="../timepicker/jquery.timepicker.css" />
