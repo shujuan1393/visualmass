@@ -32,6 +32,8 @@ require_once '../config/db.php';
     <link href="../bootstrap/css/sb-admin.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="../bootstrap/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    <!-- Datatable -->
     <link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
@@ -74,7 +76,3 @@ require_once '../config/db.php';
 <script src="../dist/js/standalone/selectize.js"></script>
 <!--devil causing the js code to appear-->
 <script src="../selectize/js/index.js"></script>
-
-<body>	
-    <div class="se-pre-con"></div>
-</body>

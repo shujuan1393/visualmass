@@ -51,7 +51,7 @@ if (isset($_GET['id'])) {
                         <div class="tab-content">
                             <div id="discounts" class="tab-pane fade in active">
                             <h1 class="page-header">Manage Discounts</h1>
-
+                            
                             <div id="updateDiscSuccess" class='success'>
                                 <?php 
                                     if (isset($_SESSION['updateDiscSuccess'])) {
@@ -93,27 +93,26 @@ if (isset($_GET['id'])) {
                             <table id ="example">
                                 <thead>
                                     <th>Discount Name</th>
-                                    <th>Use Limit</th>
+                                    <th>Limit</th>
                                     <th>Recurrence</th>
-                                    <th>Usage (C/E)</th>
+                                    <th>Usage</th>
                                     <th>Validity</th>
                                     <th>Status</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>                        
+                                    <th>Action</th>                        
                                 </thead>
                                 <tbody class="searchable">
                                 <?php
                                     // output data of each row
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr>";
-                                        echo "<td>".$row['name']."(".$row['code'].")</td>";                            
+                                        echo "<td>".$row['name']."<br/>(".$row['code'].")</td>";                            
                                         echo "<td>".$row['disclimit']."</td>";                           
                                         echo "<td>".$row['recurrence']."</td>";                           
                                         echo "<td>".$row['discusage']."</td>";                              
                                         echo "<td>".date("d M Y", strtotime($row['start']))." to ".date("d M Y", strtotime($row['end']))."</td>";                           
                                         echo "<td>".$row['status']."</td>";                        
-                                        echo '<td><button onClick="window.location.href=`discounts.php?id='.$row['id'].'`">E</button>';
-                                        echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
+                                        echo '<td><a onClick="window.location.href=`discounts.php?id='.$row['id'].'`"><i class="fa fa-pencil"></i></a>'
+                                                . '<a onClick="deleteFunction('.$row['id'].')"><i class="fa fa-trash-o"></i></a></td>';
                                         echo "</tr>";
                                     }
                                 ?>
@@ -955,7 +954,9 @@ if (isset($_GET['id'])) {
     $(document).ready(function() {
         $('#example').DataTable({
             dom: "<'row'tr>" +
-                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            aoColumnDefs: [{ 'bSortable': false, 'aTargets': [ -1 ] }],
+            responsive: true
         });
         $('#examplehistory').DataTable({
             dom: "<'row'tr>" +

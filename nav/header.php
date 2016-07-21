@@ -57,14 +57,24 @@ if (isset($_SESSION['loggedUserEmail'])) {
     } else {
         $hrow = mysqli_fetch_assoc($wres);
         $valArr = explode("#", $hrow['value']);
-        $title = explode("web=", $valArr[0]);
-        $meta = explode("meta=", $valArr[1]);
-        $ticker = explode("ticker=", $valArr[2]);
+        if(!empty($valArr[0])){
+            $title = explode("web=", $valArr[0]);
+        }
+        if(!empty($valArr[1])){
+            $meta = explode("meta=", $valArr[1]);
+        }
+        if(!empty($valArr[2])){
+            $ticker = explode("ticker=", $valArr[2]);
+        }
     }
     
     // Define variables for SEO
-    $pageTitle = $title[1]; //'Visual Mass - Singapore\'s Online Eyeglass & Sunglasses';
-    $pageDescription = $meta[1]; // 'Provides quality prescription eyewear from $95. Free delivery and exchanges.';
+    if(!empty($title[1])){
+        $pageTitle = $title[1]; //'Visual Mass - Singapore\'s Online Eyeglass & Sunglasses';
+    }
+    if(!empty($meta[1])){
+        $pageDescription = $meta[1]; // 'Provides quality prescription eyewear from $95. Free delivery and exchanges.';
+    }
     $pageCanonical = 'http://www.visualmass.co/';
     // We don't want the search engines to see our website just yet
     $pageRobots = 'noindex,nofollow';
@@ -133,7 +143,7 @@ if (isset($_SESSION['loggedUserEmail'])) {
         <div class="se-pre-con"></div>
         <?php if(!empty($ticker[1])) { ?>
         <form name="ticker"> 
-        <input id='ticker' style='text-align: center;width:100%!important;background-color: #cccccc;color:#fff!important;' name="text" VALUE="<?php 
+        <input id='ticker' class='ticker' name="text" VALUE="<?php 
                 echo $ticker[1]." | "; 
                 if (isset($_SESSION['profile'])) {
                     if(!empty($profile[1])) { 
@@ -159,55 +169,84 @@ if (isset($_SESSION['loggedUserEmail'])) {
                 <h5>Complete your profile now and get store credit worth $<?php if(!empty($profile[1])) { echo $profile[1]; } ?></h5>
             </div>-->
         <?php } ?>
-        <div id='whole_header'>
-            <div class="left_nav">
-                <a id='logoheader' class="navbar-brand" href="index.php"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
-<!--=======
-        <script src="https://js.braintreegateway.com/js/braintree-2.24.1.min.js"></script>
-        <link rel="stylesheet" href="styles/font-awesome.min.css">
-    </head>
-    <body>
-        <div id='whole_header'>
-            <div class="left_nav">
-                <a id='logoheader' class="navbar-brand" href="index.php"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
->>>>>>> Stashed changes-->
-                <!--<div id='logoheader' class="logo_sidebar"></div>-->
-                <ul>
-                    <li><div id='showGlasses'><a>GLASSES</a></div></li>
-                    <li><div id='showSunglasses'><a>SUNGLASSES</a></div></li>
-                    <li><a href='hometry.php'>HOME TRY-ON</a></li>
-                    <li><a href='locations.php'>LOCATION</a></li>
-                    <li><div id='showStory'><a>OUR STORY</a></div></li>
+        <!— Navigation —>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!— Brand and toggle get grouped for better mobile display —>
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <i class="fa fa-navicon"></i>
+        </button>
+        <a href="index.php"><img class="navbar-logo" src="images/HorizontalLogo_black.png" alt=""/></a>
+        
+        <a href="cart.php" class="sm-nav navbar-toggle pull-right caps">Cart</a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <!— Top Menu Items —>
+        <ul class="nav navbar-left top-nav caps content-inline">
+            <li class="dropdown pull-left">
+                <a href="#" id="showGlasses" class="dropdown-toggle" data-toggle="dropdown">Glasses</a>
+            </li>
+            <li class="dropdown pull-left">
+                <a href="#" id="showSunglasses" class="dropdown-toggle" data-toggle="dropdown">Sunglasses</a>
+            </li>
+            <li class="dropdown pull-right">
+                <a id="nav-collapse2" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
+                <ul class="dropdown-menu caps">
+                    <li class="dropdown pull-left">
+                        <a href="hometry.php" >Home Try-on</a>
+                    </li>
+                    <li class="dropdown pull-left">
+                        <a href="location.php" >Location</a>
+                    </li>
                 </ul>
-                <div class ="rightheader">
-                    <ul>
-                        <?php 
-                            if (isset($_SESSION['loggedUser'])) {
-                        ?>
-                        <li id='user'><a><?php echo $_SESSION['loggedUser']; ?></a>
-                            <div id='userMenu' style='float: none;display:none;'>
-                                <p><a href='profile.php'>PROFILE</a></p>
-                                <p><a href='favourites.php'>FAVOURITES</a></p>
-                                <p><a href='orders.php'>ORDERS</a></p>
-                                <p><a href='logout.php'>LOGOUT</a></p>
-                            </div>
-                        </li>
-                        <?php 
-                            } else {
-                        ?>
-                        <li><a href='login.php' id='signin' data-toggle="modal" data-target="#myModal">SIGN IN</a></li>
-                        <?php 
-                            } 
-                        ?>
-                        <li><a href='faq.php'>HELP</a></li>
-                        <li><a href='cart.php'>CART</a></li>
-                    </ul>
-                    <?php 
-        //                echo "Welcome, " .$_SESSION['loggedUser']; 
-        //                echo "&nbsp<a href='../logout.php'>Logout</a>";
-                    ?>
-                </div>
-            </div>
+            </li>
+            <li id="collapse-nav" class="dropdown pull-left">
+                <a href="hometry.php" >Home Try-on</a>
+            </li>
+            <li id="collapse-nav" class="dropdown pull-left">
+                <a href="location.php" >Location</a>
+            </li>
+            <li class="dropdown pull-left">
+                <a href="#" id="showStory" class="dropdown-toggle" data-toggle="dropdown">Our Story</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-right top-nav caps content-inline">
+            <li class="dropdown caps pull-left">
+                <?php 
+                    if (isset($_SESSION['loggedUser'])) {
+                ?>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['loggedUser'] ?></a>
+                <?php 
+                    } else {
+                ?>
+                <a href='login.php' id='signin' data-toggle="modal" data-target="#myModal">Sign In</a>
+                <?php 
+                    } 
+                ?>
+                <ul class="dropdown-menu caps">
+                    <li>
+                        <a href="profile.php">Profile</a>
+                    </li>
+                    <li>
+                        <a href="favourites.php">Favourites</a>
+                    </li>
+                    <li>
+                        <a href="orders.php">Orders</a>
+                    </li>
+                    <li>
+                        <a href="logout.php">Log Out</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="pull-left">
+                <a href="faq.php" > Help</a>
+            </li>
+            <li id="ddl-nav" class="pull-left">
+                <a href="cart.php" > Cart</a>
+            </li>
+        </ul>
+    </div>
+</nav>
             <div id='glasses' style='display:none;'>
                 <ul class='col-md-12'>
                     <li class='col-md-6'><button id='glassesmen' class='button'>SHOP MEN</button></li>
@@ -230,7 +269,6 @@ if (isset($_SESSION['loggedUserEmail'])) {
                     <li class='col-sm-3'><button id='design' class='button' onclick='ourstory("design")'>DESIGN</button></li>
                 </ul>
             </div>
-        </div>
         
         <div class="modal fade modal-fullscreen force-fullscreen" id="myModal" tabindex="-1" 
              role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -238,13 +276,11 @@ if (isset($_SESSION['loggedUserEmail'])) {
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" id='closeModal' data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title">Modal title</h4>
+                  <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
               </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->

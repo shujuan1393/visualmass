@@ -91,8 +91,7 @@ if (isset($_GET['id'])) {
                                 <th>Customisable</th>
                                 <th>Amount</th>
                                 <th>Status</th>
-                                <th>Edit</th>
-                                <th>Delete</th>                        
+                                <th>Action</th>                        
                             </thead>
                             <tbody class="searchable">
                             <?php
@@ -111,8 +110,8 @@ if (isset($_GET['id'])) {
 
                                     echo "</td>";                           
                                     echo "<td>".$row['status']."</td>";                        
-                                    echo '<td><button onClick="window.location.href=`giftcards.php?id='.$row['id'].'`">E</button>';
-                                    echo '<td><button onClick="deleteFunction('.$row['id'].')">D</button></td>';
+                                    echo '<td><a onClick="window.location.href=`giftcards.php?id='.$row['id'].'`"><i class="fa fa-pencil"></i></a>'
+                                            . '<a onClick="deleteFunction('.$row['id'].')"><i class="fa fa-trash"></i></a></td>';
                                     echo "</tr>";
                                 }
                             ?>
@@ -397,7 +396,9 @@ if (isset($_GET['id'])) {
     $(document).ready(function() {
         $('#example').DataTable({
             dom: "<'row'tr>" +
-                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            aoColumnDefs: [{ 'bSortable': false, 'aTargets': [ -1 ] }],
+            responsive: true
         });
     });
 </script>
