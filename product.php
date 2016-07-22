@@ -208,190 +208,104 @@
                         ?>
                 </div>
                 
-                <div class="details row">
-                    <table id='prodTable' class='full_section'> 
-                        <tr width='40%'>
-                            <td colspan="2" class='product_desc' width='40%'>
-                                <h3>ABOUT THE FRAME</h3>
-                                <?php echo html_entity_decode($brow['description']); ?>                                
-                            </td>
-                            <td rowspan="4" width='45%'>
-                                <div id='image_display' class='product_display col-md-6'>
-                                    <h3>Move your cursor over to view different angles</h3>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr width='10%'>
-                            <td>
-                                <h5>WIDTH</h5><br>
-                                <?php echo $brow['width']; ?>                                
-                            </td>
-                            <td>
-                                <h5>MEASUREMENTS</h5><br>
-                                <?php echo $brow['measurement']; ?>                             
-                            </td>
-                        </tr>
-                        <tr width='10%'>
-                            <td colspan="2">
-                                <h5 class='caps'>Tags</h5>
-                                <?php 
-                                    if (!empty($brow['tags'])) {
-                                        $tags = explode(",", $brow['tags']);
-
-                                        for ($i = 0; $i < count($tags); $i++) {
-                                            $t = $tags[$i];
-                                            echo "#".$t;
-
-                                            if ($i + 1 !== count($tags)) {
-                                                echo ", ";
-                                            }
-                                        }
-                                    } else {
-                                        echo " - ";
-                                    }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr width='40%' id='carouselrow'>
-                            <td colspan="2">
-                                <div id="myCarousel" class="carousel slide">
-                                    <!-- Carousel items -->
-                                    <div class="carousel-inner">
-                                        <div class="item active">
-                                                <?php 
-                                                    for($i = 0; $i < count($browArr); $i++) {
-                                                        $count++;
-                                                        $pos = strpos($browArr[$i], '/');
-                                                        $url = substr($browArr[$i], $pos+1);
-
-                                                        echo "<div class='col-md-4'><a href='#x' id='thumb$count' class='thumbnail'>"
-                                                        . "<img class='img-responsive' src='".$url."'>";
-                                                        echo "</a><input type='hidden' id='url".$count."' value='$url'></div>";
-                                                        if ($count % 3 === 0 && $i !== (count($browArr)-1)) {
-                                                            echo "</div></div>";
-                                                            echo "<div class='item'>";
-                                                            echo "<div class='col-md-12'>";
-                                                        }
-                                                        if ($i === (count($browArr)-1)) {
-                                                            echo "</div></div>";
-                                                        }
-                                                    }
-                                                ?>
-                                            <!--/carousel-inner--> 
-                                            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                            </a>
-
-                                            <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-<!--                    <div class='product_details col-md-6 full_section'>
-                            <div class='product_desc col-md-12'>
-                                <h3>ABOUT THE FRAME</h3>
-                                <?php echo html_entity_decode($brow['description']); ?>
-                            </div>
-
-                            <div class='product_measurements col-md-12'>
-                                <div class='col-md-6'>
-                                    <h5>WIDTH</h5><br>
-                                    <?php echo $brow['width']; ?>
-                                </div>
-                                <div class='col-md-6'>
-                                    <h5>MEASUREMENTS</h5><br>
-                                    <?php echo $brow['measurement']; ?>
-                                </div>
-                                <div class='col-md-10 col-md-offset-1'><hr></div>
-                                <div class='col-md-12'>
-                                    <h5 class='caps'>Tags</h5>
-                                    <?php 
-                                        if (!empty($brow['tags'])) {
-                                            $tags = explode(",", $brow['tags']);
-
-                                            for ($i = 0; $i < count($tags); $i++) {
-                                                $t = $tags[$i];
-                                                echo "#".$t;
-
-                                                if ($i + 1 !== count($tags)) {
-                                                    echo ", ";
-                                                }
-                                            }
-                                        } else {
-                                            echo " - ";
-                                        }
-                                    ?>
-                                    <div class='col-md-10 col-md-offset-1'><hr></div>
-                                </div>
-                            </div>
-                            <div id="myCarousel" class="carousel slide">
-                                 Carousel items 
-                                <div class="carousel-inner">
-                                    <div class="item active">
-                                            <?php 
-//                                                for($i = 0; $i < count($browArr); $i++) {
-//                                                    $count++;
-//                                                    $pos = strpos($browArr[$i], '/');
-//                                                    $url = substr($browArr[$i], $pos+1);
-//                                                    
-//                                                    echo "<div class='col-md-4'><a href='#x' id='thumb$count' class='thumbnail'>"
-//                                                    . "<img class='img-responsive' src='".$url."'>";
-//                                                    echo "</a><input type='hidden' id='url".$count."' value='$url'></div>";
-//                                                    if ($count % 3 === 0 && $i !== (count($browArr)-1)) {
-//                                                        echo "</div></div>";
-//                                                        echo "<div class='item'>";
-//                                                        echo "<div class='col-md-12'>";
-//                                                    }
-//                                                    if ($i === (count($browArr)-1)) {
-//                                                        echo "</div></div>";
-//                                                    }
-//                                                }
-                                            ?>
-                                        /carousel-inner 
-                                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                        </a>
-
-                                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                <div id='products' class='row'>
                     <div id='image_display' class='product_display col-md-6'>
                         <h3>Move your cursor over to view different angles</h3>
-                    </div>
-                </div>-->
-            </div>
-            <div id='shipping_terms' class='row'>
-                <h3>SHIPPING TERMS</h3>
-            </div>
-                
-            <div id='virtual_tryon' class='row'>
-                <div class='col-md-2'></div>
-                <div class='col-md-8'>
-                    <h3>GET FEEDBACK</h3>
-                    <p>If you're having a hard time deciding which frame suits you, <br>ask your friends / family / co-workers </p>
-                    <p>TWITTER | PINTEREST | FACEBOOK</p>
-                    <img src='images/virtual_tryon.png' width='500'>
-                    <div>             
-                        <div class='col-md-2'></div>          
-                        <div class='col-md-4'>
-                        UPLOAD YOUR OWN IMAGE <br>
-                        <button>CHOOSE FILE</button></div>
-                        <div class='col-md-4'>ADJUST CROPPING</div>
-                        <div class='col-md-2'></div>   
+                    </div> 
+                    <div class='product_desc col-md-6'>
+                        <h3>ABOUT THE FRAME</h3>
+                        <?php echo html_entity_decode($brow['description']); ?>
+                        <div class='col-md-3 col-md-offset-2'>
+                            <h5>WIDTH</h5>
+                            <?php echo $brow['width']; ?>
+                        </div>
+                        <div class='col-md-3 col-md-offset-1'>
+                            <h5>MEASUREMENTS</h5>
+                            <?php echo $brow['measurement']; ?>
+                        </div>
+                        <div class='col-md-8 col-md-offset-2'><hr></div>
+                        <div class='col-md-6 col-md-offset-3'>
+                            <h5 class='caps'>Tags</h5>
+                            <?php 
+                                if (!empty($brow['tags'])) {
+                                    $tags = explode(",", $brow['tags']);
+
+                                    for ($i = 0; $i < count($tags); $i++) {
+                                        $t = $tags[$i];
+                                        echo "#".$t;
+
+                                        if ($i + 1 !== count($tags)) {
+                                            echo ", ";
+                                        }
+                                    }
+                                } else {
+                                    echo " - ";
+                                }
+                            ?>
+                            <!--<div class='col-md-10 col-md-offset-1'><hr></div>-->
+                        </div>
+                        <div id="myCarousel" class="carousel slide">
+                            <!--Carousel items--> 
+                           <div class="carousel-inner">
+                               <div class="item active">
+                                       <?php 
+                                           for($i = 0; $i < count($browArr); $i++) {
+                                               $count++;
+                                               $pos = strpos($browArr[$i], '/');
+                                               $url = substr($browArr[$i], $pos+1);
+
+                                               echo "<div class='col-md-4'><a href='#x' id='thumb$count' class='thumbnail'>"
+                                               . "<img class='img-responsive' src='".$url."'>";
+                                               echo "</a><input type='hidden' id='url".$count."' value='$url'></div>";
+                                               if ($count % 3 === 0 && $i !== (count($browArr)-1)) {
+                                                   echo "</div></div>";
+                                                   echo "<div class='item'>";
+                                                   echo "<div class='col-md-12'>";
+                                               }
+                                               if ($i === (count($browArr)-1)) {
+                                                   echo "</div></div>";
+                                               }
+                                           }
+                                       ?>
+                                   <!--/carousel-inner--> 
+                                   <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                   </a>
+
+                                   <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                   </a>
+                               </div>
+                           </div>
+                       </div> 
                     </div>
                 </div>
-                <div class='col-md-2'></div>
-            </div>
-            <hr>
-            
-            <div id='recommended' class='row'>
+                
+                <div id='shipping_terms' class='row'>
+                    <h3>SHIPPING TERMS</h3>
+                </div>
+                
+                <div id='virtual_tryon' class='row'>
+                    <div class='col-md-2'></div>
+                    <div class='col-md-8'>
+                        <h3>GET FEEDBACK</h3>
+                        <p>If you're having a hard time deciding which frame suits you, <br>ask your friends / family / co-workers </p>
+                        <p>TWITTER | PINTEREST | FACEBOOK</p>
+                        <img src='images/virtual_tryon.png' width='500'>
+                        <div>             
+                            <div class='col-md-2'></div>          
+                            <div class='col-md-4'>
+                            UPLOAD YOUR OWN IMAGE <br>
+                            <button>CHOOSE FILE</button></div>
+                            <div class='col-md-4'>ADJUST CROPPING</div>
+                            <div class='col-md-2'></div>   
+                        </div>
+                    </div>
+                    <div class='col-md-2'></div>
+                </div>
+                <hr>
+                <br>
+            <div id='recommended' class='row text-center'>
                 <h3>YOU MAY ALSO LIKE</h3>
                 <div class='col-md-2'></div>
                 <div class='col-md-8'>
@@ -405,9 +319,13 @@
                             echo "Error: ". mysqli_error($link);
                         } else {
                             while ($rec = mysqli_fetch_assoc($recResult)) {
-                                $imgArr = explode(",", $rec['images']);
-                                $imgpos = strpos($imgArr[0], '/');
-                                $imgurl = substr($imgArr[0], $imgpos+1);
+                                if (!empty($rec['featured'])) {
+                                    $imgArr = explode(",", $rec['featured']);
+                                    $imgpos = strpos($imgArr[0], '/');
+                                    $imgurl = substr($imgArr[0], $imgpos+1);
+                                } else {
+                                    $imgurl = "";
+                                }
                     ?>
                         <div id='recom_prod' class='col-md-4'>
                             <a href='product.php?id=<?php echo $rec['pid']; ?>'><img src='<?php echo $imgurl; ?>'></a> <br>
@@ -514,15 +432,15 @@
                     someElement.style.backgroundColor = "#000";
                 });
                 
-                var clientHeight = document.getElementById('header').clientHeight;
+                var clientHeight = document.getElementById('content').offsetTop;
                 var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 //                alert(clientHeight + " " + height);
                 document.getElementById('banner').style.maxHeight = height - clientHeight;
                 
                 var $item = $('.carousel .item');
                 var $wHeight = $(window).height();
-                var taboffset = document.getElementById('prodTable').offsetTop;
-                var troffset = document.getElementById('carouselrow').offsetTop;
+                var taboffset = document.getElementById('products').offsetTop;
+                var troffset = document.getElementById('myCarousel').offsetTop;
                 var tableheight = taboffset-troffset;
 //                alert($wHeight-tableheight);
                 $item.height(tableheight); 
@@ -539,7 +457,7 @@
 
                 $(window).on('resize', function (){
                     $wHeight = $(window).height();
-                    var taboffset = document.getElementById('prodTable').offsetTop;
+                    var taboffset = document.getElementById('products').offsetTop;
                     var troffset = document.getElementById('carouselrow').offsetTop;
                     var tableheight = taboffset-troffset;
                     $item.height(tableheight);

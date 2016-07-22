@@ -182,8 +182,13 @@
                     }
 
                     if (!empty($advrow['html'])) {
-                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
-                        $toPrint .= html_entity_decode($advrow['html'])."</div>";
+                        if (strcmp($advrow['htmlpos'], "center") === 0) {
+                            $toPrint .= "<div class='section-text' style='left: 25%; right: 25%;'>";
+                        } else {
+                            $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos'].";'>";
+                        }
+    //                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
+                        $toPrint .= trim(html_entity_decode($advrow['html']))."</div>";
                     }
 
                     if (!empty($advrow['buttontext'])) {

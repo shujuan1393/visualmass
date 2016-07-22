@@ -405,8 +405,12 @@ table.dataTable thead .sorting_desc:after{
 .webbanner {
     display: block;
     margin: auto;
-    height: 100%;
+    width: 100%!important;
     text-align: center;
+}
+
+img#banner {
+    width: 100%;
 }
 
 .row {
@@ -530,7 +534,7 @@ a:hover, .left_nav a:hover:not(.active), #terms_nav a:hover:not(.active), .produ
 /*    width: 100%;
     height: auto;*/
     text-align: center;
-    margin-top: 50px;
+    margin-top: 0px;
 /*    cursor: pointer;*/
     position: absolute;
     background-color: #fff;
@@ -714,11 +718,11 @@ a:hover#heart {
 }
 
 #lens_select {
-    width: 15%;
+    width: 14%;
     float: right;
     position: absolute;
     padding: 8px 0px;
-    bottom: -50px;
+    bottom: -23px;
     right: 40px;
     z-index: 15;
     background-color: #ccc;
@@ -729,48 +733,34 @@ a:hover#heart {
     padding: 0 5px;
 }
 
-.details {
-    width: 100%;
+#products .row {
+    width: 100%; 
 }
 
-.product_details {
-    height: 100%;
-    width: 49%;
-    margin-left: 10px!important;
-    float: left;
+div.product_display {
+    float: right;
+    background-color: #000;
+    width: 45%;
+    height: 85%;
 }
 
-#prodTable tr {
-    border: none;
-}
-
-#prodTable {
-    padding-left: 10px;
-}
-
-.image_display {
-    width: 100%;
+div.product_display h3 {
+    color: #fff!important;
+    /*padding: 10px;*/
 }
 
 .product_desc {
-    margin: 20px 20px;
+    width: 50%;
+}
+
+.product_details {
+    height: 90%;
+    /*margin-left: 10px!important;*/
     float: left;
 }
-
-.product_measurements {
-    text-align: center;
-    margin: 20px auto;
-    bottom: 0;
-    float: left;
-}
-
-.product_measurements h5 {
-    display: inline;
-}
-
 .home-section {
     width: inherit;
-    height: 100%;
+    height: 90%;
     position: relative;
     margin: 10px 0;
 }
@@ -781,7 +771,7 @@ a:hover#heart {
 }
 
 .section-image img {
-    height: 100%;
+    height: 90%;
     width: 100%;
     display: block;
     margin: auto;
@@ -793,7 +783,7 @@ a:hover#heart {
 }
 
 .section-link {
-    width: 80%;
+    width: 30%;
     margin: auto;
     display: block;
     position: absolute;
@@ -924,12 +914,14 @@ div.panel.show {
 
 #recom_prod img {
     width: 100%;
+    height: 80%;
 }
 
 #myCarousel {
     width:100%;
     text-align: center;
-    margin: 10px;
+    margin: 0 auto;
+    float: left;
 }
 
 .thumbnail {
@@ -947,11 +939,7 @@ div.panel.show {
 }
 
 #myCarousel .col-md-4 img {
-    height: 100%;
-}
-
-div.product_display img {
-    height: 100%;
+    height: 90%;
 }
 
 #myCarousel .carousel-inner {
@@ -959,20 +947,8 @@ div.product_display img {
     height: 40%!important;
 }
 
-div.product_display.col-md-6 {
-    background-color: #000;
-    width: 100%;
-    height: 100%;
-    color: #fff;
-}
-
-#image_display img {
-    width: 100%;
-    margin: 0 auto;
-}
-
 #shipping_terms, #virtual_tryon, #ourstory, #recommended, .career_section_full, .full_section, .products {
-    height: 100%!important;
+    height: 90%!important;
     margin: 10px auto;
     text-align: center;
 }
@@ -994,7 +970,7 @@ div.product_display.col-md-6 {
 
 #virtual_tryon .col-md-4 button, #job_openings a, #retailJobs a, #hqJobs a, #featured_jobs a{
     border: 1px solid #ccc!important;
-    background-color: #fff;
+    background-color: #ddd;
     text-decoration: none;
     color: #000;
     margin: 10px;

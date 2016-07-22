@@ -101,7 +101,7 @@
                                 while ($frow = mysqli_fetch_assoc($fresult)) {
                                     $featcount++;
                                     echo "<input type='hidden' id='featdesc".$featcount."' value='".$frow['html']."'>";
-                                    echo "<a id='featjob".$featcount."'>".$frow['title']."</a>";
+                                    echo "<a class='addMore' id='featjob".$featcount."'>".$frow['title']."</a>";
                                 }
                             }
                         ?>
@@ -112,8 +112,8 @@
                 <div id='job_openings' class='row'>
                     <div class='col-md-8 col-md-offset-2'>
                         <h3>AVAILABLE OPENINGS</h3><br>
-                        <a id='showHq'>HEADQUARTERS</a>
-                        <a id='showRetail'>RETAIL</a>
+                        <a id='showHq' class='addMore'>HEADQUARTERS</a>
+                        <a id='showRetail' class="addMore">RETAIL</a>
                         <hr>
                     </div>
                 </div>

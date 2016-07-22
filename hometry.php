@@ -89,19 +89,6 @@
                                     $linkposArr = explode(",", $row['linkpos']);
                                     $prevpos = $linkposArr[0];
                                     
-//                                    echo "<div class='section-link'>";
-//                                    
-//                                    echo "<div class='section-link col-md-3' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
-//                                    for ($i = 0; $i < count($textArr); $i++) {
-//                                        if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
-//                                            echo "</div>";
-//                                        }
-//                                        if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
-//                                            echo "<div class='section-link col-md-3' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
-//                                        }
-//                                        echo "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
-//                                        $prevpos = $linkposArr[$i];
-//                                    }
                                     if (strcmp($linkposArr[0], "center") === 0) {
                                         echo "<div class='section-link' style='left: 25%; right: 25%;'>";
                                     } else {
@@ -125,7 +112,6 @@
                                 }
                                 
                                 echo "</div>";
-//                                echo "</div>";
                                 $count++;
                             }
                         ?>
@@ -180,8 +166,13 @@
                     }
 
                     if (!empty($advrow['html'])) {
-                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
-                        $toPrint .= html_entity_decode($advrow['html'])."</div>";
+                        if (strcmp($advrow['htmlpos'], "center") === 0) {
+                            $toPrint .= "<div class='section-text' style='left: 25%; right: 25%;'>";
+                        } else {
+                            $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos'].";'>";
+                        }
+    //                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
+                        $toPrint .= trim(html_entity_decode($advrow['html']))."</div>";
                     }
 
                     if (!empty($advrow['buttontext'])) {
@@ -207,20 +198,19 @@
                                     $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
                                 }
                             }
-                            $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
+                            $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a><br>";
                             $prevpos = $linkposArr[$i];
                         }
                         $toPrint .= "</div>";
                     }
                     $toPrint .= "</div>";
                 ?>    
-                    var newElm = document.createElement('div');
-                    newElm.className = "home-section";
-                    newElm.innerHTML = "<?php echo $toPrint; ?>";  
-                    sectionObj.parentNode.insertBefore(newElm, sectionObj);//firstChild.nextSibling
+                        var newElm = document.createElement('div');
+                        newElm.className = "home-section";
+                        newElm.innerHTML = "<?php echo $toPrint; ?>";  
+                        sectionObj.parentNode.insertBefore(newElm, sectionObj);//firstChild.nextSibling
 
-//                            sectionObj.innerHTML = sectionObj.innerHTML + "<?php echo $toPrint; ?>";
-                        }
+                    }
                 <?php
                         }
                     }

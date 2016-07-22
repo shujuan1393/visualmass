@@ -141,21 +141,20 @@ if (isset($_SESSION['loggedUserEmail'])) {
     </head>
     <body>	
         <div class="se-pre-con"></div>
-        <?php if(!empty($ticker[1])) { ?>
-        <form name="ticker"> 
-        <input id='ticker' class='ticker' name="text" VALUE="<?php 
-                echo $ticker[1]." | "; 
-                if (isset($_SESSION['profile'])) {
-                    if(!empty($profile[1])) { 
-                        echo "Complete your profile now and get store credit worth $". $profile[1]." | ";
-                    }
-                }
-            ?>"> 
-        </form>
-        <?php } ?>
-        
         <!— Navigation —>
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <?php if(!empty($ticker[1])) { ?>
+                <form name="ticker"> 
+                <input id='ticker' class='ticker' name="text" VALUE="<?php 
+                        echo $ticker[1]." | "; 
+                        if (isset($_SESSION['profile'])) {
+                            if(!empty($profile[1])) { 
+                                echo "Complete your profile now and get store credit worth $". $profile[1]." | ";
+                            }
+                        }
+                    ?>"> 
+                </form>
+                <?php } ?>
                 <!— Brand and toggle get grouped for better mobile display —>
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -231,30 +230,29 @@ if (isset($_SESSION['loggedUserEmail'])) {
                         </li>
                     </ul>
                 </div>
+                <div id='glasses' style='display:none;'>
+                    <ul class='col-md-12'>
+                        <li class='col-md-6'><button id='glassesmen' class='button'>SHOP MEN</button></li>
+                        <li class='col-md-6'><button id='glasseswomen' class='button'>SHOP WOMEN</button></li>
+                    </ul>
+                </div>
+
+                <div id='sunglasses' style='display:none;'>
+                    <ul class='col-md-12'>
+                        <li class='col-md-6'><button id='sunglassesmen' class='button'>SHOP MEN</button></li>
+                        <li class='col-md-6'><button id='sunglasseswomen' class='button'>SHOP WOMEN</button></li>
+                    </ul>
+                </div>
+
+                <div id='ourstoryheader' style='display:none;'>
+                     <ul class='col-lg-12'>
+                        <li class='col-sm-3'><button class='button' onclick='ourstory("main")'>HISTORY</button></li>
+                        <li class='col-sm-3'><button id='gift' class='button' onclick='ourstory("one")'>ONE FOR YOU, <br> ONE FOR THEM</button></li>
+                        <li class='col-sm-3'><button id='culture' class='button' onclick='ourstory("culture")'>CULTURE</button></li>
+                        <li class='col-sm-3'><button id='design' class='button' onclick='ourstory("design")'>DESIGN</button></li>
+                    </ul>
+                </div>
             </nav>
-        
-            <div id='glasses' style='display:none;'>
-                <ul class='col-md-12'>
-                    <li class='col-md-6'><button id='glassesmen' class='button'>SHOP MEN</button></li>
-                    <li class='col-md-6'><button id='glasseswomen' class='button'>SHOP WOMEN</button></li>
-                </ul>
-            </div>
-
-            <div id='sunglasses' style='display:none;'>
-                <ul class='col-md-12'>
-                    <li class='col-md-6'><button id='sunglassesmen' class='button'>SHOP MEN</button></li>
-                    <li class='col-md-6'><button id='sunglasseswomen' class='button'>SHOP WOMEN</button></li>
-                </ul>
-            </div>
-
-            <div id='ourstoryheader' style='display:none;'>
-                 <ul class='col-lg-12'>
-                    <li class='col-sm-3'><button class='button' onclick='ourstory("main")'>HISTORY</button></li>
-                    <li class='col-sm-3'><button id='gift' class='button' onclick='ourstory("one")'>ONE FOR YOU, <br> ONE FOR THEM</button></li>
-                    <li class='col-sm-3'><button id='culture' class='button' onclick='ourstory("culture")'>CULTURE</button></li>
-                    <li class='col-sm-3'><button id='design' class='button' onclick='ourstory("design")'>DESIGN</button></li>
-                </ul>
-            </div>
         
         <div class="modal fade modal-fullscreen force-fullscreen" id="myModal" tabindex="-1" 
              role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

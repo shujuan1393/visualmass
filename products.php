@@ -62,15 +62,33 @@
                 
                 <div class='search_filter'>
                     <input type='checkbox' name='homeTry' id='hometry' value='yes'> Available for Home Try-on?
-                    <ul>
-                        <li>COLOUR</li>
+                    <ul class="addMore">
+                        <li id='colour'>COLOUR</li>
                         <li>|</li>
-                        <li>WIDTH</li>
+                        <li id='width'>WIDTH</li>
                         <li>|</li>
-                        <li>SHAPE</li>
+                        <li id='shape'>SHAPE</li>
                         <li>|</li>
-                        <li>MATERIAL</li>
+                        <li id='material'>MATERIAL</li>
                     </ul>
+                    
+                    <div id='showColour' style='display:none;'>
+                        <?php 
+                            $cols = array();
+                            $colours = "Select * from products";
+                            $colres = mysqli_query($link, $colours);
+                            
+                            if (!mysqli_query($link, $colours)) {
+                                die(mysqli_error($link));
+                            } else {
+                                $pid = $row['pid'];
+                                $idArr = explode(",", $pid);
+                                if(!empty($idArr[1]) && !in_array($idArr[1], $cols)) {
+                                    array_push($cols, $idArr[1]);
+                                } 
+                            }
+                        ?>
+                    </div>
                 <div class='rightsearch'>
                     <a href='searchFrames.php' data-toggle="modal" data-target="#searchModal">SEARCH FRAMES</a>
                 </div>
@@ -234,102 +252,6 @@
     </body>
     
     <script>
-        for (var i = 0; i < <?php echo $rowcount; ?>; i++) {
-//            var container = document.getElementById('products_table'),
-//                firstChild = container.childNodes[i+2];
-            var str = "row" + i;
-            var sectionObj = document.getElementById(str);
-
-            if (sectionObj !== null) {
-            var secheight = sectionObj.offsetTop;
-
-                <?php 
-                    $advSql = "Select * from advertisements where status='active' and visibility like '%catalogue%';";
-
-                    $advres = mysqli_query($link, $advSql);
-
-                    if (!mysqli_query($link, $advSql)) {
-                        die(mysqli_error($link));
-                    } else {
-                        while ($advrow = mysqli_fetch_assoc($advres)) {
-                            $minheight = $advrow['minheight'];
-                ?>
-                        if (secheight > <?php echo $minheight; ?>) {
-                <?php
-                    $advimg = $advrow['image'];
-                    $advimagepos = strpos($advimg, '/');
-                    $advimageurl = substr($advimg, $advimagepos+1);
-                    $toPrint = "";
-//home-section 
-                    $toPrint .= "<div class='col-md-12' ";
-                    if (strcmp($advrow['imagepos'], "background") === 0) {
-                        $image = '"'.$advimageurl.'"';
-                        $toPrint .= "style='background-image: url($advimg); background-repeat: no-repeat; background-size: 500px auto;'>";
-//                                    echo "<script>document.getElementById('section".$count."').style.backgroundImage = 'url('$imageurl')';"
-//                                    . "document.getElementById('section".$count."').style.backgroundRepeat='no-repeat';</script>";
-                    } else {
-                        $toPrint .= ">";
-                        $toPrint .= "<div class='section-image' style='text-align:".$row['imagepos']."; float:".$row['imagepos']."'>";
-                        $toPrint .= "<img src='".$advimageurl."'>";
-                        $toPrint .= "</div>";
-                    }
-
-                    if (!empty($advrow['html'])) {
-                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
-                        $toPrint .= html_entity_decode($advrow['html'])."</div>";
-                    }
-
-                    if (!empty($advrow['buttontext'])) {
-                        $textArr = explode(",", $advrow['buttontext']);
-                        $linkArr = explode(",", $advrow['link']);
-                        $linkposArr = explode(",", $advrow['linkpos']);
-                        $prevpos = $linkposArr[0];
-
-//                                    echo "<div class='section-link'>";
-                        if (strcmp($linkposArr[0], "center") === 0) {
-                            $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
-                        } else {
-                            $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
-                        }
-                        for ($i = 0; $i < count($textArr); $i++) {
-                            if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
-                                $toPrint .= "</div>";
-                            }
-                            if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
-                                if (strcmp($linkposArr[$i], "center") === 0) {
-                                    $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
-                                } else {
-                                    $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
-                                }
-                            }
-                            $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
-                            $prevpos = $linkposArr[$i];
-                        }
-                        $toPrint .= "</div>";
-
-                    }
-                    $toPrint .= "</div>";
-                ?>    
-//                    if (container && firstChild) {
-//                        var newElm = document.createElement('div');
-//                        newElm.className = "home-section";
-//                        newElm.innerHTML = "<?php // echo $toPrint; ?>";  
-//                        firstChild.parentNode.insertBefore(newPre, firstChild.nextSibling);    
-//                    }
-                    var newElm = document.createElement('div');
-//                    newElm.className = "home-section";
-                    newElm.innerHTML = "<?php echo $toPrint; ?>";  
-                    sectionObj.parentNode.insertBefore(newElm, sectionObj);// firstChild.nextSibling);
-
-//                            sectionObj.innerHTML = sectionObj.innerHTML + "<?php echo $toPrint; ?>";
-                        }
-                <?php
-                        }
-                    }
-                ?>
-            }
-        }
-        
         $('#searchModal').appendTo("body");
         
         function checkAllProducts() {
@@ -482,6 +404,92 @@
         
         for (var i = 0; i < <?php echo $relcount; ?>; i++) {
             handleElements(i);
+        }
+        
+        for (var i = 0; i < <?php echo $rowcount; ?>; i++) {
+            var str = "row" + i;
+            var sectionObj = document.getElementById(str);
+
+            if (sectionObj !== null) {
+            var secheight = sectionObj.offsetTop;
+
+            <?php 
+                $advSql = "Select * from advertisements where status='active' and visibility like '%catalogue%';";
+                $advres = mysqli_query($link, $advSql);
+
+                if (!mysqli_query($link, $advSql)) {
+                    die(mysqli_error($link));
+                } else {
+                    while ($advrow = mysqli_fetch_assoc($advres)) {
+                        $minheight = $advrow['minheight'];
+            ?>
+                    if (secheight > <?php echo $minheight; ?>) {
+            <?php
+                $advimg = $advrow['image'];
+                $advimagepos = strpos($advimg, '/');
+                $advimageurl = substr($advimg, $advimagepos+1);
+                $toPrint = "";
+
+                $toPrint .= "<div class='col-md-12' ";
+                if (strcmp($advrow['imagepos'], "background") === 0) {
+                    $image = '"'.$advimageurl.'"';
+                    $toPrint .= "style='background-image: url($advimg); background-repeat: no-repeat; background-size: 500px auto;'>";
+                } else {
+                    $toPrint .= ">";
+                    $toPrint .= "<div class='section-image' style='text-align:".$advrow['imagepos']."; float:".$advrow['imagepos']."'>";
+                    $toPrint .= "<img src='".$advimageurl."'>";
+                    $toPrint .= "</div>";
+                }
+
+                if (!empty($advrow['html'])) {
+                    if (strcmp($advrow['htmlpos'], "center") === 0) {
+                        $toPrint .= "<div class='section-text' style='left: 25%; right: 25%;'>";
+                    } else {
+                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos'].";'>";
+                    }
+//                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
+                    $toPrint .= trim(html_entity_decode($advrow['html']))."</div>";
+                }
+
+                if (!empty($advrow['buttontext'])) {
+                    $textArr = explode(",", $advrow['buttontext']);
+                    $linkArr = explode(",", $advrow['link']);
+                    $linkposArr = explode(",", $advrow['linkpos']);
+                    $prevpos = $linkposArr[0];
+
+                    if (strcmp($linkposArr[0], "center") === 0) {
+                        $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
+                    } else {
+                        $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
+                    }
+                    for ($i = 0; $i < count($textArr); $i++) {
+                        if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                            $toPrint .= "</div>";
+                        }
+                        if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                            if (strcmp($linkposArr[$i], "center") === 0) {
+                                $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
+                            } else {
+                                $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
+                            }
+                        }
+                        $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
+                        $prevpos = $linkposArr[$i];
+                    }
+                    $toPrint .= "</div>";
+
+                }
+                $toPrint .= "</div>";
+            ?>    
+                var newElm = document.createElement('div');
+                newElm.innerHTML = "<?php echo $toPrint; ?>";  
+                sectionObj.parentNode.insertBefore(newElm, sectionObj);// firstChild.nextSibling);
+                    }
+            <?php
+                    }
+                }
+            ?>
+            }
         }
     </script>
 </html>
