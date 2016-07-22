@@ -58,6 +58,26 @@
                             echo "</div>";
                         }
                     }
+                    
+                    $cols = array();
+                    $colours = "Select * from products";
+                    $colres = mysqli_query($link, $colours);
+
+                    if (!mysqli_query($link, $colours)) {
+                        die(mysqli_error($link));
+                    } else {
+                        if($colres -> num_rows > 0) {
+                            while($row = mysqli_fetch_assoc($colres)) {
+                                $pid = $row['pid'];
+                                $idArr = explode("-", $pid);
+                                if (!empty($idArr[1])) {
+                                    if(!in_array($idArr[1], $cols)) {
+                                        array_push($cols, $idArr[1]);
+                                    } 
+                                }
+                            }
+                        }
+                    }
                 ?>
                 
                 <div class='search_filter'>
@@ -71,27 +91,19 @@
                         <li>|</li>
                         <li id='material'>MATERIAL</li>
                     </ul>
-                    
-                    <div id='showColour' style='display:none;'>
-                        <?php 
-                            $cols = array();
-                            $colours = "Select * from products";
-                            $colres = mysqli_query($link, $colours);
-                            
-                            if (!mysqli_query($link, $colours)) {
-                                die(mysqli_error($link));
-                            } else {
-                                $pid = $row['pid'];
-                                $idArr = explode(",", $pid);
-                                if(!empty($idArr[1]) && !in_array($idArr[1], $cols)) {
-                                    array_push($cols, $idArr[1]);
-                                } 
-                            }
-                        ?>
-                    </div>
+                
                 <div class='rightsearch'>
                     <a href='searchFrames.php' data-toggle="modal" data-target="#searchModal">SEARCH FRAMES</a>
                 </div>
+                </div>
+                <input type='hidden' name='filterColours' id='filterColours'>
+                <div id='showColour' class='row' style='display:none;'>
+                    <?php 
+                        for($i = 0; $i < count($cols); $i++) {
+                            echo "<input type='checkbox' name='storedColour".$i."' onclick='addColours(this)' id='storedColour".$i."' value='".$cols[$i]."'>";
+                            echo $cols[$i]."&nbsp;";
+                        }
+                    ?>
                 </div>
                 <?php 
                     $sql = "Select * from products where type='".$_GET['type']."' and "
@@ -123,9 +135,29 @@
                                 $pidArr = explode("-", $pid);                                    
                                 
                                 if (!in_array($pidArr[0], $allId)) {
+                                    //get all colours 
+                                    $col = "Select * from products where pid like '".$pidArr[0]."%';";
+                                    $cres = mysqli_query($link, $col);
+                                    $pcolours = array();
+                                    
+                                    if (!mysqli_query($link, $col)) {
+                                        die(mysqli_error($link));
+                                    } else {
+                                        if($cres -> num_rows > 0) {
+                                            while($crow = mysqli_fetch_assoc($cres)) {
+                                                $id = explode("-", $crow['pid']);
+                                                if(!in_array($id[1], $pcolours)) {
+                                                    array_push($pcolours, $id[1]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    $pcolour = implode(",", $pcolours);
+                                    
                                     array_push($allId, $pidArr[0]);
                                     
                                     echo "<div class='products col-md-4 full-section' id='prod".$count."'>";
+                                    echo "<input type='hidden' id='prodColour$count' value='".$pcolour."'>";
                                     echo "<input type='hidden' id='id$count' value='".$pid."'>";
                                     echo "<input type='hidden' id='avail".$count."' value='".$row['availability']."'>";
                                     echo "<input type='hidden' id='prodName$count' value='".$row['name']."'>";
@@ -253,6 +285,72 @@
     
     <script>
         $('#searchModal').appendTo("body");
+        
+        document.getElementById('colour').onclick = function() {
+            var el = document.getElementById('showColour');
+            
+            if (el.style.display === "block") {
+                el.style.display = "none";
+            } else {
+                el.style.display = "block";
+            }
+        };
+        
+        function checkColours() {
+            var colours = document.getElementById('filterColours').value;
+            for(var i = 0; i < <?php echo $count; ?>; i++) {
+                var str = "prodColour"+i;
+                var cols = document.getElementById(str).value;
+                
+                var prod = "prod" + i;
+                if (cols === "" || cols === null || cols === undefined) {
+                    document.getElementById(prod).style.display = "none";
+                } else {
+                    var arr = colours.split(",");
+                    if (arr.length === 0) {
+                        arr = [colours];
+                    }
+                    toShow = false;
+                    
+                    for (var s = 0; s < arr.length; s++) {
+                        var col = arr[s];
+//                    alert(cols + " - " + col);
+                        if (!toShow && s !== 0 && cols.indexOf(col) > -1) {
+                            toShow = true;
+                        } else if (toShow && s !== 0) {
+                            return;
+                        }
+                    }
+                    
+                    if (toShow) {
+                        document.getElementById(prod).style.display = "block";
+                    } else {
+                        document.getElementById(prod).style.display = "none";
+                    }
+                }
+            }
+        }
+        
+        function addColours(checkbox) {
+            var exist = document.getElementById('filterColours').value;
+            var val = checkbox.value;
+            var index = exist.indexOf(val);
+            
+            if (checkbox.checked) {
+                if (index === -1) {
+                    document.getElementById('filterColours').value += ","+val;
+                }
+            } else {
+                if (index > -1) {
+                    var arr = exist.split(",");
+                    var arrindex = exist.indexOf(val);
+                    arr.splice(arrindex, 1);
+                    arr = arr.join();
+                    document.getElementById('filterColours').value = arr;
+                }
+            }
+            checkColours();
+        }
         
         function checkAllProducts() {
             var count = 0;
