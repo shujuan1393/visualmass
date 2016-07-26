@@ -7,14 +7,14 @@
  */
 require_once '../config/db.php';
 
-$selectSql = "SELECT value from settings WHERE type='homeTryon'";
+$selectSql = "SELECT value from settings WHERE type='payments'";
 $savedresult = mysqli_query($link, $selectSql);
 
 if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
     $savedrow = mysqli_fetch_assoc($savedresult);
-    $valArr = explode("&", $savedrow['value']);
+    $valArr = explode("#", $savedrow['value']);
 ?>
 
 <!DOCTYPE html>
@@ -40,26 +40,26 @@ if (!mysqli_query($link,$selectSql)) {
                                 Settings
                             </li>
                             <li class="active">
-                                Home Try-on
+                                Payments/Shipping
                             </li>
                         </ol>
                         
-                        <h1 class="page-header">Update Home Try-on Settings</h1>
+                        <h1 class="page-header">Update Payments/Shipping Settings</h1>
         
-                        <form id='homeTrySettings' action='saveHomeTrySettings.php' method='post'>
+                        <form id='paymentSettings' action='savePaymentSettings.php' method='post'>
 
-                            <div id="htSetError" class="error">
+                            <div id="paymentSetError" class="error">
                                 <?php
-                                    if (isset($_SESSION['updateHTSetError'])) {
-                                        echo $_SESSION['updateHTSetError'];
+                                    if (isset($_SESSION['updatePaymentSetError'])) {
+                                        echo $_SESSION['updatePaymentSetError'];
                                     }
                                 ?>
                             </div>
 
-                            <div id="htSetSuccess" class="success">
+                            <div id="paymentSetSuccess" class="success">
                                 <?php
-                                    if (isset($_SESSION['updateHTSetSuccess'])) {
-                                        echo $_SESSION['updateHTSetSuccess'];
+                                    if (isset($_SESSION['updatePaymentSetSuccess'])) {
+                                        echo $_SESSION['updatePaymentSetSuccess'];
                                     }
                                 ?>
                             </div>
@@ -72,7 +72,7 @@ if (!mysqli_query($link,$selectSql)) {
                             ?>
                             <input name='visibility' type='radio' value='on' 
                                     <?php 
-                                    if (isset($_SESSION['visibility'])) { 
+                                    if (isset($_SESSION['visibility'])) {
                                         if (strcmp($_SESSION['visibility'], "on")===0) {
                                             echo " checked";
                                             $_SESSION['visibilityOff'] = "on";
@@ -87,7 +87,7 @@ if (!mysqli_query($link,$selectSql)) {
                                     onclick="toggleTextbox(true);">On
                             <input type='radio' name='visibility' value='off' 
                                     <?php 
-                                    if (isset($_SESSION['visibility'])) { 
+                                    if (isset($_SESSION['visibility'])) {
                                         if (strcmp($_SESSION['visibility'], "off")===0) {
                                             echo " checked";
                                             $_SESSION['visibilityOff'] = "off";
@@ -101,45 +101,45 @@ if (!mysqli_query($link,$selectSql)) {
                                     ?>
                                     onclick="toggleTextbox(false);">Off
                             
-                            <p class='setting-tooltips'>*Turn on/off the home try-on feature</p><br>
+                            <p class='setting-tooltips'>*Turn on/off the shipping feature</p><br>
 
                             <?php 
                                 if(!empty($valArr[1])){
-                                    $duration = explode("duration=", $valArr[1]);
+                                    $disclaimer = explode("disclaimer=", $valArr[1]);
                                 }
                             ?>
-                            Duration (days):
-                            <input type="text" class="textfield" id="duration" name="duration" 
-                                    value='<?php
-                                    if (isset($_SESSION['duration'])) { 
-                                        echo $_SESSION['duration'];
-                                    } else if (!empty($duration[1])) {
-                                        echo $duration[1];
+                            Disclaimer:
+                            <textarea name='disclaimer' id='disclaimer'>
+                                <?php 
+                                    if (isset($_SESSION['disclaimer'])) {
+                                        echo $_SESSION['disclaimer'];
+                                    } else if (!empty($disclaimer[1])) {
+                                        echo $disclaimer[1];
                                     }
-                                    ?>'
-                                    onkeypress="return isNumber(event)" />
-                            <!--<span id='days'>days</span>-->
-            
-                            <p class='setting-tooltips'>*Set the default duration for home try-ons</p><br>
+                                ?>
+                            </textarea>
+                            <script type='text/javascript'>
+                                CKEDITOR.replace('disclaimer');
+                            </script>
+                            <p class='setting-tooltips'>*Set the default disclaimer to be displayed on the website</p><br>
 
                             <?php 
-                                if(!empty($valArr[2])){
-                                    $amount = explode("amount=", $valArr[2]);
-                                }
+//                                if(!empty($valArr[2])){
+//                                    $amount = explode("amount=", $valArr[2]);
+//                                }
                             ?>
-                            Amount Chargeable:
+<!--                            Amount Chargeable:
                             <input type='text' name='amount' id='amount' 
-                                    value='<?php
-                                    if (isset($_SESSION['amount'])) { 
-                                        echo $_SESSION['amount'];
-                                    } else if (!empty($amount[1])) {
-                                        echo $amount[1];
-                                    }
-                                     ?>'
+                                    <?php
+//                                        if (!empty($amount[1])) {
+//                                            echo "value='". $amount[1]."'";
+//                                        }
+                                     ?>
+                                      
                                       onkeypress="return isNumberKey(event)" > <br>
             
                             <p id='nanError' style="display: none;">Please enter numbers only</p>
-                            <p class='setting-tooltips'>*Set the default amount to charge for home try-ons</p><br>
+                            <p class='setting-tooltips'>*Set the default amount to charge for home try-ons</p><br>-->
                             <input type='submit' name='submit' value='Save Changes' />
                         </form>
                     </div>

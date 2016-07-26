@@ -280,11 +280,37 @@
                        </div> 
                     </div>
                 </div>
-                
+                <?php 
+                    $ship = "Select * from settings where type='payments';";
+                    $shipres = mysqli_query($link, $ship);
+                    
+                    if (!mysqli_query($link, $ship)) {
+                        die(mysqli_error($link));
+                    } else {
+                        $savedrow = mysqli_fetch_assoc($shipres);
+                        $valArr = explode("#", $savedrow['value']);
+                        if (!empty($valArr[0])) {
+                            $visib = explode("visibility=", $valArr[0]);
+                        }
+                        
+                        if (strcmp($visib[1], "on") === 0) {
+                            
+                            if (!empty($valArr[1])) {
+                                $disclaimer = explode("disclaimer=", $valArr[1]);
+                            }
+                ?>
                 <div id='shipping_terms' class='row'>
                     <h3>SHIPPING TERMS</h3>
+                    <?php if (!empty($disclaimer[1])) {
+                            echo $disclaimer[1];
+                        }
+                    ?>
                 </div>
                 
+                <?php 
+                        }
+                    }
+                ?>
                 <div id='virtual_tryon' class='row'>
                     <div class='col-md-2'></div>
                     <div class='col-md-8'>

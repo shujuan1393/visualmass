@@ -8,28 +8,43 @@
 require_once '../config/db.php';
 
 if (isset($_POST['submit'])) {
-    $webstore = $_POST['title'];
-    $metadata = htmlentities($_POST['metadata']);
-    $ticker = $_POST['ticker'];
+    $_SESSION['title'] = $_POST['title'];
+    $_SESSION['metadata'] = $_POST['metadata'];
+    $_SESSION['ticker'] = $_POST['ticker'];
     
-    $val = "web=".$webstore."#";
-    $val .= "meta=".$metadata."#";
-    $val .= "ticker=".$ticker;
-    
-    $checkSql = "Select * from settings where type='web'";
-    $cresult = mysqli_query($link, $checkSql);
-    
-    if (!mysqli_query($link,$checkSql)) {
-        echo("Error description: " . mysqli_error($link));
+    if (empty($_POST['title']) || empty($_SESSION['metadata'])) {
+        unset($_SESSION['updateWebSetSuccess']);
+        $_SESSION['updateWebSetError'] = "Empty field(s)";
     } else {
-        if ($cresult -> num_rows == 0) {
-            $webSql = "INSERT INTO settings (type, value) VALUES ('web', '$val');";
-        } else {
-            $webSql = 'UPDATE settings SET value="'.$val.'" where type="web";';
-        }
+        unset($_SESSION['updateWebSetError']);
         
-        mysqli_query($link, $webSql);
-        $_SESSION['updateWebSetSuccess'] = "Changes saved successfully";
+        $webstore = $_POST['title'];
+        $metadata = htmlentities($_POST['metadata']);
+        $ticker = $_POST['ticker'];
+
+        $val = "web=".$webstore."#";
+        $val .= "meta=".$metadata."#";
+        $val .= "ticker=".$ticker;
+
+        $checkSql = "Select * from settings where type='web'";
+        $cresult = mysqli_query($link, $checkSql);
+
+        if (!mysqli_query($link,$checkSql)) {
+            echo("Error description: " . mysqli_error($link));
+        } else {
+            unset($_SESSION['title']);
+            unset($_SESSION['metadata']);
+            unset($_SESSION['ticker']);
+
+            if ($cresult -> num_rows == 0) {
+                $webSql = "INSERT INTO settings (type, value) VALUES ('web', '$val');";
+            } else {
+                $webSql = 'UPDATE settings SET value="'.$val.'" where type="web";';
+            }
+
+            mysqli_query($link, $webSql);
+            $_SESSION['updateWebSetSuccess'] = "Changes saved successfully";
+        }
     }
 }
 
@@ -94,14 +109,20 @@ if (!mysqli_query($link,$selectSql)) {
                                 $web = explode("web=", $valArr[0]);
                             ?>
                             <input type='text' name='title' 
-                                   value="<?php if (!empty($web[1])) { echo $web[1]; } ?>"><br>
+                                   value="<?php 
+                                   if (isset($_SESSION['title'])) { 
+                                       echo $_SESSION['title'];
+                                   } else if (!empty($web[1])) { echo $web[1]; } ?>"><br>
                             Metadata Description:
                             <?php 
                                 if(!empty($valArr[1])){
                                     $meta = explode("meta=", $valArr[1]);
                                 }
                             ?>
-                            <textarea name='metadata'><?php if (!empty($meta[1])) { echo $meta[1]; } ?></textarea>
+                            <textarea name='metadata'><?php 
+                            if (isset($_SESSION['metadata'])) { 
+                                echo $_SESSION['metadata'];
+                            } else if (!empty($meta[1])) { echo $meta[1]; } ?></textarea>
                             <script type="text/javascript">
                                 CKEDITOR.replace('metadata');
                             </script><br>
@@ -112,7 +133,10 @@ if (!mysqli_query($link,$selectSql)) {
                                 }
                             ?>
                             <input type='text' name='ticker' 
-                                   value="<?php if (!empty($tick[1])) { echo $tick[1]; } ?>"><br>
+                                   value="<?php 
+                                   if (isset($_SESSION['ticker'])) { 
+                                       echo $_SESSION['ticker'];
+                                   } else if (!empty($tick[1])) { echo $tick[1]; } ?>"><br>
                             <input type='submit' name='submit' value='Save' />
                         </form>
                     </div>

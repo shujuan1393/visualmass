@@ -68,7 +68,7 @@ if (!mysqli_query($link,$selectSql)) {
                                         Primary Store:
                                         <p class='setting-tooltips'>*Set Visual Mass's primary location</p>
                                         <?php
-                                            $locSql = "Select * from locations";
+                                            $locSql = "Select * from locations where name <> 'banner'";
 
                                             $result = mysqli_query($link, $locSql);
 
@@ -85,7 +85,11 @@ if (!mysqli_query($link,$selectSql)) {
 
                                                     while ($row = mysqli_fetch_assoc($result)) {
                                                         echo "<option value='".$row['code']."'";
-                                                        if (strcmp($priStore[1], $row['code']) === 0) {
+                                                        if (isset($_SESSION['primary'])) { 
+                                                            if (strcmp($_SESSION['primary'], $row['code']) === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        } else if (strcmp($priStore[1], $row['code']) === 0) {
                                                             echo " selected";
                                                         }
                                                         echo ">".$row['name']."</option>";
@@ -104,7 +108,11 @@ if (!mysqli_query($link,$selectSql)) {
                                         Contact Email:
                                         <p class='setting-tooltips'>*Set the default contact email address for Visual Mass</p>
                                         <input type='text' name='email' id='email' 
-                                                value='<?php if (!empty($email[1])) echo $email[1]; ?>'>
+                                                value='<?php if (isset($_SESSION['email'])) {
+                                                            echo $_SESSION['email'];
+                                                        } else if (!empty($email[1])) {
+                                                            echo $email[1]; 
+                                                        }?>'>
                                     </td>
                                 </tr>
                                 <tr>
@@ -238,7 +246,11 @@ if (!mysqli_query($link,$selectSql)) {
                                             foreach($currency_list as $key => $value) {
                                                 $cur = $value ."(".$key.")";
                                                 echo "<option value='".$key."' ";
-                                                if (!empty($currency[1])){
+                                                if (isset($_SESSION['currency'])) {
+                                                    if (strcmp($key, $_SESSION['currency']) === 0) {
+                                                        echo "selected";
+                                                    }
+                                                } else if (!empty($currency[1])){
                                                     if (strcmp($key, $currency[1]) === 0) {
                                                         echo "selected";
                                                     }
@@ -298,7 +310,11 @@ if (!mysqli_query($link,$selectSql)) {
                                             echo "<select name='timezone'>";
                                             foreach($timezone_list as $key => $timevalue) {
                                                 echo "<option value='".$timevalue."' ";
-                                                if(!empty($time[1])){
+                                                if (isset($_SESSION['timezone'])) {
+                                                    if (strcmp($timevalue, $_SESSION['timezone']) === 0) {
+                                                        echo "selected";
+                                                    }
+                                                } else if(!empty($time[1])){
                                                     if (strcmp($timevalue, $time[1])===0) {
                                                         echo "selected";
                                                     }

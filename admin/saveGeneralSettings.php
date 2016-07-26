@@ -9,11 +9,21 @@ require_once '../config/db.php';
 
 
 if(isset($_POST['submit'])) {
+    $_SESSION['primary'] = $_POST['primary'];
+    $_SESSION['email'] = $_POST['email'];
+    $_SESSION['currency'] = $_POST['currency'];
+    $_SESSION['timezone'] = $_POST['timezone'];
+    
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         unset($_SESSION['updateGenSetSuccess']);
         $_SESSION['gensetError'] = "Invalid email";
         header('Location: generalSettings.php');
     } else {
+        unset($_SESSION['primary']);
+        unset($_SESSION['email']);
+        unset($_SESSION['currency']);
+        unset($_SESSION['timezone']);
+        
         unset($_SESSION['gensetError']);
         $store = $_POST['primary'];
         $email = $_POST['email'];

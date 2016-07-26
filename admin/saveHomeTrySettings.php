@@ -7,6 +7,9 @@
  */
 require_once '../config/db.php';
 
+$_SESSION['visibility'] = $_POST['visibility'];
+$_SESSION['duration'] = $_POST['duration'];
+$_SESSION['amount'] = $_POST['amount'];
 
 if (strcmp($_POST['visibility'], "on") === 0 && 
         (empty($_POST['duration']) || empty($_POST['amount']))) { 
@@ -14,6 +17,10 @@ if (strcmp($_POST['visibility'], "on") === 0 &&
     $_SESSION['updateHTSetError'] = "Empty field(s)";
     header("Location: homeTrySettings.php");
 } else if(isset($_POST['submit'])) {
+    unset($_SESSION['visibility']);
+    unset($_SESSION['duration']);
+    unset($_SESSION['amount']);
+    
     unset($_SESSION['updateHTSetError']);
     $visibility = $_POST['visibility'];
     $time = $_POST['duration'];

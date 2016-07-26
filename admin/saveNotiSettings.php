@@ -8,7 +8,8 @@
 require_once '../config/db.php';
 
 
-if(isset($_POST['submit'])) {unset($_SESSION['gensetError']);
+if(isset($_POST['submit'])) {
+    unset($_SESSION['gensetError']);
     $welcome = htmlentities($_POST['welcome']);
     $purchase = htmlentities($_POST['purchase']);
     $incomplete = htmlentities($_POST['incomplete']);

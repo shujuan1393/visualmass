@@ -135,32 +135,32 @@ if (isset($_GET['id'])) {
                                     <td>
                                     Name*:
                                     <input type='text' name='name' id='name'  maxlength="50" 
-                                           value='<?php if (!empty($erow['servicename'])) 
-                                               { echo $erow['servicename']; 
-                                               } else if (isset($_SESSION['name'])) {
+                                           value='<?php if (isset($_SESSION['name'])) {
                                                    echo $_SESSION['name'];
-                                               }
+                                               } else if (!empty($erow['servicename'])) 
+                                               { echo $erow['servicename']; 
+                                               }  
 ?>'/>
                                     </td>
                                     <td>
                                     Service Code*:
                                     <input type='text' name='code' id='code'  maxlength="50" 
-                                           value='<?php if (!empty($erow['servicecode'])) 
-                                               { echo $erow['servicecode']; 
-                                               } else if (isset($_SESSION['code'])) {
+                                           value='<?php if (isset($_SESSION['code'])) {
                                                    echo $_SESSION['code'];
-                                               }?>'/>
+                                               } else if (!empty($erow['servicecode'])) 
+                                               { echo $erow['servicecode']; 
+                                               } ?>'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
                                         Description:
                                         <textarea name="desc" id='desc'><?php 
-                                            if(!empty($erow['description'])) { 
-                                                echo $erow['description']; 
-                                            } else if (isset($_SESSION['desc'])) {
+                                            if (isset($_SESSION['desc'])) {
                                                 echo $_SESSION['desc'];
-                                            }?></textarea>
+                                            } else if(!empty($erow['description'])) { 
+                                                echo $erow['description']; 
+                                            } ?></textarea>
                                         <script type="text/javascript">
                                             CKEDITOR.replace('desc');
                                         </script>

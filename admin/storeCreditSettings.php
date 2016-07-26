@@ -8,11 +8,17 @@
 require_once '../config/db.php';
 
 if (isset($_POST['submit'])) {
-    if (empty($_POST['redeem'])) {
+    $_SESSION['redeem'] = $_POST['redeem'];
+    $_SESSION['profile'] = $_POST['profile'];
+    
+    if (empty($_POST['redeem']) || empty($_POST['profile'])) {
         unset($_SESSION['updateScSetSuccess']);        
         $_SESSION['updateScSetError'] = "Empty field(s)";
     } else {
         unset($_SESSION['updateScSetError']);
+        unset($_SESSION['redeem']);
+        unset($_SESSION['profile']);
+        
         $redeem = $_POST['redeem'];
         $profile = $_POST['profile'];
         
@@ -98,7 +104,9 @@ if (!mysqli_query($link,$selectSql)) {
                             ?>
                             Amount awarded: <input type='text' name='redeem' id='redeem' 
                                              value='<?php 
-                                                if (!empty($amount[1])) {
+                                                if (isset($_SESSION['redeem'])) { 
+                                                    echo $_SESSION['redeem'];
+                                                } else if (!empty($amount[1])) {
                                                     echo $amount[1];
                                                 }
                                              ?>' onkeypress="return isNumberKey(event)">
@@ -113,7 +121,9 @@ if (!mysqli_query($link,$selectSql)) {
                             ?>
                             Profile: <input type='text' name='profile' id='profile' 
                                              value='<?php 
-                                                if (!empty($profile[1])) {
+                                                if (isset($_SESSION['profile'])) { 
+                                                    echo $_SESSION['profile'];
+                                                } else if (!empty($profile[1])) {
                                                     echo $profile[1];
                                                 }
                                              ?>' onkeypress="return isNumberKey(event)">

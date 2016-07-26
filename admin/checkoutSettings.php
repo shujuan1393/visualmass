@@ -8,10 +8,18 @@
 require_once '../config/db.php';
 
 if (isset($_POST['submit'])) {
+    $_SESSION['promo'] = $_POST['promo'];
+    $_SESSION['gift'] = $_POST['gift'];
+    $_SESSION['guest'] = $_POST['guest'];
+    
     if (empty($_POST['promo']) || empty($_POST['gift']) || empty($_POST['guest'])) {
         unset($_SESSION['updateCheckSetSuccess']);
         $_SESSION['updateCheckSetError'] = "Empty field(s)";
     } else {
+        unset($_SESSION['promo']);
+        unset($_SESSION['gift']);
+        unset($_SESSION['guest']);
+        
         $promotion = $_POST['promo'];
         $giftcard = $_POST['gift'];
         $guestcheck = $_POST['guest'];
@@ -99,11 +107,17 @@ if (!mysqli_query($link,$selectSql)) {
             
                             Get customers' consent to receive promotional emails: 
                             <?php 
-                                $promo = explode("promo=", $valArr[0]);
+                                if (!empty($valArr[0])) {
+                                    $promo = explode("promo=", $valArr[0]);
+                                }
                             ?>
                             <input name='promo' type='radio' value='yes' 
                                     <?php 
-                                    if (!empty($promo[1])) {
+                                    if (isset($_SESSION['promo'])) { 
+                                        if (strcmp($_SESSION['promo'], "yes")===0) {
+                                            echo " checked";
+                                        }
+                                    } else if (!empty($promo[1])) {
                                         if (strcmp($promo[1], "yes")===0) {
                                             echo " checked";
                                         }
@@ -111,7 +125,11 @@ if (!mysqli_query($link,$selectSql)) {
                                     ?>>Yes
                             <input type='radio' name='promo' value='no' 
                                     <?php 
-                                    if (!empty($promo[1])) {
+                                    if (isset($_SESSION['promo'])) { 
+                                        if (strcmp($_SESSION['promo'], "no")===0) {
+                                            echo " checked";
+                                        }
+                                    } else if (!empty($promo[1])) {
                                         if (strcmp($promo[1], "no")===0) {
                                             echo " checked";
                                         }
@@ -127,7 +145,11 @@ if (!mysqli_query($link,$selectSql)) {
                             ?>
                             <input name='gift' type='radio' value='yes' 
                                 <?php 
-                                if (!empty($gift[1])) {
+                                if (isset($_SESSION['gift'])) { 
+                                    if (strcmp($_SESSION['gift'], "yes")===0) {
+                                        echo " checked";
+                                    }
+                                } else if (!empty($gift[1])) {
                                     if (strcmp($gift[1], "yes")===0) {
                                         echo " checked";
                                     }
@@ -135,7 +157,11 @@ if (!mysqli_query($link,$selectSql)) {
                                 ?>>Yes
                             <input type='radio' name='gift' value='no' 
                                 <?php 
-                                if (!empty($gift[1])) {
+                                if (isset($_SESSION['gift'])) { 
+                                    if (strcmp($_SESSION['gift'], "no")===0) {
+                                        echo " checked";
+                                    }
+                                } else if (!empty($gift[1])) {
                                     if (strcmp($gift[1], "no")===0) {
                                         echo " checked";
                                     }
@@ -151,7 +177,11 @@ if (!mysqli_query($link,$selectSql)) {
                             Enable Guest Checkout: 
                             <input name='guest' type='radio' value='yes' 
                                 <?php 
-                                if (!empty($guest[1])) {
+                                if (isset($_SESSION['guest'])) { 
+                                    if (strcmp($_SESSION['guest'], "yes")===0) {
+                                        echo " checked";
+                                    }
+                                } else if (!empty($guest[1])) {
                                     if (strcmp($guest[1], "yes")===0) {
                                         echo " checked";
                                     }
@@ -159,7 +189,11 @@ if (!mysqli_query($link,$selectSql)) {
                                 ?>>Yes
                             <input type='radio' name='guest' value='no' 
                                 <?php 
-                                if (!empty($guest[1])) {
+                                if (isset($_SESSION['guest'])) { 
+                                    if (strcmp($_SESSION['guest'], "no")===0) {
+                                        echo " checked";
+                                    }
+                                } else if (!empty($guest[1])) {
                                     if (strcmp($guest[1], "no")===0) {
                                         echo " checked";
                                     }

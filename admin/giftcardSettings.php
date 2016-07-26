@@ -8,17 +8,16 @@
 require_once '../config/db.php';
 
 if (isset($_POST['submit'])) {
+    $_SESSION['expiry'] = $_POST['expiry'];
+    $_SESSION['duration'] = $_POST['duration'];
+    
     if (empty($_POST['expiry']) || 
             ($_POST['expiry'] === "on" && empty($_POST['duration']) )) {
         unset($_SESSION['updateGcSetSuccess']);
-        
-        if(!empty($_POST['expiry'])){
-            $_SESSION['expiry'] = $expiry;
-            
-        }
-        
         $_SESSION['updateGcSetError'] = "Empty field(s)";
     } else {
+        unset($_SESSION['expiry']);
+        unset($_SESSION['duration']);
         unset($_SESSION['updateGcSetError']);
         $expiry = $_POST['expiry'];
         $duration = $_POST['duration'];
@@ -106,7 +105,12 @@ if (!mysqli_query($link,$selectSql)) {
                             Enable Expiry:
                             <input type="radio" name='expiry' id="expiry" value='on' 
                                     <?php 
-                                        if(!empty($expiry[1])){
+                                        if(isset($_SESSION['expiry'])){
+                                             if (strcmp("on", $_SESSION['expiry'])===0) {
+                                                 echo " checked";
+                                                 $_SESSION['expiryOff'] = "on";
+                                             }
+                                        } else if(!empty($expiry[1])){
                                              if (strcmp("on", $expiry[1])===0) {
                                                  echo " checked";
                                                  $_SESSION['expiryOff'] = "on";
@@ -116,7 +120,12 @@ if (!mysqli_query($link,$selectSql)) {
                                     onclick="toggleTextbox(true);">On
                             <input type="radio" name='expiry' value='off' 
                                     <?php 
-                                        if(!empty($expiry[1])){
+                                        if(isset($_SESSION['expiry'])){
+                                             if (strcmp("off", $_SESSION['expiry'])===0) {
+                                                 echo " checked";
+                                                 $_SESSION['expiryOff'] = "off";
+                                             }
+                                        } else if(!empty($expiry[1])){
                                             if (strcmp("off", $expiry[1])===0) {
                                                 echo " checked";
                                                 $_SESSION['expiryOff'] = "off";
@@ -132,7 +141,9 @@ if (!mysqli_query($link,$selectSql)) {
                             ?>
                             Duration (days): <input type='text' name='duration' id='duration' 
                                              value='<?php 
-                                                if (!empty($duration[1])) {
+                                                if(isset($_SESSION['duration'])){
+                                                    echo $_SESSION['duration'];
+                                                } else if (!empty($duration[1])) {
                                                     echo $duration[1];
                                                 }
                                              ?>' onkeypress="return isNumber(event)">
