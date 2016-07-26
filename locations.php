@@ -54,7 +54,7 @@
         <div id="wrapper">
             <div id="header"><?php require_once 'nav/header.php';?></div>
             
-            <div id="locContent">
+            <div id="content">
                 <?php
                     $banner = "Select * from locations where name='banner';";
                     
@@ -63,7 +63,7 @@
                     if (!mysqli_query($link, $banner)) {
                         echo "Error: ".mysqli_error($link);
                     } else {
-                        if ($bresult -> num_rows == 0) {
+                        if ($bresult -> num_rows === 0) {
                             echo "<h3 id='banner' class='banner-title'>Sorry, this page is under construction.</h3>";
                         } else {
                             $brow = mysqli_fetch_assoc($bresult);
@@ -90,7 +90,7 @@
                         }
                     }
                 ?>
-                
+               
                 <div id='service_filter'>
                     <div class='heading row'>
                         <div class='col-md-6'>
@@ -171,112 +171,112 @@
                         </div>
                     </div>
                     
-                <div id='retail_locs' class='locrow'>
-                    <h3 id='retail'>RETAIL</h3>
-                    <div id='retail_filter' style='display: none;'>
-                        <h4>There are no retail stores for this filter.</h4>
-                    </div>
-                    
-                    <div id='retails' class='col-md-10 col-md-offset-2'>
-                    <?php 
-                        $retail = "Select * from locations where type='retail' and status='active';";
-                        $retailres = mysqli_query($link, $retail);
-                        
-                        if (!mysqli_query($link, $retail)) {
-                            echo "Error: ".mysqli_error($link);
-                        } else {
-                            $count = 0;
-                            if ($retailres -> num_rows > 0) {
-                                while ($row = mysqli_fetch_assoc($retailres)) {
-                                    $pos = strpos($row['featured'], '/');
-                                    $url = substr($row['featured'], $pos+1);
+                    <div id='retail_locs' class='locrow'>
+                        <h3 id='retail'>RETAIL</h3>
+                        <div id='retail_filter' style='display: none;'>
+                            <h4>There are no retail stores for this filter.</h4>
+                        </div>
 
-                                    echo "<div id='loc".$count."' class='row'>";
-                                        echo "<div id='retailadd".$count."' class='col-md-10'>";
-                                        echo "<h4 id='".$row['name']."'><a href='location.php?id=".$row['id']."'>".$row['name']."</a></h4>";
-                                        echo "<p>".$row['address']." ".$row['apt']. "</p>";
-                                        echo "<p>".$row['country']." ".$row['zip']."</p>";
-                                        echo "</div>";
-                                        echo "<div id='storeimg' class='col-md-5'><img src='".$url."' style='width:100%'></div>";
-                                        echo "<div class='col-md-5'>";
+                        <div id='retails' class='col-md-10 col-md-offset-2'>
+                        <?php 
+                            $retail = "Select * from locations where type='retail' and status='active';";
+                            $retailres = mysqli_query($link, $retail);
 
-                                        /******* GEOCODE ******/
+                            if (!mysqli_query($link, $retail)) {
+                                echo "Error: ".mysqli_error($link);
+                            } else {
+                                $count = 0;
+                                if ($retailres -> num_rows > 0) {
+                                    while ($row = mysqli_fetch_assoc($retailres)) {
+                                        $pos = strpos($row['featured'], '/');
+                                        $url = substr($row['featured'], $pos+1);
 
-                                        // get latitude, longitude and formatted address
-                                        $data_arr = geocode($row['country']. " ". $row['zip']);
+                                        echo "<div id='loc".$count."' class='row'>";
+                                            echo "<div id='retailadd".$count."' class='col-md-10'>";
+                                            echo "<h4 id='".$row['name']."'><a href='location.php?id=".$row['id']."'>".$row['name']."</a></h4>";
+                                            echo "<p>".$row['address']." ".$row['apt']. "</p>";
+                                            echo "<p>".$row['country']." ".$row['zip']."</p>";
+                                            echo "</div>";
+                                            echo "<div id='storeimg' class='col-md-5'><img src='".$url."' style='width:100%'></div>";
+                                            echo "<div class='col-md-5'>";
 
-                                        // if able to geocode the address
-                                        if($data_arr){
+                                            /******* GEOCODE ******/
 
-                                            $latitude = $data_arr[0];
-                                            $longitude = $data_arr[1];
-                                            $formatted_address = $data_arr[2];
+                                            // get latitude, longitude and formatted address
+                                            $data_arr = geocode($row['country']. " ". $row['zip']);
 
-                                        ?>
+                                            // if able to geocode the address
+                                            if($data_arr){
 
-                                        <!-- google map will be shown here -->
-                                        <!--<div id="gmap_canvas" style='width: 100%;'>Loading map...</div>-->
-                                        <div id="gmap_canvas<?php echo $count;?>" style='width: 100%; height:70%; margin: 5px;'>Loading map...</div>
+                                                $latitude = $data_arr[0];
+                                                $longitude = $data_arr[1];
+                                                $formatted_address = $data_arr[2];
 
-                                        <!-- JavaScript to show google map -->
-                                        <script type="text/javascript">
-                                            function init_map() {
-                                                var myOptions = {
-                                                    zoom: 14,
-                                                    center: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
-                                                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                                                };
+                                            ?>
 
-                                                var mapname = "gmap_canvas" + <?php echo $count;?>;
-                                                map = new google.maps.Map(document.getElementById(mapname), myOptions);
-        //                                            map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
+                                            <!-- google map will be shown here -->
+                                            <!--<div id="gmap_canvas" style='width: 100%;'>Loading map...</div>-->
+                                            <div id="gmap_canvas<?php echo $count;?>" style='width: 100%; height:70%; margin: 5px;'>Loading map...</div>
 
-                                                var image = {
-                                                    url: 'images/Monogram.png', 
-                                                    scaledSize: new google.maps.Size(50, 50)   
-                                                }; 
-                                                marker = new google.maps.Marker({
-                                                    map: map,
-                                                    position: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
-                                                    icon: image
-                                                });
-        //                                        infowindow = new google.maps.InfoWindow({
-        //                                            content: "<?php echo $formatted_address; ?>"
-        //                                        });
-                                                google.maps.event.addListener(marker, "click", function () {
-                                                    infowindow.open(map, marker);
-                                                });
-        //                                        infowindow.open(map, marker);
+                                            <!-- JavaScript to show google map -->
+                                            <script type="text/javascript">
+                                                function init_map() {
+                                                    var myOptions = {
+                                                        zoom: 14,
+                                                        center: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
+                                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                                                    };
+
+                                                    var mapname = "gmap_canvas" + <?php echo $count;?>;
+                                                    map = new google.maps.Map(document.getElementById(mapname), myOptions);
+            //                                            map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
+
+                                                    var image = {
+                                                        url: 'images/Monogram.png', 
+                                                        scaledSize: new google.maps.Size(50, 50)   
+                                                    }; 
+                                                    marker = new google.maps.Marker({
+                                                        map: map,
+                                                        position: new google.maps.LatLng(<?php echo $latitude; ?>, <?php echo $longitude; ?>),
+                                                        icon: image
+                                                    });
+            //                                        infowindow = new google.maps.InfoWindow({
+            //                                            content: "<?php echo $formatted_address; ?>"
+            //                                        });
+                                                    google.maps.event.addListener(marker, "click", function () {
+                                                        infowindow.open(map, marker);
+                                                    });
+            //                                        infowindow.open(map, marker);
+                                                }
+
+                                                google.maps.event.addDomListener(window, 'load', init_map);
+                                            </script>
+
+                                            <?php
+                                            // if unable to geocode the address                                
+                                            }else{
+                                                echo "No map found.";
                                             }
 
-                                            google.maps.event.addDomListener(window, 'load', init_map);
-                                        </script>
+                                            $servArr = explode(",", $row['services']);
 
-                                        <?php
-                                        // if unable to geocode the address                                
-                                        }else{
-                                            echo "No map found.";
-                                        }
+                                            echo "</div>";
+                                            echo "<div id='loc_service".$count."' class='loc_serv col-md-10'>";
+                                            echo "<ul>";
 
-                                        $servArr = explode(",", $row['services']);
-
+                                            for ($i = 0; $i < count($servArr); $i++) {
+                                                echo "<li servId='".$servArr[$i]."'>".$servArr[$i]."</li>";
+                                            }                                
+                                            echo "</ul>";
+                                            echo "</div>";
                                         echo "</div>";
-                                        echo "<div id='loc_service".$count."' class='loc_serv col-md-10'>";
-                                        echo "<ul>";
-
-                                        for ($i = 0; $i < count($servArr); $i++) {
-                                            echo "<li servId='".$servArr[$i]."'>".$servArr[$i]."</li>";
-                                        }                                
-                                        echo "</ul>";
-                                        echo "</div>";
-                                    echo "</div>";
-                                    $count++;
-                                }
-                            } 
-                        }
-                    ?>
+                                        $count++;
+                                    }
+                                } 
+                            }
+                        ?>
+                        </div>
                     </div>
-                </div>
                 
                 </div>
                 
@@ -405,220 +405,219 @@
               </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
           </div><!-- /.modal -->
-          
+        </div>
             <div id="footer"><?php require_once 'nav/footer.php';?></div>
-            
-            <script>
-                $('#searchModal').appendTo("body");
-                
-                function makeActive(num) {
-                    for(var i = 0; i < <?php echo $locCount; ?>; i++) {
-                        var link = "link" + i;
-                        document.getElementById(link).style.fontWeight = "normal";
-                    }
-                    
-                    var selected = "link" + num;
-                    document.getElementById(selected).style.fontWeight = "bold";
+        </div>
+        <script>
+            $('#searchModal').appendTo("body");
+
+            function makeActive(num) {
+                for(var i = 0; i < <?php echo $locCount; ?>; i++) {
+                    var link = "link" + i;
+                    document.getElementById(link).style.fontWeight = "normal";
                 }
-                
-                var floating = $('#scrollable_loc');
-                var fixtop = floating.offset().top;
-                
-                var lowpoint = $('#whole_footer').offset().top;
-                
-                $(window).scroll(function() {
-                    var current = $(window).scrollTop();
-                    floating.addClass('above');
-                    if (current >= fixtop && current <= lowpoint) {
-                        floating.addClass('stuck').css('top', 60);
-                    } else if (current > lowpoint) {
-                        floating.removeClass('stuck').css('top', lowpoint);
-                    } else if (current < fixtop) {
-                        floating.removeClass('stuck').css('top', 60);
-                    }
-                });
-                
-                var clientHeight = document.getElementById('header').clientHeight;
-                var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+                var selected = "link" + num;
+                document.getElementById(selected).style.fontWeight = "bold";
+            }
+
+            var floating = $('#scrollable_loc');
+            var fixtop = floating.offset().top;
+
+            var lowpoint = $('#whole_footer').offset().top;
+
+            $(window).scroll(function() {
+                var current = $(window).scrollTop();
+                floating.addClass('above');
+                if (current >= fixtop && current <= lowpoint) {
+                    floating.addClass('stuck').css('top', 60);
+                } else if (current > lowpoint) {
+                    floating.removeClass('stuck').css('top', lowpoint);
+                } else if (current < fixtop) {
+                    floating.removeClass('stuck').css('top', 60);
+                }
+            });
+
+            var clientHeight = document.getElementById('header').clientHeight;
+            var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 //                alert(clientHeight + " " + height);
-                var obj = document.getElementById('banner');
-                
-                if (obj !== null) {
-                    obj.style.maxHeight = height - clientHeight;
-                }
-                
-                for (var i = 0; i < <?php echo $count; ?>; i++) {
-                    var str = "loc" + i;
-                    document.getElementById(str).style.height = "100%";
-                }
+            var obj = document.getElementById('banner');
+
+            if (obj !== null) {
+                obj.style.maxHeight = height - clientHeight;
+            }
+
+            for (var i = 0; i < <?php echo $count; ?>; i++) {
+                var str = "loc" + i;
+                document.getElementById(str).style.height = "100%";
+            }
 //                
-                function resetLocs() {
-                    for (var i = 0; i < <?php echo $count; ?>; i++) {
-                        var locToHide = "loc"+i;
-                        document.getElementById(locToHide).style.display = "block"; 
-                    }
+            function resetLocs() {
+                for (var i = 0; i < <?php echo $count; ?>; i++) {
+                    var locToHide = "loc"+i;
+                    document.getElementById(locToHide).style.display = "block"; 
                 }
-                
-                function findLocs(value) {
-                    for (var l = 0; l < <?php echo $count; ?>; l++) {
-                        var loc = "loc_service" + l;
-                        var location = document.getElementById(loc);
-                        var display = false;
-                        
-                        var allservices = location.getElementsByTagName('li');
-                        for (var i = 0; i < allservices.length; i++) {
-                            if (allservices[i].getAttribute('servId').indexOf(value) > -1) {
-                                display = true;
+            }
+
+            function findLocs(value) {
+                for (var l = 0; l < <?php echo $count; ?>; l++) {
+                    var loc = "loc_service" + l;
+                    var location = document.getElementById(loc);
+                    var display = false;
+
+                    var allservices = location.getElementsByTagName('li');
+                    for (var i = 0; i < allservices.length; i++) {
+                        if (allservices[i].getAttribute('servId').indexOf(value) > -1) {
+                            display = true;
+                        } 
+                    }
+                    if (!display) {
+                        var locToHide = "loc"+l;
+                        document.getElementById(locToHide).style.display = "none";
+                        var retail = document.getElementById('retails');
+                        var allretails = retail.getElementsByTagName('div');
+                        var retdisplay = false;
+                        var oneret = true;
+
+                        for (var i = 0; i < allretails.length; i++) {
+                            if (allretails[i].style.display === "block") {
+                                oneret = false;
                             } 
                         }
-                        if (!display) {
-                            var locToHide = "loc"+l;
-                            document.getElementById(locToHide).style.display = "none";
-                            var retail = document.getElementById('retails');
-                            var allretails = retail.getElementsByTagName('div');
-                            var retdisplay = false;
-                            var oneret = true;
-                            
-                            for (var i = 0; i < allretails.length; i++) {
-                                if (allretails[i].style.display === "block") {
-                                    oneret = false;
-                                } 
-                            }
-                            
-                            var popup = document.getElementById('pops');
-                            var allpops = popup.getElementsByTagName('div');
-                            var popdisplay = false;
-                            var onepop = true;
-                            
-                            for (var i = 0; i < allpops.length; i++) {
-                                if (allpops[i].style.display === "block") {
-                                    onepop = false;
-                                } 
-                            }
-                            
-                            if (oneret) {
-                                retdisplay = true;
-                            }
-                            
-                            if (onepop) {
-                                popdisplay = true;
-                            }
+
+                        var popup = document.getElementById('pops');
+                        var allpops = popup.getElementsByTagName('div');
+                        var popdisplay = false;
+                        var onepop = true;
+
+                        for (var i = 0; i < allpops.length; i++) {
+                            if (allpops[i].style.display === "block") {
+                                onepop = false;
+                            } 
+                        }
+
+                        if (oneret) {
+                            retdisplay = true;
+                        }
+
+                        if (onepop) {
+                            popdisplay = true;
                         }
                     }
-                    
-                    if (retdisplay && !popdisplay) {
-                        document.getElementById('retail_filter').style.display = "block";
-                        document.getElementById('popup_filter').style.display = "none";
-                    } else if (!retdisplay && popdisplay) {
-                        document.getElementById('retail_filter').style.display = "none";
-                        document.getElementById('popup_filter').style.display = "block";
-                    } else if (retdisplay && popdisplay) {
-                        document.getElementById('retail_filter').style.display = "block";                                
-                        document.getElementById('popup_filter').style.display = "block";
-                    } else if (!retdisplay && ! popdisplay) {
-                        document.getElementById('retail_filter').style.display = "none";
-                        document.getElementById('popup_filter').style.display = "none";                                
-                    }
                 }
-                
-                function filterServices(s) {
-                    var service = "serv"+s;
-                    document.getElementById(service).onclick = function() {
-                        resetLocs();
-                        var val = "serviceval" + s;
-                        var value = document.getElementById(val).value;
-                        findLocs(value);
-                    };
+
+                if (retdisplay && !popdisplay) {
+                    document.getElementById('retail_filter').style.display = "block";
+                    document.getElementById('popup_filter').style.display = "none";
+                } else if (!retdisplay && popdisplay) {
+                    document.getElementById('retail_filter').style.display = "none";
+                    document.getElementById('popup_filter').style.display = "block";
+                } else if (retdisplay && popdisplay) {
+                    document.getElementById('retail_filter').style.display = "block";                                
+                    document.getElementById('popup_filter').style.display = "block";
+                } else if (!retdisplay && ! popdisplay) {
+                    document.getElementById('retail_filter').style.display = "none";
+                    document.getElementById('popup_filter').style.display = "none";                                
                 }
-                
-                for (var s = 0; s < <?php echo $servcount; ?>; s++) {
-                    filterServices(s);
-                }
-                
-                var sections = document.getElementsByClassName("locrow");
-                
-                for (var i = 0; i < sections.length; i++) {
-                   var sectionObj = sections[i];
-                   var secheight = sectionObj.offsetTop;
+            }
+
+            function filterServices(s) {
+                var service = "serv"+s;
+                document.getElementById(service).onclick = function() {
+                    resetLocs();
+                    var val = "serviceval" + s;
+                    var value = document.getElementById(val).value;
+                    findLocs(value);
+                };
+            }
+
+            for (var s = 0; s < <?php echo $servcount; ?>; s++) {
+                filterServices(s);
+            }
+
+            var sections = document.getElementsByClassName("locrow");
+
+            for (var i = 0; i < sections.length; i++) {
+               var sectionObj = sections[i];
+               var secheight = sectionObj.offsetTop;
 //                   alert(secheight);
-                <?php 
-                    if (!mysqli_query($link, $advSql)) {
-                        die(mysqli_error($link));
-                    } else {
-                        while ($advrow = mysqli_fetch_assoc($advres)) {
-                            $minheight = $advrow['minheight'];
-                ?>
-                        if (secheight > <?php echo $minheight; ?>) {
-                <?php
-                    $advimg = $advrow['image'];
-                    $advimagepos = strpos($advimg, '/');
-                    $advimageurl = substr($advimg, $advimagepos+1);
-                    $toPrint = "";
-                    
-                    $toPrint .= "<div class='home-section' ";
-                    if (strcmp($advrow['imagepos'], "background") === 0) {
-                        $image = '"'.$advimageurl.'"';
-                        $toPrint .= "style='background-image: url($advimg); background-repeat: no-repeat; background-size: 500px auto;'>";
+            <?php 
+                if (!mysqli_query($link, $advSql)) {
+                    die(mysqli_error($link));
+                } else {
+                    while ($advrow = mysqli_fetch_assoc($advres)) {
+                        $minheight = $advrow['minheight'];
+            ?>
+                    if (secheight > <?php echo $minheight; ?>) {
+            <?php
+                $advimg = $advrow['image'];
+                $advimagepos = strpos($advimg, '/');
+                $advimageurl = substr($advimg, $advimagepos+1);
+                $toPrint = "";
+
+                $toPrint .= "<div class='home-section' ";
+                if (strcmp($advrow['imagepos'], "background") === 0) {
+                    $image = '"'.$advimageurl.'"';
+                    $toPrint .= "style='background-image: url($advimg); background-repeat: no-repeat; background-size: 500px auto;'>";
 //                                    echo "<script>document.getElementById('section".$count."').style.backgroundImage = 'url('$imageurl')';"
 //                                    . "document.getElementById('section".$count."').style.backgroundRepeat='no-repeat';</script>";
+                } else {
+                    $toPrint .= ">";
+                    $toPrint .= "<div class='section-image' style='text-align:".$row['imagepos']."; float:".$row['imagepos']."'>";
+                    $toPrint .= "<img src='".$advimageurl."'>";
+                    $toPrint .= "</div>";
+                }
+
+                if (!empty($advrow['html'])) {
+                    if (strcmp($advrow['htmlpos'], "center") === 0) {
+                        $toPrint .= "<div class='section-text' style='left: 25%; right: 25%;'>";
                     } else {
-                        $toPrint .= ">";
-                        $toPrint .= "<div class='section-image' style='text-align:".$row['imagepos']."; float:".$row['imagepos']."'>";
-                        $toPrint .= "<img src='".$advimageurl."'>";
-                        $toPrint .= "</div>";
+                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos'].";'>";
                     }
+//                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
+                    $toPrint .= trim(html_entity_decode($advrow['html']))."</div>";
+                }
 
-                    if (!empty($advrow['html'])) {
-                        if (strcmp($advrow['htmlpos'], "center") === 0) {
-                            $toPrint .= "<div class='section-text' style='left: 25%; right: 25%;'>";
-                        } else {
-                            $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos'].";'>";
-                        }
-    //                        $toPrint .= "<div class='section-text' style='float:".$advrow['htmlpos']."'>"; 
-                        $toPrint .= trim(html_entity_decode($advrow['html']))."</div>";
-                    }
-
-                    if (!empty($advrow['buttontext'])) {
-                        $textArr = explode(",", $advrow['buttontext']);
-                        $linkArr = explode(",", $advrow['link']);
-                        $linkposArr = explode(",", $advrow['linkpos']);
-                        $prevpos = $linkposArr[0];
+                if (!empty($advrow['buttontext'])) {
+                    $textArr = explode(",", $advrow['buttontext']);
+                    $linkArr = explode(",", $advrow['link']);
+                    $linkposArr = explode(",", $advrow['linkpos']);
+                    $prevpos = $linkposArr[0];
 
 //                                    echo "<div class='section-link'>";
-                        if (strcmp($linkposArr[0], "center") === 0) {
-                            $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
-                        } else {
-                            $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
+                    if (strcmp($linkposArr[0], "center") === 0) {
+                        $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
+                    } else {
+                        $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[0]."; ".$linkposArr[0].": 0;'>";
+                    }
+                    for ($i = 0; $i < count($textArr); $i++) {
+                        if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                            $toPrint .= "</div>";
                         }
-                        for ($i = 0; $i < count($textArr); $i++) {
-                            if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
-                                $toPrint .= "</div>";
+                        if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
+                            if (strcmp($linkposArr[$i], "center") === 0) {
+                                $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
+                            } else {
+                                $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
                             }
-                            if (strcmp($linkposArr[$i], $prevpos)!==0 ) {
-                                if (strcmp($linkposArr[$i], "center") === 0) {
-                                    $toPrint .= "<div class='section-link' style='left: 25%; right: 25%;'>";
-                                } else {
-                                    $toPrint .= "<div class='section-link' style='text-align:".$linkposArr[$i]."; ".$linkposArr[$i].": 0;'>";
-                                }
-                            }
-                            $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
-                            $prevpos = $linkposArr[$i];
                         }
-                        $toPrint .= "</div>";
+                        $toPrint .= "<a class='button' href='".$linkArr[$i]."'>".$textArr[$i]."</a>";
+                        $prevpos = $linkposArr[$i];
                     }
                     $toPrint .= "</div>";
-                ?>    
-                    var newElm = document.createElement('div');
-                    newElm.className = "home-section";
-                    newElm.innerHTML = "<?php echo $toPrint; ?>";  
-                    sectionObj.parentNode.insertBefore(newElm, sectionObj);//firstChild.nextSibling
-                    }
-                <?php
-                        }
-                    }
-                ?>
                 }
-            </script>
-        </div>
+                $toPrint .= "</div>";
+            ?>    
+                var newElm = document.createElement('div');
+                newElm.className = "home-section";
+                newElm.innerHTML = "<?php echo $toPrint; ?>";  
+                sectionObj.parentNode.insertBefore(newElm, sectionObj);//firstChild.nextSibling
+                }
+            <?php
+                    }
+                }
+            ?>
+            }
+        </script>
     </body>
 </html>

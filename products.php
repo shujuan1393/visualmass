@@ -60,7 +60,7 @@
                     }
                     
                     $cols = array();
-                    $colours = "Select * from products";
+                    $colours = "Select * from products where type='".$_GET['type']."';";
                     $colres = mysqli_query($link, $colours);
 
                     if (!mysqli_query($link, $colours)) {
@@ -105,6 +105,25 @@
                         }
                     ?>
                 </div>
+                
+                <div id='showMaterial' class='row' style='display: none;'>
+                    <?php 
+                        $mat = "Select * from materials where type='".$_GET['type']."';";
+                        $mres = mysqli_query($link, $mat);
+                        
+                        if (!mysqli_query($link, $mat)) {
+                            die(mysqli_error($link));
+                        } else {
+                            if($mres -> num_rows > 0) {
+                                $matcount = 0;
+                                while($mrow = mysqli_fetch_assoc($mres)) {
+                                    echo "<input type='checkbox' name='storedMat".$matcount."' onclick='' id='storedMat".$matcount."' value='".$mrow['name']."'>";
+                                    echo $mrow['name']."&nbsp;";
+                                }
+                            }
+                        }
+                    ?>
+                </div>
                 <?php 
                     $sql = "Select * from products where type='".$_GET['type']."' and "
                             . "gender LIKE '%".$_GET['gender']."%' and status='active';";
@@ -146,8 +165,10 @@
                                         if($cres -> num_rows > 0) {
                                             while($crow = mysqli_fetch_assoc($cres)) {
                                                 $id = explode("-", $crow['pid']);
-                                                if(!in_array($id[1], $pcolours)) {
-                                                    array_push($pcolours, $id[1]);
+                                                if (!empty($id[1])) {
+                                                    if(!in_array($id[1], $pcolours)) {
+                                                        array_push($pcolours, $id[1]);
+                                                    }
                                                 }
                                             }
                                         }
@@ -181,7 +202,7 @@
                                     echo '<li id="cartLink'.$count.'"><a class="addcart" href="addCart.php?type=purchase&id='.$pid.
                                             '"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i></a></li>';
                                     if (isset($_SESSION['loggedUserEmail'])) {
-                                        if (in_array($pidArr[0], $favArr)) {
+                                        if (in_array($pid, $favArr)) {
                                             echo '<li id="heartLink'.$count.'"><a id="heart" href="addFavourite.php?delete=1&id='.$pid.'"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>';
                                         } else {
                                             echo '<li id="heartLink'.$count.'"><a id="heart" href="addFavourite.php?id='.$pid.'"><i class="fa fa-heart-o fa-2x" aria-hidden="true"></i></a></li>';
@@ -291,8 +312,32 @@
             
             if (el.style.display === "block") {
                 el.style.display = "none";
+                document.getElementById('colour').style.textDecoration = "none";
+                document.getElementById('colour').style.fontWeight = "normal";
             } else {
                 el.style.display = "block";
+                document.getElementById('colour').style.textDecoration = "underline";
+                document.getElementById('colour').style.fontWeight = "bold";
+                document.getElementById('showMaterial').style.display = "none";
+                document.getElementById('material').style.textDecoration = "none";
+                document.getElementById('material').style.fontWeight = "normal";
+            }
+        };
+        
+        document.getElementById('material').onclick = function() {
+            var el = document.getElementById('showMaterial');
+            
+            if (el.style.display === "block") {
+                el.style.display = "none";
+                document.getElementById('material').style.textDecoration = "none";
+                document.getElementById('material').style.fontWeight = "normal";
+            } else {
+                el.style.display = "block";
+                document.getElementById('material').style.textDecoration = "underline";
+                document.getElementById('material').style.fontWeight = "bold";
+                document.getElementById('showColour').style.display = "none";
+                document.getElementById('colour').style.textDecoration = "none";
+                document.getElementById('colour').style.fontWeight = "normal";
             }
         };
         
@@ -303,7 +348,9 @@
                 var cols = document.getElementById(str).value;
                 
                 var prod = "prod" + i;
-                if (cols === "" || cols === null || cols === undefined) {
+                if (colours === "") {
+                    document.getElementById(prod).style.display = "block";
+                } else if (cols === "" || cols === null || cols === undefined) {
                     document.getElementById(prod).style.display = "none";
                 } else {
                     var arr = colours.split(",");

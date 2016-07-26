@@ -16,7 +16,7 @@
     <body>
         <div id='whole_footer'>
         <div class="left_nav">
-            <ul>
+            <ul class='pull-left'>
                 <li><a href='giftcard.php'>GIFT CARDS</a></li>
                 <li><a href='career.php'>CAREER</a></li>
                 <li><a href='blog.php'>BLOG</a></li>
@@ -31,6 +31,7 @@
         <hr id="footer-hr">
         
         <div class="left_nav">
+            <div class="clearfix"></div>
             <div class="contact pull-left">CONTACT US <br>
             We are here Monday-Sunday, <br>
             12 noon - 9p.m., SGT-Singapore Time <br>

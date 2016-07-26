@@ -188,7 +188,7 @@ if (isset($_SESSION['loggedUserEmail'])) {
                             <a href="hometry.php" >Home Try-on</a>
                         </li>
                         <li id="collapse-nav" class="dropdown pull-left">
-                            <a href="location.php" >Location</a>
+                            <a href="locations.php" >Location</a>
                         </li>
                         <li class="dropdown pull-left">
                             <a href="#" id="showStory" class="dropdown-toggle" data-toggle="dropdown">Our Story</a>

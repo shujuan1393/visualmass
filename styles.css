@@ -478,10 +478,12 @@ img#banner {
 
 .contact {
     padding-left: 10px;
+    text-align: left;
 }
 
 .copyright {
     padding-right: 10px;
+    text-align: left;
 }
 
 #footer-hr {

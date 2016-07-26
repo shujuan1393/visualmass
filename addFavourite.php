@@ -36,45 +36,38 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
 //    header("Location: cart.php");
 } else if (isset($_GET['id'])) {
     $pid = $_GET['id'];
-    $type = $_GET['type'];
+//    $type = $_GET['type'];
     $cartid = GetCartId();
 
-    $getproduct = "Select * from products where pid='$pid'";
-    $prodres = mysqli_query($link, $getproduct);
+    $prod = mysqli_fetch_assoc($prodres);
+    $user = $_SESSION['loggedUserEmail'];
 
-    if (!mysqli_query($link, $getproduct)) {
-        echo "Error: ".mysqli_error($link);
+    $query = "Select * from favourites where email='".$user."';";
+    $result = mysqli_query($link, $query);
+
+    if (!mysqli_query($link, $query)) {
+        echo "Error: ". mysqli_error($link);
     } else {
-        $prod = mysqli_fetch_assoc($prodres);
-        $user = $_SESSION['loggedUserEmail'];
-        
-        $query = "Select * from favourites where email='".$user."';";
-        $result = mysqli_query($link, $query);
-
-        if (!mysqli_query($link, $query)) {
-            echo "Error: ". mysqli_error($link);
+        $sql;
+        if ($result -> num_rows === 0) {
+            $sql = "INSERT into favourites (pid, email) "
+                    . "VALUES ('$pid', '$user')";
         } else {
-            $sql;
-            if ($result -> num_rows === 0) {
-                $sql = "INSERT into favourites (pid, email) "
-                        . "VALUES ('$pid', '$user')";
+            $row = mysqli_fetch_assoc($result);
+            if (strcmp($row['pid'], "")=== 0) {
+                $pids = $pid;
             } else {
-                $row = mysqli_fetch_assoc($result);
-                if (strcmp($row['pid'], "")=== 0) {
-                    $pids = $pid;
-                } else {
-                    $pids = $row['pid'].",".$pid;
-                }
-                $sql = "UPDATE favourites set pid='$pids' where email='$user';";
+                $pids = $row['pid'].",".$pid;
             }
-            
-            $stats = "INSERT INTO productstatistics (type, pid, customer) VALUES".
-                    "('favourite', '$pid', '$user');";
-            mysqli_query($link, $stats);
-            
-            mysqli_query($link, $sql);
-            echo "<script>window.location.replace(document.referrer);</script>";
-//            header("Location: product.php?id=".$pid);
+            $sql = "UPDATE favourites set pid='$pids' where email='$user';";
         }
+
+        $stats = "INSERT INTO productstatistics (type, pid, customer) VALUES".
+                "('favourite', '$pid', '$user');";
+        mysqli_query($link, $stats);
+
+        mysqli_query($link, $sql);
+        echo "<script>window.location.replace(document.referrer);</script>";
+//            header("Location: product.php?id=".$pid);
     }
 } 

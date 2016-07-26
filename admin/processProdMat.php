@@ -19,6 +19,7 @@ if (isset($_GET['delete'])) {
 } else {
     $_SESSION['name'] = $_POST['name'];
     $_SESSION['details'] = $_POST['details'];
+    $_SESSION['type'] = $_POST['type'];
     
     if(empty($_POST['name']) || empty($_POST['details'])) {
         unset($_SESSION['addProdMatSuccess']);
@@ -31,8 +32,10 @@ if (isset($_GET['delete'])) {
             header('Location: productSettings.php#prodMat');
         }
     } else {
+        
         unset($_SESSION['name']);
         unset($_SESSION['details']);
+        unset($_SESSION['type']);
         
         unset($_SESSION['addProdMatError']);
         unset($_SESSION['updateProdMatError']);
@@ -40,6 +43,7 @@ if (isset($_GET['delete'])) {
         
         $name = $_POST['name'];
         $details = htmlentities($_POST['details']);
+        $type = $_POST['type'];
         
         //upload image
         $target_dir = "../uploads/materials/";
@@ -121,7 +125,7 @@ if (isset($_GET['delete'])) {
         if (!empty($_POST['editid'])) {
             $editid = $_POST['editid'];
             $updateSql = "UPDATE materials SET name ='" .$name. "', details='$details',"
-                    . "image='$image' where id='". $editid. "'";
+                    . "image='$image', type='$type' where id='". $editid. "'";
 
             if (mysqli_query($link, $updateSql)) {
                 unset($_SESSION['addProdMatSuccess']);
@@ -132,8 +136,8 @@ if (isset($_GET['delete'])) {
             }
         } else {
             // output data of each row
-            $sql = "INSERT INTO materials (details, name, image) "
-                    . "VALUES ('$details','$name', '$image');";
+            $sql = "INSERT INTO materials (details, name, image, type) "
+                    . "VALUES ('$details','$name', '$image', '$type');";
 
             mysqli_query($link, $sql);
 

@@ -242,6 +242,31 @@ if (isset($_GET['id']) && strcmp($_GET['type'], "category") === 0) {
                                            } else if (!empty($mrow['name'])) 
                                                { echo $mrow['name']; }?>'/>
                                     <br>
+                                    Type*: 
+                                    <select name='type' id='type'>
+                                        <option value='sunglasses' <?php 
+                                        if (isset($_SESSION['type'])) {
+                                            if (strcmp($_SESSION['type'], "sunglasses") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if (!empty($mrow['type'])) {
+                                            if (strcmp($mrow['type'], "sunglasses") === 0) {
+                                                echo " selected";
+                                            }
+                                        }
+                                        ?>>Sunglasses</option>
+                                        <option value='glasses' <?php 
+                                        if (isset($_SESSION['type'])) {
+                                            if (strcmp($_SESSION['type'], "glasses") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if (!empty($mrow['type'])) {
+                                            if (strcmp($mrow['type'], "glasses") === 0) {
+                                                echo " selected";
+                                            }
+                                        }
+                                        ?>>Glasses</option>
+                                    </select>
                                     
                                     Details*:
                                     <textarea name="details" id="details"><?php if (isset($_SESSION['details'])) { 

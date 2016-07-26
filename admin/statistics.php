@@ -61,7 +61,7 @@ if (!mysqli_query($link,$selectSql)) {
                                     <tr>
                                         <td>
                                             <div>
-                                                <h4>Most Viewed Product</h4>
+                                                <h4>Most Popular Product</h4>
                                                 <div class='col-md-5 text-center'>
                                                 <?php 
                                                     $viewed = "Select COUNT(pid) as count, pid from productstatistics where type = 'viewproduct' group by pid order by count desc LIMIT 1;";
@@ -86,6 +86,36 @@ if (!mysqli_query($link,$selectSql)) {
                                                                     echo "<img src='".$img."' width='200'><br>";
                                                                     echo "<div class='text-center'>".$prow['name']."</div>";
                                                                     echo "<span>".$row['count']." views</span>";
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class='col-md-5 text-center'>
+                                                <?php 
+                                                    $favourite = "Select COUNT(pid) as count, pid from productstatistics where type = 'favourite' group by pid order by count desc LIMIT 1;";
+                                                    $favprod = mysqli_query($link, $favourite);
+
+                                                    if (!mysqli_query($link, $favourite)) {
+                                                        die(mysqli_error($link));
+                                                    } else {
+                                                        if($favprod -> num_rows > 0) {
+                                                            $row = mysqli_fetch_assoc($favprod);
+                                                            $prod = "Select * from products where pid='".$row['pid']."';";
+                                                            $pres = mysqli_query($link, $prod);
+
+                                                            if(!mysqli_query($link, $prod)) {
+                                                                die(mysqli_error($link));
+                                                            } else {
+                                                                if($pres -> num_rows > 0) {
+                                                                    $prow = mysqli_fetch_assoc($pres);
+                                                                    $imgArr = explode(",", $prow['featured']);
+                                                                    $imgpos = strpos($imgArr[0], '/');
+                                                                    $img = substr($imgArr[0], $imgpos+1);
+                                                                    echo "<img src='".$img."' width='200'><br>";
+                                                                    echo "<div class='text-center'>".$prow['name']."</div>";
+                                                                    echo "<span>".$row['count']." favourites</span>";
                                                                 }
                                                             }
                                                         }
@@ -407,7 +437,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 <div id="updates">
                                     <h4>Recent Logins</h4>
                                     <?php 
-                                        $users = "Select * from staff order by lastlogin desc LIMIT 5";
+                                        $users = "Select firstname, lastname, lastlogin, lastlogout from staff order by lastlogin desc LIMIT 5";
                                         $ures = mysqli_query($link, $users);
 
                                         if(!mysqli_query($link, $users)) {
@@ -805,22 +835,6 @@ if (!mysqli_query($link,$selectSql)) {
 <?php } ?>
 
 <script>
-    function deleteFunction(empId) {
-        var r = confirm("Are you sure you wish to delete this employee type?");
-        if (r === true) {
-            window.location="saveAccountSettings.php?delete=1&id=" + empId;
-        } else if (r === false) {
-            <?php
-//                unset($_SESSION['updateEmpTypeSuccess']);
-//                unset($_SESSION['updateAccSetSuccess']);
-//                unset($_SESSION['addEmpTypeSuccess']);
-//                unset($_SESSION['addEmpTypeError']);
-//                $_SESSION['updateEmpTypeError'] = "Nothing was deleted";
-            ?>
-            window.location='accountSettings.php';
-        }
-    }
-    
     $(document).ready(function() {
         if(location.hash) {
             $('a[href=' + location.hash + ']').tab('show');
@@ -833,32 +847,5 @@ if (!mysqli_query($link,$selectSql)) {
     $(window).on('popstate', function() {
         var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
         $('a[href=' + anchor + ']').tab('show');
-    });
-    
-    $("#filter").keyup(function () {
-        var search = $(this).val();
-        $(".searchable").children().show();
-        $('.noresults').remove();
-        if (search) {
-            $(".searchable").children().not(":containsNoCase(" + search + ")").hide();
-            $(".searchable").each(function () {
-                if ($(this).children(':visible').length === 0) 
-                    $(this).append('<tr class="noresults"><td colspan="100%">No matching results found</td></tr>');
-            });
-
-        }
-    });
-    
-    $.expr[":"].containsNoCase = function (el, i, m) {
-        var search = m[3];
-        if (!search) return false;
-           return new RegExp(search,"i").test($(el).text());
-    };
-    
-    $(document).ready(function() {
-        $('#example').DataTable({
-            dom: "<'row'tr>" +
-                "<'row'<'col-sm-5'i><'col-sm-7'p>>"
-        });
     });
 </script>

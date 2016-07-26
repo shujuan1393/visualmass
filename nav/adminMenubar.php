@@ -178,7 +178,7 @@
                         <a href='checkoutSettings.php'>CHECKOUT</a>
                     </li>
                     <li <?php if (in_array("exportSettings.php", $urlArr)) echo "class='active'" ?> >
-                        <a href='#'>EXPORTS</a>
+                        <a href='exportSettings.php'>EXPORTS</a>
                     </li>
                     <li <?php if (in_array("formSettings.php", $urlArr)) echo "class='active'" ?> >
                         <a href='formSettings.php'>FORMS</a>
