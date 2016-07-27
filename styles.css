@@ -241,6 +241,11 @@ table.dataTable thead .sorting_desc:after{
 
 /*  HEADER BAR */
 
+#maintenanceMsg {
+    padding: 100px;
+    margin: 100px;
+}
+
 #logoheader, #user , .swatch{
     cursor:pointer;
 }

@@ -125,6 +125,7 @@ if (!mysqli_query($link, $sql)) {
 setActive($link, "products");
 setActive($link, "locations");
 setActive($link, "pages");
+setActive($link, "jobs");
 
 function setActive($link, $table) {
     $product = "Select * from ".$table." where status='inactive';";
@@ -141,6 +142,37 @@ function setActive($link, $table) {
                 if ($today >= $scheduled) {
                     $update = "UPDATE ".$table." set status='active' where id='".$row['id']."';";
                     mysqli_query($link, $update);
+                }
+            }
+        }
+    }
+}
+
+//check if maintenance mode for web is on/off
+if (!in_array("admin", $urlArr)) {
+    $web = "Select * from settings where type='web';";
+    $wres = mysqli_query($link, $web);
+    
+    if (!mysqli_query($link, $web)) {
+        die(mysqli_error($link));
+    } else {
+        $row = mysqli_fetch_assoc($wres);
+        $valArr = explode("#", $row['value']);
+        
+        if (!empty($valArr[3])) {
+            $maintainence = explode("maintenance=", $valArr[3]);
+            
+            if (!empty($maintainence[1])) {
+                if (strcmp($maintainence[1], "on") === 0) {
+                    //get message to display
+                    if (!empty($valArr[5])) {
+                        $msgArr = explode("message=", $valArr[5]);
+                        if (!empty($msgArr[1])) {
+                            $_SESSION['maintenanceMsg'] = $msgArr[1];
+                        } else {
+                            unset($_SESSION['maintenanceMsg']);
+                        }
+                    }
                 }
             }
         }

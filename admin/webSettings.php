@@ -11,21 +11,33 @@ if (isset($_POST['submit'])) {
     $_SESSION['title'] = $_POST['title'];
     $_SESSION['metadata'] = $_POST['metadata'];
     $_SESSION['ticker'] = $_POST['ticker'];
+    $_SESSION['maintenance'] = $_POST['maintenance'];
+    $_SESSION['password'] = $_POST['password'];
+    $_SESSION['message'] = $_POST['message'];
     
-    if (empty($_POST['title']) || empty($_SESSION['metadata'])) {
+    if (empty($_POST['title']) || empty($_SESSION['metadata']) || empty($_POST['maintenance'])) {
         unset($_SESSION['updateWebSetSuccess']);
         $_SESSION['updateWebSetError'] = "Empty field(s)";
+    } else if (strcmp($_POST['maintenance'], "on") === 0 && (empty($_POST['password']) || empty($_POST['message']))) { 
+        unset($_SESSION['updateWebSetSuccess']);
+        $_SESSION['updateWebSetError'] = "Password and message required";
     } else {
         unset($_SESSION['updateWebSetError']);
         
         $webstore = $_POST['title'];
         $metadata = htmlentities($_POST['metadata']);
         $ticker = $_POST['ticker'];
+        $maintain = $_POST['maintenance'];
+        $store = $_POST['password'];
+        $msg = htmlentities($_POST['message']);
 
         $val = "web=".$webstore."#";
         $val .= "meta=".$metadata."#";
-        $val .= "ticker=".$ticker;
-
+        $val .= "ticker=".$ticker."#";
+        $val .= "maintenance=".$maintain."#";
+        $val .= "password=".$store."#";
+        $val .= "message=".$msg;
+        
         $checkSql = "Select * from settings where type='web'";
         $cresult = mysqli_query($link, $checkSql);
 
@@ -35,6 +47,9 @@ if (isset($_POST['submit'])) {
             unset($_SESSION['title']);
             unset($_SESSION['metadata']);
             unset($_SESSION['ticker']);
+            unset($_SESSION['maintenance']);
+            unset($_SESSION['password']);
+            unset($_SESSION['message']);
 
             if ($cresult -> num_rows == 0) {
                 $webSql = "INSERT INTO settings (type, value) VALUES ('web', '$val');";
@@ -136,7 +151,79 @@ if (!mysqli_query($link,$selectSql)) {
                                    value="<?php 
                                    if (isset($_SESSION['ticker'])) { 
                                        echo $_SESSION['ticker'];
-                                   } else if (!empty($tick[1])) { echo $tick[1]; } ?>"><br>
+                                   } else if (!empty($tick[1])) { echo $tick[1]; } ?>">
+                            <br><br>
+                            Maintenance Mode:
+                            <?php 
+                                if (!empty($valArr[3])) {
+                                    $maintain = explode("maintenance=", $valArr[3]);
+                                }
+                            ?>
+                            <input name='maintenance' type='radio' value='on' 
+                                    <?php 
+                                    if (isset($_SESSION['maintenance'])) { 
+                                        if (strcmp($_SESSION['maintenance'], "on")===0) {
+                                            echo " checked";
+                                            $_SESSION['passwordOff'] = "on";
+                                        }
+                                    } else if (!empty($maintain[1])) {
+                                        if (strcmp($maintain[1], "on")===0) {
+                                            echo " checked";
+                                            $_SESSION['passwordOff'] = "on";
+                                        }
+                                    }
+                                    ?>
+                                    onclick="toggleTextbox(true);">On
+                            <input type='radio' name='maintenance' value='off' 
+                                    <?php 
+                                    if (isset($_SESSION['maintenance'])) { 
+                                        if (strcmp($_SESSION['maintenance'], "off")===0) {
+                                            echo " checked";
+                                            $_SESSION['passwordOff'] = "off";
+                                        }
+                                    } else if (!empty($maintain[1])) {
+                                        if (strcmp($maintain[1], "off")===0) {
+                                            echo " checked";
+                                            $_SESSION['passwordOff'] = "off";
+                                        }
+                                    }
+                                    ?>
+                                    onclick="toggleTextbox(false);">Off
+                            
+                            <br><br>
+                            <div id='storePwd' style='display: none'>
+                                <?php 
+                                    if (!empty($valArr[4])) {
+                                        $pwd = explode("password=", $valArr[4]);
+                                    }
+                                ?>
+                                Store Password: 
+                                <input type="text" name='password' id='password' value='<?php 
+                                    if (isset($_SESSION['password'])) {
+                                        echo $_SESSION['password'];
+                                    } else if (!empty ($pwd[1])) {
+                                        echo $pwd[1];
+                                    }
+                                    ?>'>
+                                <br>
+                                <?php 
+                                    if (!empty($valArr[5])) {
+                                        $message = explode("message=", $valArr[5]);
+                                    }
+                                ?>
+                                <br>
+                                Maintenance Message:
+                                <textarea name='message' id='message'><?php 
+                                    if (isset($_SESSION['message'])) {
+                                        echo $_SESSION['message'];
+                                    } else if (!empty ($message[1])) {
+                                        echo $message[1];
+                                    }
+                                    ?></textarea>
+                                <script type='text/javascript'>
+                                    CKEDITOR.replace('message');
+                                </script>
+                            </div>
                             <input type='submit' name='submit' value='Save' />
                         </form>
                     </div>
@@ -149,5 +236,33 @@ if (!mysqli_query($link,$selectSql)) {
         </div>
         <!-- /#page-wrapper -->
     </div>
+    <script>
+        function toggleTextbox(rdo) {
+//            document.getElementById("duration").disabled = !rdo;
+//            document.getElementById("amount").disabled = !rdo;
+            if (rdo) {
+                document.getElementById("storePwd").style.display = "block";
+            } else {
+                document.getElementById("storePwd").style.display = "none";
+                document.getElementById('password').value = "";
+                document.getElementById('message').value = "";
+            }
+        }
+
+        window.onload = function() {
+            <?php 
+            if (isset($_SESSION['passwordOff'])) {
+                if ($_SESSION['passwordOff'] === "off") {
+            ?>
+                toggleTextbox(false);
+            <?php 
+                } else {
+            ?>
+                toggleTextbox(true);                    
+            <?php 
+                } 
+            }?>
+        };
+    </script>
 </html>
 <?php } ?>

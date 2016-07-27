@@ -28,6 +28,13 @@ if (isset($_SESSION['mailSuccess'])) {
 //$pageCanonical = "";
 //$pageRobots = "";
     
+if (isset($_SESSION['maintenanceMsg'])) {
+    $mainUrl = $_SERVER['REQUEST_URI'];
+    $curArr = explode("/", $mainUrl);
+    if (strcmp($curArr[count($curArr)-1], "index.php") !== 0) {
+        header("Location: index.php");
+    }
+}
 //check user profile
 if (isset($_SESSION['loggedUserEmail'])) {
     $user = "Select * from user where email ='".$_SESSION['loggedUserEmail']."';";

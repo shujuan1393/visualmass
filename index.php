@@ -14,6 +14,7 @@
             
             <div id="content">
                 <?php
+                if (!isset($_SESSION['maintenanceMsg'])) {
                     $banner = "Select * from homepage where type='banner';";
                     $bresult = mysqli_query($link, $banner);
                     
@@ -135,7 +136,11 @@
                 <?php
                         }
                     }
-                    
+                } else {
+                    echo "<div id='maintenanceMsg'>";
+                    echo $_SESSION['maintenanceMsg'];
+                    echo "</div>";
+                }
                     $advSql = "Select * from advertisements where status='active' and visibility like '%homepage%';";
                     $advres = mysqli_query($link, $advSql);
                 ?>
@@ -148,7 +153,10 @@
                 var clientHeight = document.getElementById('header').clientHeight;
                 var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
                 document.getElementById('banner').style.maxHeight = height - clientHeight;
-                
+             
+            <?php 
+                if (!isset($_SESSION['maintenanceMsg'])) { 
+            ?>  
                 for (var i = 0; i < <?php echo $count; ?>; i++) {
                    var str = "section" + i;
                    var sectionObj = document.getElementById(str);
@@ -234,6 +242,9 @@
                     }
                 ?>
                 }
+                <?php 
+                }
+                ?>  
             </script>
         </div>
     </body>
