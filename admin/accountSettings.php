@@ -61,7 +61,7 @@ if (!mysqli_query($link,$selectSql)) {
                                 <h1 class="page-header">Manage Employee Restrictions</h1>
                                 <p>
                                     <form id='accountSettings' action='saveAccountSettings.php?save=1' method='post'>
-                                        <div id="accSetSuccess" style='color:green'>
+                                        <div id="accSetSuccess" class='success'>
                                             <?php
                                                 if (isset($_SESSION['updateAccSetSuccess'])) {
                                                     echo $_SESSION['updateAccSetSuccess'];
@@ -201,6 +201,13 @@ if (!mysqli_query($link,$selectSql)) {
                                                         }
                                                        ?>
                                                        > Web
+                                                <input type="checkbox" name="<?php echo $row1['code']; ?>[]" value='pos' 
+                                                       <?php 
+                                                        if (in_array("pos", $accessArr)) {
+                                                            echo " checked";
+                                                        }
+                                                       ?>
+                                                       > POS
                                             </td>
                                             <?php 
                                                     echo "</tr>";

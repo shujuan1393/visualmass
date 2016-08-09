@@ -153,7 +153,7 @@ and open the template in the editor.
                                     echo "<div class='col-md-1'><input type='text' name='quantity".$count."' value='".$row['quantity']."'>"
                                     . "</div>";
                                     echo "<div class='col-md-1'><p class='totalprice'>$".$total."</p></div>";  
-                                    echo "<div class='col-md-1'><p><a class='cart_button' href='addCart.php?delete=1&id=".$type."-".$pid."'>X</a></p></div>";  
+                                    echo "<div class='col-md-1'><p><a class='cart_button' href='addCart.php?delete=1&id=".$type."/".$pid."'>X</a></p></div>";  
 //                                    echo "</div>";
                                     echo "</div>";
                                     $count++;

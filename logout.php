@@ -15,7 +15,7 @@ if (isset($_SESSION['loggedUserEmail']) && isset($_SESSION['userType'])) {
     
     mysqli_query($link, $updateSql);
     session_destroy();
-    header("Location: login.php");  
+    header("Location: admin/login.php");  
 } else {
     session_destroy();
     setcookie("cartId", "", time() - 3600);

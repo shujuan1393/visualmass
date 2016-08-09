@@ -149,6 +149,7 @@ and open the template in the editor.
                             <div id='hometrydeliver' class='col-md-6 col-md-offset-3'>
                             <h5 class='caps'>Home Try-On Delivery Options</h5>
                             <input type='hidden' name='selectedDeliveryDate' id='selectedDeliveryDate'>
+                            <input type='hidden' name='corrCollectionDate' id='corrCollectionDate'>
                             <div id='deliverError' class='error' style='display:none;'>No timings selected</div>
                             <p>Select the most suitable date and timing(s) to start your 1-week trial</p>
                                 <input type="checkbox" name="timings[]" value="MORNING"> Morning 
@@ -160,7 +161,7 @@ and open the template in the editor.
                             <button id='getTimes' class='caps button'>Get Timings</button>
                             <?php } ?>
                             <br>
-                            <?php if (isset($_SESSION['deliveryTimings'])) { ?>
+                            <?php if (isset($_SESSION['hometrydeliver']) && isset($_SESSION['deliveryTimings'])) { ?>
                             <div id='deliveryAvailability' class='col-md-6 col-md-offset-3'>
                                 <?php 
                                     $deliveryArr = $_SESSION['deliveryTimings'];
@@ -169,11 +170,17 @@ and open the template in the editor.
                                     echo "<p>For your selected date, ".$date.",</p>";
                                     echo "<p> there are ".count($deliveryArr[0]['deliveryWindow'])." available slots</p>";
                                     $slots = $deliveryArr[0]['deliveryWindow'];
+                                    $collection = $deliveryArr[0]['collection']['collectionWindow'];
+                                    
                                     for ($s = 0; $s < count($slots); $s++) {
                                         $slot = explode(" ",$slots[$s]);
                                         $time = count($slot)-1;
                                         echo "<input type='radio' name='time' id='time".$count."' value='".$slots[$s]."'>&nbsp;"
                                                 .$slot[$time]."<br>";
+                                        
+                                        $collect = explode(" ",$collection[$s]);
+                                        $col = count($collect)-1;
+                                        echo "<input type='hidden' name='collect' id='collect".$count."' value='".$collection[$s]."'>";
                                         $count++;
                                     }
                                 ?>
@@ -210,11 +217,15 @@ and open the template in the editor.
     <script>
         function getRadio(num) {
             var str = "time"+num;
+            var col = "collect" + num;
             
             document.getElementById(str).onclick = function() {
                 var val = this.value;
+                var collect = document.getElementById(col).value;
+                
                 if (val !== null) {
                     document.getElementById('selectedDeliveryDate').value = val;
+                    document.getElementById('corrCollectionDate').value = collect;
                 }
             };
         }

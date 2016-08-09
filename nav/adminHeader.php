@@ -52,6 +52,7 @@ include("../fusioncharts/fusioncharts.php");
     
     <link href="../styles.css" rel="stylesheet" type="text/css" />
     
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
     <meta name="description" content="Singapore Eyewear">
     <meta name="author" content="Visual Mass">
 

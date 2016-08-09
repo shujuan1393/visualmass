@@ -69,6 +69,58 @@
                 </li>
             </ul>
         </li>-->
+
+        <!--check if current user has permission-->
+        <?php 
+            $pos = "Select * from settings where type='account';";
+            $pres = mysqli_query($link, $pos);
+            
+            if (!mysqli_query($link, $pos)) {
+                die(mysqli_error($link));
+            } else {
+                $row = mysqli_fetch_assoc($pres);
+                $valArr = explode("&", $row['value']);
+                for ($i = 0; $i < count($valArr); $i++) {
+                    $value = $valArr[$i];
+                    $access = explode("=", $value);
+                    
+                    if (strcmp($_SESSION['userType'], "admin") === 0) { 
+                        $_SESSION['displayPos'] = "show";
+                    } else if(in_array($_SESSION['userType'], $access)) {
+                        $userAccess = explode(",", $access[1]);
+                        if (in_array("pos", $userAccess)) {
+                            $_SESSION['displayPos'] = "show";
+                        } else {
+                            unset($_SESSION['displayPos']);
+                        }
+                    } else {
+                        unset($_SESSION['displayPos']);
+                    }
+                }
+            }
+            
+            if (isset($_SESSION['displayPos']) && !isset($_SESSION['storePOS'])) {
+        ?>
+        
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-shopping-bag"></i> POS <b class="caret"></b></a>
+            <ul class="dropdown-menu alert-dropdown">
+                <li>
+                    <a href="store.php"><i class="fa fa-fw fa-shopping-bag"></i> View Store</a>
+                </li>
+            </ul>
+        </li>
+        
+            <?php } else if (isset($_SESSION['storePOS'])) { ?>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-home"></i> Admin Panel <b class="caret"></b></a>
+            <ul class="dropdown-menu alert-dropdown">
+                <li>
+                    <a href="index.php"><i class="fa fa-fw fa-caret-left"></i>Home</a>
+                </li>
+            </ul>
+        </li>
+            <?php } ?>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
             <ul class="dropdown-menu alert-dropdown">
@@ -81,6 +133,7 @@
                 </li>
             </ul>
         </li>
+            
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $_SESSION['loggedUser'] ?> <b class="caret"></b></a>
             <ul class="dropdown-menu">
@@ -94,6 +147,8 @@
             </ul>
         </li>
     </ul>
+    
+    <?php if(!isset($_SESSION['storePOS'])) { ?>
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
@@ -292,5 +347,49 @@
             <?php } ?>
         </ul>
     </div>
+    <?php } else { ?>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav side-nav">
+            <li <?php if (in_array("storeLoc.php", $urlArr)) { echo "class='active'"; }; ?> >
+                <a href='storeLoc.php'><i class="fa fa-fw fa-shopping-bag"></i> 
+                    <?php 
+                    if (!isset($_SESSION['curStore'])) {
+                        echo "SET ";
+                    }
+                    ?>
+                    CURRENT STORE<?php
+                    if (isset($_SESSION['curStore'])) {
+                        echo ": ";
+                        
+                        $getLoc = "Select * from locations where code='".$_SESSION['curStore']."';";
+                        $lres = mysqli_query($link, $getLoc);
+                        
+                        if (!mysqli_query($link, $getLoc)) {
+                            die(mysqli_error($link));
+                        } else {
+                            if ($lres -> num_rows > 0) {
+                                $lrow = mysqli_fetch_assoc($lres);
+                                
+                                if (strcmp($_SESSION['curStore'], $lrow['code']) === 0) {
+                                    echo $lrow['name'];
+                                }
+                            }
+                        }
+                    }
+                ?></a>
+            </li>
+            <li <?php if (in_array("store.php", $urlArr)) { echo "class='active'"; }; ?> >
+                <a href='store.php'><i class="fa fa-fw fa-shopping-bag"></i> STORE</a>
+            </li>
+            <li <?php if (in_array("cart.php", $urlArr)) { echo "class='active'"; }; ?> >
+                <a href='cart.php'><i class="fa fa-fw fa-shopping-cart"></i> CART</a>
+            </li>
+            <li <?php if (in_array("posOrders.php", $urlArr)) { echo "class='active'"; }; ?> >
+                <a href='posOrders.php'><i class="fa fa-fw fa-check-square-o"></i> ORDERS</a>
+            </li>
+            
+        </ul>
+    </div>
+    <?php } ?>
     <!-- /.navbar-collapse -->
 </nav>

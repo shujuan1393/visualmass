@@ -1582,3 +1582,8 @@ input#search:focus {
     background-color: #cccccc;
     color:#fff!important;
 }
+
+.pos {
+    width: 100%!important;
+    background-color: #ffffff;
+}

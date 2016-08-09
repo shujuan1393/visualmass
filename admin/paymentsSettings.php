@@ -14,7 +14,7 @@ if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
     $savedrow = mysqli_fetch_assoc($savedresult);
-    $valArr = explode("#", $savedrow['value']);
+    $payments = explode("#", $savedrow['value']);
 ?>
 
 <!DOCTYPE html>
@@ -66,8 +66,8 @@ if (!mysqli_query($link,$selectSql)) {
                             
                             Visibility: 
                             <?php 
-                                if (!empty($valArr[0])) {
-                                    $visib = explode("visibility=", $valArr[0]);
+                                if (!empty($payments[0])) {
+                                    $visib = explode("visibility=", $payments[0]);
                                 }
                             ?>
                             <input name='visibility' type='radio' value='on' 
@@ -104,8 +104,8 @@ if (!mysqli_query($link,$selectSql)) {
                             <p class='setting-tooltips'>*Turn on/off the shipping feature</p><br>
 
                             <?php 
-                                if(!empty($valArr[1])){
-                                    $disclaimer = explode("disclaimer=", $valArr[1]);
+                                if(!empty($payments[1])){
+                                    $disclaimer = explode("disclaimer=", $payments[1]);
                                 }
                             ?>
                             Disclaimer:
@@ -124,8 +124,8 @@ if (!mysqli_query($link,$selectSql)) {
                             <p class='setting-tooltips'>*Set the default disclaimer to be displayed on the website</p><br>
 
                             <?php 
-//                                if(!empty($valArr[2])){
-//                                    $amount = explode("amount=", $valArr[2]);
+//                                if(!empty($payments[2])){
+//                                    $amount = explode("amount=", $payments[2]);
 //                                }
                             ?>
 <!--                            Amount Chargeable:

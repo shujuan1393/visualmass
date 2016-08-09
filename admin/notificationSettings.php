@@ -14,7 +14,7 @@ if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
     $savedrow = mysqli_fetch_assoc($savedresult);
-    $valArr = explode("#", $savedrow['value']);
+    $notifications = explode("#", $savedrow['value']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,8 +67,8 @@ if (!mysqli_query($link,$selectSql)) {
                                     Set default email templates to be received by customers
                                 </span></p>
                             <?php 
-                                if(!empty($valArr[0])){
-                                    $emailArr = explode("email=", $valArr[0]);
+                                if(!empty($notifications[0])){
+                                    $emailArr = explode("email=", $notifications[0]);
                                     $emailVal = explode(",", $emailArr[1]);
                                 }
                             ?>
@@ -144,8 +144,8 @@ if (!mysqli_query($link,$selectSql)) {
                                     Set default SMS templates to be received by customers
                                 </span></p>
                             <?php 
-                                if(!empty($valArr[1])){
-                                    $smsArr = explode("sms=", $valArr[1]);
+                                if(!empty($notifications[1])){
+                                    $smsArr = explode("sms=", $notifications[1]);
                                     $smsVal = explode(",", $smsArr[1]);
                                 }
                             ?>

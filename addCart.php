@@ -9,7 +9,7 @@
 require_once 'config/db.php';
 
 if (isset($_GET['delete']) && isset($_GET['id'])) {
-    $idArr = explode("-", $_GET['id']);
+    $idArr = explode("/", $_GET['id']);
     $delete = "DELETE FROM cart where pid='".$idArr[1]."' and type='".$idArr[0]."' and cartid ='".GetCartId()."';";
     
     mysqli_query($link, $delete);

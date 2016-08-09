@@ -70,7 +70,7 @@ if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
     $savedrow = mysqli_fetch_assoc($savedresult);
-    $valArr = explode("#", $savedrow['value']);
+    $webset = explode("#", $savedrow['value']);
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +121,7 @@ if (!mysqli_query($link,$selectSql)) {
 
                             Web Store Title:
                             <?php 
-                                $web = explode("web=", $valArr[0]);
+                                $web = explode("web=", $webset[0]);
                             ?>
                             <input type='text' name='title' 
                                    value="<?php 
@@ -130,8 +130,8 @@ if (!mysqli_query($link,$selectSql)) {
                                    } else if (!empty($web[1])) { echo $web[1]; } ?>"><br>
                             Metadata Description:
                             <?php 
-                                if(!empty($valArr[1])){
-                                    $meta = explode("meta=", $valArr[1]);
+                                if(!empty($webset[1])){
+                                    $meta = explode("meta=", $webset[1]);
                                 }
                             ?>
                             <textarea name='metadata'><?php 
@@ -143,8 +143,8 @@ if (!mysqli_query($link,$selectSql)) {
                             </script><br>
                             Ticker:
                             <?php 
-                                if (!empty($valArr[2])) {
-                                    $tick = explode("ticker=", $valArr[2]);
+                                if (!empty($webset[2])) {
+                                    $tick = explode("ticker=", $webset[2]);
                                 }
                             ?>
                             <input type='text' name='ticker' 
@@ -155,8 +155,8 @@ if (!mysqli_query($link,$selectSql)) {
                             <br><br>
                             Maintenance Mode:
                             <?php 
-                                if (!empty($valArr[3])) {
-                                    $maintain = explode("maintenance=", $valArr[3]);
+                                if (!empty($webset[3])) {
+                                    $maintain = explode("maintenance=", $webset[3]);
                                 }
                             ?>
                             <input name='maintenance' type='radio' value='on' 
@@ -193,8 +193,8 @@ if (!mysqli_query($link,$selectSql)) {
                             <br><br>
                             <div id='storePwd' style='display: none'>
                                 <?php 
-                                    if (!empty($valArr[4])) {
-                                        $pwd = explode("password=", $valArr[4]);
+                                    if (!empty($webset[4])) {
+                                        $pwd = explode("password=", $webset[4]);
                                     }
                                 ?>
                                 Store Password: 
@@ -207,8 +207,8 @@ if (!mysqli_query($link,$selectSql)) {
                                     ?>'>
                                 <br>
                                 <?php 
-                                    if (!empty($valArr[5])) {
-                                        $message = explode("message=", $valArr[5]);
+                                    if (!empty($webset[5])) {
+                                        $message = explode("message=", $webset[5]);
                                     }
                                 ?>
                                 <br>
