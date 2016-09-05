@@ -175,10 +175,10 @@ if (isset($_SESSION['loggedUserEmail'])) {
                     <!— Top Menu Items —>
                     <ul class="nav navbar-left top-nav caps content-inline">
                         <li class="dropdown pull-left">
-                            <a href="#" id="showGlasses" class="dropdown-toggle" data-toggle="dropdown">Glasses</a>
+                            <a id="showGlasses" class="dropdown-toggle" data-toggle="dropdown">Glasses</a>
                         </li>
                         <li class="dropdown pull-left">
-                            <a href="#" id="showSunglasses" class="dropdown-toggle" data-toggle="dropdown">Sunglasses</a>
+                            <a id="showSunglasses" class="dropdown-toggle" data-toggle="dropdown">Sunglasses</a>
                         </li>
                         <li class="dropdown pull-right">
                             <a id="nav-collapse2" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
@@ -198,7 +198,7 @@ if (isset($_SESSION['loggedUserEmail'])) {
                             <a href="locations.php" >Location</a>
                         </li>
                         <li class="dropdown pull-left">
-                            <a href="#" id="showStory" class="dropdown-toggle" data-toggle="dropdown">Our Story</a>
+                            <a id="showStory" class="dropdown-toggle" data-toggle="dropdown">Our Story</a>
                         </li>
                     </ul>
                     <ul class="nav navbar-right top-nav caps content-inline">

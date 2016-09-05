@@ -28,6 +28,16 @@ if (isset($_GET['id'])) {
             <?php require '../nav/adminMenubar.php'; ?>
             
             <!-- Content -->
+            <div class="bc-top bg-white">
+                <img src="../icons/admin/discounts16.png" alt="" class="bc-img pull-left"/>
+                <div class="pull-left">Discounts
+                </div>
+                <div class="pull-right">
+                    <a href="#addDiscount"><i class="fa fa-fw fa-plus"></i> Add Discount</a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            
             <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -35,37 +45,26 @@ if (isset($_GET['id'])) {
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <ol class="breadcrumb">
-                            <li>
-                                <a href="home.php"><i class="fa fa-home"></i></a>
-                            </li>
-                            <li class="active">
-                                Discounts
-                            </li>
-                        </ol>
                         <ul class="nav nav-tabs" id="myTabs">
                             <li class="active"><a data-toggle="tab" href="#discounts">Discounts</a></li>
-                            <li><a data-toggle="tab" href="#menu1">Discount History</a></li>
+                            <li><a data-toggle="tab" href="#discountHistory">Discount History</a></li>
                         </ul>
 
                         <div class="tab-content">
                             <div id="discounts" class="tab-pane fade in active">
-                            <h1 class="page-header">Manage Discounts</h1>
+                            <h3 class="page-header">Manage Discounts</h3>
                             
-                            <div id="updateDiscSuccess" class='success'>
-                                <?php 
-                                    if (isset($_SESSION['updateDiscSuccess'])) {
-                                        echo $_SESSION['updateDiscSuccess'];
-                                    }
-                                ?>
+                            <?php if (isset($_SESSION['updateDiscSuccess'])) { ?>
+                            <div id="updateDiscSuccess" class="alert alert-success">
+                                <?php echo $_SESSION['updateDiscSuccess']; ?>
                             </div>
-                            <div id="updateDiscError" class='error'>
-                                <?php 
-                                    if (isset($_SESSION['updateDiscError'])) {
-                                        echo $_SESSION['updateDiscError'];
-                                    }
-                                ?>
+                            <?php } ?>
+                            
+                            <?php if (isset($_SESSION['updateDiscError'])) { ?>
+                            <div id="updateDiscError" class="alert alert-danger">
+                                <?php echo $_SESSION['updateDiscError']; ?>
                             </div>
+                            <?php } ?>
 
                             <?php 
                                 $qry = "Select * from discounts";
@@ -81,13 +80,9 @@ if (isset($_GET['id'])) {
                                     } else {
                             ?>
 
-                            <p class="text-right">
-                                <a href="#add"><i class="fa fa-fw fa-plus"></i> Add Discount</a>
-                            </p>
-
                             <div class="pull-left filter-align">Filter: </div>
                             <div style="overflow:hidden">
-                                <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                                <input type="text" id="filter" class="pull-right" placeholder="Type here to search for discounts">
                             </div>
 
                             <table id ="example">
@@ -123,666 +118,12 @@ if (isset($_GET['id'])) {
                                 } 
                             }
                             ?>
-
-                            <h1 id="add" class="page-header">Add/Edit Discount</h1>
-
-                            <form id='addDiscount' action='processDiscounts.php' method='post'>
-                                <div id="addDiscError" class='error'>
-                                    <?php 
-                                        if (isset($_SESSION['addDiscError'])) {
-                                            echo $_SESSION['addDiscError'];
-                                        }
-                                    ?>
-                                </div>
-                                <p id='nanError' class='error' style="display: none;">Please enter numbers only</p>
-
-                                <div id="addDiscSuccess"  class='success'>
-                                    <?php 
-                                        if (isset($_SESSION['addDiscSuccess'])) {
-                                            echo $_SESSION['addDiscSuccess'];
-                                        }
-                                    ?>
-                                </div>
-
-                            <table class='content'>
-                                <tr>
-                                    <td>
-                                        <input type='hidden' name='submitted' id='submitted' value='1'/>
-                                        <input type='hidden' name='editid' id='editid' 
-                                               value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
-                                        Name:
-                                        <input type='text' name='name' id='name'  maxlength="50" 
-                                               value ="<?php 
-                                        if (isset($_SESSION['name'])) {
-                                            echo $_SESSION['name'];
-                                        } else if (!empty($erow['name'])) {
-                                            echo $erow['name'];
-                                        } 
-                                            ?>"/>
-                                    </td>
-                                    <td>
-                                        Discount Code*: <br/>
-                                        <button type="button" onclick="randomString()" class="pull-right">Generate</button>
-                                        <div style="overflow: hidden;" >
-                                            <input type='text' name='code' id='code' value ="<?php 
-                                                if(isset($_SESSION['randomString'])) { 
-                                                    echo $_SESSION['randomString'];
-                                                } else if (!empty($erow['code'])) {
-                                                    echo $erow['code'];
-                                                }?>" maxlength="50" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <?php
-                                            if (isset($_SESSION['usage'])) {
-                                                $usageArr = explode(",", $_SESSION['usage']);
-                                            } else if (!empty($erow['discusage'])) { 
-                                                $usageArr = explode(",", $erow['discusage']);
-                                            }  
-                                        ?>
-                                        Usage*: <br/>
-                                        <input type='checkbox' name='usage[]' value="cust" <?php 
-                                                if (!empty($erow['discusage']) || isset($_SESSION['usage'])) {
-                                                    if (in_array("cust", $usageArr)) {
-                                                        echo " checked";
-                                                    }
-                                                }
-                                            ?>>Customer 
-                                        <input type='checkbox' name='usage[]' value='emp' <?php 
-                                                if (!empty($erow['discusage']) || isset($_SESSION['usage'])) {
-                                                    if (in_array("emp", $usageArr)) {
-                                                        echo " checked";
-                                                    }
-                                                }
-                                            ?>>Employee
-                                    </td>
-                                    <td>
-                                        Limit Per User*:
-                                        <input type='text' name='userlimit' id='userlimit'  maxlength="50"  
-                                               onkeypress="return isNumber(event)" value ="<?php 
-                                                if (isset($_SESSION['userlimit'])) {
-                                                    echo $_SESSION['userlimit'];
-                                                } else if (!empty($erow['userlimit'])) {
-                                                    echo $erow['userlimit'];
-                                                }  
-                                            ?>"/>
-                                    </td>                                
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Track Serial Number?: <br/>
-                                        <input type='checkbox' name='serial' value="yes" <?php 
-                                                if (isset($_SESSION['serial'])) {
-                                                    if(strcmp("yes", $_SESSION['serial']) === 0) {
-                                                        echo " checked";
-                                                    }
-                                                } else if (!empty($erow['serial'])) {
-                                                    if (strcmp("yes", $erow['serial']) === 0) {
-                                                        echo " checked";
-                                                    }
-                                                } 
-                                            ?>>Yes 
-                                    </td>
-                                    <td>
-                                        Limit*:
-                                        <input type='text' name='limit' id='limit'  maxlength="50"  
-                                               onkeypress="return isNumber(event)" value ="<?php 
-                                                if (isset($_SESSION['disclimit'])) {
-                                                    echo $_SESSION['disclimit'];
-                                                } else if (!empty($erow['disclimit'])) {
-                                                    echo $erow['disclimit'];
-                                                } 
-                                            ?>"/>
-                                    </td> 
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                            <h5>Discount Condition</h5>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width='40%'>
-                                        <div id='conditiontype'>
-                                            <?php 
-
-                                            if (isset($_SESSION['condition'])) {
-                                                $condition = $_SESSION['condition'];
-                                            } else if(!empty($erow['disccondition'])){
-                                                if (isset($erow['disccondition'])) {
-                                                    $condition = $erow['disccondition'];
-                                                } else {
-                                                    $condition = "";
-                                                }
-                                            } 
-
-                                            if (isset($_SESSION['discterms'])) {
-                                                $disctype = $_SESSION['discterms'];
-                                            } else if(!empty($erow['disctype'])){
-                                                if (isset($erow['disctype'])) {
-                                                    $disctype = $erow['disctype'];
-                                                } else {
-                                                    $disctype = "";
-                                                }
-
-                                                $typeArr = explode(" ", $disctype);
-                                            }  
-
-                                            ?>
-                                            <select name='condition' id='condition'>
-                                                <option value='null' <?php 
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "null") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($typeArr)) && (in_array("", $typeArr))) {
-                                                    $_SESSION['editcondition'] = "";
-                                                    echo " selected";
-                                                }
-                                                ?>>Select Discount Type</option>
-
-                                                <option value='upgrade' <?php 
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "upgrade") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($typeArr)) && (in_array("Upgrade", $typeArr))) {
-                                                    $_SESSION['editcondition'] = "upgrade";
-                                                    echo " selected";
-                                                }
-                                                ?>>Free Upgrade</option>
-
-                                                <option value='bundleamount' <?php 
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "bundleamount") === 0) {
-                                                        echo " selected";
-                                                    }
-
-                                                } else if ((!empty($typeArr)) && (strcmp($typeArr[2], "For") === 0)) {
-                                                    $_SESSION['editcondition'] = "bundleamount";
-                                                    echo " selected";
-                                                }
-                                                ?>>Bundle Amount</option>
-
-                                                <option value='bundlediscount' <?php 
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "bundlediscount") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($typeArr)) && (in_array("Discount", $typeArr))) {
-                                                    $_SESSION['editcondition'] = "bundlediscount";
-                                                    echo " selected";
-                                                }
-                                                ?>>Bundle Discount</option>
-
-                                                <option value='nextfree' <?php 
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "nextfree") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($typeArr)) && (in_array("Next", $typeArr))) {
-                                                    $_SESSION['editcondition'] = "nextfree";
-                                                    echo " selected";
-                                                }
-                                                ?>>Next Pair Free</option>
-
-                                                <option value='nextdiscount' <?php
-                                                $nextdiscArr = array("Buy", "Next");
-                                                if (!empty($typeArr)) { 
-                                                    $resArr = array_intersect($nextdiscArr, $typeArr);
-                                                }
-
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "nextdiscount") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($resArr)) && (!empty($disctype)) && count($resArr) === count($nextdiscArr) && is_numeric(strpos($disctype, "%"))) {
-                                                    $_SESSION['editcondition'] = "nextdiscount";
-                                                    echo " selected";
-                                                }
-                                                ?>>Next Pair Discounted</option>
-
-                                                <option value='fixedpercent' <?php 
-                                                $fixedArr = array("Get", "Off");
-                                                if ((!empty($fixedArr)) && (!empty($typeArr))) {
-                                                    $percArr = array_intersect($fixedArr, $typeArr);
-                                                }
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "fixedpercent") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($percArr)) && (!empty($disctype)) && count($percArr) ===  count($fixedArr) && is_numeric(strpos($disctype, "%"))) {
-                                                    $_SESSION['editcondition'] = "fixedpercent";
-                                                    echo " selected";
-                                                }
-                                                ?>>Fixed Percentage Discount</option>
-                                                <option value='fixedamount' <?php 
-                                                if ((!empty($fixedArr)) && (!empty($typeArr))) {
-                                                    $amtArr = array_intersect($fixedArr, $typeArr);
-                                                }
-
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "fixedamount") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($percArr)) && (count($percArr) === count($fixedArr) && is_numeric(strpos($disctype, "$")))) {
-                                                    $_SESSION['editcondition'] = "fixedamount";
-                                                    echo " selected";
-                                                }
-                                                ?>>Fixed Amount Discount</option>
-                                                <option value='shipping' <?php 
-                                                if (isset($_SESSION['condition'])) {
-                                                    if (strcmp($_SESSION['condition'], "shipping") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                }
-                                                ?>>Free Shipping</option>
-
-                                            </select>
-                                            <div id='bundleamount' style='display:none;'>
-                                                <div class='pull-left' style='width: 45%!important;'>
-                                                    <span class='pull-left padded-input'>Buy&nbsp; </span> 
-                                                    <span class='pull-right' style='width: 80%!important;'>
-                                                        <input type='text' name='bundleamtqty' 
-                                                               value='<?php 
-                                                               if (isset($_SESSION['bundleamt']['qty'])) {
-                                                                   echo $_SESSION['bundleamt']['qty'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
-                                                                if (strcmp($_SESSION['editcondition'], "bundleamount") === 0) { 
-                                                                    echo $typeArr[1];
-                                                                } 
-                                                            } ?>'
-                                                               onkeypress="return isNumber(event)">
-                                                    </span>
-                                                </div>
-                                                <div class='pull-right' style='width: 48%!important;'>
-                                                    <span class='pull-left padded-input'>For $</span>
-                                                    <span class='pull-right' style='width: 80%!important;'>
-                                                        <input type='text' name='bundleamtprice' 
-                                                               value='<?php if (isset($_SESSION['bundleamt']['price'])) {
-                                                                   echo $_SESSION['bundleamt']['price'];
-                                                               } if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
-                                                                if (strcmp($_SESSION['editcondition'], "bundleamount") === 0) { 
-                                                                    echo substr($typeArr[3], 1);
-                                                                } 
-                                                            } ?>'
-                                                               onkeypress="return isNumberKey(event)">
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div id='bundlediscount' style='display:none;'>
-                                                <div class='pull-left' style='width: 45%!important;'>
-                                                    <span class='pull-left padded-input'>Buy&nbsp; </span> 
-                                                    <span class='pull-right' style='width: 80%!important;'>
-                                                        <input type='text' name='bundlediscqty' 
-                                                               value='<?php if (isset($_SESSION['bundledisc']['qty'])) {
-                                                                   echo $_SESSION['bundledisc']['qty'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
-                                                                if (strcmp($_SESSION['editcondition'], "bundlediscount") === 0) { 
-                                                                    echo $typeArr[1];
-                                                                } 
-                                                            } ?>'
-                                                               onkeypress="return isNumber(event)">
-                                                    </span>
-                                                </div>
-                                                <div class='pull-right' style='width: 48%!important;'>
-                                                    <span class='pull-left' style='width: 80%!important;'>
-                                                        <input type='text' name='bundlediscprice' 
-                                                               value='<?php if (isset($_SESSION['bundledisc']['price'])) {
-                                                                   echo $_SESSION['bundledisc']['price'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
-                                                                if (strcmp($_SESSION['editcondition'], "bundlediscount") === 0) { 
-                                                                    echo substr($typeArr[3], 0, -1); 
-                                                                } 
-                                                            } ?>'
-                                                               onkeypress="return isNumberKey(event)">
-                                                    </span>
-                                                    <span class='pull-right padded-input'>% Off</span>
-                                                </div>
-                                            </div>
-                                            <div id='nextfree' style='display:none;'>
-                                                <div class='pull-left' style='width: 45%!important;'>
-                                                    <span class='pull-left padded-input'>Buy&nbsp; </span> 
-                                                    <span class='pull-right' style='width: 80%!important;'>
-                                                        <input type='text' name='nextfreeqty' 
-                                                               value='<?php if (isset($_SESSION['nextfree']['qty'])) {
-                                                                   echo $_SESSION['nextfree']['qty'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
-                                                                if (strcmp($_SESSION['editcondition'], "nextfree") === 0) { 
-                                                                    echo $typeArr[1];
-                                                                } 
-                                                            } ?>'
-                                                               onkeypress="return isNumber(event)">
-                                                    </span>
-                                                </div>
-                                                <div class='pull-right' style='width: 45%!important;'>
-                                                    <span class='pull-left padded-input'>Free  </span>
-                                                    <span class='pull-right' style='width: 80%!important;'>
-                                                        <input type='text' name='nextfreeamt'
-                                                               value='<?php if (isset($_SESSION['nextfree']['amt'])) {
-                                                                   echo $_SESSION['nextfree']['amt'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
-                                                                if (strcmp($_SESSION['editcondition'], "nextfree") === 0) { 
-                                                                    echo $typeArr[3];
-                                                                } 
-                                                            } ?>'
-                                                               onkeypress="return isNumber(event)">
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div id='nextdiscount' style='display:none;'>
-                                                <div class='pull-left' style='width: 45%!important;'>
-                                                    <span class='pull-left padded-input'>Buy&nbsp; </span> 
-                                                    <span class='pull-right' style='width: 80%!important;'>
-                                                        <input type='text' name='nextdiscqty' 
-                                                               value='<?php if (isset($_SESSION['nextdisc']['qty'])) {
-                                                                   echo $_SESSION['nextdisc']['qty'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
-                                                                if (strcmp($_SESSION['editcondition'], "nextdiscount") === 0) { 
-                                                                    echo $typeArr[1];
-                                                                } 
-                                                            } ?>'
-                                                               onkeypress="return isNumber(event)">
-                                                    </span>
-                                                </div>
-                                                <div class='pull-right' style='width: 48%!important;'>
-                                                    <span class='pull-left' style='width: 80%!important;'>
-                                                        <input type='text' name='nextdiscamt' 
-                                                               value='<?php if (isset($_SESSION['nextdisc']['amt'])) {
-                                                                   echo $_SESSION['nextdisc']['amt'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
-                                                                    if (strcmp($_SESSION['editcondition'], "nextdiscount") === 0) { 
-                                                                        echo substr($typeArr[4], 0, -1); 
-                                                                    } 
-                                                                } ?>'
-                                                               onkeypress="return isNumber(event)">
-                                                    </span>
-                                                    <span class='pull-right padded-input'> % Off </span>
-                                                </div>
-                                            </div>
-                                            <div id='fixedpercent' style='display:none;'>
-                                                <span class='pull-left' style='width: 50%!important;'>
-                                                    <input type='text' name='fixedperc'
-                                                        value='<?php if (isset($_SESSION['fixedperc'])) {
-                                                                   echo $_SESSION['fixedperc'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
-                                                                if (strcmp($_SESSION['editcondition'], "fixedpercent") === 0) { 
-                                                                    echo substr($typeArr[1], 0, -1); 
-                                                                } 
-                                                            } ?>'
-                                                        onkeypress="return isNumber(event)">
-                                                </span>
-                                                <span class='pull-left padded-input'>&nbsp; % Off </span>
-                                            </div>
-                                            <div id='fixedamount' style='display:none;'>
-                                                <span class='pull-left padded-input'>$ &nbsp; </span>
-                                                <span class='pull-left' style='width: 50%!important;'>
-                                                    <input type='text' name='fixedamt' 
-                                                           value='<?php if (isset($_SESSION['fixedamt'])) {
-                                                                   echo $_SESSION['fixedamt'];
-                                                               } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
-                                                                if (strcmp($_SESSION['editcondition'], "fixedamount") === 0) { 
-                                                                    echo substr($typeArr[1], 1); 
-                                                                } 
-                                                            } ?>'
-                                                            onkeypress="return isNumberKey(event)">
-                                                </span>
-                                                <span class='pull-left padded-input'>&nbsp; Off </span>
-                                            </div>
-                                            <div id='shipping' style='display:none;'>
-                                                <div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div id='conditions'>
-                                            <?php 
-                                            if(!empty($condition)) {
-                                                $condArr = explode(" ", $condition);
-                                            }
-                                            ?>
-                                            <select name='conditionfor' id='conditionfor'>
-                                                <option value='null' <?php 
-                                                if (isset($_SESSION['discterms'])) {
-                                                    if (strcmp($_SESSION['discterms'], "null") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($condArr)) && (in_array("", $condArr))) {
-                                                    $_SESSION['editterms'] = "";
-                                                    echo " selected";
-                                                }
-                                                ?>>Select an option</option>
-                                                <option value='allorders' <?php 
-                                                if (isset($_SESSION['discterms'])) {
-                                                    if (strcmp($_SESSION['discterms'], "allorders") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($condArr)) && (in_array("All", $condArr))) {
-                                                    $_SESSION['editterms'] = "allorders";
-                                                    echo " selected";
-                                                }
-                                                ?>>All orders</option>
-                                                <option value='ordersabove' <?php 
-                                                if (isset($_SESSION['discterms'])) {
-                                                    if (strcmp($_SESSION['discterms'], "ordersabove") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($condArr)) && (in_array("above", $condArr))) {
-                                                    $_SESSION['editterms'] = "ordersabove";
-                                                    echo " selected";
-                                                }
-                                                ?>>Orders above</option>
-                                                <option value='productcat' <?php 
-                                                if (isset($_SESSION['discterms'])) {
-                                                    if (strcmp($_SESSION['discterms'], "productcat") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($condArr)) && (in_array("categories:", $condArr))) {
-                                                    $_SESSION['editterms'] = "productcat";
-                                                    echo " selected";
-                                                }
-                                                ?>>Product Categories</option>
-                                                <option value='specificprod' <?php 
-                                                if (isset($_SESSION['discterms'])) {
-                                                    if (strcmp($_SESSION['discterms'], "specificprod") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($condArr)) && (in_array("For", $condArr))) {
-                                                    $_SESSION['editterms'] = "specificprod";
-                                                    echo " selected";
-                                                }
-                                                ?>>Specific Product</option>
-                                                <option value='customergroup' <?php 
-                                                if (isset($_SESSION['discterms'])) {
-                                                    if (strcmp($_SESSION['discterms'], "customergroup") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if ((!empty($condArr)) && (in_array("customer", $condArr))) {
-                                                    $_SESSION['editterms'] = "customergroup";
-                                                    echo " selected";
-                                                }
-                                                ?>>Customers in group</option>
-                                            </select>
-                                            <div id='ordersabove' style='display:none;'>
-                                                <span class='pull-left padded-input'>$ &nbsp; </span>
-                                                <span class='pull-left' style='width: 50%!important;'>
-                                                    <input type='text' name='aboveamt' 
-                                                           value='<?php if (isset($_SESSION['aboveamt'])) { 
-                                                               echo $_SESSION['aboveamt'];
-                                                           } else if(isset($_SESSION['editterms']) && !empty($condArr[1])) {
-                                                                if (strcmp($_SESSION['editterms'], "ordersabove") === 0) { 
-                                                                    echo substr($condArr[2], 1);
-                                                                } 
-                                                            } ?>'
-                                                            onkeypress="return isNumberKey(event)">
-                                                </span>                                            
-                                            </div>
-                                            <div id='productcat' style='display:none;'>
-                                                <div id='no-tags' stye='display:none;'>
-                                                    No existing tags found
-                                                </div>
-                                                <input type='hidden' id='tags' name='tags'>
-                                                <div class="control-group">
-                                                        <select id="select-to" class="contacts" placeholder="Type to select product categories... "></select>
-                                                </div>
-                                            </div>
-
-                                            <div id='specificprod' style='display:none;'>
-                                                <?php 
-                                                    $prodsql = "Select * from products;";
-                                                    $pres = mysqli_query($link, $prodsql);
-                                                ?>
-                                                <select name='specificprod'>
-                                                <?php
-                                                    if (!mysqli_query($link, $prodsql)) {
-                                                        die(mysqli_error($link));
-                                                    } else {
-                                                        while ($row = mysqli_fetch_assoc($pres)) {
-                                                            echo "<option value='".$row['name']."'"; 
-                                                            if(isset($_SESSION['discterms']) && isset($_SESSION['specificprod'])) {
-                                                                if (strcmp($_SESSION['discterms'], "specificprod") === 0) { 
-                                                                    if (strcmp($row['name'], $_SESSION['specificprod']) === 0) {
-                                                                        echo " selected";
-                                                                    }
-                                                                } 
-                                                            } else if(isset($_SESSION['editterms']) && !empty($condArr[2])) {
-                                                                if (strcmp($_SESSION['editterms'], "specificprod") === 0) { 
-                                                                    if (strcmp($row['name'], $condArr[2]) === 0) {
-                                                                        echo " selected";
-                                                                    }
-                                                                } 
-                                                            } 
-                                                            echo ">".$row['name']."</option>";
-                                                        }
-                                                    }
-                                                ?>
-                                                </select>
-                                            </div>
-                                            <div id='customergroup' style='display:none;'>
-
-                                            </div>
-                                        </div>
-    <!--                                    Amount*:
-                                        <input type='text' name='amount' id='amount'  maxlength="50"  
-                                               onkeypress="return isNumberKey(event)" value ="<?php 
-                                                if (!empty($erow['amount'])) {
-    //                                                echo $erow['amount'];
-                                                }
-                                            ?>"/>-->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Recurrence*:
-                                        <select name='recurrence'>
-                                            <option value='adhoc' <?php 
-                                                if (isset($_SESSION['recurrence'])) { 
-                                                    if(strcmp($_SESSION['recurrence'], "adhoc") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if (!empty($erow['recurrence'])) {
-                                                    if (strcmp($erow['recurrence'], "adhoc") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                }
-                                            ?>>Ad-hoc</option>
-                                            <option value='weekly' <?php 
-                                                if (isset($_SESSION['recurrence'])) { 
-                                                    if(strcmp($_SESSION['recurrence'], "weekly") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if (!empty($erow['recurrence'])) {
-                                                    if (strcmp($erow['recurrence'], "weekly") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                }
-                                            ?>>Weekly</option>
-                                            <option value='monthly' <?php 
-                                                if (isset($_SESSION['recurrence'])) { 
-                                                    if(strcmp($_SESSION['recurrence'], "monthly") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if (!empty($erow['recurrence'])) {
-                                                    if (strcmp($erow['recurrence'], "monthly") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                }
-                                            ?>>Monthly</option>
-                                            <option value='yearly' <?php 
-                                                if (isset($_SESSION['recurrence'])) { 
-                                                    if(strcmp($_SESSION['recurrence'], "yearly") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if (!empty($erow['recurrence'])) {
-                                                    if (strcmp($erow['recurrence'], "yearly") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                }
-                                            ?>>Yearly</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        Status*:
-                                        <select name='status'>
-                                            <option value='active' <?php 
-                                                if (isset($_SESSION['status'])) { 
-                                                    if(strcmp($_SESSION['status'], "active") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if (!empty($erow['status'])) {
-                                                    if (strcmp($erow['status'], "active") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                }
-                                            ?>>Active</option>
-                                            <option value='inactive' <?php 
-                                                if (isset($_SESSION['status'])) { 
-                                                    if(strcmp($_SESSION['status'], "inactive") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                } else if (!empty($erow['status'])) {
-                                                    if (strcmp($erow['status'], "inactive") === 0) {
-                                                        echo " selected";
-                                                    }
-                                                }
-                                            ?>>Inactive</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Start date:
-                                        <input type="text" id="date3" name="date3" 
-                                               value='<?php if (isset($_SESSION['start'])) { 
-                                                    echo $_SESSION['start'];
-                                                } else if (!empty($erow['start'])) { 
-                                                   echo $erow['start'];
-                                                }?>'>
-                                    </td>
-                                    <td>
-                                        End date:
-                                        <input type="text" id="date4" name="date4"
-                                               value='<?php if (isset($_SESSION['end'])) { 
-                                                    echo $_SESSION['end'];
-                                                } else if (!empty($erow['end'])) { 
-                                                   echo $erow['end'];
-                                                }?>'>
-                                    </td>
-                                </tr>
-                                    <td colspan='2'><input type='submit' name='submit' value='Submit' /></td>
-                                </tr>
-                                </form>
-                            </table>
                         </div>
                             
-                        <div id="menu1" class="tab-pane fade">
-                            <h1 class="page-header">Discount History</h1><br>
-                            
+                        <div id="discountHistory" class="tab-pane fade">                            
                             <div class="pull-left filter-align">Filter: </div>
                             <div style="overflow:hidden">
-                                <input type="text" id="filterhistory" class="pull-right" placeholder="Type here to search">
+                                <input type="text" id="filterhistory" class="pull-right" placeholder="Type here to search for discounts">
                             </div>
 
                             <?php 
@@ -822,11 +163,663 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
                 </div>
-                <!-- /.row -->
-
             </div>
-            <!-- /.container-fluid -->
+            <!-- /.row -->
 
+            <form id='addDiscount' action='processDiscounts.php' method='post'>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="vm-container vm-margin-t-30">
+                        
+                        <?php if (isset($_SESSION['addDiscError'])) { ?>
+                        <div id="addDiscError" class="alert alert-danger">
+                            <?php echo $_SESSION['addDiscError']; ?>
+                        </div>
+                        <?php } ?>
+                        
+                        <p id='nanError' class="alert alert-danger" style="display: none;">Please enter numbers only</p>
+
+                        <?php if (isset($_SESSION['addDiscSuccess'])) { ?>
+                        <div id="addDiscSuccess"  class="alert alert-success">
+                            <?php echo $_SESSION['addDiscSuccess']; ?>
+                        </div>
+                        <?php } ?>
+                        
+                        <h4 class="page-header vm-margin-t-clear">Discount Code</h4>
+                        
+                        <input type='hidden' name='submitted' id='submitted' value='1'/>
+                        <input type='hidden' name='editid' id='editid' 
+                               value='<?php if (isset($_GET['id'])) { echo $erow['id']; }?>'/>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                Name:
+                                    <input type='text' name='name' id='name'  maxlength="50" 
+                                           value ="<?php 
+                                    if (isset($_SESSION['name'])) {
+                                        echo $_SESSION['name'];
+                                    } else if (!empty($erow['name'])) {
+                                        echo $erow['name'];
+                                    } 
+                                        ?>"/>
+                            </div>
+                            <div class="col-md-6">
+                                Discount Code*: <br/>
+                                <button type="button" onclick="randomString()" class="pull-right">Generate</button>
+                                <div style="overflow: hidden;" >
+                                    <input type='text' name='code' id='code' value ="<?php 
+                                        if(isset($_SESSION['randomString'])) { 
+                                            echo $_SESSION['randomString'];
+                                        } else if (!empty($erow['code'])) {
+                                            echo $erow['code'];
+                                        }?>" maxlength="50" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h4 class="page-header">Usage Limit</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?php
+                                    if (isset($_SESSION['usage'])) {
+                                        $usageArr = explode(",", $_SESSION['usage']);
+                                    } else if (!empty($erow['discusage'])) { 
+                                        $usageArr = explode(",", $erow['discusage']);
+                                    }  
+                                ?>
+                                Usage*: <br/>
+                                <div class="checkbox">
+                                <label class="checkbox-inline">
+                                    <input type='checkbox' name='usage[]' value="cust" <?php 
+                                            if (!empty($erow['discusage']) || isset($_SESSION['usage'])) {
+                                                if (in_array("cust", $usageArr)) {
+                                                    echo " checked";
+                                                }
+                                            }
+                                        ?>>Customer
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type='checkbox' name='usage[]' value='emp' <?php 
+                                            if (!empty($erow['discusage']) || isset($_SESSION['usage'])) {
+                                                if (in_array("emp", $usageArr)) {
+                                                    echo " checked";
+                                                }
+                                            }
+                                        ?>>Employee
+                                </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                Limit Per User*:
+                                <input type='text' name='userlimit' id='userlimit'  maxlength="50"  
+                                       onkeypress="return isNumber(event)" value ="<?php 
+                                        if (isset($_SESSION['userlimit'])) {
+                                            echo $_SESSION['userlimit'];
+                                        } else if (!empty($erow['userlimit'])) {
+                                            echo $erow['userlimit'];
+                                        }  
+                                    ?>"/>
+                            </div>
+                        </div>
+                        <div class="row vm-margin-t-20">
+                            <div class="col-md-6">
+                                Track Serial Number?: <br/>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="serial" value="yes" <?php 
+                                                if (isset($_SESSION['serial'])) {
+                                                    if(strcmp("yes", $_SESSION['serial']) === 0) {
+                                                        echo " checked";
+                                                    }
+                                                } else if (!empty($erow['serial'])) {
+                                                    if (strcmp("yes", $erow['serial']) === 0) {
+                                                        echo " checked";
+                                                    }
+                                                } 
+                                                ?>>Yes
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                Limit*:
+                                <input type='text' name='limit' id='limit'  maxlength="50"  
+                                       onkeypress="return isNumber(event)" value ="<?php 
+                                        if (isset($_SESSION['disclimit'])) {
+                                            echo $_SESSION['disclimit'];
+                                        } else if (!empty($erow['disclimit'])) {
+                                            echo $erow['disclimit'];
+                                        } 
+                                    ?>"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h4 class="page-header">Discount Condition</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id='conditiontype'>
+                                    <?php 
+
+                                    if (isset($_SESSION['condition'])) {
+                                        $condition = $_SESSION['condition'];
+                                    } else if(!empty($erow['disccondition'])){
+                                        if (isset($erow['disccondition'])) {
+                                            $condition = $erow['disccondition'];
+                                        } else {
+                                            $condition = "";
+                                        }
+                                    } 
+
+                                    if (isset($_SESSION['discterms'])) {
+                                        $disctype = $_SESSION['discterms'];
+                                    } else if(!empty($erow['disctype'])){
+                                        if (isset($erow['disctype'])) {
+                                            $disctype = $erow['disctype'];
+                                        } else {
+                                            $disctype = "";
+                                        }
+
+                                        $typeArr = explode(" ", $disctype);
+                                    }  
+
+                                    ?>
+                                    <select name='condition' id='condition'>
+                                        <option value='null' <?php 
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "null") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($typeArr)) && (in_array("", $typeArr))) {
+                                            $_SESSION['editcondition'] = "";
+                                            echo " selected";
+                                        }
+                                        ?>>Select Discount Type</option>
+
+                                        <option value='upgrade' <?php 
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "upgrade") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($typeArr)) && (in_array("Upgrade", $typeArr))) {
+                                            $_SESSION['editcondition'] = "upgrade";
+                                            echo " selected";
+                                        }
+                                        ?>>Free Upgrade</option>
+
+                                        <option value='bundleamount' <?php 
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "bundleamount") === 0) {
+                                                echo " selected";
+                                            }
+
+                                        } else if ((!empty($typeArr)) && (strcmp($typeArr[2], "For") === 0)) {
+                                            $_SESSION['editcondition'] = "bundleamount";
+                                            echo " selected";
+                                        }
+                                        ?>>Bundle Amount</option>
+
+                                        <option value='bundlediscount' <?php 
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "bundlediscount") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($typeArr)) && (in_array("Discount", $typeArr))) {
+                                            $_SESSION['editcondition'] = "bundlediscount";
+                                            echo " selected";
+                                        }
+                                        ?>>Bundle Discount</option>
+
+                                        <option value='nextfree' <?php 
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "nextfree") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($typeArr)) && (in_array("Next", $typeArr))) {
+                                            $_SESSION['editcondition'] = "nextfree";
+                                            echo " selected";
+                                        }
+                                        ?>>Next Pair Free</option>
+
+                                        <option value='nextdiscount' <?php
+                                        $nextdiscArr = array("Buy", "Next");
+                                        if (!empty($typeArr)) { 
+                                            $resArr = array_intersect($nextdiscArr, $typeArr);
+                                        }
+
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "nextdiscount") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($resArr)) && (!empty($disctype)) && count($resArr) === count($nextdiscArr) && is_numeric(strpos($disctype, "%"))) {
+                                            $_SESSION['editcondition'] = "nextdiscount";
+                                            echo " selected";
+                                        }
+                                        ?>>Next Pair Discounted</option>
+
+                                        <option value='fixedpercent' <?php 
+                                        $fixedArr = array("Get", "Off");
+                                        if ((!empty($fixedArr)) && (!empty($typeArr))) {
+                                            $percArr = array_intersect($fixedArr, $typeArr);
+                                        }
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "fixedpercent") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($percArr)) && (!empty($disctype)) && count($percArr) ===  count($fixedArr) && is_numeric(strpos($disctype, "%"))) {
+                                            $_SESSION['editcondition'] = "fixedpercent";
+                                            echo " selected";
+                                        }
+                                        ?>>Fixed Percentage Discount</option>
+                                        <option value='fixedamount' <?php 
+                                        if ((!empty($fixedArr)) && (!empty($typeArr))) {
+                                            $amtArr = array_intersect($fixedArr, $typeArr);
+                                        }
+
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "fixedamount") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($percArr)) && (count($percArr) === count($fixedArr) && is_numeric(strpos($disctype, "$")))) {
+                                            $_SESSION['editcondition'] = "fixedamount";
+                                            echo " selected";
+                                        }
+                                        ?>>Fixed Amount Discount</option>
+                                        <option value='shipping' <?php 
+                                        if (isset($_SESSION['condition'])) {
+                                            if (strcmp($_SESSION['condition'], "shipping") === 0) {
+                                                echo " selected";
+                                            }
+                                        }
+                                        ?>>Free Shipping</option>
+
+                                    </select>
+                                    <div id='bundleamount' class="row" style='display:none;'>
+                                        <div class="col-md-2 vm-padding-l-clear vm-padding-t-15 pull-left" style="display:inline;">Buy </div>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='bundleamtqty' 
+                                                   value='<?php 
+                                                   if (isset($_SESSION['bundleamt']['qty'])) {
+                                                       echo $_SESSION['bundleamt']['qty'];
+                                                   } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                    if (strcmp($_SESSION['editcondition'], "bundleamount") === 0) { 
+                                                        echo $typeArr[1];
+                                                    } 
+                                                } ?>'
+                                                   onkeypress="return isNumber(event)">
+                                        </div>
+                                        <div class="col-md-2 vm-padding-r-clear vm-padding-t-15 pull-left" style="display:inline;">For $</div>
+                                        <div class="col-md-4 vm-padding-r-clear" style="overflow:hidden;">
+                                            <input type='text' name='bundleamtprice' 
+                                                   value='<?php if (isset($_SESSION['bundleamt']['price'])) {
+                                                       echo $_SESSION['bundleamt']['price'];
+                                                   } if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                    if (strcmp($_SESSION['editcondition'], "bundleamount") === 0) { 
+                                                        echo substr($typeArr[3], 1);
+                                                    } 
+                                                } ?>'
+                                                   onkeypress="return isNumberKey(event)">
+                                        </div>
+                                    </div>
+                                    <div id='bundlediscount' style='display:none;'>
+                                        <div class="col-md-2 vm-padding-l-clear vm-padding-t-15 pull-left" style="display:inline;">Buy</div>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='bundlediscqty' 
+                                                   value='<?php if (isset($_SESSION['bundledisc']['qty'])) {
+                                                       echo $_SESSION['bundledisc']['qty'];
+                                                   } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                    if (strcmp($_SESSION['editcondition'], "bundlediscount") === 0) { 
+                                                        echo $typeArr[1];
+                                                    } 
+                                                } ?>'
+                                                   onkeypress="return isNumber(event)">
+                                        </div>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='bundlediscprice' 
+                                                   value='<?php if (isset($_SESSION['bundledisc']['price'])) {
+                                                       echo $_SESSION['bundledisc']['price'];
+                                                   } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                    if (strcmp($_SESSION['editcondition'], "bundlediscount") === 0) { 
+                                                        echo substr($typeArr[3], 0, -1); 
+                                                    } 
+                                                } ?>'
+                                                   onkeypress="return isNumberKey(event)">
+                                        </div>
+                                        <div class="col-md-2 vm-padding-r-clear vm-padding-t-15 pull-left" style="display:inline;">% Off</div>
+                                    </div>
+                                    <div id='nextfree' style='display:none;'>
+                                        <div class="col-md-2 vm-padding-l-clear vm-padding-t-15 pull-left" style="display:inline;">Buy</div>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='nextfreeqty' 
+                                                   value='<?php if (isset($_SESSION['nextfree']['qty'])) {
+                                                       echo $_SESSION['nextfree']['qty'];
+                                                   } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                    if (strcmp($_SESSION['editcondition'], "nextfree") === 0) { 
+                                                        echo $typeArr[1];
+                                                    } 
+                                                } ?>'
+                                                   onkeypress="return isNumber(event)">
+                                        </div>
+                                        <div class="col-md-2 vm-padding-r-clear vm-padding-t-15 pull-left" style="display:inline;">Free</div>
+                                        <div class="col-md-4 vm-padding-r-clear" style="overflow:hidden;">
+                                            <input type='text' name='nextfreeamt'
+                                                   value='<?php if (isset($_SESSION['nextfree']['amt'])) {
+                                                       echo $_SESSION['nextfree']['amt'];
+                                                   } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                    if (strcmp($_SESSION['editcondition'], "nextfree") === 0) { 
+                                                        echo $typeArr[3];
+                                                    } 
+                                                } ?>'
+                                                   onkeypress="return isNumber(event)">
+                                        </div>
+                                    </div>
+                                    <div id='nextdiscount' style='display:none;'>
+                                        <div class="col-md-2 vm-padding-l-clear vm-padding-t-15 pull-left" style="display:inline;">Buy</div>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='nextdiscqty' 
+                                                   value='<?php if (isset($_SESSION['nextdisc']['qty'])) {
+                                                       echo $_SESSION['nextdisc']['qty'];
+                                                   } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                    if (strcmp($_SESSION['editcondition'], "nextdiscount") === 0) { 
+                                                        echo $typeArr[1];
+                                                    } 
+                                                } ?>'
+                                                   onkeypress="return isNumber(event)">
+                                        </div>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='nextdiscamt' 
+                                                   value='<?php if (isset($_SESSION['nextdisc']['amt'])) {
+                                                       echo $_SESSION['nextdisc']['amt'];
+                                                   } else if(isset($_SESSION['editcondition']) && !empty($typeArr[3])) {
+                                                        if (strcmp($_SESSION['editcondition'], "nextdiscount") === 0) { 
+                                                            echo substr($typeArr[4], 0, -1); 
+                                                        } 
+                                                    } ?>'
+                                                   onkeypress="return isNumber(event)">
+                                        </div>
+                                        <div class="col-md-2 vm-padding-r-clear vm-padding-t-15 pull-left" style="display:inline;">% Off</div>
+                                    </div>
+                                    <div id='fixedpercent' style='display:none;'>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='fixedperc'
+                                                value='<?php if (isset($_SESSION['fixedperc'])) {
+                                                           echo $_SESSION['fixedperc'];
+                                                       } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                        if (strcmp($_SESSION['editcondition'], "fixedpercent") === 0) { 
+                                                            echo substr($typeArr[1], 0, -1); 
+                                                        } 
+                                                    } ?>'
+                                                onkeypress="return isNumber(event)">
+                                        </div>
+                                        <div class="col-md-2 vm-padding-r-clear vm-padding-t-15 pull-left" style="display:inline;">% Off</div>
+                                    </div>
+                                    <div id='fixedamount' style='display:none;'>
+                                        <div class="col-md-2 vm-padding-l-clear vm-padding-t-15 pull-left" style="display:inline;">$</div>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='fixedamt' 
+                                                   value='<?php if (isset($_SESSION['fixedamt'])) {
+                                                           echo $_SESSION['fixedamt'];
+                                                       } else if(isset($_SESSION['editcondition']) && !empty($typeArr[1])) {
+                                                        if (strcmp($_SESSION['editcondition'], "fixedamount") === 0) { 
+                                                            echo substr($typeArr[1], 1); 
+                                                        } 
+                                                    } ?>'
+                                                    onkeypress="return isNumberKey(event)">
+                                        </div>
+                                        <div class="col-md-2 vm-padding-r-clear vm-padding-t-15 pull-left" style="display:inline;">Off</div>
+                                    </div>
+                                    <div id='shipping' style='display:none;'>
+                                        <div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id='conditions'>
+                                    <?php 
+                                    if(!empty($condition)) {
+                                        $condArr = explode(" ", $condition);
+                                    }
+                                    ?>
+                                    <select name='conditionfor' id='conditionfor'>
+                                        <option value='null' <?php 
+                                        if (isset($_SESSION['discterms'])) {
+                                            if (strcmp($_SESSION['discterms'], "null") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($condArr)) && (in_array("", $condArr))) {
+                                            $_SESSION['editterms'] = "";
+                                            echo " selected";
+                                        }
+                                        ?>>Select an option</option>
+                                        <option value='allorders' <?php 
+                                        if (isset($_SESSION['discterms'])) {
+                                            if (strcmp($_SESSION['discterms'], "allorders") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($condArr)) && (in_array("All", $condArr))) {
+                                            $_SESSION['editterms'] = "allorders";
+                                            echo " selected";
+                                        }
+                                        ?>>All orders</option>
+                                        <option value='ordersabove' <?php 
+                                        if (isset($_SESSION['discterms'])) {
+                                            if (strcmp($_SESSION['discterms'], "ordersabove") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($condArr)) && (in_array("above", $condArr))) {
+                                            $_SESSION['editterms'] = "ordersabove";
+                                            echo " selected";
+                                        }
+                                        ?>>Orders above</option>
+                                        <option value='productcat' <?php 
+                                        if (isset($_SESSION['discterms'])) {
+                                            if (strcmp($_SESSION['discterms'], "productcat") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($condArr)) && (in_array("categories:", $condArr))) {
+                                            $_SESSION['editterms'] = "productcat";
+                                            echo " selected";
+                                        }
+                                        ?>>Product Categories</option>
+                                        <option value='specificprod' <?php 
+                                        if (isset($_SESSION['discterms'])) {
+                                            if (strcmp($_SESSION['discterms'], "specificprod") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($condArr)) && (in_array("For", $condArr))) {
+                                            $_SESSION['editterms'] = "specificprod";
+                                            echo " selected";
+                                        }
+                                        ?>>Specific Product</option>
+                                        <option value='customergroup' <?php 
+                                        if (isset($_SESSION['discterms'])) {
+                                            if (strcmp($_SESSION['discterms'], "customergroup") === 0) {
+                                                echo " selected";
+                                            }
+                                        } else if ((!empty($condArr)) && (in_array("customer", $condArr))) {
+                                            $_SESSION['editterms'] = "customergroup";
+                                            echo " selected";
+                                        }
+                                        ?>>Customers in group</option>
+                                    </select>
+                                    <div id='ordersabove' style='display:none;'>
+                                        <div class="col-md-2 vm-padding-l-clear vm-padding-t-15 pull-left" style="display:inline;">$</div>
+                                        <div class="col-md-4 vm-padding-l-clear" style="overflow:hidden;">
+                                            <input type='text' name='aboveamt' 
+                                                   value='<?php if (isset($_SESSION['aboveamt'])) { 
+                                                       echo $_SESSION['aboveamt'];
+                                                   } else if(isset($_SESSION['editterms']) && !empty($condArr[1])) {
+                                                        if (strcmp($_SESSION['editterms'], "ordersabove") === 0) { 
+                                                            echo substr($condArr[2], 1);
+                                                        } 
+                                                    } ?>'
+                                                    onkeypress="return isNumberKey(event)">
+                                        </div>                                            
+                                    </div>
+                                    <div id='productcat' style='display:none;'>
+                                        <div id='no-tags' stye='display:none;'>
+                                            No existing tags found
+                                        </div>
+                                        <input type='hidden' id='tags' name='tags'>
+                                        <select id="select-to" class="contacts" placeholder="Type to select product categories... "></select>
+                                    </div>
+
+                                    <div id='specificprod' style='display:none;'>
+                                        <?php 
+                                            $prodsql = "Select * from products;";
+                                            $pres = mysqli_query($link, $prodsql);
+                                        ?>
+                                        <select name='specificprod'>
+                                        <?php
+                                            if (!mysqli_query($link, $prodsql)) {
+                                                die(mysqli_error($link));
+                                            } else {
+                                                while ($row = mysqli_fetch_assoc($pres)) {
+                                                    echo "<option value='".$row['name']."'"; 
+                                                    if(isset($_SESSION['discterms']) && isset($_SESSION['specificprod'])) {
+                                                        if (strcmp($_SESSION['discterms'], "specificprod") === 0) { 
+                                                            if (strcmp($row['name'], $_SESSION['specificprod']) === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        } 
+                                                    } else if(isset($_SESSION['editterms']) && !empty($condArr[2])) {
+                                                        if (strcmp($_SESSION['editterms'], "specificprod") === 0) { 
+                                                            if (strcmp($row['name'], $condArr[2]) === 0) {
+                                                                echo " selected";
+                                                            }
+                                                        } 
+                                                    } 
+                                                    echo ">".$row['name']."</option>";
+                                                }
+                                            }
+                                        ?>
+                                        </select>
+                                    </div>
+                                    <div id='customergroup' style='display:none;'>
+
+                                    </div>
+                                </div>
+<!--                                    Amount*:
+                                <input type='text' name='amount' id='amount'  maxlength="50"  
+                                       onkeypress="return isNumberKey(event)" value ="<?php 
+                                        if (!empty($erow['amount'])) {
+//                                                echo $erow['amount'];
+                                        }
+                                    ?>"/>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="vm-container vm-margin-t-30">
+                        <h4 class="page-header vm-margin-t-clear">Status</h4>
+                        <div class="row">
+                            Recurrence*:
+                            <select name='recurrence'>
+                                <option value='adhoc' <?php 
+                                    if (isset($_SESSION['recurrence'])) { 
+                                        if(strcmp($_SESSION['recurrence'], "adhoc") === 0) {
+                                            echo " selected";
+                                        }
+                                    } else if (!empty($erow['recurrence'])) {
+                                        if (strcmp($erow['recurrence'], "adhoc") === 0) {
+                                            echo " selected";
+                                        }
+                                    }
+                                ?>>Ad-hoc</option>
+                                <option value='weekly' <?php 
+                                    if (isset($_SESSION['recurrence'])) { 
+                                        if(strcmp($_SESSION['recurrence'], "weekly") === 0) {
+                                            echo " selected";
+                                        }
+                                    } else if (!empty($erow['recurrence'])) {
+                                        if (strcmp($erow['recurrence'], "weekly") === 0) {
+                                            echo " selected";
+                                        }
+                                    }
+                                ?>>Weekly</option>
+                                <option value='monthly' <?php 
+                                    if (isset($_SESSION['recurrence'])) { 
+                                        if(strcmp($_SESSION['recurrence'], "monthly") === 0) {
+                                            echo " selected";
+                                        }
+                                    } else if (!empty($erow['recurrence'])) {
+                                        if (strcmp($erow['recurrence'], "monthly") === 0) {
+                                            echo " selected";
+                                        }
+                                    }
+                                ?>>Monthly</option>
+                                <option value='yearly' <?php 
+                                    if (isset($_SESSION['recurrence'])) { 
+                                        if(strcmp($_SESSION['recurrence'], "yearly") === 0) {
+                                            echo " selected";
+                                        }
+                                    } else if (!empty($erow['recurrence'])) {
+                                        if (strcmp($erow['recurrence'], "yearly") === 0) {
+                                            echo " selected";
+                                        }
+                                    }
+                                ?>>Yearly</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            Status*:
+                            <select name='status'>
+                                <option value='active' <?php 
+                                    if (isset($_SESSION['status'])) { 
+                                        if(strcmp($_SESSION['status'], "active") === 0) {
+                                            echo " selected";
+                                        }
+                                    } else if (!empty($erow['status'])) {
+                                        if (strcmp($erow['status'], "active") === 0) {
+                                            echo " selected";
+                                        }
+                                    }
+                                ?>>Active</option>
+                                <option value='inactive' <?php 
+                                    if (isset($_SESSION['status'])) { 
+                                        if(strcmp($_SESSION['status'], "inactive") === 0) {
+                                            echo " selected";
+                                        }
+                                    } else if (!empty($erow['status'])) {
+                                        if (strcmp($erow['status'], "inactive") === 0) {
+                                            echo " selected";
+                                        }
+                                    }
+                                ?>>Inactive</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            Start date:
+                            <input type="text" id="date3" name="date3" 
+                                   value='<?php if (isset($_SESSION['start'])) { 
+                                        echo date("d M y", strtotime($_SESSION['start']));
+                                    } else if (!empty($erow['start'])) { 
+                                       echo date("d M y", strtotime($erow['start']));
+                                    }?>'>
+                        </div>
+                        <div class="row">
+                            End date:
+                            <input type="text" id="date4" name="date4"
+                                   value='<?php if (isset($_SESSION['end'])) { 
+                                        echo date("d M y", strtotime($_SESSION['end']));
+                                    } else if (!empty($erow['end'])) { 
+                                       echo date("d M y", strtotime($erow['end']));
+                                    }?>'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bc-bottom vm-margin-t-20">
+                <div class="pull-right">
+                    <input type='reset' name='cancel' value='Cancel' />
+                    <input type='submit' name='submit' value='Save' />
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            </form>
+        </div>
         </div>
         <!-- /#page-wrapper -->
             
@@ -852,13 +845,16 @@ if (isset($_GET['id'])) {
                 }
             }
         ?>
-    </div>
+        </div>
+    </body>
 </html>
 
  <script>
     var myCalendar = new dhtmlXCalendarObject(["date3"]);
+    myCalendar.setDateFormat("%d %M %Y");
             myCalendar.hideTime();
     var myCalendar2 = new dhtmlXCalendarObject(["date4"]);
+    myCalendar2.setDateFormat("%d %M %Y");
             myCalendar2.hideTime();
 
     function isNumberKey(evt) {

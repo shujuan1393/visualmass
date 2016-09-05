@@ -41,7 +41,7 @@
         <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-ex1-collapse">
             <i class="fa fa-navicon"></i>
         </button>
-        <a href="admin.php"><img class="navbar-logo" src="../images/HorizontalLogo_black.png" alt=""/></a>
+        <a href="admin.php"><img class="navbar-logo" src="../images/HorizontalLogo_white.png" alt=""/></a>
     </div>
     <!-- Top Menu Items -->
     <ul class="nav navbar-right top-nav">
@@ -70,7 +70,7 @@
             </ul>
         </li>-->
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <i class="fa fa-fw fa-angle-down"></i></a>
             <ul class="dropdown-menu alert-dropdown">
                 <li>
                     <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
@@ -82,7 +82,7 @@
             </ul>
         </li>
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $_SESSION['loggedUser'] ?> <b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['loggedUser'] ?> <i class="fa fa-fw fa-angle-down"></i></a>
             <ul class="dropdown-menu">
                 <li>
                     <a href="profile.php"><i class="fa fa-fw fa-user"></i> Profile</a>
@@ -98,62 +98,62 @@
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
             <li <?php if (in_array("index.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='index.php'><i class="fa fa-fw fa-home"></i> HOME</a>
+                <a href='index.php'><img class="sb-img" src="../icons/admin/home20.png" alt=""/> HOME</a>
             </li>
             <?php if (in_array("cust", $checkArr)) { ?>
             <li <?php if (in_array("customers.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='customers.php'><i class="fa fa-fw fa-users"></i> CUSTOMERS</a>
+                <a href='customers.php'><img class="sb-img" src="../icons/admin/customers20.png" alt=""/> CUSTOMERS</a>
             </li>
             <?php } ?>
             <?php if (in_array("disc", $checkArr)) { ?>
             <li <?php if (in_array("discounts.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='discounts.php'><i class="fa fa-fw fa-percent"></i> DISCOUNTS</a>
+                <a href='discounts.php'><img class="sb-img" src="../icons/admin/discounts20.png" alt=""/> DISCOUNTS</a>
             </li>
             <?php } ?>
             <?php if (in_array("gift", $checkArr)) { ?>
             <li <?php if (in_array("giftcards.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='giftcards.php'><i class="fa fa-fw fa-gift"></i> GIFT CARDS</a>
+                <a href='giftcards.php'><img class="sb-img" src="../icons/admin/giftcards20.png" alt=""/> GIFT CARDS</a>
             </li>
             <?php } ?>
             <?php if (in_array("inv", $checkArr)) { ?>
             <li <?php if (in_array("inventory.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='inventory.php'><i class="fa fa-fw fa-archive"></i> INVENTORY</a>
+                <a href='inventory.php'><img class="sb-img" src="../icons/admin/inventory20.png" alt=""/> INVENTORY</a>
             </li>
             <?php } ?>
             <?php if (in_array("career", $checkArr)) { ?>
             <li <?php if (in_array("jobs.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='jobs.php'><i class="fa fa-fw fa-briefcase"></i> JOBS</a>
+                <a href='jobs.php'><img class="sb-img" src="../icons/admin/careers20.png" alt=""/> JOBS</a>
             </li>
             <?php } ?>   
             <?php if (in_array("loc", $checkArr)) { ?>
             <li <?php if (in_array("locations.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='locations.php'><i class="fa fa-fw fa-location-arrow"></i> LOCATIONS</a>
+                <a href='locations.php'><img class="sb-img" src="../icons/admin/locations20.png" alt=""/> LOCATIONS</a>
             </li>
             <?php } ?>
             <?php if (in_array("media", $checkArr)) { ?>
             <li <?php if (in_array("media.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='media.php'><i class="fa fa-fw fa-picture-o"></i> MEDIA GALLERY</a>
+                <a href='media.php'><img class="sb-img" src="../icons/admin/gallery20.png" alt=""/> MEDIA GALLERY</a>
             </li>
             <?php } ?>
             <?php if (in_array("orders", $checkArr)) { ?>
             <li <?php if (in_array("orders.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='orders.php'><i class="fa fa-fw fa-check-square-o"></i> ORDERS</a>
+                <a href='orders.php'><img class="sb-img" src="../icons/admin/orders20.png" alt=""/> ORDERS</a>
             </li>
             <?php } ?>
             <?php if (in_array("partners", $checkArr)) { ?>
             <li <?php if (in_array("partners.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='partners.php'><i class="fa fa-fw fa-suitcase>"></i> PARTNERS</a>
+                <a href='partners.php'><img class="sb-img" src="../icons/admin/partners20.png" alt=""/> PARTNERS</a>
             </li>
             <?php } ?>
             <?php if (in_array("products", $checkArr)) { ?>
             <li <?php if (in_array("products.php", $urlArr)) { echo "class='active'"; }; ?> >
-                <a href='products.php'><i class="fa fa-fw fa-tag"></i> PRODUCTS</a>
+                <a href='products.php'><img class="sb-img" src="../icons/admin/products20.png" alt=""/> PRODUCTS</a>
             </li>
             <?php } ?>
             <?php if (in_array("settings", $checkArr)) { ?>
             <li>
                 <a href="javascript:;" data-toggle="collapse" data-target="#settings">
-                    <i class="fa fa-fw fa-gear"></i> SETTINGS 
+                    <img class="sb-img" src="../icons/admin/settings20.png" alt=""/> SETTINGS 
                     <i class="fa fa-fw fa-angle-right" style="float: right;"></i></a>
                     <?php
                         $settingsList = array("generalSettings.php", "accountSettings.php", "blogSettings.php", 
@@ -221,18 +221,18 @@
             <?php } ?> 
             <?php if (in_array("stats", $checkArr)) { ?>
             <li <?php if (in_array("statistics.php", $urlArr)) { echo "class='active'"; } ?> >
-                <a href='statistics.php'><i class="fa fa-fw fa-line-chart"></i> STATISTICS</a>
+                <a href='statistics.php'><img class="sb-img" src="../icons/admin/statistics20.png" alt=""/> STATISTICS</a>
             </li>
             <?php } ?> 
             <?php if (in_array("emp", $checkArr)) { ?>
             <li <?php if (in_array("users.php", $urlArr)) { echo "class='active'"; } ?> >
-                <a href='users.php'><i class="fa fa-fw fa-user"></i> USERS</a>
+                <a href='users.php'><img class="sb-img" src="../icons/admin/users20.png" alt=""/> USERS</a>
             </li>
             <?php } ?>        
             <?php if (in_array("web", $checkArr)) { ?>
             <li class="dropdown">
                 <a href="javascript:;" data-toggle="collapse" data-target="#web">
-                    <i class="fa fa-fw fa-globe"></i> WEB 
+                    <img class="sb-img" src="../icons/admin/web20.png" alt=""/> WEB 
                     <i class="fa fa-fw fa-angle-right" style="float: right;"></i></a>
                     <?php
                         $webList = array("advertisements.php", "blog.php", "careers.php", 

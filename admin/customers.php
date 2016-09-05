@@ -16,26 +16,24 @@ require_once '../config/db.php';
             <?php require '../nav/adminMenubar.php'; ?>
             
             <!-- Content -->
+            <div class="bc-top bg-white">
+                <img src="../icons/admin/customers16.png" alt="" class="bc-img pull-left"/>
+                <div class="pull-left">Customers
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            
             <div id="page-wrapper">
-
+                
             <div class="container-fluid">
 
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <ol class="breadcrumb">
-                            <li>
-                                <a href="index.php"><i class="fa fa-home"></i></a>
-                            </li>
-                            <li class="active">
-                                CUSTOMERS
-                            </li>
-                        </ol>
-                        
                         <?php
                             if (isset($_GET['id'])) {
                         ?>
-                            <h1 class="page-header">Customer Details</h1>
+                            <h3 class="page-header">Customer Details</h3>
                         
                         <?php
                                 $sql = "Select * from user where id='".$_GET['id']."';";
@@ -259,11 +257,11 @@ require_once '../config/db.php';
                                  </div>
                              </div>
                         <?php } else { ?>
-                            <h1 class="page-header">View Customers</h1>
+                            <h3 class="page-header">View Customers</h3>
                         
                             <div class="pull-left filter-align">Filter: </div>
                             <div style="overflow:hidden">
-                                <input type="text" id="filter" class="pull-right" placeholder="Type here to search">
+                                <input type="text" id="filter" class="pull-right" placeholder="Type here to search for customers">
                             </div>
 
                             <table id ="example">

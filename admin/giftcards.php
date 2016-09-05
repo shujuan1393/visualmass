@@ -28,6 +28,13 @@ if (isset($_GET['id'])) {
             <?php require '../nav/adminMenubar.php'; ?>
             
             <!-- Content -->
+            <div class="bc-top bg-white">
+                <img src="../icons/admin/giftcards16.png" alt="" class="bc-img pull-left"/>
+                <div class="pull-left">Gift Cards
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            
             <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -35,16 +42,7 @@ if (isset($_GET['id'])) {
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <ol class="breadcrumb">
-                            <li>
-                                <a href="index.php"><i class="fa fa-home"></i></a>
-                            </li>
-                            <li class="active">
-                                Gift Cards
-                            </li>
-                        </ol>
-                        
-                        <h1 class="page-header">Manage Gift Cards</h1>
+                        <h3 class="page-header">Manage Gift Cards</h3>
                         
                         <div id="updateGiftSuccess" class="success">
                             <?php 
@@ -141,7 +139,7 @@ if (isset($_GET['id'])) {
                                 ?>
                             </div>
                             
-                            <h1 id="add" class="page-header">Add/Edit Gift Card</h1>
+                            <h3 id="add" class="page-header">Add/Edit Gift Card</h3>
                             
                             <input type='hidden' name='submitted' id='submitted' value='1'/>
                             <input type='hidden' name='editid' id='editid' 

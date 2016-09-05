@@ -47,12 +47,13 @@ if (isset($_GET['id'])) {
                             </li>
                         </ol>
                         
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#homep">Homepage Banner</a></li>
-                            <li><a data-toggle="tab" href="#menu1">Homepage Sections</a></li>
+                        <div class="content-tabs">
+                        <ul class="nav nav-pills">
+                            <li role="presentation" class="active"><a data-toggle="tab" href="#homep">Homepage Banner</a></li>
+                            <li role="presentation"><a data-toggle="tab" href="#menu1">Homepage Sections</a></li>
                         </ul>
 
-                        <div class="tab-content">
+                        <div class="tab-content bg-grey">
                             <div id="homep" class="tab-pane fade in active">
                                 <h1 class="page-header">Update Homepage Banner</h1>
                                 <p>
@@ -763,6 +764,7 @@ if (isset($_GET['id'])) {
                                     </form>
                                 </p>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>

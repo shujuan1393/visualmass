@@ -215,8 +215,8 @@ if (isset($_GET['delete'])) {
         }
         $recurrence = $_POST['recurrence'];
         $status = $_POST['status'];
-        $start = $_POST['date3'];
-        $end = $_POST['date4'];
+        $start = date("Y-m-d",strtotime($_POST['date3']));
+        $end = date("Y-m-d",strtotime($_POST['date4']));
 //        $amount = $_POST['amount'];
         $usageArr = $_POST['usage'];
         $usage = "";

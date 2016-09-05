@@ -121,24 +121,17 @@ unset($_SESSION['addProdBannerError']);
             
             <!-- Content -->
             <div id="page-wrapper">
-
             <div class="container-fluid">
-
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <ol class="breadcrumb">
-                            <li class="active">
-                                <i class="fa fa-home"></i>  Home
-                            </li>
-                        </ol>
-                        <h1 class="page-header">
-                            <?php echo $welcome = "<script>document.write(welcome)</script>" .$_SESSION['loggedUser']; ?>
-                        </h1>
-                        
+                        <div class="vm-center">
+                            <h2>
+                                <?php echo $welcome = "<script>document.write(welcome)</script>" .$_SESSION['loggedUser']; ?>
+                            </h2>
+                            <h5>Today is <?php echo date('l, d F Y'); ?></h5>
+                        </div>
                         <div id="today">
-                            <h4>Today is <?php echo date('D, d M Y'); ?></h4>
-                            
                             <?php 
                                 $sales = "Select SUM(totalcost) as total, location from orders where DATE(datepaid)=CURDATE() group by location;";
                                 

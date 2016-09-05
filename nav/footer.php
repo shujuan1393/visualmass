@@ -7,13 +7,13 @@
  */
     
 ?>
-
+<!--
 <html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
+    <body>-->
         <div id='whole_footer'>
         <div class="left_nav">
             <ul class='pull-left'>
@@ -93,7 +93,7 @@
               </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
           </div><!-- /.modal -->
-    </body>
+    <!--</body>-->
     
     <script>
         $('#searchModal').appendTo("body");
@@ -104,4 +104,4 @@
             $('#search').focus();
         })
     </script>
-</html>
+<!--</html>-->
