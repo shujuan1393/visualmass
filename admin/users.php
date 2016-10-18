@@ -132,7 +132,7 @@ if (isset($_GET['id'])) {
                                 <h1 class="page-header">Manage Employees</h1>
                                 <p>
                                     <?php 
-                                        $qry = "Select * from staff where email <> '".$_SESSION['loggedUserEmail']."'";
+                                        $qry = "Select * from staff where email <> '".$_SESSION['loggedUserEmail']."' and type <> 'author'";
 
                                         $result = mysqli_query($link, $qry);
 

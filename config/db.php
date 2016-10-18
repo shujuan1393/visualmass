@@ -18,6 +18,13 @@ if (in_array("admin", $urlArr)) {
     }
 }
 
+if (in_array("store.php", $urlArr) || in_array("cart.php", $urlArr) 
+        || in_array("storeLoc.php", $urlArr) || in_array("posOrders.php", $urlArr)) {
+    $_SESSION['storePOS'] = "show";
+} else {
+    unset($_SESSION['storePOS']);
+}
+
 //$link = mysqli_connect('localhost', 'visualma_admin', 'P@ssw0rd!23');
 $link = mysqli_connect('localhost', 'visualmass', 'ilovevisualmass');
 
@@ -173,6 +180,8 @@ if (!in_array("admin", $urlArr)) {
                             unset($_SESSION['maintenanceMsg']);
                         }
                     }
+                } else {
+                    unset($_SESSION['maintenanceMsg']);
                 }
             }
         }

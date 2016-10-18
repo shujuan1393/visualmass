@@ -46,7 +46,7 @@ if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
     $savedrow = mysqli_fetch_assoc($savedresult);
-    $valArr = explode("&", $savedrow['value']);
+    $giftcard = explode("&", $savedrow['value']);
 ?>
 
 <!DOCTYPE html>
@@ -98,8 +98,8 @@ if (!mysqli_query($link,$selectSql)) {
                             </div>
                             
                             <?php
-                                if(!empty($valArr[0])){
-                                    $expiry = explode("expiry=", $valArr[0]);
+                                if(!empty($giftcard[0])){
+                                    $expiry = explode("expiry=", $giftcard[0]);
                                 }
                             ?>
                             Enable Expiry:
@@ -135,8 +135,8 @@ if (!mysqli_query($link,$selectSql)) {
                                     onclick="toggleTextbox(false);">Off
             <br/><br/>
                             <?php 
-                                if(!empty($valArr[1])){
-                                    $duration = explode("duration=", $valArr[1]);
+                                if(!empty($giftcard[1])){
+                                    $duration = explode("duration=", $giftcard[1]);
                                 }
                             ?>
                             Duration (days): <input type='text' name='duration' id='duration' 

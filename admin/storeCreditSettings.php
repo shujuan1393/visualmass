@@ -47,7 +47,7 @@ if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
     $savedrow = mysqli_fetch_assoc($savedresult);
-    $valArr = explode("&", $savedrow['value']);
+    $storecredit = explode("&", $savedrow['value']);
 ?>
 
 <!DOCTYPE html>
@@ -98,8 +98,8 @@ if (!mysqli_query($link,$selectSql)) {
                                 ?>
                             </div>
                             <?php 
-                                if(!empty($valArr[0])){
-                                    $amount = explode("redeemamount=", $valArr[0]);
+                                if(!empty($storecredit[0])){
+                                    $amount = explode("redeemamount=", $storecredit[0]);
                                 }
                             ?>
                             Amount awarded: <input type='text' name='redeem' id='redeem' 
@@ -115,8 +115,8 @@ if (!mysqli_query($link,$selectSql)) {
                             <p class='setting-tooltips'>*Set the default store credit amount redeemed from using referral codes</p>
                             <br>
                             <?php 
-                                if(!empty($valArr[1])){
-                                    $profile = explode("profile=", $valArr[1]);
+                                if(!empty($storecredit[1])){
+                                    $profile = explode("profile=", $storecredit[1]);
                                 }
                             ?>
                             Profile: <input type='text' name='profile' id='profile' 

@@ -123,17 +123,42 @@ if (isset($_GET['id']) && isset($_GET['date']) && isset($_GET['add'])
         $date = $element['date'];
         //add 1 week then get collection windows for that
         $createDate = date_create(date("Y-m-d",strtotime($date)));
-        date_add($createDate,date_interval_create_from_date_string("7 days"));
+        
+        $duration = getHometryDuration($link);
+        
+        date_add($createDate,date_interval_create_from_date_string($duration." days"));
         $newdate = date_format($createDate,"Y-m-d");
         $collectionArr = getCollectionWindow($access, $newdate, $post_data);
         $element['collection'] = $collectionArr;
         $deliveryArr[$c] = $element;
     }
+    
+    $collection = $deliveryArr[0]['collection']['collectionWindow'];
 //    print_r($deliveryArr);
 //    exit();
     //set delivery array and redirect to page
     $_SESSION['deliveryTimings'] = $deliveryArr;
     header("Location: checkout.php#deliveryAvailability");
+}
+
+function getHometryDuration($link) {
+    $sql = "Select * from settings where type='homeTryon';";
+    $res = mysqli_query($link, $sql);
+    
+    if (!mysqli_query($link, $sql)) {
+        die(mysqli_error($link));
+    } else {
+        $row = mysqli_fetch_assoc($res);
+        $valArr = explode("&", $row['value']);
+        
+        if (!empty($valArr[1])) {
+            $duration = explode("duration=", $valArr[1]);
+            
+            return $duration[1];
+        }
+        
+        return 0;
+    }
 }
 
 function getDeliveryWindow($date, $forecasts) {

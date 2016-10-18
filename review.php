@@ -1,7 +1,8 @@
 <?php
     require_once 'config/db.php';
     $nonceFromTheClient = $_POST["payment_method_nonce"];    
-    $selectedDeliveryDate = $_POST['selectedDeliveryDate'];
+    $selectedDeliveryDate = $_POST['selectedDeliveryDate'];  
+    $corrCollectionDate = $_POST['corrCollectionDate'];
 ?>
 <!DOCTYPE html>
 <!--
@@ -80,9 +81,11 @@ and open the template in the editor.
                             echo "<div class='caps'>". $payment."</div>";
                             // echo $_POST['']; 
                             $deliverArr = explode(" ", $selectedDeliveryDate);
+                            $collArr = explode(" ", $corrCollectionDate);
                             if (isset($_SESSION['hometrydeliver'])) { 
-                                echo "<h5>Home Try-On Delivery Date</h5>";
-                                echo $deliverArr[0]." ".$deliverArr[1]." ".$deliverArr[4]."<br>";
+                                echo "<h5>Home Try-On</h5>";
+                                echo "Delivery: ".$deliverArr[0]." ".$deliverArr[1]." ".$deliverArr[4]."<br>";
+                                echo "Return: ".$collArr[0]." ".$collArr[1]." ".$collArr[4]."<br><br>";
                                 echo $comments;
                             }
                         ?>
@@ -105,7 +108,7 @@ and open the template in the editor.
                             <span>$<?php echo $cost; ?></span><br>
                             <span id='showDiscount'> - </span><br>
                             
-                            <?php if (!empty($urow['credit'])) { ?>
+                            <?php if (!empty($urow['credit']) && intval($urow['credit']) > 0) { ?>
                             <span id='existingCredit'>$<?php echo $urow['credit']; ?></span><br>
                             <?php } ?>
                             <input type='hidden' name='cost' value='<?php echo $cost; ?>'>
@@ -207,7 +210,7 @@ and open the template in the editor.
                                     }
                                 }
                             ?>
-                            <?php if (!empty($urow['credit'])) { ?>
+                            <?php if (!empty($urow['credit']) && intval($urow['credit']) > 0) { ?>
                             <a id='useCredit' class='addMore'> Use Existing Credit</a><br>
                             <?php } ?>
                             <input type="hidden" name="redeem" id='redeem'>
@@ -375,7 +378,8 @@ and open the template in the editor.
             var apt = <?php echo '"'.$apt.'"'; ?>;
             var email = <?php echo '"'.$email.'"'; ?>;
             var phone = <?php echo '"'.$phone.'"'; ?>;
-            var delivery = <?php echo '"'.$selectedDeliveryDate.'"'; ?>;
+//            var delivery = <?php echo '"'.$selectedDeliveryDate.'"'; ?>;
+//            var collection = <?php echo '"'.$corrCollectionDate.'"'; ?>;
             var code = document.getElementById('discount').value;
             var amount = document.getElementById('discountAmount').value;
             var comments = <?php echo '"'.$comments.'"'; ?>;
@@ -384,12 +388,15 @@ and open the template in the editor.
                 code = document.getElementById('redeem').value;
                 amount = document.getElementById('redeemAmount').value;
             }
-            
+            <?php 
+                $_SESSION['selectedDeliveryDate'] = $selectedDeliveryDate;
+                $_SESSION['corrCollectionDate'] = $corrCollectionDate;
+            ?>
             window.location = "processPayment.php?id=" + str + "&cost=" + cost + "&payment=" + payment + 
                     "&firstname=" + firstname + "&lastname="+lastname + 
                     "&email="+email+"&phone="+phone+"&address=" + address + "&country=" + country +
                     "&apt=" + apt + "&zip=" + zip + "&comments=" + comments +
-                    "&code=" + code + "&amount=" + amount + "&delivery=" + delivery;
+                    "&code=" + code + "&amount=" + amount;
         }
         
 //        document.getElementById('addCode').onclick = function() {

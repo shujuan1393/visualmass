@@ -14,7 +14,7 @@ if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
     $savedrow = mysqli_fetch_assoc($savedresult);
-    $valArr = explode("&", $savedrow['value']);
+    $hometry = explode("&", $savedrow['value']);
 ?>
 
 <!DOCTYPE html>
@@ -66,8 +66,8 @@ if (!mysqli_query($link,$selectSql)) {
                             
                             Visibility: 
                             <?php 
-                                if (!empty($valArr[0])) {
-                                    $visib = explode("visibility=", $valArr[0]);
+                                if (!empty($hometry[0])) {
+                                    $visib = explode("visibility=", $hometry[0]);
                                 }
                             ?>
                             <input name='visibility' type='radio' value='on' 
@@ -104,8 +104,8 @@ if (!mysqli_query($link,$selectSql)) {
                             <p class='setting-tooltips'>*Turn on/off the home try-on feature</p><br>
 
                             <?php 
-                                if(!empty($valArr[1])){
-                                    $duration = explode("duration=", $valArr[1]);
+                                if(!empty($hometry[1])){
+                                    $duration = explode("duration=", $hometry[1]);
                                 }
                             ?>
                             Duration (days):
@@ -123,8 +123,8 @@ if (!mysqli_query($link,$selectSql)) {
                             <p class='setting-tooltips'>*Set the default duration for home try-ons</p><br>
 
                             <?php 
-                                if(!empty($valArr[2])){
-                                    $amount = explode("amount=", $valArr[2]);
+                                if(!empty($hometry[2])){
+                                    $amount = explode("amount=", $hometry[2]);
                                 }
                             ?>
                             Amount Chargeable:

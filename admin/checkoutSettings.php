@@ -56,7 +56,7 @@ if (!mysqli_query($link,$selectSql)) {
     echo("Error description: " . mysqli_error($link));
 } else {
     $savedrow = mysqli_fetch_assoc($savedresult);
-    $valArr = explode("&", $savedrow['value']);
+    $checkout = explode("&", $savedrow['value']);
 ?>
 
 <!DOCTYPE html>
@@ -107,8 +107,8 @@ if (!mysqli_query($link,$selectSql)) {
             
                             Get customers' consent to receive promotional emails: 
                             <?php 
-                                if (!empty($valArr[0])) {
-                                    $promo = explode("promo=", $valArr[0]);
+                                if (!empty($checkout[0])) {
+                                    $promo = explode("promo=", $checkout[0]);
                                 }
                             ?>
                             <input name='promo' type='radio' value='yes' 
@@ -139,8 +139,8 @@ if (!mysqli_query($link,$selectSql)) {
 
                             Automatically fulfill electronic gift cards: 
                             <?php 
-                                if(!empty($valArr[1])){
-                                    $gift = explode("gift=", $valArr[1]);
+                                if(!empty($checkout[1])){
+                                    $gift = explode("gift=", $checkout[1]);
                                 }
                             ?>
                             <input name='gift' type='radio' value='yes' 
@@ -170,8 +170,8 @@ if (!mysqli_query($link,$selectSql)) {
                             
                             <p class='setting-tooltips'>*If you select 'No', manual input is needed to fulfill electronic gift card purchases.</p><br>
                             <?php 
-                                if(!empty($valArr[2])){
-                                    $guest = explode("guest=", $valArr[2]);
+                                if(!empty($checkout[2])){
+                                    $guest = explode("guest=", $checkout[2]);
                                 }
                             ?>
                             Enable Guest Checkout: 
