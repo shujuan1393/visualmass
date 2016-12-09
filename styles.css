@@ -42,6 +42,9 @@ a {
 }
 
 /*======*/
+.page-header {
+    margin: 20px 0 20px!important;
+}
 
 .cke_editable {
     font-family: 'Alright Sans-Light'!important;
@@ -1376,7 +1379,7 @@ button .navbar-toggle {
     padding: 10px 15px;
 }
 
-.top-nav > li, .top-nav > li > a {
+.navbar-inverse > .top-nav > li, .navbar-inverse > .top-nav > li > a {
     color: #eeeeee;
 }
 
@@ -1390,6 +1393,9 @@ button .navbar-toggle {
 
 .top-nav > li > a:hover, .top-nav > .open > a:hover, .top-nav > .open > a:focus {
     background-color: initial!important;
+}
+
+.navbar-inverse > .top-nav > li > a:hover, .navbar-inverse > .top-nav > .open > a:hover, .navbar-inverse > .top-nav > .open > a:focus {
     color: #ffffff!important;
 }
 
