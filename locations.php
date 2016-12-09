@@ -105,6 +105,7 @@
                             <?php 
                                 $services = "Select * from services;";
                                 $sres = mysqli_query($link, $services);
+                                $servcount = 0;
 
                                 if (!mysqli_query($link, $services)) {
                                     echo "Error: " . mysqli_error($link);
@@ -112,7 +113,6 @@
                                     if ($sres -> num_rows === 0) {
                                         echo "<h5>There are no services available for filter.</h5>";
                                     } else {
-                                        $servcount = 0;
                                         while($row = mysqli_fetch_assoc($sres)) {
                                             echo "<div class='service text-center col-md-3'>";
                                             echo "<input type='hidden' id='serviceval".$servcount."' value='".$row['servicecode']."'>";
@@ -138,13 +138,13 @@
                                 <?php 
                                     $ret = "Select * from locations where type='retail' and status='active';";
                                     $retres = mysqli_query($link, $ret);
+                                    $locCount = 0;
 
                                     if (!mysqli_query($link, $ret)) {
                                         echo "Error: ".mysqli_error($link);                                
                                     } else {
                                         if ($retres -> num_rows > 0) {
                                             echo "<li class='store_header'>RETAIL STORE</li>";
-                                            $locCount = 0;
                                             while($row = mysqli_fetch_assoc($retres)) {
                                                 echo "<li><a href='#".$row['name']."' id='link".$locCount."' onclick='makeActive(".$locCount.")'>".$row['name']."</a></li>";
                                                 $locCount++;
